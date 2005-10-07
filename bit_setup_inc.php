@@ -6,9 +6,9 @@
 	define('BITPAGE_CONTENT_TYPE_GUID', 'bitpage' );
 	*/
 
-	if($gBitSystem->isPackageActive( 'bitmapki' ) ) {
-		if ($gBitUser->hasPermission( 'bit_p_view_bitmapki' )) {
-			$gBitSystem->registerAppMenu( 'bitmapki', 'bitMapki', BITMAPKI_PKG_URL.'index.php', 'bitpackage:bitmapki/menu_bitmapki.tpl', 'bitmapki');
+	if($gBitSystem->isPackageActive( 'bitmap' ) ) {
+		if ($gBitUser->hasPermission( 'bit_p_view_bitmap' )) {
+			$gBitSystem->registerAppMenu( 'bitmap', 'BitMap', BITMAP_PKG_URL.'index.php', 'bitpackage:bitmap/menu_bitmap.tpl', 'bitmap');
 		}
 
 		/* @todo wj: address this later when getting into advanced features

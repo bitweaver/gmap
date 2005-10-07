@@ -20,38 +20,36 @@
  */
 
 /**
- * wj: basically includes the basic parts to render the page
- * checks to see if a page has been asked for based on name or id, 
- * if not gets the defined home page for the whole website - I think this last part is right.
+ * wj: Most of this page is based on the Sample Package
  */
  
 require_once( '../bit_setup_inc.php' );
-require_once( BITMAPKI_PKG_PATH.'BitMap.php' );
+require_once( BITMAP_PKG_URL.'BitMap.php' );
 
 
-// @todo wj: need some conditions for setting the page request.
-/*
-	if( !empty( $_REQUEST['structure_id'] ) ) {
-		include( LIBERTY_PKG_PATH.'display_structure_inc.php' );
-	} else {
-	
-		global $siteTitle;
-		if ( !isset( $_REQUEST['page'] ) and !isset( $_REQUEST['page_id'] ) ) {
-			$_REQUEST['page'] = $wikiHomePage;
-		}
-		$gHome = new BitMap();		
-		$wikiHome = $gBitSystem->getPreference("wikiHomePage", 'HomePage');
-		if( !($gHome->pageExists( $wikiHome )) ) {
-			$homeHash = array( 'title' => (isset( $wikiHome ) ? $wikiHome : 'HomePage'),
-							   'creator_user_id' => ROOT_USER_ID,
-							   'modifier_user_id' => ROOT_USER_ID,
-							   'edit' => 'Welcome to '.(!empty( $siteTitle ) ? $siteTitle : 'our site') );
-			$gHome->store( $homeHash );
-		}
+// Initialization
+require_once('../bit_setup_inc.php' );
 
-		include( BITMAPKI_PKG_URL.'lookup_page_inc.php' );
-		include( BITMAPKI_PKG_URL.'display_bitpage_inc.php' );
-	}
-*/		
+// Is package installed and enabled
+$gBitSystem->verifyPackage('bitmap' );
+
+// Now check permissions to access this page
+$gBitSystem->verifyPermission('bit_p_read_bitmap' );
+
+if (!isset($_REQUEST['map_id'] ) ) {
+    $_REQUEST['map_id'] = $gBitSystem->getPreference("home_bitmap");
+}
+
+require_once(BITMAP_PKG_PATH.'lookup_bitmap_inc.php' );
+
+
+
+//@todo wj: this line from wiki package - might want to use it
+include( BITMAP_PKG_URL.'display_bitmap_inc.php' );		
+
+
+
+// Display the template
+$gBitSystem->display('bitpackage:bitmap/show_bitmap.tpl', tra('BitMap') );
 
 ?>

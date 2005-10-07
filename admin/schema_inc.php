@@ -1,9 +1,13 @@
 <?php
 
+//@todo wj: still trying to figureout best way to handle foreign key relationship between markers and markersets
+
+
 $tables = array(
 
-'tiki_gmaps' => "
-  map_id I8 PRIMARY,
+'bit_gmaps' => "
+  map_id I4 PRIMARY,
+  content_id I4 NOTNULL,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
   created I8 NOTNULL,
@@ -33,7 +37,7 @@ $tables = array(
 ",
 
 
-'tiki_gmaps_markers' => "
+'bit_gmaps_markers' => "
   marker_id I8 PRIMARY,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
@@ -43,17 +47,17 @@ $tables = array(
   name C(200),
   location_lat F,		 //@todo wj:Default must be created in Marker creation engine
   location_lon F,		 //@todo wj:Default must be created in Marker creation engine
-  icon_id I8 DEFAULT 0,  //@todo wj:This needs to be a Foreign Key relationship to the Icons table
+  icon_id I4 DEFAULT 0,  //@todo wj:This needs to be a Foreign Key relationship to the Icons table
   window_data X,
-  style_id I8 DEFAULT 0,  //@todo wj:This needs to be a Foreign Key relationship to the Markers Styles table
+  style_id I4 DEFAULT 0,  //@todo wj:This needs to be a Foreign Key relationship to the Markers Styles table
   label_data X,
   zindex I8, 	 //@todo wj:NULL check needs to return 'auto'
   xml X
 ",
 
 
-'tiki_gmaps_iconstyles' => "
-  icon_id I8 PRIMARY,
+'bit_gmaps_iconstyles' => "
+  icon_id I4 PRIMARY,
   name C(40),
   type I2 DEFAULT 0, 		//@todo wj:maybe need a table for this? Right now only 2 options. 0 => GIcon, 1 => XIcon
   image X,				//@todo wj:takes a path - requires some special escaping?
@@ -73,8 +77,8 @@ $tables = array(
 ",
 
 
-'tiki_gmaps_markerstyles' => "
-  style_id I8 PRIMARY,
+'bit_gmaps_markerstyles' => "
+  style_id I4 PRIMARY,
   name C(40),
   type I2 DEFAULT 0,		 // 0 => GMarker, 1 => PdMarker, 1 => XMarker])
   label_hover_opacity I4 DEFAULT 70, 	 //(PdMarker Class)
@@ -84,8 +88,8 @@ $tables = array(
 ",
 
 
-'tiki_gmaps_polylines' => "
-  polyline_id I8 PRIMARY,
+'bit_gmaps_polylines' => "
+  polyline_id I4 PRIMARY,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
   created I8 NOTNULL,
@@ -94,18 +98,18 @@ $tables = array(
   name C(200),
   type I4 DEFAULT 0, //0 => Google Default, 1 => XPolyline
   points_data X, //@todo wj:verify that X is the best type for storing an array - for example how can tiki_preferences => value be varchar(250) and take those long arrays?
-  style_id I8 DEFAULT 0,
+  style_id I4 DEFAULT 0,
   border_text X,
   zindex I8,
   xml X
 ",
 
 
-'tiki_gmaps_polylinestyles' => "
-  style_id I8 PRIMARY,
+'bit_gmaps_polylinestyles' => "
+  style_id I4 PRIMARY,
   name C(40),
   color C(6) DEFAULT 'ff3300',
-  weight I8 DEFAULT 2,
+  weight I4 DEFAULT 2,
   opacity F DEFAULT 1,    //takes a value from 0-1
   pattern c(200),         //takes an array.  Default NULL
   segment_count I8,       //takes a value.  Default NULL
@@ -115,18 +119,18 @@ $tables = array(
   font c(200),            //(CSS)
   text_every I8,          //takes a value.   Default NULL
   text_fgstyle_color C(6) DEFAULT 'ffffff',
-  text_fgstyle_weight I8 DEFAULT 1,
+  text_fgstyle_weight I4 DEFAULT 1,
   text_fgstyle_opacity I4 DEFAULT 1,   //Take a value from 0-1
   text_fgstyle_zindex I8,
   text_bgstyle_color C(6) DEFAULT 'ff3300',
-  text_bgstyle_weight I8 DEFAULT 2,
+  text_bgstyle_weight I4 DEFAULT 2,
   text_bgstyle_opacity I4 DEFAULT 1,   //Take a value from 0-1
   text_bgstyle_zindex I8
 ",
 
 
-'tiki_gmaps_polygons' => "
-  polygon_id I8 PRIMARY,
+'bit_gmaps_polygons' => "
+  polygon_id I4 PRIMARY,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
   created I8 NOTNULL,
@@ -138,26 +142,26 @@ $tables = array(
   center_x F,             //lat for circle
 	center_y F,             //lon for circle
   radius F,               //@todo wj:check this after up and running - might require an XDistance (for circle)
-  polylinestyle_id I8 DEFAULT 0,    //outline uses polyline style
-  style_id I8 DEFAULT 0,            //fill style
+  polylinestyle_id I4 DEFAULT 0,    //outline uses polyline style
+  style_id I4 DEFAULT 0,            //fill style
   border_text X,
   zindex I8,
   xml X
 ",
 
 
-'tiki_gmaps_polygonstyles' => "
-  style_id I8 PRIMARY,
+'bit_gmaps_polygonstyles' => "
+  style_id I4 PRIMARY,
   name C(40),
   color C(6),
-  weight I8 DEFAULT 2,
+  weight I4 DEFAULT 2,
   opacity F DEFAULT 1   //Take a value from 0-1
 ",
 
 
-'tiki_gmaps_history' => "
+'bit_gmaps_history' => "
   mapparttype C(40) NOTNULL,  //takes: map, marker, polyline, polygon, icon, markerstyle, polylinestyle, polygonstyle 
-	part_id I8 NOTNULL,      //this corresponds to the id for the given type
+	part_id I4 NOTNULL,         //this corresponds to the id for the given part type
   version I4 NOTNULL,
   last_modified I8 NOTNULL,
   user_id C(40),
