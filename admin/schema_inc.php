@@ -1,8 +1,5 @@
 <?php
 
-//@todo wj: still trying to figureout best way to handle foreign key relationship between markers and markersets
-
-
 $tables = array(
 
 'bit_gmaps' => "
@@ -13,27 +10,34 @@ $tables = array(
   created I8 NOTNULL,
   last_modified I8 NOTNULL,
   version I4 NOTNULL,
-  title C(200),
-  description C(200),
+  title C(256),
+  description C(256),
   width I4 DEFAULT 500,
   height I4 DEFAULT 300,
   location_lat F DEFAULT 40.77638178482896,
   location_lon F DEFAULT -73.89266967773438,
   zoom_level I4 DEFAULT 6,
-  map_type C(200) DEFAULT 'G_HYBRID_TYPE',
-  show_controls C(1) DEFAULT 'S',  //takes S,L,N  small, large, or none
+  map_type C(128) DEFAULT 'G_HYBRID_TYPE',
+  show_controls C(1) DEFAULT 's',   //takes s,l,n  small, large, or none
   show_scale L DEFAULT 1,
   show_map_types L DEFAULT 1,
-  init_marker_set I8,
-  init_polylines_set I8,
-  init_polygon_set I8,
-  add_map_types I8,
-  marker_sets I8,
-  polyline_sets I8,
-  polygon_sets I8,
-	icon_styles I8,  //@todo wj:This might need to be a Foreign Key relationship to the Icons table
-	marker_styles I8,  //@todo wj:This might need to be a Foreign Key relationship to the Markers Styles table
   xml X
+",
+
+
+'bit_gmaps_setskeychain' => "
+  map_id I4,
+	set_type c(32),    //takes init_markers, init_polylines, init_polygons, marker_sets, polyline_sets, polygonsets, add_map_types
+	set_id					
+",
+
+
+'bit_gmaps_maptypes' => "
+  maptype_id I4 PRIMARY,
+  name C(64),
+  basetype I2 DEFAULT 0,    //0 => Streetmap 1 => Satellite, 2 => Hybrid
+	maptiles_url X,           //@todo wj: takes a url path, special escaping required?
+	hybridtiles_url X         //@todo wj: takes a url path, special escaping required?
 ",
 
 
@@ -44,47 +48,58 @@ $tables = array(
   created I8 NOTNULL,
   last_modified I8 NOTNULL,
   version I4 NOTNULL,
-  name C(200),
-  location_lat F,		 //@todo wj:Default must be created in Marker creation engine
-  location_lon F,		 //@todo wj:Default must be created in Marker creation engine
-  icon_id I4 DEFAULT 0,  //@todo wj:This needs to be a Foreign Key relationship to the Icons table
+  name C(256),
+  location_lat F,		 //Default must be created in Marker creation engine
+  location_lon F,		 //Default must be created in Marker creation engine
   window_data X,
-  style_id I4 DEFAULT 0,  //@todo wj:This needs to be a Foreign Key relationship to the Markers Styles table
   label_data X,
-  zindex I8, 	 //@todo wj:NULL check needs to return 'auto'
+  zindex I8, 	 			 //NULL check needs to return 'auto' because CSS only accepts auto or an integer so we restrict this to an integer here
   xml X
 ",
 
 
 'bit_gmaps_iconstyles' => "
   icon_id I4 PRIMARY,
-  name C(40),
-  type I2 DEFAULT 0, 		//@todo wj:maybe need a table for this? Right now only 2 options. 0 => GIcon, 1 => XIcon
-  image X,				//@todo wj:takes a path - requires some special escaping?
+  name C(64),
+  type I2 DEFAULT 0, 		 //Right now only 2 options. 0 => GIcon, 1 => XIcon
+  image X,				       //@todo wj:takes a url path - requires some special escaping?
   image_w I4,
   image_h I4,
-  shadow_image X,				//@todo wj:takes a path - requires some special escaping?
+  shadow_image X,				 //@todo wj:takes a url path - requires some special escaping?
   shadow_w I4,
   shadow_h I4,
-  rollover_image				//@todo wj:takes a path - requires some special escaping?
+  rollover_image				 //@todo wj:takes a url path - requires some special escaping?
   icon_anchor_x I4 DEFAULT 0,
   icon_anchor_y I4 DEFAULT 0,
   infowindow_anchor_x I4 DEFAULT 0,
   infowindow_anchor_y I4 DEFAULT 0,
   infoshadow_anchor_x I4 DEFAULT 0,
   infoshadow_anchor_y I4 DEFAULT 0,
-	maps X 							//@todo wj:takes an array or links to a table that tracks back which maps its used in. (Maybe foreign key can do this for me.)
 ",
 
 
 'bit_gmaps_markerstyles' => "
   style_id I4 PRIMARY,
-  name C(40),
-  type I2 DEFAULT 0,		 // 0 => GMarker, 1 => PdMarker, 1 => XMarker])
+  name C(64),
+  type I2 DEFAULT 0,		               // 0 => GMarker, 1 => PdMarker, 1 => XMarker])
   label_hover_opacity I4 DEFAULT 70, 	 //(PdMarker Class)
   label_opacity I4 DEFAULT 100, 			 //(PdMarker Class)
-  label_hover_styles X, 		 //@todo wj:might want to add default here (CSS for PdMarker Class)
-  window_styles X, 				 //@todo wj:might want to add default here (CSS for PdMarker Class)
+  label_hover_styles X DEFAULT "border:none; color:black, background-color:#cccccc",   //(CSS for PdMarker Class)
+  window_styles X DEFAULT "border:none; color:black, background-color:white"           //(CSS for PdMarker Class)
+",
+
+
+'bit_gmaps_markersets' => "
+  set_id I4 PRIMARY,
+  style_id I4,   //@todo wj:This needs to be a Foreign Key relationship to the Markers Styles table	
+  icon_id,       //@todo wj:This needs to be a Foreign Key relationship to the Icons table
+  set_data X
+",
+
+
+'bit_gmaps_markerkeychain' => "
+  set_id I4,    //@todo wj:make this foreign keyed to markersets set_id
+	marker_id     //@todo wj:make this foreign keyed to marker marker_id
 ",
 
 
@@ -95,10 +110,9 @@ $tables = array(
   created I8 NOTNULL,
   last_modified I8 NOTNULL,
   version I4 NOTNULL,
-  name C(200),
+  name C(256),
   type I4 DEFAULT 0, //0 => Google Default, 1 => XPolyline
-  points_data X, //@todo wj:verify that X is the best type for storing an array - for example how can tiki_preferences => value be varchar(250) and take those long arrays?
-  style_id I4 DEFAULT 0,
+  points_data X,
   border_text X,
   zindex I8,
   xml X
@@ -107,25 +121,39 @@ $tables = array(
 
 'bit_gmaps_polylinestyles' => "
   style_id I4 PRIMARY,
-  name C(40),
+  name C(64),
   color C(6) DEFAULT 'ff3300',
   weight I4 DEFAULT 2,
-  opacity F DEFAULT 1,    //takes a value from 0-1
-  pattern c(200),         //takes an array.  Default NULL
-  segment_count I8,       //takes a value.  Default NULL
+  opacity F DEFAULT 1,                 //takes a float from 0-1
+  pattern c(256),                      //takes an array.  Default NULL
+  segment_count I8,                    //takes a value.  Default NULL
   begin_arrow L DEFAULT 0,
   end_arrow L DEFAULT 0,
-  arrows_every I8,        //takes a value.   Default NULL
-  font c(200),            //(CSS)
-  text_every I8,          //takes a value.   Default NULL
+  arrows_every I8,                     //takes a value.   Default NULL
+  font c(256) DEFAULT "Arial",         //(CSS)
+  text_every I8,                       //takes a value.   Default NULL
   text_fgstyle_color C(6) DEFAULT 'ffffff',
   text_fgstyle_weight I4 DEFAULT 1,
-  text_fgstyle_opacity I4 DEFAULT 1,   //Take a value from 0-1
+  text_fgstyle_opacity I4 DEFAULT 1,   //Take a float from 0-1
   text_fgstyle_zindex I8,
   text_bgstyle_color C(6) DEFAULT 'ff3300',
   text_bgstyle_weight I4 DEFAULT 2,
-  text_bgstyle_opacity I4 DEFAULT 1,   //Take a value from 0-1
+  text_bgstyle_opacity I4 DEFAULT 1,   //Take a float from 0-1
   text_bgstyle_zindex I8
+",
+
+
+
+'bit_gmaps_polylinesets' => "
+  set_id I4 PRIMARY,
+  style_id I4,         //@todo wj:This needs to be a Foreign Key relationship to the Polyline Styles table	
+  set_data X
+",
+
+
+'bit_gmaps_polylinekeychain' => "
+  set_id I4,          //@todo wj:make this foreign keyed to polylinesets set_id
+  polyline_id I4      //@todo wj:This needs to be a Foreign Key relationship to the Polyline table	
 ",
 
 
@@ -136,14 +164,12 @@ $tables = array(
   created I8 NOTNULL,
   last_modified I8 NOTNULL,
   version I4 NOTNULL,
-  name C(40),
+  name C(64),
   type I4 DEFAULT 0,      //0 => Polygon, 1 => Circle
   points_data X,          //takes an array for polygon
   center_x F,             //lat for circle
 	center_y F,             //lon for circle
   radius F,               //@todo wj:check this after up and running - might require an XDistance (for circle)
-  polylinestyle_id I4 DEFAULT 0,    //outline uses polyline style
-  style_id I4 DEFAULT 0,            //fill style
   border_text X,
   zindex I8,
   xml X
@@ -152,22 +178,36 @@ $tables = array(
 
 'bit_gmaps_polygonstyles' => "
   style_id I4 PRIMARY,
-  name C(40),
+  name C(64),
   color C(6),
   weight I4 DEFAULT 2,
-  opacity F DEFAULT 1   //Take a value from 0-1
+  opacity F DEFAULT 1   //Take a float from 0-1
+",
+
+
+'bit_gmaps_polygonsets' => "
+  set_id I4 PRIMARY,
+  style_id I4,         //@todo wj:This needs to be a Foreign Key relationship to the Polygon Styles table	
+	polylinestyle_id,    //@todo wj:This needs to be a Foreign Key relationship to the Polyline Styles table	
+  set_data X
+",
+
+
+'bit_gmaps_polygonkeychain' => "
+  set_id I4,          //@todo wj:make this foreign keyed to polygonets set_id
+  polygon_id I4       //@todo wj:This needs to be a Foreign Key relationship to the Polygon table	
 ",
 
 
 'bit_gmaps_history' => "
-  mapparttype C(40) NOTNULL,  //takes: map, marker, polyline, polygon, icon, markerstyle, polylinestyle, polygonstyle 
+  mapparttype C(64) NOTNULL,  //takes: map, marker, polyline, polygon, icon, markerstyle, polylinestyle, polygonstyle 
 	part_id I4 NOTNULL,         //this corresponds to the id for the given part type
   version I4 NOTNULL,
   last_modified I8 NOTNULL,
-  user_id C(40),
+  user_id C(64),
   ip C(15),
-  comment C(200),
-  xml X
+  comment C(256),
+  data X
 ",
 
 

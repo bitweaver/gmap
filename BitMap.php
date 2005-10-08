@@ -1,6 +1,6 @@
 <?php
 /**
- * @version ?
+ * @todo wj: How to do the credits up here?
  * @package bitmap
  *
  * @author will <will@wjamesphoto.com>
@@ -17,17 +17,18 @@
  */
 
 /**
- * required setup
- */
-
-require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
-
-/**
  *
  * @package bitmap
  *
  * creation started 2005/10/05
  */
+ 
+/**
+ * required setup
+ */
+
+require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
+
 
 /**
 * This is used to uniquely identify the object
