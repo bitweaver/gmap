@@ -1,3 +1,6 @@
+<!--// @todo holly cow, gotta do tools for editing sets too?! //-->
+
+<!--// @todo remove following html tag for real use, only for easy previewing //-->
 <html>
 
 {* submit/XMLHttpRequest functions called from this form are created in js_formsubmit.php *}
@@ -19,7 +22,7 @@ div id.maptoolsbar
 					 input id.map_z //zoom level
 					 input id.map_showcont
 					 input id.map_showscale
-					 input id.map_showtype
+					 input id.map_showtypecont
  					 input id.map_type
 
 			form name/id.maptypesform
@@ -63,15 +66,15 @@ div id.maptoolsbar
 					 input id.icon_name
 					 input id.icon_type
 					 input id.icon_img
-					 input id.icon_imgsize
+					 input id.icon_w
+					 input id.icon_h
 					 input id.icon_shadow
-					 input id.icon_shadowsize
+					 input id.icon_shadoww
+					 input id.icon_shadowh
 					 input id.icon_anchorx
 					 input id.icon_anchory
 					 input id.icon_winanchorx
 					 input id.icon_winanchory
-					 input id.icon_shadowanchorx
-					 input id.icon_shadowanchory
 					 input id.marker_styid
 					 input id.marker_styname
 					 input id.marker_stytype
@@ -139,7 +142,7 @@ div id.maptoolsbar
 <div id="maptoolsbar">
 <div id="maptools">
     <h3>Map Tools</h3>
-    <form method="POST" action="store_map.php" name="mapform" id="mapform">
+    <form action="javascript:;" name="mapform" id="mapform">
     <table>
 		  <tr><td>id</td><td><input name="map_id" id="map_id" type="text" size="25" value="<!-- //@todo get val from db -->"></td></tr>
     	<tr><td>Title</td><td><input name="map_title" id="map_title" type="text" size="25" value="<!-- //@todo get val from db -->"></td></tr>
@@ -157,7 +160,7 @@ div id.maptoolsbar
           <option>None</option>
           </select></td></tr>
     	<tr><td>Show Scale</td><td><input name="map_showscale" id="map_showscale" type="checkbox" value="<!-- //@todo get val from db -->"></td></tr>
-    	<tr><td>Show Map Type Buttons</td><td><input name="map_showtype" id="map_showtype" type="checkbox" value="<!-- //@todo get val from db -->"></td></tr>
+    	<tr><td>Show Map Type Buttons</td><td><input name="map_showtypecont" id="map_showtypecont" type="checkbox" value="<!-- //@todo get val from db -->"></td></tr>
     	<tr><td>Default Map Type</td>
     			<td><select name="map_type" id="map_type">
           <!-- //@todo set option from db -->
@@ -167,12 +170,12 @@ div id.maptoolsbar
     			<!-- //@todo dynamically generate this part of the list -->
     			<option>*Any custom map types*</option></select></td></tr>
     </table>
-    <input type="submit" name="mapsubmit" value="Submit">
+    <input type="button" name="mapsubmit" value="Submit" onclick="javascript:get(this.parentNode);">
     </form>
 
 		
     <!-- Additional Map Types Table -->
-    <form method="POST" action="store_map.php" name="maptypesform" id="maptypesform">    
+    <form action="javascript:;" name="maptypesform" id="maptypesform">    
     <table>
     	<tr><td><b>Additional Map Types</b></td>
 					<td>Type Id</td>
@@ -185,12 +188,12 @@ div id.maptoolsbar
     			<td><input name="map_typeside1" id="map_typeside1" type="checkbox" value="True"></td>
     			<td>*Link*</td></tr>
     </table>
-    <input type="submit" name="maptypessubmit" value="Submit">
+    <input type="button" name="maptypessubmit" value="Submit" onclick="javascript:get(this.parentNode);">
     </form>
 
 		
     <!-- Marker Sets Table -->
-    <form method="POST" action="store_map.php" name="markersetsform" id="markersetsform">    
+    <form action="javascript:;" name="markersetsform" id="markersetsform">    
     <table>    	
     	<tr><td><b>Marker Sets<b></td>
 					<td>Set Id</td>
@@ -214,12 +217,12 @@ div id.maptoolsbar
     			<td><input name="map_markside" id="map_markside[n]" type="checkbox" value="True"></td>
     			<td>*Link*</td></tr>
     </table>
-    <input type="submit" name="markersetssubmit" value="Submit">
+    <input type="button" name="markersetssubmit" value="Submit" onclick="javascript:get(this.parentNode);">
     </form>
 
     
     <!-- Polyline Sets Table -->
-    <form method="POST" action="store_map.php" name="linesetsform" id="linesetsform">    
+    <form action="javascript:;" name="linesetsform" id="linesetsform">    
     <table>    	
     	<tr><td><b>Polylines Sets<b></td>
 					<td>Set Id</td>
@@ -232,13 +235,13 @@ div id.maptoolsbar
     			<td><input name="map_lineside1" id="map_lineside1" type="checkbox" value="True"></td>
     			<td>*Link*</td></tr>
     </table>
-    <input type="submit" name="linesetssubmit" value="Submit">
+    <input type="button" name="linesetssubmit" value="Submit" onclick="javascript:get(this.parentNode);">
     </form>
 
 
     
     <!-- Polygon Sets Table -->
-    <form method="POST" action="store_map.php" name="polysetsform" id="polysetsform">    
+    <form action="javascript:;" name="polysetsform" id="polysetsform">    
     <table>    	
     	<tr><td><b>Polygon Sets<b></td>
 					<td>Set Id</td>
@@ -251,7 +254,7 @@ div id.maptoolsbar
     			<td><input name="map_polyside1" id="map_polyside1" type="checkbox" value="True"></td>
     			<td>*Link*</td></tr>
     </table>
-    <input type="submit" name="polysetssubmit" value="Submit">
+    <input type="button" name="polysetssubmit" value="Submit" onclick="javascript:get(this.parentNode);">
     </form>
 
     </form>
@@ -259,11 +262,8 @@ div id.maptoolsbar
 
 
 
-<!-- //@todo holly cow, gotta do tools for editing sets too?! -->
-
-
 <div id="markertools">
-    <form method="POST" action="submit.php" name="markerform" id="markerform">
+    <form action="submit.php" name="markerform" id="markerform">
     <h3>Marker Tools</h3>
 		<table>
     	<tr><td><b>Marker</b></td></tr>				
@@ -293,15 +293,15 @@ div id.maptoolsbar
      					<option>GIcon</option>
     					<option>XIcon</option></select></td></tr>
     	<tr><td>Icon Image Path</td><td><input name="icon_img" id="icon_img" type="text" size="25" value="Some Value"></td></tr>
-    	<tr><td>Image Size</td><td><input name="icon_imgsize" id="icon_imgsize" type="text" size="25" value="Some Value"></td></tr>
+\    	<tr><td>Image Width Size</td><td><input name="icon_w" id="icon_w" type="text" size="25" value="Some Value"></td></tr>
+    	<tr><td>Image Height Size</td><td><input name="icon_h" id="icon_h" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Shadow Image Path</td><td><input name="icon_shadow" id="icon_shadow" type="text" size="25" value="Some Value"></td></tr>
-    	<tr><td>Shadow Size</td><td><input name="icon_shadowsize" id="icon_shadowsize" type="text" size="25" value="Some Value"></td></tr>
+    	<tr><td>Shadow Width Size</td><td><input name="icon_shadoww" id="icon_shadoww" type="text" size="25" value="Some Value"></td></tr>
+    	<tr><td>Shadow Height Size</td><td><input name="icon_shadowh" id="icon_shadowh" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Icon Anchor x</td><td><input name="icon_anchorx" id="icon_anchorx" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Icon Anchor y</td><td><input name="icon_anchory" id="icon_anchory" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Info Window Anchor x</td><td><input name="icon_winanchorx" id="icon_winanchorx" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Info Window Anchor y</td><td><input name="icon_winanchory" id="icon_winanchory" type="text" size="25" value="Some Value"></td></tr>
-    	<tr><td>Info Shadow Anchor x</td><td><input name="icon_shadowanchorx" id="icon_shadowanchorx" type="text" size="25" value="Some Value"></td></tr>
-    	<tr><td>Info Shadow Anchor y</td><td><input name="icon_shadowanchory" id="icon_shadowanchory" type="text" size="25" value="Some Value"></td></tr>
 		</table>    
 
     <h4>Custom Marker Styles</h4>    
@@ -319,14 +319,14 @@ div id.maptoolsbar
     	<tr><td>Window Styles</td><td><input name="icon_winstyle" id="icon_winstyle" type="text" size="25" value="Some Value"></td></tr>
 		</table>
 		
-    <input type="submit" name="markersubmit" value="Submit">
+    <input type="button" name="markersubmit" value="Submit" onclick="javascript:get(this.parentNode);">
     </form>
 </div>
 
 
 
 <div id="polytools">
-    <form method="POST" action="submit.php" name="polyform" id="polyform">
+    <form action="submit.php" name="polyform" id="polyform">
     <h3>Polyline Tools</h3>
 		<table>
     	<tr><td><b>Ployline</b></td></tr>
@@ -400,7 +400,7 @@ div id.maptoolsbar
     	<tr><td>Opacity</td><td><input name="poly_op" id="poly_op" type="text" size="25" value="A Number"></td></tr>
 		</table>
 		
-    <input type="submit" name="polysubmit" value="Submit">
+    <input type="button" name="polysubmit" value="Submit" onclick="javascript:get(this.parentNode);">
     </form>
 </div>
 </div>

@@ -3,7 +3,7 @@
 $tables = array(
 
 'bit_gmaps' => "
-  map_id I4 PRIMARY,
+  map_id I4 AUTO PRIMARY,
   content_id I4 NOTNULL,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
@@ -20,20 +20,20 @@ $tables = array(
   map_type C(128) DEFAULT 'G_HYBRID_TYPE',
   show_controls C(1) DEFAULT 's',   //takes s,l,n  small, large, or none
   show_scale L DEFAULT 1,
-  show_map_types L DEFAULT 1,
-  xml X
+  show_typecontrols L DEFAULT 1,
+  data X
 ",
 
 
 'bit_gmaps_setskeychain' => "
   map_id I4,
-	set_type c(32),    //takes init_markers, init_polylines, init_polygons, marker_sets, polyline_sets, polygonsets, add_map_types
+	set_type c(32),    //takes init_markers, init_polylines, init_polygons, marker_sets, polyline_sets, polygonsets, map_types
 	set_id					
 ",
 
 
 'bit_gmaps_maptypes' => "
-  maptype_id I4 PRIMARY,
+  maptype_id I4 AUTO PRIMARY,
   name C(64),
   basetype I2 DEFAULT 0,    //0 => Streetmap 1 => Satellite, 2 => Hybrid
 	maptiles_url X,           //@todo wj: takes a url path, special escaping required?
@@ -42,7 +42,7 @@ $tables = array(
 
 
 'bit_gmaps_markers' => "
-  marker_id I8 PRIMARY,
+  marker_id I8 AUTO PRIMARY,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
   created I8 NOTNULL,
@@ -54,17 +54,17 @@ $tables = array(
   window_data X,
   label_data X,
   zindex I8, 	 			 //NULL check needs to return 'auto' because CSS only accepts auto or an integer so we restrict this to an integer here
-  xml X
+  data X
 ",
 
 
 'bit_gmaps_iconstyles' => "
-  icon_id I4 PRIMARY,
+  icon_id I4 AUTO PRIMARY,
   name C(64),
   type I2 DEFAULT 0, 		 //Right now only 2 options. 0 => GIcon, 1 => XIcon
   image X,				       //@todo wj:takes a url path - requires some special escaping?
-  image_w I4,
-  image_h I4,
+  icon_w I4,
+  icon_h I4,
   shadow_image X,				 //@todo wj:takes a url path - requires some special escaping?
   shadow_w I4,
   shadow_h I4,
@@ -72,28 +72,27 @@ $tables = array(
   icon_anchor_x I4 DEFAULT 0,
   icon_anchor_y I4 DEFAULT 0,
   infowindow_anchor_x I4 DEFAULT 0,
-  infowindow_anchor_y I4 DEFAULT 0,
-  infoshadow_anchor_x I4 DEFAULT 0,
-  infoshadow_anchor_y I4 DEFAULT 0,
+  infowindow_anchor_y I4 DEFAULT 0
 ",
 
 
 'bit_gmaps_markerstyles' => "
-  style_id I4 PRIMARY,
+  style_id I4 AUTO PRIMARY,
   name C(64),
   type I2 DEFAULT 0,		               // 0 => GMarker, 1 => PdMarker, 1 => XMarker])
   label_hover_opacity I4 DEFAULT 70, 	 //(PdMarker Class)
   label_opacity I4 DEFAULT 100, 			 //(PdMarker Class)
   label_hover_styles X DEFAULT "border:none; color:black, background-color:#cccccc",   //(CSS for PdMarker Class)
-  window_styles X DEFAULT "border:none; color:black, background-color:white"           //(CSS for PdMarker Class)
+  window_styles X DEFAULT "border:none; color:black, background-color:white",           //(CSS for PdMarker Class)
+	data X
 ",
 
 
 'bit_gmaps_markersets' => "
-  set_id I4 PRIMARY,
+  set_id I4 AUTO PRIMARY,
   style_id I4,   //@todo wj:This needs to be a Foreign Key relationship to the Markers Styles table	
   icon_id,       //@todo wj:This needs to be a Foreign Key relationship to the Icons table
-  set_data X
+  data X
 ",
 
 
@@ -104,7 +103,7 @@ $tables = array(
 
 
 'bit_gmaps_polylines' => "
-  polyline_id I4 PRIMARY,
+  polyline_id I4 AUTO PRIMARY,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
   created I8 NOTNULL,
@@ -115,12 +114,12 @@ $tables = array(
   points_data X,
   border_text X,
   zindex I8,
-  xml X
+  data X
 ",
 
 
 'bit_gmaps_polylinestyles' => "
-  style_id I4 PRIMARY,
+  style_id I4 AUTO PRIMARY,
   name C(64),
   color C(6) DEFAULT 'ff3300',
   weight I4 DEFAULT 2,
@@ -145,9 +144,9 @@ $tables = array(
 
 
 'bit_gmaps_polylinesets' => "
-  set_id I4 PRIMARY,
+  set_id I4 AUTO PRIMARY,
   style_id I4,         //@todo wj:This needs to be a Foreign Key relationship to the Polyline Styles table	
-  set_data X
+  data X
 ",
 
 
@@ -158,7 +157,7 @@ $tables = array(
 
 
 'bit_gmaps_polygons' => "
-  polygon_id I4 PRIMARY,
+  polygon_id I4 AUTO PRIMARY,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
   created I8 NOTNULL,
@@ -172,12 +171,12 @@ $tables = array(
   radius F,               //@todo wj:check this after up and running - might require an XDistance (for circle)
   border_text X,
   zindex I8,
-  xml X
+  data X
 ",
 
 
 'bit_gmaps_polygonstyles' => "
-  style_id I4 PRIMARY,
+  style_id I4 AUTO PRIMARY,
   name C(64),
   color C(6),
   weight I4 DEFAULT 2,
@@ -186,10 +185,10 @@ $tables = array(
 
 
 'bit_gmaps_polygonsets' => "
-  set_id I4 PRIMARY,
+  set_id I4 AUTO PRIMARY,
   style_id I4,         //@todo wj:This needs to be a Foreign Key relationship to the Polygon Styles table	
 	polylinestyle_id,    //@todo wj:This needs to be a Foreign Key relationship to the Polyline Styles table	
-  set_data X
+  data X
 ",
 
 

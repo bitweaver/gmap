@@ -1,8 +1,7 @@
-//@todo wj: need a way to store the map_id in js because it will be needed all the time
-//@todo wj: modify all below functions where needed to get map_id from page
-
 <script type="text/javascript" language="javascript">
    var http_request = false;
+	 
+   //makeRequest handles any XMLHttpRequest relaying a url and a string of values
    function makeRequest(url, parameters) {
       http_request = false;
       if (window.XMLHttpRequest) { // Mozilla, Safari,...
@@ -39,8 +38,11 @@
          }
       }
    }
-   
-   function get(obj) {
+
+
+   //get translates the DOM of any FORM into a string of values for php
+	 //also relays the url of the php script to makeRequest().
+   function get(url, obj) {
       var getstr = "?";
       for (i=0; i<obj.childNodes.length; i++) {
          if (obj.childNodes[i].tagName == "INPUT") {
@@ -69,6 +71,6 @@
          }
          
       }
-      makeRequest('get.php', getstr);
+      makeRequest(url, getstr);
    }
 </script>
