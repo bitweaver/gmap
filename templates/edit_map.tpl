@@ -57,6 +57,7 @@ div id.maptoolsbar
 					 input id.marker_name
 					 input id.marker_lat
 					 input id.marker_lon
+//@todo wj: marker_incotype should be iconname and it needs to be selected as a part of the set styles...it is not assigneed individually
 					 input id.marker_icontype
 					 input id.marker_wintext
 					 input id.marker_style
@@ -78,11 +79,11 @@ div id.maptoolsbar
 					 input id.marker_styid
 					 input id.marker_styname
 					 input id.marker_stytype
-					 input id.icon_hover
+					 input id.icon_hoverimg
 					 input id.icon_hoverop
 					 input id.icon_labelop
 					 input id.icon_hoverstyle
-					 input id.icon_winstyle
+					 input id.marker_winstyle
 					 
 					 
   div id.polytools
@@ -312,11 +313,11 @@ div id.maptoolsbar
      					<option>PdMarker</option>
     					<option>XMarker</option></select></td></tr>
     	<tr><td><small>(PdMarker Class Only)</small></td></tr>
-    	<tr><td>Icon Hover Image Path</td><td><input name="icon_hover" id="icon_hover" type="text" size="25" value="Some Value"></td></tr>
+    	<tr><td>Icon Hover Image Path</td><td><input name="icon_hoverimg" id="icon_hoverimg" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Label Hover Opacity</td><td><input name="icon_hoverop" id="icon_hoverop" type="text" size="25" value="A Number"></td></tr>
     	<tr><td>Label Opacity</td><td><input name="icon_labelop" id="icon_labelop" type="text" size="25" value="A Number"></td></tr>
     	<tr><td>Label Hover Styles</td><td><input name="icon_hoverstyle" id="icon_hoverstyle" type="text" size="25" value="Some Value"></td></tr>
-    	<tr><td>Window Styles</td><td><input name="icon_winstyle" id="icon_winstyle" type="text" size="25" value="Some Value"></td></tr>
+    	<tr><td>Window Styles</td><td><input name="marker_winstyle" id="marker_winstyle" type="text" size="25" value="Some Value"></td></tr>
 		</table>
 		
     <input type="button" name="markersubmit" value="Submit" onclick="javascript:get(this.parentNode);">
