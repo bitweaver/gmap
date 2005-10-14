@@ -235,62 +235,61 @@ var bPolgons = new Array();
 				 			bMarkers[n] = new Array();
 
 				 			for (m=0; m < markerSets[n].length; m++) {
+							
+							//@todo wj:get options for PdMarker and XMarker and checks for those in here.
 
 									//Shorten the marker datapath to save us a headache
 							    var q = markerSet[n].marker[m];
 							
-							    // get the lon/lat and create a point		
+							    //Get the lon/lat and create a point		
                   var myPoint = new GPoint(parseFloat(q.marker_lon), parseFloat(q.marker_lat));
-
-
-									//@todo wj: everything from here down in this function still needs reworking
 									
 									//Set Icon Styles
                 	var myIconKey = bIconKey[q.marker_iconid];
-									var myIcon = bIcons[myIconKey];
-									
-									//set Z-index	
-									if (q.marker_zi != NULL) {
-                		 var myzi = q.marker_zi;
-									}else{ 
-										 var myzi = "auto";
-									}
-        
-                	// Add the infoWindow click function and html content
-                  GEvent.addListener(marker, "click", function() {
-                    marker.openInfoWindowHtml(myhtml);
-
-									if (q.marker_iconid == 0){									
-                	// Create marker at location using specified icon
-                  var marker = new GMarker(mypoint);
+									if (myIconKey != 0){
+  									var myIcon = bIcons[myIconKey];
 									}else{
+									  var myIcon = G_DEFAULT_ICON;
+									}
+									
+									//Create the marker
                   var marker = new GMarker(mypoint, myicon);
-									}							
-							
-									bMarkers[n][m] = marker;
+
+									//Attach a bunch of related info to the marker
+									//Set Z-index	
+									if (q.marker_zi != NULL) {
+                		 marker.myzi = q.marker_zi;
+									}else{ 
+										 marker.myzi = "auto";
+									}
+
+        				 	marker.myid = q.marker_id;
+                	marker.myname = q.marker_name;
+									marker.mystyle = q.marker_styleid;
+                	marker.mylabel = q.marker_labeltext;									
+
+									//Remember ids for where I am in the tracking array
+        				 	marker.mySarrayid = [n];
+        				 	marker.myMarrayid = [m];								
 
 									// make the infoWindow HTML
-          				var myhtml = q.marker_wintext;
+          				marker.myhtml = q.marker_wintext;
 
-        				 	var myid = q.marker_id;
-                	vra myname = q.marker_name;
-
-									var mystyle = q.marker_styleid;
-                	var mylabel = q.marker_labeltext;
-
-									
-									//remember ids for where I am in the set lists
-        				 	var mySarrayid = [n];
-        				 	var myMarrayid = [m];
+                	// Add the infoWindow click function and html content
+                  GEvent.addListener(marker, "click", function() {
+                    marker.openInfoWindowHtml(marker.myhtml);
+									}							
+																
+									//Add the marker to our tracking array
+									bMarkers[n][m] = marker;
         
-                  //add it to the map
+                  //Add the marker to the map
           				map.addOverlay(newmarker);
-
       }			
 		
 	
 
-			//@todo the following functions
+			//@todo the following functions when marker function is complete
       function makePolylines(polyineSet) {
 			}			
       function makePolygons(polygonSet) {

@@ -3,7 +3,7 @@
 $tables = array(
 
 'bit_gmaps' => "
-  map_id I4 AUTO PRIMARY,
+  gmap_id I4 AUTO PRIMARY,
   content_id I4 NOTNULL,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
@@ -25,14 +25,14 @@ $tables = array(
 ",
 
 
-'bit_gmaps_setskeychain' => "
-  map_id I4,
-	set_type c(32),    //takes init_markers, init_polylines, init_polygons, marker_sets, polyline_sets, polygonsets, map_types
-	set_id					
+'bit_gmaps_sets_keychain' => "
+  gmap_id I4,
+	set_type c(32),    //takes init_markers, init_polylines, init_polygons, set_markers, set_polylines, set_polygons, map_types
+	set_id,					
 ",
 
 
-'bit_gmaps_maptypes' => "
+'bit_gmaps_map_types' => "
   maptype_id I4 AUTO PRIMARY,
   name C(64),
   basetype I2 DEFAULT 0,    //0 => Streetmap 1 => Satellite, 2 => Hybrid
@@ -58,7 +58,7 @@ $tables = array(
 ",
 
 
-'bit_gmaps_iconstyles' => "
+'bit_gmaps_icon_styles' => "
   icon_id I4 AUTO PRIMARY,
   name C(64),
   type I2 DEFAULT 0, 		 //Right now only 2 options. 0 => GIcon, 1 => XIcon
@@ -76,19 +76,19 @@ $tables = array(
 ",
 
 
-'bit_gmaps_markerstyles' => "
+'bit_gmaps_marker_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
   type I2 DEFAULT 0,		               // 0 => GMarker, 1 => PdMarker, 1 => XMarker])
   label_hover_opacity I4 DEFAULT 70, 	 //(PdMarker Class)
   label_opacity I4 DEFAULT 100, 			 //(PdMarker Class)
-  label_hover_styles X DEFAULT "border:none; color:black, background-color:#cccccc",   //(CSS for PdMarker Class)
-  window_styles X DEFAULT "border:none; color:black, background-color:white",           //(CSS for PdMarker Class)
+  label_hover_styles X DEFAULT 'border:none; color:black; background-color:#cccccc',   //(CSS for PdMarker Class)
+  window_styles X DEFAULT 'border:none; color:black; background-color:white',           //(CSS for PdMarker Class)
 	data X
 ",
 
 
-'bit_gmaps_markersets' => "
+'bit_gmaps_marker_sets' => "
   set_id I4 AUTO PRIMARY,
   style_id I4,   //@todo wj:This needs to be a Foreign Key relationship to the Markers Styles table	
   icon_id,       //@todo wj:This needs to be a Foreign Key relationship to the Icons table
@@ -96,7 +96,7 @@ $tables = array(
 ",
 
 
-'bit_gmaps_markerkeychain' => "
+'bit_gmaps_marker_keychain' => "
   set_id I4,    //@todo wj:make this foreign keyed to markersets set_id
 	marker_id     //@todo wj:make this foreign keyed to marker marker_id
 ",
@@ -118,7 +118,7 @@ $tables = array(
 ",
 
 
-'bit_gmaps_polylinestyles' => "
+'bit_gmaps_polyline_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
   color C(6) DEFAULT 'ff3300',
@@ -143,14 +143,14 @@ $tables = array(
 
 
 
-'bit_gmaps_polylinesets' => "
+'bit_gmaps_polyline_sets' => "
   set_id I4 AUTO PRIMARY,
   style_id I4,         //@todo wj:This needs to be a Foreign Key relationship to the Polyline Styles table	
   data X
 ",
 
 
-'bit_gmaps_polylinekeychain' => "
+'bit_gmaps_polyline_keychain' => "
   set_id I4,          //@todo wj:make this foreign keyed to polylinesets set_id
   polyline_id I4      //@todo wj:This needs to be a Foreign Key relationship to the Polyline table	
 ",
@@ -175,7 +175,7 @@ $tables = array(
 ",
 
 
-'bit_gmaps_polygonstyles' => "
+'bit_gmaps_polygon_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
   color C(6),
@@ -184,7 +184,7 @@ $tables = array(
 ",
 
 
-'bit_gmaps_polygonsets' => "
+'bit_gmaps_polygon_sets' => "
   set_id I4 AUTO PRIMARY,
   style_id I4,         //@todo wj:This needs to be a Foreign Key relationship to the Polygon Styles table	
 	polylinestyle_id,    //@todo wj:This needs to be a Foreign Key relationship to the Polyline Styles table	
@@ -192,7 +192,7 @@ $tables = array(
 ",
 
 
-'bit_gmaps_polygonkeychain' => "
+'bit_gmaps_polygon_keychain' => "
   set_id I4,          //@todo wj:make this foreign keyed to polygonets set_id
   polygon_id I4       //@todo wj:This needs to be a Foreign Key relationship to the Polygon table	
 ",
