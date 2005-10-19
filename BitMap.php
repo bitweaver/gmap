@@ -66,6 +66,7 @@ class BitMap extends LibertyAttachable {
 	/**
 	* Load the data from the database
 	* @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
+	* @todo wj: not sure I want to use this given that Gmap will not use content really
 	**/
 	function load() {
 		if( !empty( $this->mBitmapId ) || !empty( $this->mContentId ) ) {
@@ -90,60 +91,20 @@ class BitMap extends LibertyAttachable {
  
 
 	
+	//* @todo wj: start of a model request	
+	function get_map($map_id) {
+		global $gBitSystem;
+		$ret = NULL;
+		if ($map_id && is_numeric($map_id)) {
+			
+			$query = "SELECT bm.*, bmk.*, bmm.* FROM ".BIT_DB_PREFIX."bit_gmaps` bm, ".BIT_DB_PREFIX."bit_gmaps_setskeychain bmk, ".BIT_DB_PREFIX."bit_gmaps_markersets` bmm WHERE bm.map_id = ? AND bmk.map_id = bm.map_id AND bmm.set_id = bmk.set_id";
+  		$result = $this->mDb->query( $query, array((int)$map_id));
+			
+		}
+		return $result;
+	}
 	
-	/**
-	* @todo wj:the following are sketches for queries, but they really need to be part of a basic map request.
-	*  Just how to integrate them I am still working out.
-	**/
-	 
-	/**
-	* This function gets the set ids and types of a map
-	**/
-	function getSetIds( &$pParamHash ) {
-		LibertyContent::prepGetList( $pParamHash );
-		
-			$query = "SELECT bms.*, FROM `".BIT_DB_PREFIX."bit_gmaps_setskeychain` bms WHERE bms.`map_id`=?";
-			$result = $this->mDb->query( $query, array( 'map_id' ) );
-
-			//@todo wj: this seems conspicously wrong as the result is going to be an array of set ids and set types - is this how I should get the data back
-			if( $result && $result->numRows() ) {
-				$this->mInfo = $result->fields;
-				$this->mSetId = $result->fields['set_id'];
-				$this->mSetType = $result->fields['set_type'];
-				LibertyAttachable::load();
-			}
-			
-		  return( count( $this->mInfo ) );
-	}
-
-
-
-	/**
-	* This function gets the set data for a given settype/id
-	**/
-	function getSets( &$pParamHash ) {
-		LibertyContent::prepGetList( $pParamHash );
-			
-			$set_id = $pParamHash['set_id'];
-			//an example is for type "set_markers"			
-			if ($pParamHash['set_type'] == 'set_markers') {
-
-  			//@todo wj question: is configuration of bmm.`marker_id`=? $set_id" at the end correct?
-				//@todo wj question: when to set equal to a value and when is it ok to just use "?" or other
-  			$query = "SELECT bmm.*, FROM `".BIT_DB_PREFIX."bit_gmaps_markersets` bmm WHERE bmm.`set_id`=? $set_id";
-  			$result = $this->mDb->query( $query, array( $set_id ) );
-  
-  			if( $result && $result->numRows() ) {
-  				$this->mInfo = $result->fields;
-  				$this->mStyleId = $result->fields['style_id'];
-  				$this->mIconId = $result->fields['icon_id'];
-  				$this->mSetData = $result->fields['data'];
-  				LibertyAttachable::load();
-  			}
-			}
-		return( count( $this->mInfo ) );
-	}
-
+	
 
 
 	/**
