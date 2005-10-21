@@ -10,12 +10,12 @@ $tables = array(
   created I8 NOTNULL,
   last_modified I8 NOTNULL,
   version I4 NOTNULL,
-  title C(256),
-  description C(256),
+  title C(255),
+  description C(255),
   width I4 DEFAULT 500,
   height I4 DEFAULT 300,
-  location_lat F DEFAULT 40.77638178482896,
-  location_lon F DEFAULT -73.89266967773438,
+  location_lat F DEFAULT '40.77638178482896',
+  location_lon F DEFAULT '-73.89266967773438',
   zoom_level I4 DEFAULT 6,
   map_type C(128) DEFAULT 'G_HYBRID_TYPE',
   show_controls C(1) DEFAULT 's',   //takes s,l,n  small, large, or none
@@ -28,7 +28,8 @@ $tables = array(
 'bit_gmaps_sets_keychain' => "
   gmap_id I4,
 	set_type c(32),    //takes init_markers, init_polylines, init_polygons, set_markers, set_polylines, set_polygons, map_types
-	set_id,					
+	set_id
+  CONSTRAINTS ', CONSTRAINT `bit_gmaps_map_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."bit_gmaps`( `gmap_id` )'	
 ",
 
 
