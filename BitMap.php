@@ -60,8 +60,11 @@ class BitMap extends LibertyAttachable {
 
 
 	/**
+	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	 * @todo wj: Right now no plan to use this function, as content model of bitweaver does not work for Gmap
 	 * @todo wj: It is only here because it is in the sample package
+	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 *
 	 * Load the data from the database
 	 * @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
 	**/
@@ -87,6 +90,18 @@ class BitMap extends LibertyAttachable {
 	}
  
 
+	
+	// Instead of using load() we use get_map()
+	function get_map($map_id){
+		global $gBitSystem;
+			// @todo wj: not sure if this is the right way to get these into the engine for access by smarty
+			$this->mMapData = get_map_data($map_id);
+			$mapSets = get_sets_data($map_id);
+			$this->mMapSets = $mapSets;
+			$this->mMapStyles = get_styles($mapSets);
+	}
+	
+	
 	
 	//* Gets the basic map info.  This can be trimmed to only return the field 'data'	
 	function get_map_data($map_id) {
