@@ -92,13 +92,16 @@ class BitMap extends LibertyAttachable {
 
 	
 	// Instead of using load() we use get_map()
-	function get_map($map_id){
+	function get_map(){
 		global $gBitSystem;
-			// @todo wj: not sure if this is the right way to get these into the engine for access by smarty
-			$this->mMapData = get_map_data($map_id);
-			$mapSets = get_sets_data($map_id);
+		if( !empty( $this->mBitmapId ) ) {
+			$lookupId = !empty( $this->mBitmapId )? $this->mBitmapId;
+			$this->mMapData = get_map_data($lookupId);
+			$mapSets = get_sets_data($lookupId);
 			$this->mMapSets = $mapSets;
 			$this->mMapStyles = get_styles($mapSets);
+			$this->mInfo['display_url'] = $this->getDisplayUrl();
+		}
 	}
 	
 	
@@ -287,10 +290,19 @@ class BitMap extends LibertyAttachable {
 	 * @todo wj: functions to build out
 	 *
 	 * Save Map
+	 *	  - get map by id
+	 *		   - save map values and data
+	 *			 - get and return map data
+	 *			 - update map on client side
 	 * Save MapType
 	 * Save Marker
 	 * Save Polyline
 	 * Save Polygone
+	 *   - get object by id
+   *       - save object values and data
+   *       - get object data
+   *       - update map object
+   *       - update sets data via object id
 	 * Get list of maps
 	 * Get list of maptypes
 	 * Get list of markers

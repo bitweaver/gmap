@@ -8,17 +8,18 @@
 
 /**
  * The post values here come directly from the values in js_formsubmit.tpl 
- * The functions here processes them to create a new map or update an existing one.
+ * The function here processes them to update an existing Map.
  *
- * Updates are broken into parts Map, Marker, Icon, Polyline etc.
+ * This is part of the AJAX updating set
+ * Updates are broken into parts Map, Marker, Icon, Polyline etc.  
  * All the parts are not saved at once.
+ * 
+ * This script returns valid XML
  */
 
 /**
- 	 Map Updates Contain the following Post Values:
-	 ----------------------------------------------
- */
- 
+ 	 Map Update Requests Contain the following Post Values:
+	 ---------------------------------------------- 
 	 		$_REQUEST['map_id'] 
 	 		$_REQUEST['map_title']
 	 		$_REQUEST['map_desc']
@@ -27,148 +28,81 @@
 	 		$_REQUEST['map_h']
 	 		$_REQUEST['map_lat']
 	 		$_REQUEST['map_lon']
-	 		$_REQUEST['map_z //zoom level']
+	 		$_REQUEST['map_z'] //zoom level
 	 		$_REQUEST['map_showcont']
 	 		$_REQUEST['map_showscale']
 	 		$_REQUEST['map_showtype']
  	 		$_REQUEST['map_type']
- 
-
-
- 
-/**
- 	 MapSets Updates Contain the following Post Values:
-	 -------------------------------------------------------
  */
- 	 		$_REQUEST['map_id']
- 	 		$_REQUEST['map_typeid[n]']
- 	 		$_REQUEST['map_typelaunch[n]']
- 	 		$_REQUEST['map_typeside[n]']
-
-
-
- 
-/**			
- 	 MarkerSets Updates Contain the following Post Values:
-	 -------------------------------------------------------
- */
-  	 	$_REQUEST['map_id']
- 	 		$_REQUEST['map_markersetid[n]']
- 	 		$_REQUEST['map_markerlaunch[n]']
- 	 		$_REQUEST['map_markerside[n]']
-
-
-
- 
-/**
- 	 PolylineSets Updates Contain the following Post Values:
-	 -------------------------------------------------------
- */
-  	 	$_REQUEST['map_id']
-  	 	$_REQUEST['map_linesetid[n]']
-  	 	$_REQUEST['map_linelaunch[n]']
-  	 	$_REQUEST['map_lineside[n]']
- 
- 
-
- 
-/**		
- 	 PolygonSets Updates Contain the following Post Values:
-	 -------------------------------------------------------
- */	 
-  	 	$_REQUEST['map_id']
-  	 	$_REQUEST['map_polysetid[n]']
-  	 	$_REQUEST['map_polylaunch[n]']
-  	 	$_REQUEST['map_polyside[n]']
- */
-
- 
-/** 
- 	 Marker/Icon/Styles Updates Contain the following Post Values:
-	 -------------------------------------------------------
- */
-  	 	$_REQUEST['marker_id']
-  	 	$_REQUEST['marker_name']
-  	 	$_REQUEST['marker_lat']
-  	 	$_REQUEST['marker_lon']
-  	 	$_REQUEST['marker_icontype']
-  	 	$_REQUEST['marker_wintext']
-  	 	$_REQUEST['marker_style']
-  	 	$_REQUEST['marker_labeltext']
-  	 	$_REQUEST['marker_zi'] 
-  	 	$_REQUEST['icon_id']
-  	 	$_REQUEST['icon_name']
-  	 	$_REQUEST['icon_type']
-  	 	$_REQUEST['icon_img']
-  	 	$_REQUEST['icon_imgsize']
-  	 	$_REQUEST['icon_shadow']
-  	 	$_REQUEST['icon_shadowsize']
-  	 	$_REQUEST['icon_anchorx']
-  	 	$_REQUEST['icon_anchory']
-  	 	$_REQUEST['icon_winanchorx']
-  	 	$_REQUEST['icon_winanchory']
-  	 	$_REQUEST['icon_shadowanchorx']
-  	 	$_REQUEST['icon_shadowanchory']
-  	 	$_REQUEST['marker_styid']		
-  	 	$_REQUEST['marker_styname']
-  	 	$_REQUEST['marker_stytype']
-  	 	$_REQUEST['icon_hover']
-  	 	$_REQUEST['icon_hoverop']
-  	 	$_REQUEST['icon_labelop']
-  	 	$_REQUEST['icon_hoverstyle']
-  	 	$_REQUEST['icon_winstyle']
-			 
 
 			
-/** 
- 	 Polyline/Polygon Updates Contain the following Post Values:
-	 -------------------------------------------------------
- */
+// @todo wj:how to check for user id and permissions?
 
-  	 	$_REQUEST['line_id']
-  	 	$_REQUEST['line_name']
-  	 	$_REQUEST['line_type']
-  	 	$_REQUEST['line_data']
-  	 	$_REQUEST['line_style']
-  	 	$_REQUEST['line_bordertext']
-  	 	$_REQUEST['line_zi']
-		
-  	 	$_REQUEST['line_styid']
-  	 	$_REQUEST['line_styname']
-  	 	$_REQUEST['line_color']
-  	 	$_REQUEST['line_weight']
-  	 	$_REQUEST['line_op']
-  	 	$_REQUEST['line_pattern']
-  	 	$_REQUEST['line_seg']
-  	 	$_REQUEST['line_beginarrow']
-  	 	$_REQUEST['line_endarrow']
-  	 	$_REQUEST['line_arrowint']
-  	 	$_REQUEST['line_font']
-  	 	$_REQUEST['line_textint']
-  	 	$_REQUEST['line_txtfgcolor']
-  	 	$_REQUEST['line_txtfgweight']
-  	 	$_REQUEST['line_txtfgop']
-  	 	$_REQUEST['line_txtfgzi']
-  	 	$_REQUEST['line_txtbgcolor']
-  	 	$_REQUEST['line_txtbgweight']
-  	 	$_REQUEST['line_txtbgop']
-  	 	$_REQUEST['line_txtbgzi']
 
-  	 	$_REQUEST['poly_id']
-  	 	$_REQUEST['poly_name']
-  	 	$_REQUEST['poly_type']
-  	 	$_REQUEST['poly_data']
-  	 	$_REQUEST['poly_center']
-  	 	$_REQUEST['poly_radius']
-  	 	$_REQUEST['poly_borderstyle']
-  	 	$_REQUEST['poly_style']
-  	 	$_REQUEST['poly_bordertext']
-  	 	$_REQUEST['poly_zi']
+	//since we are returning xml we must report so in the header
+	//we also need to tell the browser not to cache the page
+	//see: http://mapki.com/index.php?title=Dynamic_XML
+  // Date in the past
+  header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+  // always modified
+  header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+  // HTTP/1.1
+  header("Cache-Control: no-store, no-cache, must-revalidate");
+  header("Cache-Control: post-check=0, pre-check=0", false);
+  // HTTP/1.0
+  header("Pragma: no-cache");
+  //XML Header
+  header("content-type:text/xml");
 
-  	 	$_REQUEST['poly_styid']
-  	 	$_REQUEST['poly_styname']
-  	 	$_REQUEST['poly_color']
-  	 	$_REQUEST['poly_weight']
-  	 	$_REQUEST['poly_op']
 			
+	function store_map( &$pParamHash ) {
+			$table = BIT_DB_PREFIX."bit_gmaps";
+			$this->mDb->StartTrans();
+			$locId = array( "name" => 'gmap_id'], "value" => $pParamHash['gmap_id'] );
+			$result = $this->mDb->associateUpdate( $table, $pParamHash, $locId );			
+			$this->mDb->CompleteTrans();			
+						
+			//After update, query the database for row and return as valid XML.
+			$query = "SELECT bm.*, FROM `".BIT_DB_PREFIX."bit_gmaps` bm WHERE bm.gmap_id=?";
+			$result = $this->mDb->query( $query, array( $pParamHash['gmap_id'] ) );
+			
+			$xml = "<map>"
+					 	 ."<title>".$result->fields['title']."</title> 
+						 ."<desc>".$result->fields['description']."</desc>"
+						 ."<w>".$result->fields['width']."</w>"
+						 ."<h>".$result->fields['height']."</h>"
+						 ."<lat>".$result->fields['location_lat']."</lat>"
+						 ."<lon>".$result->fields['location_lon']."</lon>"
+						 ."<z>".$result->fields['zoom_level']."</z>"
+						 ."<maptype>".$result->fields['map_type']."</maptype>"
+						 ."<cont>".$result->fields['show_controls']."</cont>"
+						 ."<scale>".$result->fields['show_scale']."</scale>"
+						 ."<typecon>".$result->fields['show_typecontrols']."</typecon>"
+						 ."</map>"
+			
+			echo $xml;
+	}		
+
+	
+	//The array of data we feed into the database.  
+	//We modify the field names from the Request array
+  $mapData = new Array();	
+  $mapData['gmap_id'] = $_REQUEST['map_id'];
+  $mapData['title'] = $_REQUEST['map_title'];
+  $mapData['description'] = $_REQUEST['map_desc'];
+  $mapData['width'] = $_REQUEST['map_w'];
+  $mapData['height'] = $_REQUEST['map_h'];
+  $mapData['location_lat'] = $_REQUEST['map_lat'];
+  $mapData['location_lon'] = $_REQUEST['map_lon'];
+  $mapData['zoom_level'] = $_REQUEST['map_z'];
+  $mapData['map_type'] = $_REQUEST['map_type'];
+  $mapData['show_controls'] = $_REQUEST['map_showcont'];
+  $mapData['show_scale'] = $_REQUEST['map_showscale'];
+  $mapData['show_typecontrols'] = $_REQUEST['map_showtype'];
+  //@todo need script to generate js to cache in data
+  // $mapData['data']  = ; 
+
+	
+  store_map($mapData);
+		 			
 ?>
