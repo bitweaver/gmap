@@ -219,127 +219,177 @@ $tables = array(
 
 global $gBitInstaller;
 
-
-//@todo wj:Everything below here still needs customizing!
-
-$gBitInstaller->makePackageHomeable(WIKI_PKG_NAME);
+$gBitInstaller->makePackageHomeable(GMAP_PKG_NAME);
 
 foreach( array_keys( $tables ) AS $tableName ) {
-	$gBitInstaller->registerSchemaTable( WIKI_PKG_NAME, $tableName, $tables[$tableName] );
+	$gBitInstaller->registerSchemaTable( GMAP_PKG_NAME, $tableName, $tables[$tableName] );
 }
 
-$gBitInstaller->registerPackageInfo( WIKI_PKG_NAME, array(
-	'description' => "A wiki is 'the simplest online database that could possibly work.' No HTML or programming knowledge is needed to contribute to a wiki.",
+$gBitInstaller->registerPackageInfo( GMAP_PKG_NAME, array(
+	'description' => "A wikid Map engine that adds wiki editing power to Google Maps and eliminates the need to understand the Google Map API or Javascript.",
 	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
 	'version' => '0.1',
 	'state' => 'experimental',
 	'dependencies' => '',
 ) );
 
+
+
+//@todo wj: is the use of UNIQUE here correct?
 // ### Indexes
 $indices = array (
-	'tiki_pages_content_idx' => array( 'table' => 'tiki_pages', 'cols' => 'content_id', 'opts' => 'UNIQUE' ),
-	'tiki_pages_page_rank_idx' => array( 'table' => 'tiki_pages', 'cols' => 'page_rank', 'opts' => NULL ),
-	'tiki_page_footnotes_page_idx' => array( 'table' => 'tiki_page_footnotes', 'cols' => 'page_id', 'opts' => NULL )
+	'bit_gmaps_gmap_id_idx' => array( 'table' => 'bit_gmaps', 'cols' => 'gmap_id', 'opts' => 'UNIQUE' ),
+	'bit_gmaps_marker_sets_set_id_idx' => array( 'table' => 'bit_gmaps_marker_sets', 'cols' => 'set_id', 'opts' => 'UNIQUE' ),
+	'bit_gmaps_polyline_sets_set_id_idx' => array( 'table' => 'bit_gmaps_polyline_sets', 'cols' => 'set_id', 'opts' => 'UNIQUE' ),
+	'bit_gmaps_polygon_sets_set_id_idx' => array( 'table' => 'bit_gmaps_polygon_sets', 'cols' => 'set_id', 'opts' => 'UNIQUE' )
 );
-$gBitInstaller->registerSchemaIndexes( WIKI_PKG_NAME, $indices );
+$gBitInstaller->registerSchemaIndexes( GMAP_PKG_NAME, $indices );
 
+
+//@todo wj: what the devil is this for?
 // ### Sequences
 $sequences = array (
-	'tiki_pages_page_id_seq' => array( 'start' => 1 )
+	'bit_gmaps_gmap_id_seq' => array( 'start' => 1 ),
+	'bit_gmaps_marker_sets_set_id_seq' => array( 'start' => 1 ),
+	'bit_gmaps_polyline_sets_set_id_seq' => array( 'start' => 1 )
+	'bit_gmaps_polygon_sets_set_id_seq' => array( 'start' => 1 )
 );
-$gBitInstaller->registerSchemaSequences( WIKI_PKG_NAME, $sequences );
+$gBitInstaller->registerSchemaSequences( GMAP_PKG_NAME, $sequences );
+
+
+//@todo wj:Everything below here still needs customizing!
 
 
 // ### Default UserPermissions
-$gBitInstaller->registerUserPermissions( WIKI_PKG_NAME, array(
-	array('bit_p_edit_dynvar', 'Can edit dynamic variables', 'editors', WIKI_PKG_NAME),
-	array('bit_p_edit', 'Can edit pages', 'registered', WIKI_PKG_NAME),
-	array('bit_p_view', 'Can view page/pages', 'basic', WIKI_PKG_NAME),
-	array('bit_p_remove', 'Can remove', 'editors', WIKI_PKG_NAME),
-	array('bit_p_rollback', 'Can rollback pages', 'editors', WIKI_PKG_NAME),
-	array('bit_p_admin_wiki', 'Can admin the wiki', 'editors', WIKI_PKG_NAME),
-	array('bit_p_wiki_admin_attachments', 'Can admin attachments to wiki pages', 'editors', WIKI_PKG_NAME),
-	array('bit_p_wiki_view_attachments', 'Can view wiki attachments and download', 'registered', WIKI_PKG_NAME),
-	array('bit_p_upload_picture', 'Can upload pictures to wiki pages', 'registered', WIKI_PKG_NAME),
-	array('bit_p_minor', 'Can save as minor edit', 'registered', WIKI_PKG_NAME),
-	array('bit_p_rename', 'Can rename pages', 'editors', WIKI_PKG_NAME),
-	array('bit_p_lock', 'Can lock pages', 'editors', WIKI_PKG_NAME),
+$gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
+	array('bit_gm_edit_map', 'Can edit maps', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_map', 'Can view maps', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_map', 'Can remove maps', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_map', 'Can rollback maps', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_maps', 'Can admin the maps', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_map', 'Can rename maps', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_map', 'Can lock maps', 'editors', GMAP_PKG_NAME),
 
-	array('bit_p_edit_books', 'Can create and edit books', 'registered', WIKI_PKG_NAME),
-	array('bit_p_admin_books', 'Can administer books', 'editors', WIKI_PKG_NAME),
-	array('bit_p_edit_copyrights', 'Can edit copyright notices', 'registered', WIKI_PKG_NAME)
+	array('bit_gm_edit_maptype', 'Can edit maptypes', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_maptype', 'Can view maptypes', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_maptype', 'Can remove maptypes', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_maptype', 'Can rollback maptypes', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_maptype', 'Can admin the maptypes', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_maptype', 'Can rename maptypes', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_maptype', 'Can lock maptypes', 'editors', GMAP_PKG_NAME),
+	
+	array('bit_gm_edit_marker', 'Can edit markers', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_marker', 'Can view markers', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_marker', 'Can remove markers', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_marker', 'Can rollback markers', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_marker', 'Can admin the markers', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_marker', 'Can rename markers', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_marker', 'Can lock markers', 'editors', GMAP_PKG_NAME),
+
+	array('bit_gm_edit_marker_sets', 'Can edit marker sets', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_marker_sets', 'Can view marker sets', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_marker_sets', 'Can remove marker sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_marker_sets', 'Can rollback marker sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_marker_sets', 'Can admin the marker sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_marker_sets', 'Can rename marker sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_marker_sets', 'Can lock marker sets', 'editors', GMAP_PKG_NAME),
+
+	array('bit_gm_edit_marker_styles', 'Can edit marker styles', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_marker_styles', 'Can view marker styles', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_marker_styles', 'Can remove marker styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_marker_styles', 'Can rollback marker styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_marker_styles', 'Can admin the marker styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_marker_styles', 'Can rename marker styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_marker_styles', 'Can lock marker styles', 'editors', GMAP_PKG_NAME),
+	
+	array('bit_gm_edit_polyline', 'Can edit polylines', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_polyline', 'Can view polylines', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_polyline', 'Can remove polylines', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_polyline', 'Can rollback polylines', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_polyline', 'Can admin the polylines', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_polyline', 'Can rename polylines', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_polyline', 'Can lock polylines', 'editors', GMAP_PKG_NAME),
+
+	array('bit_gm_edit_polyline_sets', 'Can edit polyline sets', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_polyline_sets', 'Can view polyline sets', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_polyline_sets', 'Can remove polyline sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_polyline_sets', 'Can rollback polyline sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_polyline_sets', 'Can admin the polyline sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_polyline_sets', 'Can rename polyline sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_polyline_sets', 'Can lock polyline sets', 'editors', GMAP_PKG_NAME),
+
+	array('bit_gm_edit_polyline_styles', 'Can edit polyline styles', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_polyline_styles', 'Can view polyline styles', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_polyline_styles', 'Can remove polyline styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_polyline_styles', 'Can rollback polyline styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_polyline_styles', 'Can admin the polyline styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_polyline_styles', 'Can rename polyline styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_polyline_styles', 'Can lock polyline styles', 'editors', GMAP_PKG_NAME),
+
+	array('bit_gm_edit_ploygon', 'Can edit ploygons', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_ploygon', 'Can view ploygons', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_ploygon', 'Can remove ploygons', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_ploygon', 'Can rollback ploygons', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_ploygon', 'Can admin the ploygons', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_ploygon', 'Can rename ploygons', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_ploygon', 'Can lock ploygons', 'editors', GMAP_PKG_NAME),
+
+	array('bit_gm_edit_ploygon_sets', 'Can edit ploygon sets', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_ploygon_sets', 'Can view ploygon sets', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_ploygon_sets', 'Can remove ploygon sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_ploygon_sets', 'Can rollback ploygon sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_ploygon_sets', 'Can admin the ploygon sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_ploygon_sets', 'Can rename ploygon sets', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_ploygon_sets', 'Can lock ploygon sets', 'editors', GMAP_PKG_NAME),
+	
+	array('bit_gm_edit_polygon_styles', 'Can edit polygon styles', 'registered', GMAP_PKG_NAME),
+	array('bit_gm_view_polygon_styles', 'Can view polygon styles', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_polygon_styles', 'Can remove polygon styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rollback_polygon_styles', 'Can rollback polygon styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_admin_polygon_styles', 'Can admin the polygon styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_rename_polygon_styles', 'Can rename polygon styles', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_lock_polygon_styles', 'Can lock polygon styles', 'editors', GMAP_PKG_NAME),
+
+	array('bit_gm_minor', 'Can save as minor edit', 'registered', GMAP_PKG_NAME),
 ) );
 
 // ### Default Preferences
-$gBitInstaller->registerPreferences( WIKI_PKG_NAME, array(
-	array(WIKI_PKG_NAME, 'anonCanEdit','n'),
-	array(WIKI_PKG_NAME, 'feature_autolinks','y'),
-	array(WIKI_PKG_NAME, 'feature_backlinks','y'),
-	array(WIKI_PKG_NAME, 'feature_dump','y'),
-	array(WIKI_PKG_NAME, 'feature_history','y'),
-	array(WIKI_PKG_NAME, 'feature_lastChanges','y'),
-	array(WIKI_PKG_NAME, 'feature_likePages','y'),
-	array(WIKI_PKG_NAME, 'feature_allow_dup_wiki_page_names','y'),
-	array(WIKI_PKG_NAME, 'feature_listPages','y'),
-	array(WIKI_PKG_NAME, 'feature_page_title','y'),
-	array(WIKI_PKG_NAME, 'feature_ranking','n'),
-	array(WIKI_PKG_NAME, 'feature_sandbox','y'),
-	array(WIKI_PKG_NAME, 'feature_warn_on_edit','n'),
-	array(WIKI_PKG_NAME, 'feature_wiki','y'),
-	array(WIKI_PKG_NAME, 'feature_wiki_attachments','y'),
-	array(WIKI_PKG_NAME, 'feature_wiki_books','y'),
-	array(WIKI_PKG_NAME, 'feature_wiki_comments','n'),
-	array(WIKI_PKG_NAME, 'feature_wiki_description','y'),
-	array(WIKI_PKG_NAME, 'feature_wiki_discuss','n'),
-	array(WIKI_PKG_NAME, 'feature_wiki_footnotes','n'),
-	array(WIKI_PKG_NAME, 'feature_wiki_icache','n'),
-	array(WIKI_PKG_NAME, 'feature_wiki_monosp','n'),
-	array(WIKI_PKG_NAME, 'feature_wiki_multiprint','n'),
-	array(WIKI_PKG_NAME, 'feature_wiki_notepad','n'),
-	array(WIKI_PKG_NAME, 'feature_wiki_generate_pdf',''),
-	array(WIKI_PKG_NAME, 'feature_wiki_pictures','y'),
-	array(WIKI_PKG_NAME, 'feature_wiki_plurals','y'),
-	array(WIKI_PKG_NAME, 'feature_wiki_rankings','y'),
-	array(WIKI_PKG_NAME, 'feature_wiki_tables','new'),
-	array(WIKI_PKG_NAME, 'feature_wiki_templates','n'),
-	array(WIKI_PKG_NAME, 'feature_wiki_undo','n'),
-	array(WIKI_PKG_NAME, 'feature_wiki_usrlock','n'),
-	array(WIKI_PKG_NAME, 'feature_wikiwords','y'),
-	array(WIKI_PKG_NAME, 'keep_versions','1'),
-	array(WIKI_PKG_NAME, 'maxVersions','0'),
-	array(WIKI_PKG_NAME, 'w_use_db','y'),
-	array(WIKI_PKG_NAME, 'w_use_dir',''),
-	array(WIKI_PKG_NAME, 'warn_on_edit_time','2'),
-	array(WIKI_PKG_NAME, 'wiki_bot_bar','n'),
-	array(WIKI_PKG_NAME, 'wiki_cache','0'),
-	array(WIKI_PKG_NAME, 'wiki_creator_admin','n'),
-	array(WIKI_PKG_NAME, 'wiki_feature_copyrights','n'),
-	array(WIKI_PKG_NAME, 'wiki_forum',''),
-	array(WIKI_PKG_NAME, 'wiki_forum_id',''),
-	array(WIKI_PKG_NAME, 'wiki_left_column','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_backlinks','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_comment','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_creator','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_hits','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_lastmodif','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_lastver','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_links','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_name','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_size','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_status','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_user','y'),
-	array(WIKI_PKG_NAME, 'wiki_list_versions','y'),
-	array(WIKI_PKG_NAME, 'wiki_page_regex','strict'),
-	array(WIKI_PKG_NAME, 'wiki_right_column','y'),
-	array(WIKI_PKG_NAME, 'wiki_spellcheck','n'),
-	array(WIKI_PKG_NAME, 'wiki_top_bar','n'),
-	array(WIKI_PKG_NAME, 'wiki_uses_slides','n'),
-	array(WIKI_PKG_NAME, 'wikibook_show_path','y'),
-	array(WIKI_PKG_NAME, 'wikibook_show_navigation','y'),
-	array(WIKI_PKG_NAME, 'wikiHomePage','Welcome'),
-	array(WIKI_PKG_NAME, 'wikiLicensePage',''),
-	array(WIKI_PKG_NAME, 'wikiSubmitNotice',''),
+$gBitInstaller->registerPreferences( GMAP_PKG_NAME, array(
+	array(GMAP_PKG_NAME, 'anonCanEdit','n'),
+	array(GMAP_PKG_NAME, 'feature_autolinks','y'),
+	array(GMAP_PKG_NAME, 'feature_backlinks','y'),
+	array(GMAP_PKG_NAME, 'feature_dump','y'),
+	array(GMAP_PKG_NAME, 'feature_history','y'),
+	array(GMAP_PKG_NAME, 'feature_lastChanges','y'),
+	array(GMAP_PKG_NAME, 'feature_listPages','y'),
+	array(GMAP_PKG_NAME, 'feature_page_title','y'),
+	array(GMAP_PKG_NAME, 'feature_warn_on_edit','n'),
+	array(GMAP_PKG_NAME, 'feature_gmap','y'),
+	array(GMAP_PKG_NAME, 'feature_gmap_comments','n'),
+	array(GMAP_PKG_NAME, 'feature_gmap_description','y'),
+	array(GMAP_PKG_NAME, 'feature_gmap_discuss','n'),
+	array(GMAP_PKG_NAME, 'feature_gmap_rankings','y'),
+	array(GMAP_PKG_NAME, 'feature_gmap_usrlock','n'),
+	array(GMAP_PKG_NAME, 'keep_versions','1'),
+	array(GMAP_PKG_NAME, 'maxVersions','0'),
+	array(GMAP_PKG_NAME, 'w_use_db','y'),
+	array(GMAP_PKG_NAME, 'w_use_dir',''),
+	array(GMAP_PKG_NAME, 'warn_on_edit_time','2'),
+	array(GMAP_PKG_NAME, 'gmap_cache','0'),
+	array(GMAP_PKG_NAME, 'gmap_creator_admin','n'),
+	array(GMAP_PKG_NAME, 'gmap_left_column','y'),
+	array(GMAP_PKG_NAME, 'gmap_list_backlinks','y'),
+	array(GMAP_PKG_NAME, 'gmap_list_comment','y'),
+	array(GMAP_PKG_NAME, 'gmap_list_creator','y'),
+	array(GMAP_PKG_NAME, 'gmap_list_hits','y'),
+	array(GMAP_PKG_NAME, 'gmap_list_lastmodif','y'),
+	array(GMAP_PKG_NAME, 'gmap_list_lastver','y'),
+	array(GMAP_PKG_NAME, 'gmap_list_links','y'),
+	array(GMAP_PKG_NAME, 'gmap_list_name','y'),
+	array(GMAP_PKG_NAME, 'gmap_list_user','y'),
+	array(GMAP_PKG_NAME, 'gmap_list_versions','y'),
+	array(GMAP_PKG_NAME, 'gmapHomePage','Welcome'),
+	array(GMAP_PKG_NAME, 'gmapLicensePage',''),
 ) );
 
 ?>
