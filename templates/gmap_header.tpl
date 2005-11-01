@@ -1,12 +1,13 @@
+<div class="floaticon">
+		{if $gBitUser->hasPermission( 'bit_gm_edit_map' )}
+		<a href="{$smarty.const.GMAP_PKG_URL}edit.php?gmap_id={$gContent->mMapData.gmap_id}" >{biticon ipackage=liberty iname="edit" iexplain="edit"}</a>
+		{/if}
+</div>
+
 <div class="header">
-	{if $gBitSystem->isFeatureActive( 'feature_bitmap_title' )}
-		<h1>{$bitmapInfo.title}</h1>
-		{if $cached_bitmap eq 'y'}<span class="cached">(cached)</span>{/if}
-	{/if}
+		<h1 id="mymaptitle">{$gContent->mMapData.title}</h1>
 
-	{if $gBitSystem->isFeatureActive( 'feature_bitmap_description' ) and $description}
-		<h2>{$description}</h2>
-	{/if}
+		<h2 id="mymapdesc">{$gContent->mMapData.description}</h2>
 
-	{include file="bitpackage:bitmap/bitmap_date_bar.tpl"}
+	{include file="bitpackage:gmap/gmap_date_bar.tpl"}
 </div><!-- end .header -->

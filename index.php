@@ -23,29 +23,27 @@
  * wj: Most of this page is based on the Sample Package
  */
  
-require_once( '../bit_setup_inc.php' );
-require_once( BITMAP_PKG_URL.'BitGmap.php' );
-
-
 // Initialization
-require_once('../bit_setup_inc.php' );
+require_once( '../bit_setup_inc.php' );
 
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
 // Now check permissions to access this page
-$gBitSystem->verifyPermission('bit_p_read_gmap' );
+$gBitSystem->verifyPermission('bit_gm_view_map' );
 
 if (!isset($_REQUEST['gmap_id'] ) ) {
     $_REQUEST['gmap_id'] = $gBitSystem->getPreference("home_gmap");
 }
 
-require_once(BITMAP_PKG_PATH.'lookup_gmap_inc.php' );
+require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 
 
 //@todo wj: this line from wiki package - might want to use it
 //include( BITMAP_PKG_URL.'display_gmap_inc.php' );		
 
+//set onload function in body
+$gBodyOnload[] = 'loadMap()';
 
 // Display the template
 $gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Gmap') );

@@ -15,29 +15,40 @@
  * All the parts are not saved at once.
  * 
  * This script returns valid XML
+ *
+ * You can test XML results by pointing at http://pathtobw/gmap/store_gmap.php?map_id=1&map_title=map&map_desc=map&map_w=400&map_h=100&map_lat=40&map_lon=70&map_z=3&map_showcont=s&map_showscale=1&map_showtypecont=1&map_type=G_MAP_TYPE
  */
 
-/**
- 	 Map Update Requests Contain the following Post Values:
-	 ---------------------------------------------- 
-	 		$_REQUEST['map_id'] 
-	 		$_REQUEST['map_title']
-	 		$_REQUEST['map_desc']
-	 		$_REQUEST['map_comm']
-	 		$_REQUEST['map_w']
-	 		$_REQUEST['map_h']
-	 		$_REQUEST['map_lat']
-	 		$_REQUEST['map_lon']
-	 		$_REQUEST['map_z'] //zoom level
-	 		$_REQUEST['map_showcont']
-	 		$_REQUEST['map_showscale']
-	 		$_REQUEST['map_showtype']
- 	 		$_REQUEST['map_type']
- */
+// Initialization
+require_once( '../bit_setup_inc.php' );
 
-			
-// @todo wj:how to check for user id and permissions?
+// Is package installed and enabled
+$gBitSystem->verifyPackage('gmap' );
 
+global $gContent;
+require_once( GMAP_PKG_PATH.'BitGmap.php');
+
+
+// Now check permissions to access this page
+$gBitSystem->verifyPermission('bit_gm_edit_map' );
+
+
+	//The array of data we feed into the database.  
+	//We modify the field names from the Request array
+  $mapData = array();	
+  $mapData['gmap_id'] = $_REQUEST['map_id'];
+  $mapData['title'] = $_REQUEST['map_title'];
+  $mapData['description'] = $_REQUEST['map_desc'];
+  $mapData['width'] = $_REQUEST['map_w'];
+  $mapData['height'] = $_REQUEST['map_h'];
+  $mapData['lat'] = $_REQUEST['map_lat'];
+  $mapData['lon'] = $_REQUEST['map_lon'];
+  $mapData['zoom_level'] = $_REQUEST['map_z'];
+  $mapData['show_controls'] = $_REQUEST['map_showcont'];
+	$mapData['show_scale'] = $_REQUEST['map_showscale'];
+  $mapData['show_typecontrols'] = $_REQUEST['map_showtypecont'];
+  $mapData['map_type'] = $_REQUEST['map_type'];
+	
 
 	//since we are returning xml we must report so in the header
 	//we also need to tell the browser not to cache the page
@@ -53,56 +64,10 @@
   header("Pragma: no-cache");
   //XML Header
   header("content-type:text/xml");
-
-			
-	function store_map( &$pParamHash ) {
-			$table = BIT_DB_PREFIX."bit_gmaps";
-			$this->mDb->StartTrans();
-			$locId = array( "name" => 'gmap_id'], "value" => $pParamHash['gmap_id'] );
-			$result = $this->mDb->associateUpdate( $table, $pParamHash, $locId );			
-			$this->mDb->CompleteTrans();			
-						
-			//After update, query the database for row and return as valid XML.
-			$query = "SELECT bm.*, FROM `".BIT_DB_PREFIX."bit_gmaps` bm WHERE bm.gmap_id=?";
-			$result = $this->mDb->query( $query, array( $pParamHash['gmap_id'] ) );
-			
-			$xml = "<map>"
-					 	 ."<title>".$result->fields['title']."</title> 
-						 ."<desc>".$result->fields['description']."</desc>"
-						 ."<w>".$result->fields['width']."</w>"
-						 ."<h>".$result->fields['height']."</h>"
-						 ."<lat>".$result->fields['location_lat']."</lat>"
-						 ."<lon>".$result->fields['location_lon']."</lon>"
-						 ."<z>".$result->fields['zoom_level']."</z>"
-						 ."<maptype>".$result->fields['map_type']."</maptype>"
-						 ."<cont>".$result->fields['show_controls']."</cont>"
-						 ."<scale>".$result->fields['show_scale']."</scale>"
-						 ."<typecon>".$result->fields['show_typecontrols']."</typecon>"
-						 ."</map>"
-			
-			echo $xml;
-	}		
-
-	
-	//The array of data we feed into the database.  
-	//We modify the field names from the Request array
-  $mapData = new Array();	
-  $mapData['gmap_id'] = $_REQUEST['map_id'];
-  $mapData['title'] = $_REQUEST['map_title'];
-  $mapData['description'] = $_REQUEST['map_desc'];
-  $mapData['width'] = $_REQUEST['map_w'];
-  $mapData['height'] = $_REQUEST['map_h'];
-  $mapData['location_lat'] = $_REQUEST['map_lat'];
-  $mapData['location_lon'] = $_REQUEST['map_lon'];
-  $mapData['zoom_level'] = $_REQUEST['map_z'];
-  $mapData['map_type'] = $_REQUEST['map_type'];
-  $mapData['show_controls'] = $_REQUEST['map_showcont'];
-  $mapData['show_scale'] = $_REQUEST['map_showscale'];
-  $mapData['show_typecontrols'] = $_REQUEST['map_showtype'];
-  //@todo need script to generate js to cache in data
-  // $mapData['data']  = ; 
-
-	
-  store_map($mapData);
+		
+		
+	$xml = new BitGmap();
+  $xml->storeMapData($mapData);
+	print_r($xml->mRet);
 		 			
 ?>

@@ -22,7 +22,7 @@
 		// TODO not sure what this does - wolff_borg
 		if( empty( $gContent->mGmapId ) && empty( $gContent->mContentId )  ) {
 		}
-		$gContent->get_map();
-		$smarty->assign_by_ref( "gContent", $gContent );
+		$gContent->getMap();
+		$gBitSmarty->assign_by_ref( "gContent", $gContent );
 	}
 ?>

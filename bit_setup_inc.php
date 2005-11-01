@@ -3,8 +3,8 @@
 	$gBitSystem->registerPackage( 'gmap', dirname( __FILE__).'/' );
 
 	if($gBitSystem->isPackageActive( 'gmap' ) ) {
-		if ($gBitUser->hasPermission( 'bit_p_view_gmap' )) {
-			$gBitSystem->registerAppMenu( 'gmap', 'Gmap', BITMAP_PKG_URL.'index.php', 'bitpackage:gmap/menu_gmap.tpl', 'gmap');
+		if ($gBitUser->hasPermission( 'bit_gm_view_map' )) {
+			$gBitSystem->registerAppMenu( 'gmap', 'Gmap', GMAP_PKG_URL.'index.php', 'bitpackage:gmap/menu_gmap.tpl', 'gmap');
 		}
 
 		/* @todo wj: either of these wanted for gmap (source: WikiPackage)?
