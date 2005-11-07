@@ -103,7 +103,13 @@ class BitGmap extends LibertyAttachable {
 			$this->mMapData = $map_result->fields;
 			
 			$map_types_result = $this->getMapTypes($lookupId);
-			$this->mMapSets['map_types'] = $map_types_result;		
+			$this->mMapTypes = $map_types_result;		
+
+			$init_markers_result = $this->getMarkers($lookupId, "init_markers");
+			$this->mMapInitMarkers = $init_markers_result;
+
+			$set_markers_result = $this->getMarkers($lookupId, "set_markers");
+			$this->mMapSetMarkers = $set_markers_result;
 																																				
 			$this->mInfo['display_url'] = $this->getDisplayUrl();
 		}
@@ -136,8 +142,9 @@ class BitGmap extends LibertyAttachable {
 		
 			$bindVars = array((int)$gmap_id, "map_types");
 			$query = "SELECT bmt.* 
-			FROM `".BIT_DB_PREFIX."bit_gmaps_map_types` bmt, `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bmk 
-			WHERE bmt.`maptype_id` = bmk.`set_id` AND bmk.`gmap_id` = ? AND bmk.`set_type` = ?";
+          			FROM `".BIT_DB_PREFIX."bit_gmaps_map_types` bmt, `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bmk 
+          			WHERE bmt.`maptype_id` = bmk.`set_id` AND bmk.`gmap_id` = ? AND bmk.`set_type` = ?";
+								
   		$result = $this->mDb->query( $query, $bindVars );
 						
 			$ret = array();
@@ -150,7 +157,7 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
-	//@todo test in sql
+
 	//returns array of marker data and associated style and icon style ids for given gmap_id and set_type
 	function getMarkers($gmap_id, $settype) {
 		global $gBitSystem;
@@ -159,8 +166,12 @@ class BitGmap extends LibertyAttachable {
 
 		 	$bindVars = array((int)$gmap_id, $settype);
 			$query = "SELECT bmm.*, bms.* 
-		 	FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."bit_gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."bit_gmaps_markers` bmm, `".BIT_DB_PREFIX."bit_gmaps_marker_sets` bms
-			WHERE bsk.`gmap_id` = ? AND bsk`set_type` = ? AND bms.`set_id` = bsk.`set_id` AND bmk.`set_id` = bms.`set_id` AND bmm.`marker_id` = bmk.`marker_id`";
+                FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."bit_gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."bit_gmaps_markers` bmm, `".BIT_DB_PREFIX."bit_gmaps_marker_sets` bms
+                WHERE bsk.`gmap_id` = ? 
+                AND bsk.`set_type` = ? 
+                AND bms.`set_id` = bsk.`set_id` 
+                AND bmk.`set_id` = bms.`set_id` 
+                AND bmm.`marker_id` = bmk.`marker_id`";
 			
 			$result = $this->mDb->query( $query, $bindVars );
 
@@ -170,143 +181,11 @@ class BitGmap extends LibertyAttachable {
 				$ret[] = $res;
 			};			
 		};
-	};
+		return $ret;
+	}
 	
-
-	
-	//@todo test in sql
-	//get marker styles for a given gmap_id and set_type
-	function getMarkerStyles($gmap_id) {
-		global $gBitSystem;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-			$query = "SELECT bs.*
-	 		FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."bit_gmaps_marker_sets` bms, `".BIT_DB_PREFIX."bit_gmaps_marker_styles` bs,
-	 		WHERE bmk.`gmap_id` = ? AND bmk.`set_type` = "init_markers" OR bmk.`set_type` = "set_markers" AND bms.`set_id` = bmk.`set_id` AND bs.`style_id` = bms.`style_id`";
-	
-			$result = $this->mDb->query( $query, array((int)$gmap_id) );
-
-			$ret = array();
-			
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};			
-		};
-	};
-	 	
-
-	//@todo test in sql
-	//@todo does this return duplicates, if so, can they be reduced in sql
-	//get icon styles for given gmap_id		 
-	function getIconStyles($gmap_id) {
-		global $gBitSystem;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-			$query = "SELECT bis.*
-	 		FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."bit_gmaps_marker_sets` bms, `".BIT_DB_PREFIX."bit_gmaps_icon_styles` bis,
-	 		WHERE bmk.`gmap_id` = ? AND bmk.`set_type` = "init_markers" OR bmk.`set_type` = "set_markers" AND bms.`set_id` = bmk.`set_id` AND bis.`icon_id` = bms.`icon_id`";
-	
-			$result = $this->mDb->query( $query, array((int)$gmap_id) );
-
-			$ret = array();
-			
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};			
-		};
-	};
-
-	
-	
-	//@todo check in sql	
-	//get all polyline data for given gmap_id and set_type
-	function getPolylines($gmap_id, $settype) {
-		global $gBitSystem;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-
-		 	$bindVars = array((int)$gmap_id, $settype);
-			$query = "SELECT bmp.*, bps.* 
-		 	FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."bit_gmaps_polyline_keychain` bpk, `".BIT_DB_PREFIX."bit_gmaps_polylines` bmp, `".BIT_DB_PREFIX."bit_gmaps_polyline_sets` bps
-			WHERE bsk.`gmap_id` = ? AND bsk`set_type` = ? AND bps.`set_id` = bsk.`set_id` AND bpk.`set_id` = bps.`set_id` AND bmp.`polyline_id` = bpk.`polyline_id`";
-			
-			$result = $this->mDb->query( $query, $bindVars );
-
-			$ret = array();
-			
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};			
-		};
-	};
-
-	
-	
-	//@todo test in sql
-	//get all polylines for given gmap_id and set_types
-	function getPolylineStyles($gmap_id) {
-		global $gBitSystem;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-			$query = "SELECT bs.*
-	 		FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."bit_gmaps_polyline_sets` bps, `".BIT_DB_PREFIX."bit_gmaps_polyline_styles` bs,
-	 		WHERE bmk.`gmap_id` = ? AND bmk.`set_type` = "init_polylines" OR bmk.`set_type` = "set_polylines" AND bps.`set_id` = bmk.`set_id` AND bs.`style_id` = bps.`style_id`";
-	
-			$result = $this->mDb->query( $query, array((int)$gmap_id) );
-
-			$ret = array();
-			
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};			
-		};
-	};	
-	
-
-	
-	//@todo test in sql	
-	//get all polygones for given gmap_id and set_types
-	function getPolygons() {
-		global $gBitSystem;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-			$bindVars = array((int)$gmap_id, "set_polygons");
-			$query = "SELECT bmt.* ";
-
-			$ret = array();
-			
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};			
-		};
-	};
-
-	
-	
-	//@todo test in sql
-	//@todo find way to join with related polyline styles
-	//get all polylines for given gmap_id and set_types	
-	function getPolygonStyles() {
-		global $gBitSystem;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-
-		 	$bindVars = array((int)$gmap_id, $settype);
-			$query = "SELECT bmp.*, bps.* 
-		 	FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."bit_gmaps_polygon_keychain` bpk, `".BIT_DB_PREFIX."bit_gmaps_polygon` bmp, `".BIT_DB_PREFIX."bit_gmaps_polygon_sets` bps
-			WHERE bsk.`gmap_id` = ? AND bsk`set_type` = ? AND bps.`set_id` = bsk.`set_id` AND bpk.`set_id` = bps.`set_id` AND bmp.`polygon_id` = bpk.`polygon_id`";
-			
-			$result = $this->mDb->query( $query, $bindVars );
-
-			$ret = array();
-			
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};			
-		};
-	};	
-
-	
+		
+		
 
 	function storeMapData( &$pParamHash ) {
 			// store the posted changes

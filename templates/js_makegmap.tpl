@@ -17,18 +17,18 @@ var bZoomLevel = {$gContent->mMapData.zoom_level};
 var bMapTypes = new Array();
 
 
-{if count($gContent->mMapSets.map_types) > 0}
+{if count($gContent->mMapTypes) > 0}
 var bMapTypesData = new Array();
-{section name=maptypes loop=$gContent->mMapSets.map_types}
+{section name=maptypes loop=$gContent->mMapTypes}
 bMapTypesData[{$smarty.section.maptypes.index}] = new Array();
-bMapTypesData[{$smarty.section.maptypes.index}].map_typeid = {$gContent->mMapSets.map_types[maptypes].maptype_id};
-bMapTypesData[{$smarty.section.maptypes.index}].map_typename = "{$gContent->mMapSets.map_types[maptypes].name}";
-bMapTypesData[{$smarty.section.maptypes.index}].map_typebase = {$gContent->mMapSets.map_types[maptypes].basetype};
-{if $gContent->mMapSets.map_types[maptypes].maptiles_url != NULL}
-bMapTypesData[{$smarty.section.maptypes.index}].map_typetilesurl = "{$gContent->mMapSets.map_types[maptypes].maptiles_url}";
+bMapTypesData[{$smarty.section.maptypes.index}].map_typeid = {$gContent->mMapTypes[maptypes].maptype_id};
+bMapTypesData[{$smarty.section.maptypes.index}].map_typename = "{$gContent->mMapTypes[maptypes].name}";
+bMapTypesData[{$smarty.section.maptypes.index}].map_typebase = {$gContent->mMapTypes[maptypes].basetype};
+{if $gContent->mMapTypes[maptypes].maptiles_url != NULL}
+bMapTypesData[{$smarty.section.maptypes.index}].map_typetilesurl = "{$gContent->mMapTypes[maptypes].maptiles_url}";
 {/if}
-{if $gContent->mMapSets.map_types[maptypes].hybridtiles_url != NULL}
-bMapTypesData[{$smarty.section.maptypes.index}].map_typehybridtilesurl = "{$gContent->mMapSets.map_types[maptypes].hybridtiles_url}";
+{if $gContent->mMapTypes[maptypes].hybridtiles_url != NULL}
+bMapTypesData[{$smarty.section.maptypes.index}].map_typehybridtilesurl = "{$gContent->mMapTypes[maptypes].hybridtiles_url}";
 {/if}
 {/section}
             
@@ -55,6 +55,23 @@ function addMapTypes(pParamHash){ldelim}
 {/if}
 
 
+
+// Create a variable with properties for a Marker
+function createMarker(mypoint, mytext) {ldelim}
+		// Create marker at location using specified icon
+    var marker = new GMarker(mypoint);
+   	// Add text to marker
+    var html = mytext;
+    // Add the click function
+    GEvent.addListener(marker, "click", function(){ldelim}
+			marker.openInfoWindowHtml(html);
+     {rdelim});
+    return marker;
+{rdelim};
+
+
+
+
 function loadMap() {ldelim}			
 
     map = new GMap(document.getElementById('map'));
@@ -63,7 +80,7 @@ function loadMap() {ldelim}
 		bMapTypes['G_SATELLITE_TYPE'] = map.mapTypes[1];
 		bMapTypes['G_HYBRID_TYPE'] = map.mapTypes[2];
 		
-		{if count($gContent->mMapSets.map_types) > 0}
+		{if count($gContent->mMapTypes) > 0}
     		addMapTypes(bMapTypesData);		
     		{if $gContent->mMapData.map_type != "G_SATELLITE_TYPE" && $gContent->mMapData.map_type != "G_MAP_TYPE" && $gContent->mMapData.map_type != "G_HYBRID_TYPE" }
     				map.setMapType(bMapTypes['{$gContent->mMapData.map_type}']);
@@ -103,9 +120,30 @@ function loadMap() {ldelim}
 		{if $gContent->mMapData.show_controls eq 'z'}
 		map.addControl(zoomcontrols);
 		{/if}
-		
+				
     map.centerAndZoom(new GPoint(bMapLon, bMapLat), bZoomLevel);
 
+		//uses generic createMarker to add all markers in bIMData array
+		//@todo this needs to be more complex and account for all the variety of types and styles 
+		{if count($gContent->mMapInitMarkers) > 0}
+		for(n=0; n<bIMData.length; n++){ldelim}
+		    var point = new GPoint(parseFloat(bIMData[n].lon), parseFloat(bIMData[n].lat));
+				var newmarker = createMarker(point, bIMData[n].window_data);
+				map.addOverlay(newmarker);
+		{rdelim};
+		{/if}
+
+		//uses generic createMarker to add all markers in bIMData array
+		//@todo this needs to be more complex and account for all the variety of types and styles 
+		{if count($gContent->mMapSetMarkers) > 0}
+		for(n=0; n<bSMData.length; n++){ldelim}
+		    var point = new GPoint(parseFloat(bSMData[n].lon), parseFloat(bSMData[n].lat));
+				var newmarker = createMarker(point, bSMData[n].window_data);
+				map.addOverlay(newmarker);
+		{rdelim};
+		{/if}
+
+		
 {rdelim};
 
 //]]>		

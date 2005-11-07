@@ -35,6 +35,7 @@ $tables = array(
 'bit_gmaps_map_types' => "
   maptype_id I4 AUTO PRIMARY,
   name C(64),
+  description C(255),
   basetype I2 DEFAULT 0,
 	maptiles_url X,         
 	hybridtiles_url X
@@ -90,6 +91,8 @@ $tables = array(
 
 'bit_gmaps_marker_sets' => "
   set_id I4 AUTO PRIMARY,
+  name C(64),
+  description C(255),
   style_id I4 NOTNULL,
   icon_id I4 NOTNULL
 ",
@@ -141,6 +144,8 @@ $tables = array(
 
 'bit_gmaps_polyline_sets' => "
   set_id I4 AUTO PRIMARY,
+  name C(64),
+  description C(255),
   style_id I4 NOTNULL
 ",
 
@@ -182,6 +187,8 @@ $tables = array(
 
 'bit_gmaps_polygon_sets' => "
   set_id I4 AUTO PRIMARY,
+  name C(64),
+  description C(255),
   style_id I4 NOTNULL,
 	polylinestyle_id I4 NOTNULL
 ",
