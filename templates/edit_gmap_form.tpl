@@ -170,10 +170,10 @@ div id.maptoolsbar
           <OPTION value="G_SATELLITE_TYPE" {if $gContent->mMapData.map_type == "G_SATELLITE_TYPE"}SELECTED{/if}>Satellite</OPTION>
           <OPTION value="G_HYBRID_TYPE" {if $gContent->mMapData.map_type == "G_HYBRID_TYPE"}SELECTED{/if}>Hybrid</OPTION>
     			<!-- //add additional maptypes attached to this map -->
-          {if count($gContent->mMapSets.map_types) > 0}
-          {section name=addonmt loop=$gContent->mMapSets.map_types}
-					{$typeid = $gContent->mMapSets.map_types[addonmt].maptype_id}
-          <OPTION value="{$gContent->mMapSets.map_types[addonmt].name}" {if $gContent->mMapData.map_type == $gContent->mMapSets.map_types[addonmt].name}SELECTED{/if}>{$gContent->mMapSets.map_types[addonmt].name}</OPTION>
+          {if count($gContent->mMapTypes) > 0}
+          {section name=addonmt loop=$gContent->mMapTypes}
+					{$typeid = $gContent->mMapTypes[addonmt].maptype_id}
+          <OPTION value="{$gContent->mMapTypes[addonmt].name}" {if $gContent->mMapData.map_type == $gContent->mMapTypes[addonmt].name}SELECTED{/if}>{$gContent->mMapTypes[addonmt].name}</OPTION>
           {/section}
 					{/if}
     			</SELECT><br/>

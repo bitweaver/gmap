@@ -144,6 +144,15 @@ function loadMap() {ldelim}
 		{/if}
 
 		
+		{if count($gContent->mMapInitMarkers) > 0}
+		for(n=0; n<bILData.length; n++){ldelim}
+		    var linedata = bILData[n];
+				var newpolyline = createPolyline(linedata);
+				map.addOverlay(newpolyline);
+		{rdelim};
+		{/if}
+
+		
 {rdelim};
 
 //]]>		
