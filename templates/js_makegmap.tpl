@@ -56,21 +56,6 @@ function addMapTypes(pParamHash){ldelim}
 
 
 
-// Create a variable with properties for a Marker
-function createMarker(mypoint, mytext) {ldelim}
-		// Create marker at location using specified icon
-    var marker = new GMarker(mypoint);
-   	// Add text to marker
-    var html = mytext;
-    // Add the click function
-    GEvent.addListener(marker, "click", function(){ldelim}
-			marker.openInfoWindowHtml(html);
-     {rdelim});
-    return marker;
-{rdelim};
-
-
-
 
 function loadMap() {ldelim}			
 

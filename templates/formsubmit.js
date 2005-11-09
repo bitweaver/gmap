@@ -2,7 +2,7 @@
    var http_request = false;
 	 
    //makeRequest handles any XMLHttpRequest relaying a url and a string of values
-   function makeRequest(url) {
+   function makeRequest(url, part) {
       http_request = false;
       if (window.XMLHttpRequest) { // Mozilla, Safari,...
          http_request = new XMLHttpRequest();
@@ -22,19 +22,21 @@
          alert('Cannot create XMLHTTP instance');
          return false;
       }
-      http_request.onreadystatechange = alertContents;
+			if (part == "mapsubmit"){
+			      http_request.onreadystatechange = alertMap;
+			}
       http_request.open('GET', url, true);
       http_request.send(null);
    }
 
-   function alertContents() {
+   function alertMap() {
       if (http_request.readyState == 4) {
          if (http_request.status == 200) {
 				 		//alert(http_request.responseText);
             var result = http_request.responseXML;
 						updateMap(result);
          } else {
-            alert('There was a problem with the request.');
+            alert('There was a problem connecting to the server, please contact the site admin.');
          }
       }
    }
@@ -44,7 +46,9 @@
 	 //also relays the url of the php script to makeRequest().
    function get(url, obj) {
       var getstr = "?";
+			var part = "";
       for (i=0; i<obj.childNodes.length; i++) {
+			
          if (obj.childNodes[i].tagName == "INPUT") {
             if (obj.childNodes[i].type == "text" || "hidden") {
                getstr += obj.childNodes[i].name + "=" + obj.childNodes[i].value + "&";
@@ -61,6 +65,9 @@
                   getstr += obj.childNodes[i].name + "=" + obj.childNodes[i].value + "&";
                }
             }
+            if (obj.childNodes[i].type == "button") {
+							 part = obj.childNodes[i].name;
+						}
          }   
          if (obj.childNodes[i].tagName == "SELECT") {
             var sel = obj.childNodes[i];
@@ -71,7 +78,7 @@
          }
       }
 			getstr = url + getstr;
-      makeRequest(getstr);
+      makeRequest(getstr, part);
    }
 
 

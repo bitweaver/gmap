@@ -355,7 +355,110 @@ class BitGmap extends LibertyAttachable {
 	
 	
 	
+	
+//GENERAL LOOKUP FUNCTIONS	
 
+	//get all mapTypes data in database
+	function getAllMapTypes() {
+		global $gBitSystem;
+		$ret = NULL;
+		$query = "SELECT bmt.* FROM `".BIT_DB_PREFIX."bit_gmaps_map_types` bmt";
+		$result = $this->mDb->query( $query );
+		$ret = array();
+		while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		return $ret;
+	}
+
+	
+	
+	//returns array of all marker sets
+	function getAllMarkerSets() {
+		global $gBitSystem;
+		$ret = NULL;
+		$query = "SELECT bms.*, bsk.`set_type`, bsk.`gmap_id`, bmm.*
+    			 	 	FROM `".BIT_DB_PREFIX."bit_gmaps_marker_keychain` bmk
+							INNER JOIN `".BIT_DB_PREFIX."bit_gmaps_marker_sets` bms ON ( bmk.`set_id` = bms.`set_id` )
+              INNER JOIN `".BIT_DB_PREFIX."bit_gmaps_markers` bmm ON ( bmm.`marker_id` = bmk.`marker_id` )
+              LEFT OUTER JOIN `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bsk 
+							ON ( bsk.`set_id` = bms.`set_id` 
+							AND ( bsk.`set_type` = 'set_markers' OR bsk.`set_type` = 'init_markers')) 
+              ORDER BY bms.`set_id` ASC, bmm.`marker_id` ASC";
+			
+		$result = $this->mDb->query( $query );
+		$ret = array();			
+		while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};			
+		return $ret;
+	}
+	
+
+
+	//returns array of all markers and sets they are in
+	function getAllMarkers() {
+		global $gBitSystem;
+		$ret = NULL;
+		$query = "SELECT bmk.`set_id`, bmm.*
+					 	  FROM `".BIT_DB_PREFIX."bit_gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."bit_gmaps_markers` bmm
+          		WHERE bmm.`marker_id` = bmk.`marker_id`
+          		ORDER BY bmm.`marker_id` ASC, bmk.`set_id` ASC";					
+
+		$result = $this->mDb->query( $query );
+		$ret = array();
+		while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		return $ret;
+	}
+
+	
+
+	//returns array of polyline sets
+	function getAllPolylineSets() {
+		global $gBitSystem;
+		$ret = NULL;
+		$query = "SELECT bms.*, bsk.`set_type`, bsk.`gmap_id`, bmm.*
+    			 	 	FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_keychain` bmk
+							INNER JOIN `".BIT_DB_PREFIX."bit_gmaps_polyline_sets` bms ON ( bmk.`set_id` = bms.`set_id` )
+              INNER JOIN `".BIT_DB_PREFIX."bit_gmaps_polylines` bmm ON ( bmm.`polyline_id` = bmk.`polyline_id` )
+              LEFT OUTER JOIN `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bsk 
+							ON ( bsk.`set_id` = bms.`set_id` 
+							AND ( bsk.`set_type` = 'set_polylines' OR bsk.`set_type` = 'init_polylines')) 
+              ORDER BY bms.`set_id` ASC, bmm.`polyline_id` ASC";
+			
+		$result = $this->mDb->query( $query );
+		$ret = array();			
+		while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};			
+		return $ret;
+	}
+
+
+	//@todo this probably should return results for polygons also
+	//returns array of polylines
+	function getAllPolylines() {
+		global $gBitSystem;
+		$ret = NULL;
+		$query = "SELECT bmk.`set_id`, bmm.*
+					 	  FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_keychain` bmk, `".BIT_DB_PREFIX."bit_gmaps_polylines` bmm
+          		WHERE bmm.`polyline_id` = bmk.`polyline_id`
+          		ORDER BY bmm.`polyline_id` ASC, bmk.`set_id` ASC";					
+
+		$result = $this->mDb->query( $query );
+		$ret = array();
+		while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		return $ret;
+	}
+
+
+
+	
+//ALL STORE FUNCTIONS
 
 	function storeMapData( &$pParamHash ) {
 			// store the posted changes
@@ -382,7 +485,7 @@ class BitGmap extends LibertyAttachable {
 						 ."<typecon>".$result->fields['show_typecontrols']."</typecon>"
 						 ."</map>";			
 	}
-	
+
 	
 	
 

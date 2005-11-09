@@ -1,6 +1,6 @@
 {* submit/XMLHttpRequest functions called from this form are created in formsubmit.js *}
 
-<!-- THIS TEMPLATE's STRUCTURE
+{* THIS TEMPLATE's STRUCTURE
 
 div id.maptoolsbar
   div id.maptools
@@ -136,7 +136,9 @@ div id.maptoolsbar
 					 input id.poly_weight
 					 input id.poly_op
 
- //-->
+//end of id tree *}
+
+
 
 <div id="maptoolsbar">
 <div id="maptools">
@@ -179,69 +181,40 @@ div id.maptoolsbar
     			</SELECT><br/>
     	 Allow Comments <INPUT name="map_comm" id="map_comm" type="checkbox" value="True"><br/>
     <INPUT type="button" name="mapsubmit" value="Submit" onclick="javascript:get('store_gmap.php', this.parentNode);"><br/>
-    </FORM><br/>
-
-		
-		
+    </FORM><br/><br/>
 
 
-		<br/>
 		
     <!-- Additional Map Types Table -->
 		<h3>Additional Map Types</h3>
-    <form action="javascript:;" name="maptypesform" id="maptypesform">    
-    <table>
-    	<tr><td>Type Id</td>
-					<td>Name</td>
-					<td>Base Type</td>
-    			<td>Base Tiles Url</td>
-    			<td>Overlay Tiles Url</td>
-    			<td>Include With This Map</td></tr>
-    	<tr><td><input name="map_typeid[id]" id="map_typeid[id]" type="hidden" value="someid"></td>
-    			<td><input name="map_typename[id]" id="map_typename[id]" type="text" value="somename"></td>
-        	<td><select name="map_typebase[id]" id="map_typebase[id]">
-              <option value="0" {if $somevar == "0"}SELECTED{/if}>Street</option>
-              <option value="1" {if $somevar == "1"}SELECTED{/if}>Satellite</option>
-							</select></td>
-    			<td><input name="map_typetileurl[id]" id="map_typetileurl[id]" type="text" value="http://someurl"></td>
-    			<td><input name="map_typeoverurl[id]" id="map_typeoverurl[id]" type="text" value="http://someurl"></td>
-    			<td><input name="map_typeinclude[id]" id="map_typeinclude[id]" type="checkbox" value="{$gContent->mMapData.gmap_id}"></td></tr>
-    </table>
-    <input type="button" name="maptypessubmit" value="Submit" onclick="javascript:get(this.parentNode);">
-    </form>
-
-
-
-
-		<br/>
+    <form action="javascript:;" name="maptypesform" id="maptypesform">
+          {if count($gContent->mMapTypes) > 0}
+          {section name=mtype loop=$gContent->mMapTypes}
+    			Type Id <input name="map_typeid_{$gContent->mMapTypes[mtype].maptype_id}" id="map_typeid_{$gContent->mMapTypes[mtype].maptype_id}" type="hidden" value="{$gContent->mMapTypes[mtype].maptype_id}"><br/>
+					Name <input name="map_typename_{$gContent->mMapTypes[mtype].maptype_id}" id="map_typename_{$gContent->mMapTypes[mtype].maptype_id}" type="text" value="{$gContent->mMapTypes[mtype].name}"><br/>
+					Base Type <select name="map_typebase_{$gContent->mMapTypes[mtype].maptype_id}" id="map_typebase_{$gContent->mMapTypes[mtype].maptype_id}">
+              <option value="0" {if $gContent->mMapTypes[mtype].basetype == "0"}SELECTED{/if}>Street</option>
+              <option value="1" {if $gContent->mMapTypes[mtype].basetype == "1"}SELECTED{/if}>Satellite</option>
+              <option value="1" {if $gContent->mMapTypes[mtype].basetype == "2"}SELECTED{/if}>Hybrid</option>
+							</select><br/>
+    			Base Tiles Url <input name="map_typetileurl_{$gContent->mMapTypes[mtype].maptype_id}" id="map_typetileurl_{$gContent->mMapTypes[mtype].maptype_id}" type="text" value="{$gContent->mMapTypes[mtype].maptiles_url}"><br/>
+    			Overlay Tiles Url <input name="map_typeoverurl_{$gContent->mMapTypes[mtype].maptype_id}" id="map_typeoverurl_{$gContent->mMapTypes[mtype].maptype_id}" type="text" value="{$gContent->mMapTypes[mtype].hybridtiles_url}"><br/>
+    			Include With This Map <input name="map_typeinclude_{$gContent->mMapTypes[mtype].maptype_id}" id="map_typeinclude_{$gContent->mMapTypes[mtype].maptype_id}" type="checkbox" value="{$gContent->mMapData.gmap_id}"><br/>
+          {/section}
+					{/if}
+    <input type="button" name="maptypessubmit" value="Submit" onclick="javascript:get('store_maptype.php', this.parentNode);">
+    </form><br/>
+		
 		
     <!-- Marker Sets Table -->
 		<h3>Marker Sets</h3>
     <form action="javascript:;" name="markersetsform" id="markersetsform">    
-    <table>    	
-    	<tr><td><b>Marker Sets<b></td>
-					<td>Set Id</td>
-    			<td>Include On Launch</td>
-    			<td>Include In Side Pane</td>
-    			<td>Edit</td></tr>
-    	<tr><!--//@todo generate markers list -->
-    			<td><!--//@todo name from db-->*Sample Marker Set1*</td>
-    			<td><input name="map_markersetid[n]" id="map_markersetid[n]" type="text" value="[n]"></td>
-    			<td><input name="map_markerlaunch[n]" id="map_markerlaunch[n]" type="checkbox" value="True"></td>
-    			<td><input name="map_markerside[n]" id="map_markerside[n]" type="checkbox" value="True"></td>
-    			<td>*Link*</td></tr>
-    			<td><!--//@todo name from db-->*Sample Marker Set2*</td>
-    			<td><input name="map_markersetid[n]" id="map_markersetid[n]" type="text" value="[n]"></td>
-    			<td><input name="map_marklaunch" id="map_marklaunch[n]" type="checkbox" value="True"></td>
-    			<td><input name="map_markside" id="map_markside[n]" type="checkbox" value="True"></td>
-    			<td>*Link*</td></tr>
-    			<td><!--//@todo name from db-->*Sample Marker Set3*</td>
-    			<td><input name="map_markersetid[n]" id="map_markersetid[n]" type="text" value="[n]"></td>
-    			<td><input name="map_marklaunch" id="map_marklaunch[n]" type="checkbox" value="True"></td>
-    			<td><input name="map_markside" id="map_markside[n]" type="checkbox" value="True"></td>
-    			<td>*Link*</td></tr>
-    </table>
-    <input type="button" name="markersetssubmit" value="Submit" onclick="javascript:get(this.parentNode);">
+					Marker Sets<b></td>
+					Set Id <input name="map_markersetid[n]" id="map_markersetid[n]" type="text" value="[n]">
+					Set Name <input name="map_markersetname[n]" id="map_markersetname[n]" type="text" value="[n]">
+    			Include On Launch <input name="map_markerlaunch[n]" id="map_markerlaunch[n]" type="checkbox" value="True">
+    			Include In Side Pane <input name="map_markerside[n]" id="map_markerside[n]" type="checkbox" value="True">
+    <input type="button" name="markersetssubmit" value="Submit" onclick="javascript:get('store_markersets.php', this.parentNode);">
     </form>
 
     
