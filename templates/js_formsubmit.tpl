@@ -1,1 +1,1 @@
-<script type="text/javascript" language="javascript"></script>
+<script type="text/javascript"></script>
