@@ -8,13 +8,55 @@ var largecontrols;
 var zoomcontrols;
 
 var bMapID = {$gContent->mMapData.gmap_id};
+var bMapTitle = "{$gContent->mMapData.title}";
+var bMapDesc = "{$gContent->mMapData.description}";
 var bMapWidth = {$gContent->mMapData.width};
 var bMapHeight = {$gContent->mMapData.height};
 var bMapLat = {$gContent->mMapData.lat};
 var bMapLon = {$gContent->mMapData.lon};
-var bZoomLevel = {$gContent->mMapData.zoom_level};
-
+var bMapZoom = {$gContent->mMapData.zoom_level};
+var bMapScale = {$gContent->mMapData.show_scale}; //0,1
+var bMapControl = "{$gContent->mMapData.show_controls}"; //s,l,z,n
+var bMapTypeCont = {$gContent->mMapData.show_typecontrols};//0,1
+var bMapType = "{$gContent->mMapData.map_type}";
+		
 var bMapTypes = new Array();
+
+
+function getEditTools(){ldelim}
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'get_edit_script.php';
+  document.getElementsByTagName('head')[0].appendChild(script);	
+
+	var xmlDoc = null ;
+	
+	getEditHtml();
+{rdelim};
+
+
+function getEditHtml(){ldelim}
+	function load() {ldelim}
+        if (typeof window.ActiveXObject != 'undefined' ) {ldelim}
+          xmlDoc = new ActiveXObject("Microsoft.XMLHTTP");
+          xmlDoc.onreadystatechange = process ;
+        {rdelim} else {ldelim}
+          xmlDoc = new XMLHttpRequest();
+          xmlDoc.onload = process ;
+        {rdelim}
+        xmlDoc.open( "GET", "templates/edit_form.html", true );
+				xmlDoc.overrideMimeType('text/html');
+        xmlDoc.send( null );
+      {rdelim}
+  function process() {ldelim}
+        if ( xmlDoc.readyState != 4 ) return ;
+//				alert("The HTML requested: " + xmlDoc.responseText)
+        document.getElementById("editform").innerHTML = xmlDoc.responseText ;
+      {rdelim}			
+
+	load();		
+{rdelim};
+
 
 
 {if count($gContent->mMapTypes) > 0}
@@ -53,7 +95,6 @@ function addMapTypes(pParamHash){ldelim}
 	{rdelim}
 {rdelim};
 {/if}
-
 
 
 
@@ -106,37 +147,86 @@ function loadMap() {ldelim}
 		map.addControl(zoomcontrols);
 		{/if}
 				
-    map.centerAndZoom(new GPoint(bMapLon, bMapLat), bZoomLevel);
+    map.centerAndZoom(new GPoint(bMapLon, bMapLat), bMapZoom);
 
-		//uses generic createMarker to add all markers in bIMData array
+		
 		//@todo this needs to be more complex and account for all the variety of types and styles 
+		//@todo wrap "edit" link in permission
 		{if count($gContent->mMapInitMarkers) > 0}
 		for(n=0; n<bIMData.length; n++){ldelim}
 		    var point = new GPoint(parseFloat(bIMData[n].lon), parseFloat(bIMData[n].lat));
-				var newmarker = createMarker(point, bIMData[n].window_data);
-				map.addOverlay(newmarker);
-		{rdelim};
-		{/if}
-
-		//uses generic createMarker to add all markers in bIMData array
-		//@todo this needs to be more complex and account for all the variety of types and styles 
-		{if count($gContent->mMapSetMarkers) > 0}
-		for(n=0; n<bSMData.length; n++){ldelim}
-		    var point = new GPoint(parseFloat(bSMData[n].lon), parseFloat(bSMData[n].lat));
-				var newmarker = createMarker(point, bSMData[n].window_data);
-				map.addOverlay(newmarker);
+				bIMData[n].marker = new GMarker(point);
+				bIMData[n].marker.my_html = "<div style='white-space: nowrap;'><div class='editbtn'><a href='javascript:editMarker(\"I\","+n+")'>edit<a></div><strong>"+bIMData[n].name+"</strong><p>"+bIMData[n].window_data+"</p></div>";
+				map.addOverlay(bIMData[n].marker);
+				//add the marker label if it exists
+				if (bIMData[n].label_data){ldelim}
+  				var topElement = bIMData[n].marker.iconImage;
+  				if (bIMData[n].marker.transparentIcon) {ldelim}topElement = bIMData[n].marker.transparentIcon;{rdelim}
+  				if (bIMData[n].marker.imageMap) {ldelim}topElement = bIMData[n].marker.imageMap;{rdelim}    
+  				topElement.setAttribute( "title" , bIMData[n].label_data );
+				{rdelim}
 		{rdelim};
 		{/if}
 
 		
-		{if count($gContent->mMapInitMarkers) > 0}
-		for(n=0; n<bILData.length; n++){ldelim}
-		    var linedata = bILData[n];
-				var newpolyline = createPolyline(linedata);
-				map.addOverlay(newpolyline);
+/*
+		//@todo this needs to be more complex and account for all the variety of types and styles 
+		{if count($gContent->mMapSetMarkers) > 0}
+		for(n=0; n<bSMData.length; n++){ldelim}
+		    var point = new GPoint(parseFloat(bSMData[n].lon), parseFloat(bSMData[n].lat));
+				var bSMData[n].marker = new GMarker(point);
+				var bSMData[n].marker.my_html = "<div style='white-space: nowrap;'><h3>"+bSMData[n].name+"</h3><p>"+bSMData[n].window_data+"</p></div>";
+				//@todo this needs to come out when side panel is added to engine.
+				map.addOverlay(bSMData[n].marker);
+				//@todo marker label construction needs to be added via the side panel
+				//add the marker label if it exists
+				if (bSMData[n].label_data != ""){ldelim}
+  				var topElement = newmarker.iconImage;
+  				if (newmarker.transparentIcon) {ldelim}topElement = newmarker.transparentIcon;{rdelim}
+  				if (newmarker.imageMap) {ldelim}topElement = newmarker.imageMap;{rdelim}    
+  				topElement.setAttribute( "title" , bSMData[n].label_data );
+				{rdelim}
 		{rdelim};
 		{/if}
+*/
 
+
+		{if count($gContent->mMapInitLines) > 0}
+		for(n=0; n<bILData.length; n++){ldelim}
+		
+				for (s=0; s<bLStyData.length; s++){ldelim}
+        		if (bLStyData[s].style_id == bILData[n].style_id){ldelim}
+        				 var linecolor = "#"+bLStyData[s].color;
+        				 var lineweight = bLStyData[s].weight;
+        				 var lineopacity = bLStyData[s].opacity;
+        		{rdelim}
+        {rdelim}
+		
+    		var pointlist = new Array();
+    		for (p = 0; p < bILData[n].points_data.length; p+=2 ){ldelim}
+    				var point = new GPoint(
+    						parseFloat(bILData[n].points_data[p]),
+    						parseFloat(bILData[n].points_data[p+1])
+    				);
+    				pointlist.push(point);
+    		{rdelim};
+				
+    		bILData[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
+				map.addOverlay(bILData[n].polyline);
+		{rdelim};
+		{/if}
+		
+
+
+		
+		//opens any infoWindow when clicked if it has content	my_html	
+			GEvent.addListener(map, "click", function(overlay, point) {ldelim}
+    			if (overlay) {ldelim}
+            if (overlay.my_html) {ldelim}
+              overlay.openInfoWindowHtml(overlay.my_html);
+            {rdelim}  
+					{rdelim}
+      {rdelim}); 
 		
 {rdelim};
 

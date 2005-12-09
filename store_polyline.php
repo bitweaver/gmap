@@ -3,34 +3,64 @@
  *
  * @package bitmap
  *
- * created 2005/10/07
+ * created 2005/11/30
  */
 
 /**
- * The post values here come directly from the values in js_formsubmit.tpl 
- * The function here processes them to update an existing Polyine.
+ * The post values here come directly from the values in formsubmit.js 
+ * The function here processes them to update an existing Polyline.
  *
  * This is part of the AJAX updating set
  * Updates are broken into parts Map, Marker, Icon, Polyline etc.  
  * All the parts are not saved at once.
  * 
  * This script returns valid XML
+ *
  */
 
-/** 
- 	 Polyline/Polygon Updates Contain the following Post Values:
-	 -------------------------------------------------------
+// Initialization
+require_once( '../bit_setup_inc.php' );
 
-  	 	$_REQUEST['line_id']
-  	 	$_REQUEST['line_name']
-  	 	$_REQUEST['line_type']
-  	 	$_REQUEST['line_data']
-  	 	$_REQUEST['line_style']
-  	 	$_REQUEST['line_bordertext']
-  	 	$_REQUEST['line_zi']
+// Is package installed and enabled
+$gBitSystem->verifyPackage('gmap' );
+
+global $gContent;
+require_once( GMAP_PKG_PATH.'BitGmap.php');
+
+
+// Now check permissions to access this page
+$gBitSystem->verifyPermission('bit_gm_edit_polyline' );
+
+
+	//The array of data we feed into the database.  
+	//We modify the field names from the Request array
+  $polylineData = array();	
+  $polylineData['polyline_id'] = $_REQUEST['line_id'];
+  $polylineData['name'] = $_REQUEST['line_name'];
+  $polylineData['type'] = $_REQUEST['line_type'];
+  $polylineData['points_data'] = $_REQUEST['line_data'];
+  $polylineData['border_text'] = $_REQUEST['line_bordertext'];
+  $polylineData['zindex'] = $_REQUEST['line_z'];
+	
+	
+	//since we are returning xml we must report so in the header
+	//we also need to tell the browser not to cache the page
+	//see: http://mapki.com/index.php?title=Dynamic_XML
+  // Date in the past
+  header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+  // always modified
+  header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+  // HTTP/1.1
+  header("Cache-Control: no-store, no-cache, must-revalidate");
+  header("Cache-Control: post-check=0, pre-check=0", false);
+  // HTTP/1.0
+  header("Pragma: no-cache");
+  //XML Header
+  header("content-type:text/xml");
 		
-*/
-
-//@todo write script
-			
+		
+	$xml = new BitGmap();
+  $xml->storePolylineData($polylineData);
+	print_r($xml->mRet);
+		 			
 ?>

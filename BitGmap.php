@@ -137,8 +137,9 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $result;
 	}	
-
-
+	
+	
+	
 
 	//get all mapTypes data associated with a given $gmap_id
 	function getMapTypes($gmap_id) {
@@ -191,6 +192,24 @@ class BitGmap extends LibertyAttachable {
 	}
 	
 
+	
+	//* Gets data for a given marker.
+	// @ todo this should probably take an array so that we can get data for a bunch of markers if we want
+	function getMarkerData($marker_id) {
+		global $gBitSystem;
+		if ($marker_id && is_numeric($marker_id)) {
+
+			//select map and get list of sets to look up
+			$query = "SELECT bm.* 
+			FROM `".BIT_DB_PREFIX."bit_gmaps_markers` bm 
+			WHERE bm.marker_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$marker_id));
+			
+		}
+		return $result;
+	}	
+	
+		
 
 	//get all marker styles for a given gmap_id
 	function getMarkerStyles($gmap_id) {
@@ -244,7 +263,7 @@ class BitGmap extends LibertyAttachable {
 
 
 	
-		//get all polyline data for given gmap_id and set_type
+	//get all polyline data for given gmap_id and set_type
 	function getPolylines($gmap_id, $settype) {
 		global $gBitSystem;
 		$ret = NULL;
@@ -272,7 +291,25 @@ class BitGmap extends LibertyAttachable {
 
 
 
+	//* Gets data for a given polyline.
+	// @ todo this should probably take an array so that we can get data for a bunch of markers if we want
+	function getPolylineData($polyline_id) {
+		global $gBitSystem;
+		if ($polyline_id && is_numeric($polyline_id)) {
 
+			//select map and get list of sets to look up
+			$query = "SELECT bm.* 
+			FROM `".BIT_DB_PREFIX."bit_gmaps_polylines` bm 
+			WHERE bm.polyline_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$polyline_id));
+			
+		}
+		return $result;
+	}	
+
+	
+	
+	
 	//get all polylines for given gmap_id and set_types
 	function getPolylineStyles($gmap_id) {
 		global $gBitSystem;
@@ -484,6 +521,58 @@ class BitGmap extends LibertyAttachable {
 						 ."<scale>".$result->fields['show_scale']."</scale>"
 						 ."<typecon>".$result->fields['show_typecontrols']."</typecon>"
 						 ."</map>";			
+	}
+
+	
+
+	// @todo would be nice if this could take an array of marker ids to update several at once.
+	function storeMarkerData( &$pParamHash ) {
+			// store the posted changes
+			$table = BIT_DB_PREFIX."bit_gmaps_markers";
+			$this->mDb->StartTrans();
+			$locId = array( "name" => "marker_id", "value" => $pParamHash['marker_id'] );			
+			$rslt = $this->mDb->associateUpdate( $table, $pParamHash, $locId );			
+			$this->mDb->CompleteTrans();			
+						
+			// re-query to confirm results		
+			$result = $this->getMarkerData($pParamHash['marker_id']);
+			
+			$this->mRet = "<marker>"
+      			  ."<id>".$result->fields['marker_id']."</id>"
+              ."<mod_id>".$result->fields['modifier_user_id']."</mod_id>"
+              ."<last_mod>".$result->fields['last_modified']."</last_mod>"
+              ."<name>".$result->fields['name']."</name>"
+              ."<lat>".$result->fields['lat']."</lat>"
+              ."<lon>".$result->fields['lon']."</lon>"
+              ."<data>".$result->fields['window_data']."</data>"
+              ."<label>".$result->fields['label_data']."</label>"
+              ."<z>".$result->fields['zindex']."</z>"
+						 ."</marker>";
+	}
+
+
+	
+	
+	// @todo would be nice if this could take an array of marker ids to update several at once.
+	function storePolylineData( &$pParamHash ) {
+			// store the posted changes
+			$table = BIT_DB_PREFIX."bit_gmaps_polylines";
+			$this->mDb->StartTrans();
+			$locId = array( "name" => "polyline_id", "value" => $pParamHash['polyline_id'] );
+			$rslt = $this->mDb->associateUpdate( $table, $pParamHash, $locId );
+			$this->mDb->CompleteTrans();
+						
+			// re-query to confirm results
+			$result = $this->getPolylineData($pParamHash['polyline_id']);
+			
+			$this->mRet = "<polyline>"
+      			  ."<id>".$result->fields['polyline_id']."</id>"
+              ."<name>".$result->fields['name']."</name>"
+              ."<type>".$result->fields['type']."</type>"
+              ."<points>".$result->fields['points_data']."</points>"
+              ."<border>".$result->fields['border_text']."</border>"
+              ."<z>".$result->fields['zindex']."</z>"
+						 ."</polyline>";
 	}
 
 	

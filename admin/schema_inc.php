@@ -1,5 +1,7 @@
 <?php
 
+// @todo check all tables, consider the filed "version", verify if it is appropriate for the given table.
+
 $tables = array(
 
 //show_controls in bit_gmaps takes s,l,z,n  small, large, or none

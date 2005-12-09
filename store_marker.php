@@ -3,11 +3,11 @@
  *
  * @package bitmap
  *
- * created 2005/10/07
+ * created 2005/11/30
  */
 
 /**
- * The post values here come directly from the values in js_formsubmit.tpl 
+ * The post values here come directly from the values in formsubmit.js 
  * The function here processes them to update an existing Marker.
  *
  * This is part of the AJAX updating set
@@ -15,40 +15,53 @@
  * All the parts are not saved at once.
  * 
  * This script returns valid XML
- */
-  
-/** 
- 	 Marker/Icon/Styles Updates Contain the following Post Values:
-	 -------------------------------------------------------
-  	 	$_REQUEST['marker_id']
-  	 	$_REQUEST['marker_name']
-  	 	$_REQUEST['marker_lat']
-  	 	$_REQUEST['marker_lon']
-  	 	$_REQUEST['marker_icontype']
-  	 	$_REQUEST['marker_wintext']
-  	 	$_REQUEST['marker_style']
-  	 	$_REQUEST['marker_labeltext']
-  	 	$_REQUEST['marker_zi'] 
-  	 	$_REQUEST['icon_id']
-  	 	$_REQUEST['icon_name']
-  	 	$_REQUEST['icon_type']
-  	 	$_REQUEST['icon_img']
-  	 	$_REQUEST['icon_imgsize']
-  	 	$_REQUEST['icon_shadow']
-  	 	$_REQUEST['icon_shadowsize']
-  	 	$_REQUEST['icon_anchorx']
-  	 	$_REQUEST['icon_anchory']
-  	 	$_REQUEST['icon_winanchorx']
-  	 	$_REQUEST['icon_winanchory']
-  	 	$_REQUEST['icon_shadowanchorx']
-  	 	$_REQUEST['icon_shadowanchory']
-  	 	$_REQUEST['icon_hover']
-  	 	$_REQUEST['icon_hoverop']
-  	 	$_REQUEST['icon_labelop']
-  	 	$_REQUEST['icon_hoverstyle']
-  	 	$_REQUEST['icon_winstyle']
+ *
  */
 
-//@todo write script
-			 			
+// Initialization
+require_once( '../bit_setup_inc.php' );
+
+// Is package installed and enabled
+$gBitSystem->verifyPackage('gmap' );
+
+global $gContent;
+require_once( GMAP_PKG_PATH.'BitGmap.php');
+
+
+// Now check permissions to access this page
+$gBitSystem->verifyPermission('bit_gm_edit_marker' );
+
+
+	//The array of data we feed into the database.  
+	//We modify the field names from the Request array
+  $markerData = array();	
+  $markerData['marker_id'] = $_REQUEST['marker_id'];
+  $markerData['name'] = $_REQUEST['marker_name'];
+  $markerData['lat'] = $_REQUEST['marker_lat'];
+  $markerData['lon'] = $_REQUEST['marker_lon'];
+  $markerData['window_data'] = $_REQUEST['marker_wintext'];
+  $markerData['label_data'] = $_REQUEST['marker_labeltext'];
+  $markerData['zindex'] = $_REQUEST['marker_zi'];
+	
+	
+	//since we are returning xml we must report so in the header
+	//we also need to tell the browser not to cache the page
+	//see: http://mapki.com/index.php?title=Dynamic_XML
+  // Date in the past
+  header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+  // always modified
+  header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+  // HTTP/1.1
+  header("Cache-Control: no-store, no-cache, must-revalidate");
+  header("Cache-Control: post-check=0, pre-check=0", false);
+  // HTTP/1.0
+  header("Pragma: no-cache");
+  //XML Header
+  header("content-type:text/xml");
+		
+		
+	$xml = new BitGmap();
+  $xml->storeMarkerData($markerData);
+	print_r($xml->mRet);
+		 			
 ?>

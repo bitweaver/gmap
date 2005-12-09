@@ -12,11 +12,13 @@ bIMData[{$smarty.section.initmarkers.index}].lon = {$gContent->mMapInitMarkers[i
 bIMData[{$smarty.section.initmarkers.index}].window_data = "{$gContent->mMapInitMarkers[initmarkers].window_data}";
 bIMData[{$smarty.section.initmarkers.index}].label_data = "{$gContent->mMapInitMarkers[initmarkers].label_data}";
 bIMData[{$smarty.section.initmarkers.index}].set_id = {$gContent->mMapInitMarkers[initmarkers].set_id};
-bIMData[{$smarty.section.initmarkers.index}].set_id = {$gContent->mMapInitMarkers[initmarkers].style_id};
-bIMData[{$smarty.section.initmarkers.index}].set_id = {$gContent->mMapInitMarkers[initmarkers].icon_id};
+bIMData[{$smarty.section.initmarkers.index}].style_id = {$gContent->mMapInitMarkers[initmarkers].style_id};
+bIMData[{$smarty.section.initmarkers.index}].icon_id = {$gContent->mMapInitMarkers[initmarkers].icon_id};
 {if $gContent->mMapInitMarkers[initmarkers].zindex != NULL}
 bIMData[{$smarty.section.initmarkers.index}].zindex = {$gContent->mMapInitMarkers[initmarkers].zindex};
 {/if}
+bIMData[{$smarty.section.initmarkers.index}].array = "I";
+bIMData[{$smarty.section.initmarkers.index}].array_n = {$smarty.section.initmarkers.index};
 {/section}
 {/if}
 
@@ -31,28 +33,15 @@ bSMData[{$smarty.section.setmarkers.index}].lon = {$gContent->mMapSetMarkers[set
 bSMData[{$smarty.section.setmarkers.index}].window_data = "{$gContent->mMapSetMarkers[setmarkers].window_data}";
 bSMData[{$smarty.section.setmarkers.index}].label_data = "{$gContent->mMapSetMarkers[setmarkers].label_data}";
 bSMData[{$smarty.section.setmarkers.index}].set_id = {$gContent->mMapSetMarkers[setmarkers].set_id};
-bSMData[{$smarty.section.setmarkers.index}].set_id = {$gContent->mMapSetMarkers[setmarkers].style_id};
-bSMData[{$smarty.section.setmarkers.index}].set_id = {$gContent->mMapSetMarkers[setmarkers].icon_id};
+bSMData[{$smarty.section.setmarkers.index}].style_id = {$gContent->mMapSetMarkers[setmarkers].style_id};
+bSMData[{$smarty.section.setmarkers.index}].icon_id = {$gContent->mMapSetMarkers[setmarkers].icon_id};
 {if $gContent->mMapSetMarkers[setmarkers].zindex != NULL}
 bSMData[{$smarty.section.setmarkers.index}].zindex = {$gContent->mMapSetMarkers[setmarkers].zindex};
 {/if}
+bSMData[{$smarty.section.setmarkers.index}].array = "I";
+bSMData[{$smarty.section.setmarkers.index}].array_n = {$smarty.section.setmarkers.index};
 {/section}
 {/if}
-
-
-
-// Create a variable with properties for a Marker
-function createMarker(mypoint, mytext) {ldelim}
-		// Create marker at location using specified icon
-    var marker = new GMarker(mypoint);
-   	// Add text to marker
-    var html = mytext;
-    // Add the click function
-    GEvent.addListener(marker, "click", function(){ldelim}
-			marker.openInfoWindowHtml(html);
-     {rdelim});
-    return marker;
-{rdelim};
 
 
 

@@ -7,7 +7,7 @@
  */
 
 /**
- * The post values here come directly from the values in js_formsubmit.tpl 
+ * The post values here come directly from the values in formsubmit.js 
  * The function here processes them to update an existing Map.
  *
  * This is part of the AJAX updating set

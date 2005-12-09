@@ -1,0 +1,162 @@
+<div>
+<a href="javascript:editMap();">Edit Map</a> | 
+<a href="javascript:editMarkers();">Edit Markers</a> | 
+<a href="javascript:editPolylines();">Edit Polylines</a> |
+<!-- <a href="javascript:show('editpolygonsrform');">Edit Polygons</a> //-->
+</div>
+
+<div id="editmapform" style="display:none;">
+    <h3>Map Tools</h3>
+    <FORM action="javascript:;" name="mapform" id="mapform">
+		   <!-- Map Id --> <INPUT name="map_id" id="map_id" type="hidden" size="25" value=""><br/>
+    	 Title <INPUT name="map_title" id="map_title" type="text" size="25" value=""><br/>
+    	 Description <INPUT name="map_desc" id="map_desc" type="text" size="25" value=""><br/>
+    	 Width <INPUT name="map_w" id="map_w" type="text" size="25" value=""><br/>
+    	 Height <INPUT name="map_h" id="map_h" type="text" size="25" value=""><br/>
+    	 Latitude <INPUT name="map_lat" id="map_lat"type="text" size="25" value=""><br/>
+    	 Longitude <INPUT name="map_lon" id="map_lon" type="text" size="25" value=""><br/>
+    	 Zoom Level <INPUT name="map_z" id="map_z" type="text" size="25" value=""><br/>		
+    	 Show Controls <SELECT name="map_showcont" id="map_showcont">
+          <OPTION value="s" >Small</OPTION>
+          <OPTION value="l" >Large</OPTION>
+          <OPTION value="z" >Zoom Only</OPTION>
+          <OPTION value="n" >None</OPTION>
+          </SELECT><br/>
+    	 Show Scale <SELECT name="map_showscale" id="map_showscale">
+          <OPTION value="1" >Yes</OPTION>
+          <OPTION value="0" >No</OPTION>
+          </SELECT><br/>
+    	 Show Map Type Buttons <SELECT name="map_showtypecont" id="map_showtypecont">
+          <OPTION value="1" >Yes</OPTION>
+          <OPTION value="0" >No</OPTION>
+          </SELECT><br/>
+    	 Default Map Type
+    			<SELECT name="map_type" id="map_type">
+          <OPTION value="G_MAP_TYPE" >Street Map</OPTION>
+          <OPTION value="G_SATELLITE_TYPE" >Satellite</OPTION>
+          <OPTION value="G_HYBRID_TYPE" >Hybrid</OPTION>
+   			</SELECT><br/>
+    <!-- Allow Comments <INPUT name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
+    <INPUT type="button" name="mapsubmit" value="Submit" onclick="javascript:get('store_gmap.php', this.parentNode);"><br/>
+   	<INPUT type="button" name="closemapform" value="Cancel" onclick="javascript:canceledit('editmapform');">
+     </FORM>
+</div>	
+
+
+<div id="editmarkerform" class="editform" style="display:none;">
+    <h3>Edit Markers</h3>
+		<div><a href="javascript:newMarker();">Add a New Marker</a></div>
+		<div class="table" id="editmarkertable">
+    	<div class="tableheader">
+				<div style="float:left; padding:0 .4em; width:30px"> Id </div>
+				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
+				<div style="float:left; padding:0 .4em; width:90px"> Latitude </div>
+				<div style="float:left; padding:0 .4em; width:90px"> Longitude </div>
+				<div style="float:left; padding:0 .4em; width:140px"> Window Text </div>
+				<div style="float:left; padding:0 .4em; width:140px"> Label Text </div>
+				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
+				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
+			</div>
+			<FORM action="javascript:;" name="markerform_0" id="markerform_0">
+			<div class="data">
+  			<div style="float:left; padding:0 .4em; width:30px"><INPUT name="marker_id" type="text" size="3" value="a number"></div>
+      	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="marker_name" type="text" size="15" value=""></div>
+      	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="marker_lat" type="text" size="15" value=""></div>
+      	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="marker_lon" type="text" size="15" value=""></div>
+      	<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_wintext" cols="15" rows="3"></textarea></div>
+      	<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
+      	<div style="float:left; padding:0 .4em; width:50px"><INPUT name="marker_zi" type="text" size="3" value="undefined"></div>
+      	<div style="float:left; padding:0;"><INPUT name="marker_array" type="hidden" size="3" value=""></div>
+      	<div style="float:left; padding:0;"><INPUT name="marker_array_n" type="hidden" size="3" value=""></div>
+      	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="markersubmit" value="Submit" onclick="javascript:get('store_marker.php', this.form, this.form.marker_array.value, this.form.marker_array_n.value);"></div>
+      	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="locate" value="Locate" onclick="javascript:bIMData[this.form.marker_array_n.value].marker.openInfoWindowHtml(bIMData[this.form.marker_array_n.value].marker.my_html);"></div>
+			</div>
+			</FORM>
+		</div>
+    <div style="clear:both;"><INPUT type="button" name="closemarkerform" value="Cancel" onclick="javascript:canceledit('editmarkerform');"></div>
+</div>
+
+
+
+<div id="editpolylineform" class="editform" style="display:none;">
+    <h3>Edit Polylines</h3>
+		<div class="table" id="editpolylinetable">
+    	<div class="tableheader">
+				<div style="float:left; padding:0 .4em; width:30px"> Id </div>
+				<div style="float:left; padding:0 .4em; width:80px"> Name </div>
+				<div style="float:left; padding:0 .4em; width:90px"> Type </div>
+				<div style="float:left; padding:0 .4em; width:220px"> Data </div>
+				<div style="float:left; padding:0 .4em; width:180px"> Border Text </div>
+				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
+				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
+			</div>
+			<FORM action="javascript:;" name="polylineform_0" id="polylineform_0">
+			<div class="data">
+  			<div style="float:left; padding:0 .4em; width:30px"><INPUT name="line_id" type="text" size="3" value="a number"></div>
+      	<div style="float:left; padding:0 .4em; width:80px"><INPUT name="line_name" type="text" size="15" value=""></div>
+      	<div style="float:left; padding:0 .4em; width:90px"><SELECT name="line_type">
+                                                   				  <option>Default</option>
+                                                  					<option>XPolyline</option></SELECT></div>
+      	<div style="float:left; padding:0 .4em; width:220px"><textarea name="line_data" cols="15" rows="3"></textarea></div>
+      	<div style="float:left; padding:0 .4em; width:180px"><INPUT name="line_bordertext" type="text" size="30" value=""></div>
+      	<div style="float:left; padding:0 .4em; width:50px"><INPUT name="line_z" type="text" size="3" value=""></div>
+      	<div style="float:left; padding:0;"><INPUT name="line_array" type="hidden" size="3" value=""></div>
+      	<div style="float:left; padding:0;"><INPUT name="line_array_n" type="hidden" size="3" value=""></div>
+      	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="polylinesubmit" value="Submit" onclick="javascript:get('store_polyline.php', this.form, this.form.line_array.value, this.form.line_array_n.value);"></div>
+      	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="locate" value="Locate" onclick="javascript:alert('need an idea, maybe center on it?');"></div>
+			</div>
+			</FORM>
+		</div>
+    <div style="clear:both;"><INPUT type="button" name="closepolylineform" value="Cancel" onclick="javascript:canceledit('editpolylineform');"></div>
+</div>
+
+
+
+
+
+
+<!-- ORG, might still want to use at some point
+<div id="editmarkerform" style="display:none;">
+    <h3>Edit Marker</h3>
+    <FORM action="javascript:;" name="markerform" id="markerform">
+		<table>
+    	<tr><td> Id </td><td> Name </td><td> Latitude </td><td> Longitude </td><td> Window Text </td><td> Label Text </td><td> zIndex </td></tr>
+			<tr class="data">
+			<td><INPUT name="marker_id" id="marker_id" type="text" size="5" value=""></td>
+    	<td><INPUT name="marker_name" id="marker_name" type="text" size="15" value=""></td>
+    	<td><INPUT name="marker_lat" id="marker_lat" type="text" size="15" value=""></td>
+    	<td><INPUT name="marker_lon" id="marker_lon" type="text" size="15" value=""></td>
+    	<td><textarea name="marker_wintext" id="marker_wintext" cols="15" rows="3"></textarea></td>
+    	<td><textarea name="marker_labeltext" id="marker_labeltext" cols="15" rows="3"></textarea></td>
+    	<td><INPUT name="marker_zi" id="marker_zi" type="text" size="5" value="auto"></td>
+    	<td><INPUT type="button" name="markersubmit" value="Submit" onclick="javascript:get('store_marker.php', this.form);"></td>
+    	<td><INPUT type="button" name="closemarkerform" value="Cancel" onclick="javascript:canceledit('editmarkerform');"></td>
+			</tr>
+		</table>
+    </FORM>
+</div>
+
+<div id="editpolylinesform" style="display:none;">
+    <h3>Edit Polylines</h3>
+		<form action="submit.php" name="polyform1" id="polyform1">
+		<table>
+		<tr><td> id </td><td> name </td><td> type </td><td> data </td><td> border text </td><td> zindex </td></tr>
+		<tr>
+    	<td>Id<input name="line_id" id="line_id" type="text" value="0"></td>
+    	<td>Name<input name="line_name" id="line_name" type="text" size="20" value="my name"></td>
+    	<td>Type<select name="line_type" id="line_type">
+     				  <option>Default</option>
+    					<option>XPolyline</option></select></td>
+    	<td>Points Data<textarea name="line_data" id="line_data" cols="10" rows="5"></textarea></td>
+    	<td>Border Text<input name="line_bordertext" id="line_bordertext" type="text" size="20" value=""></td>
+    	<td>zIndex<input name="line_z" id="line_z" type="text" size="5" value="auto"></td>
+			</tr>
+		</table>
+    <INPUT type="button" name="polylinesubmit" value="Submit" onclick="javascript:get('store_polyline.php', this.parentNode);">
+    <INPUT type="button" name="closepolylineform" value="Cancel" onclick="javascript:canceledit('editpolylineform');">
+    </FORM>
+</div>
+//-->
+
+<!-- <div><h3>Url Bug Check Area:</h3><div id="alertmsg"></div></div> //-->
+

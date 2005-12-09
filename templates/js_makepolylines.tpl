@@ -21,6 +21,8 @@ bILData[{$smarty.section.initlines.index}].zindex = {$gContent->mMapInitLines[in
 {/if}
 bILData[{$smarty.section.initlines.index}].set_id = {$gContent->mMapInitLines[initlines].set_id};
 bILData[{$smarty.section.initlines.index}].style_id = {$gContent->mMapInitLines[initlines].style_id};
+bILData[{$smarty.section.initlines.index}].array = "I";
+bILData[{$smarty.section.initlines.index}].array_n = {$smarty.section.initlines.index};
 {/section}
 {/if}
 
@@ -43,6 +45,8 @@ bSLData[{$smarty.section.setlines.index}].zindex = {$gContent->mMapSetLines[setl
 {/if}
 bSLData[{$smarty.section.setlines.index}].set_id = {$gContent->mMapSetLines[setlines].set_id};
 bSLData[{$smarty.section.setlines.index}].style_id = {$gContent->mMapSetLines[setlines].style_id};
+bSLData[{$smarty.section.setlines.index}].array = "I";
+bSLData[{$smarty.section.setlines.index}].array_n = {$smarty.section.setlines.index};
 {/section}
 {/if}
 
@@ -80,29 +84,6 @@ bLStyData[{$smarty.section.linestyles.index}].text_bgstyle_zindex = {$gContent->
 {/if}
 {/section}
 {/if}
-
-
-		
-function createPolyline(pParamArray){ldelim}
-for (s=0; s<bLStyData.length; s++){ldelim}
-		if (bLStyData[s].style_id == pParamArray.style_id){ldelim}
-				 var linecolor = "#"+bLStyData[s].color;
-				 var lineweight = bLStyData[s].weight;
-				 var lineopacity = bLStyData[s].opacity;
-		{rdelim}
-{rdelim}
-
-				 var pointlist = new Array();
-				 for (p = 0; p < pParamArray.points_data.length; p+=2 ){ldelim}
-				 		 var point = new GPoint(
-						 		 parseFloat(pParamArray.points_data[p]),
-								 parseFloat(pParamArray.points_data[p+1])
-							);
-						 pointlist.push(point);
-				 {rdelim};
-				 var polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
-				 return polyline;
-{rdelim}
 
 //]]>		
 </script>

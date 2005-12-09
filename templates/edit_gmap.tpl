@@ -14,7 +14,10 @@
 
 <div class="body">
 	<div class="content">
+		<a href="javascript:getEditTools();">Load Edit Tools</a>
 		<div id="map" style="width:{$gContent->mMapData.width}px; height:{$gContent->mMapData.height}px;"></div>
+		{include file="bitpackage:gmap/edit_marker_form.tpl"}
+		{include file="bitpackage:gmap/edit_polyline_form.tpl"}
 		<div id="editform">{include file="bitpackage:gmap/edit_gmap_form.tpl"}</div>
 		<div class="clear"></div>
 	</div> <!-- end .content -->

@@ -259,28 +259,14 @@ div id.maptoolsbar
 
 
 
+
+
+
+
+
 <div id="markertools">
-    <form action="submit.php" name="markerform" id="markerform">
-    <h3>Marker Tools</h3>
-		<table>
-    	<tr><td><b>Marker</b></td></tr>				
-    	<tr><td>Id</td><td><input name="marker_id" id="marker_id" type="text" value="[n]"></td>
-    	<tr><td>Name</td><td><input name="marker_name" id="marker_name" type="text" size="25" value="somenumber"></td></tr>
-    	<tr><td>Latitude</td><td><input name="marker_lat" id="marker_lat" type="text" size="25" value="somenumber"></td></tr>
-    	<tr><td>Longitude</td><td><input name="marker_lon" id="marker_lon" type="text" size="25" value="somenumber"></td></tr>
-    	<tr><td>Icon Type</td><td><select name="marker_icontype" id="marker_icontype" >
-    	    	  <option>Default Style</option>
-    					<option>Custom Style 1</option>
-    					<option>Custom Style 1</option></select></td></tr>
-    	<tr><td>Window Text</td><td><textarea name="marker_wintext" id="marker_wintext" cols="30" rows="5"></textarea></td></tr>
-    	<tr><td>Marker Style</td><td><select name="marker_style" id="marker_style">
-							<option>Default Style</option>
-    					<option>Custom Style 1</option>
-    					<option>Custom Style 1</option></select></td></tr>
-    	<tr><td>Label Text</td><td><textarea name="marker_labeltext" id="marker_labeltext" cols="30" rows="2"></textarea></td></tr>
-    	<tr><td>zIndex</td><td><input name="marker_zi" id="marker_zi" type="text" size="25" value="auto"></td></tr>
-    	<tr><td>Flickr Image (how to get path? menu?)</td></tr>
-		</table>
+		
+		
 		
 		<table>
     	<tr><td><b>Custom Icon Tools</b></td></tr>
@@ -290,7 +276,7 @@ div id.maptoolsbar
      					<option>GIcon</option>
     					<option>XIcon</option></select></td></tr>
     	<tr><td>Icon Image Path</td><td><input name="icon_img" id="icon_img" type="text" size="25" value="Some Value"></td></tr>
-\    	<tr><td>Image Width Size</td><td><input name="icon_w" id="icon_w" type="text" size="25" value="Some Value"></td></tr>
+    	<tr><td>Image Width Size</td><td><input name="icon_w" id="icon_w" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Image Height Size</td><td><input name="icon_h" id="icon_h" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Shadow Image Path</td><td><input name="icon_shadow" id="icon_shadow" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Shadow Width Size</td><td><input name="icon_shadoww" id="icon_shadoww" type="text" size="25" value="Some Value"></td></tr>
@@ -315,31 +301,11 @@ div id.maptoolsbar
     	<tr><td>Label Hover Styles</td><td><input name="icon_hoverstyle" id="icon_hoverstyle" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Window Styles</td><td><input name="marker_winstyle" id="marker_winstyle" type="text" size="25" value="Some Value"></td></tr>
 		</table>
-		
-    <input type="button" name="markersubmit" value="Submit" onclick="javascript:get(this.parentNode);">
-    </form>
 </div>
 
 
 
 <div id="polytools">
-    <form action="submit.php" name="polyform" id="polyform">
-    <h3>Polyline Tools</h3>
-		<table>
-    	<tr><td><b>Ployline</b></td></tr>
-    	<tr><td>Id</td><td><input name="line_id" id="line_id" type="text" value="[n]"></td>
-    	<tr><td>Name</td><td><input name="line_name" id="line_name" type="text" size="25" value="Some Value"></td></tr>
-    	<tr><td>Type</td><td><select name="line_type" id="line_type">
-     				  <option>Default</option>
-    					<option>XPolyline</option></select></td></tr>
-    	<tr><td>Points Data</td><td><textarea name="line_data" id="line_data" cols="30" rows="5"></textarea></td></tr>
-    	<tr><td>Style</td><td><select name="line_style" id="line_style" >
-    					<option>Default</option>
-    					<option>Custom</option></select></td></tr>
-    	<tr><td><small>(selects a style by id</small></td></tr>
-    	<tr><td>Border Text</td><td><input name="line_bordertext" id="line_bordertext" type="text" size="25" value="Some Value"></td></tr>
-    	<tr><td>zIndex</td><td><input name="line_zi" id="line_zi" type="text" size="25" value="A Number"></td></tr>
-		</table>
 		
     <h4>Polyline Styles</h4>
 		<table>    
@@ -397,7 +363,5 @@ div id.maptoolsbar
     	<tr><td>Opacity</td><td><input name="poly_op" id="poly_op" type="text" size="25" value="A Number"></td></tr>
 		</table>
 		
-    <input type="button" name="polysubmit" value="Submit" onclick="javascript:get(this.parentNode);">
-    </form>
 </div>
 </div>
