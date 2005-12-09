@@ -17,7 +17,7 @@
 		//@todo wj: does this cause conflict with wiki or are these package independent and therefor can have same name?
 		$anonCanEdit = $gBitSystem->getPreference("anonCanEdit", 'n');
 		$gBitSmarty->assign('anonCanEdit', $anonCanEdit);
-		$gBitSmarty->assign('gmapHomePage', $wikiHomePage);
+		$gBitSmarty->assign('gmapHomePage', $gmapHomePage);
 	}
 
 ?>
