@@ -21,8 +21,8 @@ $tables = array(
   zoom_level I4 DEFAULT 6,
   map_type C(128) DEFAULT 'G_HYBRID_TYPE',
   show_controls C(1) DEFAULT 's',
-  show_scale L DEFAULT 1,
-  show_typecontrols L DEFAULT 1
+  show_scale C(1) DEFAULT '1',
+  show_typecontrols C(1) DEFAULT '1'
 ",
 
 //set_type in bit_gmaps_sets_keychain can be: init_markers, init_polylines, init_polygons, set_markers, set_polylines, set_polygons, map_types
@@ -30,7 +30,7 @@ $tables = array(
   gmap_id I4 NOTNULL,
 	set_type c(32),
 	set_id I4 NOTNULL
-	CONSTRAINTS ', CONSTRAINT `bit_gmaps_map_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."bit_gmaps`( `gmap_id` )'	
+	CONSTRAINTS ', CONSTRAINT `bit_gmaps_map_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."bit_gmaps`( `gmap_id` )'
 ",
 
 //basetype values: 0 => Streetmap 1 => Satellite, 2 => Hybrid
@@ -39,7 +39,7 @@ $tables = array(
   name C(64),
   description C(255),
   basetype I2 DEFAULT 0,
-	maptiles_url X,         
+	maptiles_url X,
 	hybridtiles_url X
 ",
 
@@ -84,7 +84,7 @@ $tables = array(
 'bit_gmaps_marker_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
-  type I2 DEFAULT 0,   
+  type I2 DEFAULT 0,
   label_hover_opacity I4 DEFAULT 70,
   label_opacity I4 DEFAULT 100,
   label_hover_styles C(255) DEFAULT 'border:none; color:black; background-color:#ccc',
@@ -113,7 +113,7 @@ $tables = array(
   last_modified I8 NOTNULL,
   version I4 NOTNULL,
   name C(255),
-  type I4 DEFAULT 0, 
+  type I4 DEFAULT 0,
   points_data X,
   border_text X,
   zindex I8
@@ -126,11 +126,11 @@ $tables = array(
   name C(64),
   color C(6) DEFAULT 'ff3300',
   weight I4 DEFAULT 2,
-  opacity F DEFAULT 1,                 
+  opacity F DEFAULT 1,
   pattern c(255),
   segment_count I8 NOTNULL,
-  begin_arrow L DEFAULT 0,
-  end_arrow L DEFAULT 0,
+  begin_arrow C(1) DEFAULT '0',
+  end_arrow C(1) DEFAULT '0',
   arrows_every I8 NOTNULL,
   font c(255) DEFAULT 'Arial',
   text_every I8 NOTNULL,
@@ -258,7 +258,7 @@ $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
 	array('bit_gm_admin_maptype', 'Can admin the maptypes', 'editors', GMAP_PKG_NAME),
 	array('bit_gm_rename_maptype', 'Can rename maptypes', 'editors', GMAP_PKG_NAME),
 	array('bit_gm_lock_maptype', 'Can lock maptypes', 'editors', GMAP_PKG_NAME),
-	
+
 	array('bit_gm_edit_marker', 'Can edit markers', 'registered', GMAP_PKG_NAME),
 	array('bit_gm_view_marker', 'Can view markers', 'basic', GMAP_PKG_NAME),
 	array('bit_gm_remove_marker', 'Can remove markers', 'editors', GMAP_PKG_NAME),
@@ -282,7 +282,7 @@ $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
 	array('bit_gm_admin_marker_styles', 'Can admin the marker styles', 'editors', GMAP_PKG_NAME),
 	array('bit_gm_rename_marker_styles', 'Can rename marker styles', 'editors', GMAP_PKG_NAME),
 	array('bit_gm_lock_marker_styles', 'Can lock marker styles', 'editors', GMAP_PKG_NAME),
-	
+
 	array('bit_gm_edit_polyline', 'Can edit polylines', 'registered', GMAP_PKG_NAME),
 	array('bit_gm_view_polyline', 'Can view polylines', 'basic', GMAP_PKG_NAME),
 	array('bit_gm_remove_polyline', 'Can remove polylines', 'editors', GMAP_PKG_NAME),
@@ -322,7 +322,7 @@ $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
 	array('bit_gm_admin_ploygon_sets', 'Can admin the ploygon sets', 'editors', GMAP_PKG_NAME),
 	array('bit_gm_rename_ploygon_sets', 'Can rename ploygon sets', 'editors', GMAP_PKG_NAME),
 	array('bit_gm_lock_ploygon_sets', 'Can lock ploygon sets', 'editors', GMAP_PKG_NAME),
-	
+
 	array('bit_gm_edit_polygon_styles', 'Can edit polygon styles', 'registered', GMAP_PKG_NAME),
 	array('bit_gm_view_polygon_styles', 'Can view polygon styles', 'basic', GMAP_PKG_NAME),
 	array('bit_gm_remove_polygon_styles', 'Can remove polygon styles', 'editors', GMAP_PKG_NAME),

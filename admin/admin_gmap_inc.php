@@ -5,7 +5,11 @@
 
 if (isset($_REQUEST["gmapset"]) && isset($_REQUEST["homeGmap"])) {
     $gBitSystem->storePreference("home_gmap", $_REQUEST["homeGmap"]);
-    $smarty->assign('home_gmap', $_REQUEST["homeGmap"]);
+    $gBitSmarty->assign('home_gmap', $_REQUEST["homeGmap"]);
+}
+
+if( !empty( $_REQUEST['gmaps_api_key'] ) ) {
+	$gBitSystem->storePreference( 'gmaps_api_key', $_REQUEST['gmaps_api_key'] );
 }
 
 require_once(GMAP_PKG_PATH.'BitGmap.php' );
@@ -21,22 +25,16 @@ $formGmapLists = array(
 		'label' => 'Text',
 	),
 );
-$smarty->assign( 'formGmapLists',$formGmapLists );
+$gBitSmarty->assign( 'formGmapLists',$formGmapLists );
 
 $processForm = set_tab();
 
 if( $processForm ) {
-	
 	$gmapToggles = array_merge( $formGmapLists );
 	foreach( $gmapToggles as $item => $data ) {
-		gmap_set_toggle( $item );
+		simple_set_toggle( $item );
 	}
-
 }
 
 
-
-$gmap = new BitGmap();
-$gmaps = $gmap->getList( $_REQUEST );
-$smarty->assign_by_ref('gmaps', $gmaps['data']);
 ?>
