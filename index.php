@@ -22,7 +22,7 @@
 /**
  * wj: Most of this page is based on the Sample Package
  */
- 
+
 // Initialization
 require_once( '../bit_setup_inc.php' );
 
@@ -40,7 +40,7 @@ require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 
 
 //@todo wj: this line from wiki package - might want to use it
-//include( BITMAP_PKG_URL.'display_gmap_inc.php' );		
+//include( BITMAP_PKG_URL.'display_gmap_inc.php' );
 
 //set onload function in body
 $gBodyOnload[] = 'loadMap()';

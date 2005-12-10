@@ -60,7 +60,7 @@ div id.maptoolsbar
 					 input id.marker_wintext
 					 input id.marker_style
 					 input id.marker_labeltext
-					 input id.marker_zi					 
+					 input id.marker_zi
 					 input id.icon_id
 					 input id.icon_name
 					 input id.icon_type
@@ -82,8 +82,8 @@ div id.maptoolsbar
 					 input id.icon_labelop
 					 input id.icon_hoverstyle
 					 input id.marker_winstyle
-					 
-					 
+
+
   div id.polytools
 			form name/id.polyform
 			   table
@@ -94,8 +94,8 @@ div id.maptoolsbar
 					 input id.line_style
 					 input id.line_bordertext
 					 input id.line_zi
-		
-		     table    
+
+		     table
 					 input id.line_styid
 					 input id.line_styname
 					 input id.line_color
@@ -144,38 +144,38 @@ div id.maptoolsbar
 <div id="maptools">
     <h3>Map Tools</h3>
     <FORM action="javascript:;" name="mapform" id="mapform">
-		   Map Id {$gContent->mMapData.gmap_id}<INPUT name="map_id" id="map_id" type="hidden" size="25" value="{$gContent->mMapData.gmap_id}"><br/>
-    	 Title <INPUT name="map_title" id="map_title" type="text" size="25" value="{$gContent->mMapData.title}"><br/>
-    	 Description <INPUT name="map_desc" id="map_desc" type="text" size="25" value="{$gContent->mMapData.description}"><br/>
-    	 Width <INPUT name="map_w" id="map_w" type="text" size="25" value="{$gContent->mMapData.width}"><br/>
-    	 Height <INPUT name="map_h" id="map_h" type="text" size="25" value="{$gContent->mMapData.height}"><br/>
-    	 Latitude <INPUT name="map_lat" id="map_lat"type="text" size="25" value="{$gContent->mMapData.lat}"><br/>
-    	 Longitude <INPUT name="map_lon" id="map_lon" type="text" size="25" value="{$gContent->mMapData.lon}"><br/>
-    	 Zoom Level <INPUT name="map_z" id="map_z" type="text" size="25" value="{$gContent->mMapData.zoom_level}"><br/>		
+		   Map Id {$gContent->mInfo.gmap_id}<INPUT name="map_id" id="map_id" type="hidden" size="25" value="{$gContent->mInfo.gmap_id}"><br/>
+    	 Title <INPUT name="map_title" id="map_title" type="text" size="25" value="{$gContent->mInfo.title}"><br/>
+    	 Description <INPUT name="map_desc" id="map_desc" type="text" size="25" value="{$gContent->mInfo.description}"><br/>
+    	 Width <INPUT name="map_w" id="map_w" type="text" size="25" value="{$gContent->mInfo.width}"><br/>
+    	 Height <INPUT name="map_h" id="map_h" type="text" size="25" value="{$gContent->mInfo.height}"><br/>
+    	 Latitude <INPUT name="map_lat" id="map_lat"type="text" size="25" value="{$gContent->mInfo.lat}"><br/>
+    	 Longitude <INPUT name="map_lon" id="map_lon" type="text" size="25" value="{$gContent->mInfo.lon}"><br/>
+    	 Zoom Level <INPUT name="map_z" id="map_z" type="text" size="25" value="{$gContent->mInfo.zoom_level}"><br/>
     	 Show Controls <SELECT name="map_showcont" id="map_showcont">
-          <OPTION value="s" {if $gContent->mMapData.show_controls == "s"}SELECTED{/if}>Small</OPTION>
-          <OPTION value="l" {if $gContent->mMapData.show_controls == "l"}SELECTED{/if}>Large</OPTION>
-          <OPTION value="z" {if $gContent->mMapData.show_controls == "z"}SELECTED{/if}>Zoom Only</OPTION>
-          <OPTION value="n" {if $gContent->mMapData.show_controls == "n"}SELECTED{/if}>None</OPTION>
+          <OPTION value="s" {if $gContent->mInfo.show_controls == "s"}SELECTED{/if}>Small</OPTION>
+          <OPTION value="l" {if $gContent->mInfo.show_controls == "l"}SELECTED{/if}>Large</OPTION>
+          <OPTION value="z" {if $gContent->mInfo.show_controls == "z"}SELECTED{/if}>Zoom Only</OPTION>
+          <OPTION value="n" {if $gContent->mInfo.show_controls == "n"}SELECTED{/if}>None</OPTION>
           </SELECT><br/>
     	 Show Scale <SELECT name="map_showscale" id="map_showscale">
-          <OPTION value="1" {if $gContent->mMapData.show_scale == 1}SELECTED{/if}>Yes</OPTION>
-          <OPTION value="0" {if $gContent->mMapData.show_scale == 0}SELECTED{/if}>No</OPTION>
+          <OPTION value="1" {if $gContent->mInfo.show_scale == 1}SELECTED{/if}>Yes</OPTION>
+          <OPTION value="0" {if $gContent->mInfo.show_scale == 0}SELECTED{/if}>No</OPTION>
           </SELECT><br/>
     	 Show Map Type Buttons <SELECT name="map_showtypecont" id="map_showtypecont">
-          <OPTION value="1" {if $gContent->mMapData.show_typecontrols == 1}SELECTED{/if}>Yes</OPTION>
-          <OPTION value="0" {if $gContent->mMapData.show_typecontrols == 0}SELECTED{/if}>No</OPTION>
+          <OPTION value="1" {if $gContent->mInfo.show_typecontrols == 1}SELECTED{/if}>Yes</OPTION>
+          <OPTION value="0" {if $gContent->mInfo.show_typecontrols == 0}SELECTED{/if}>No</OPTION>
           </SELECT><br/>
     	 Default Map Type
     			 <SELECT name="map_type" id="map_type">
-          <OPTION value="G_MAP_TYPE" {if $gContent->mMapData.map_type == "G_MAP_TYPE"}SELECTED{/if}>Street Map</OPTION>
-          <OPTION value="G_SATELLITE_TYPE" {if $gContent->mMapData.map_type == "G_SATELLITE_TYPE"}SELECTED{/if}>Satellite</OPTION>
-          <OPTION value="G_HYBRID_TYPE" {if $gContent->mMapData.map_type == "G_HYBRID_TYPE"}SELECTED{/if}>Hybrid</OPTION>
+          <OPTION value="G_MAP_TYPE" {if $gContent->mInfo.map_type == "G_MAP_TYPE"}SELECTED{/if}>Street Map</OPTION>
+          <OPTION value="G_SATELLITE_TYPE" {if $gContent->mInfo.map_type == "G_SATELLITE_TYPE"}SELECTED{/if}>Satellite</OPTION>
+          <OPTION value="G_HYBRID_TYPE" {if $gContent->mInfo.map_type == "G_HYBRID_TYPE"}SELECTED{/if}>Hybrid</OPTION>
     			<!-- //add additional maptypes attached to this map -->
           {if count($gContent->mMapTypes) > 0}
           {section name=addonmt loop=$gContent->mMapTypes}
 					{$typeid = $gContent->mMapTypes[addonmt].maptype_id}
-          <OPTION value="{$gContent->mMapTypes[addonmt].name}" {if $gContent->mMapData.map_type == $gContent->mMapTypes[addonmt].name}SELECTED{/if}>{$gContent->mMapTypes[addonmt].name}</OPTION>
+          <OPTION value="{$gContent->mMapTypes[addonmt].name}" {if $gContent->mInfo.map_type == $gContent->mMapTypes[addonmt].name}SELECTED{/if}>{$gContent->mMapTypes[addonmt].name}</OPTION>
           {/section}
 					{/if}
     			</SELECT><br/>
@@ -184,7 +184,7 @@ div id.maptoolsbar
     </FORM><br/><br/>
 
 
-		
+
     <!-- Additional Map Types Table -->
 		<h3>Additional Map Types</h3>
     <form action="javascript:;" name="maptypesform" id="maptypesform">
@@ -199,16 +199,16 @@ div id.maptoolsbar
 							</select><br/>
     			Base Tiles Url <input name="map_typetileurl_{$gContent->mMapTypes[mtype].maptype_id}" id="map_typetileurl_{$gContent->mMapTypes[mtype].maptype_id}" type="text" value="{$gContent->mMapTypes[mtype].maptiles_url}"><br/>
     			Overlay Tiles Url <input name="map_typeoverurl_{$gContent->mMapTypes[mtype].maptype_id}" id="map_typeoverurl_{$gContent->mMapTypes[mtype].maptype_id}" type="text" value="{$gContent->mMapTypes[mtype].hybridtiles_url}"><br/>
-    			Include With This Map <input name="map_typeinclude_{$gContent->mMapTypes[mtype].maptype_id}" id="map_typeinclude_{$gContent->mMapTypes[mtype].maptype_id}" type="checkbox" value="{$gContent->mMapData.gmap_id}"><br/>
+    			Include With This Map <input name="map_typeinclude_{$gContent->mMapTypes[mtype].maptype_id}" id="map_typeinclude_{$gContent->mMapTypes[mtype].maptype_id}" type="checkbox" value="{$gContent->mInfo.gmap_id}"><br/>
           {/section}
 					{/if}
     <input type="button" name="maptypessubmit" value="Submit" onclick="javascript:get('store_maptype.php', this.parentNode);">
     </form><br/>
-		
-		
+
+
     <!-- Marker Sets Table -->
 		<h3>Marker Sets</h3>
-    <form action="javascript:;" name="markersetsform" id="markersetsform">    
+    <form action="javascript:;" name="markersetsform" id="markersetsform">
 					Marker Sets<b></td>
 					Set Id <input name="map_markersetid[n]" id="map_markersetid[n]" type="text" value="[n]">
 					Set Name <input name="map_markersetname[n]" id="map_markersetname[n]" type="text" value="[n]">
@@ -217,10 +217,10 @@ div id.maptoolsbar
     <input type="button" name="markersetssubmit" value="Submit" onclick="javascript:get('store_markersets.php', this.parentNode);">
     </form>
 
-    
+
     <!-- Polyline Sets Table -->
-    <form action="javascript:;" name="linesetsform" id="linesetsform">    
-    <table>    	
+    <form action="javascript:;" name="linesetsform" id="linesetsform">
+    <table>
     	<tr><td><b>Polylines Sets<b></td>
 					<td>Set Id</td>
     			<td>Include On Launch</td>
@@ -236,10 +236,10 @@ div id.maptoolsbar
     </form>
 
 
-    
+
     <!-- Polygon Sets Table -->
-    <form action="javascript:;" name="polysetsform" id="polysetsform">    
-    <table>    	
+    <form action="javascript:;" name="polysetsform" id="polysetsform">
+    <table>
     	<tr><td><b>Polygon Sets<b></td>
 					<td>Set Id</td>
     			<td>Include On Launch</td>
@@ -265,9 +265,9 @@ div id.maptoolsbar
 
 
 <div id="markertools">
-		
-		
-		
+
+
+
 		<table>
     	<tr><td><b>Custom Icon Tools</b></td></tr>
     	<tr><td>Id</td><td><input name="icon_id" id="icon_id" type="text" value="[n]"></td>
@@ -285,9 +285,9 @@ div id.maptoolsbar
     	<tr><td>Icon Anchor y</td><td><input name="icon_anchory" id="icon_anchory" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Info Window Anchor x</td><td><input name="icon_winanchorx" id="icon_winanchorx" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Info Window Anchor y</td><td><input name="icon_winanchory" id="icon_winanchory" type="text" size="25" value="Some Value"></td></tr>
-		</table>    
+		</table>
 
-    <h4>Custom Marker Styles</h4>    
+    <h4>Custom Marker Styles</h4>
 		<table>
     	<tr><td>Id</td><td><input name="marker_styid" id="marker_styid" type="text" value="[n]"></td>
     	<tr><td>Name</td><td><input name="marker_styname" id="marker_styname" type="text" size="25" value="Some Value"></td></tr>
@@ -306,9 +306,9 @@ div id.maptoolsbar
 
 
 <div id="polytools">
-		
+
     <h4>Polyline Styles</h4>
-		<table>    
+		<table>
     	<tr><td>Id</td><td><input name="line_styid" id="line_styid" type="text" value="[n]"></td>
     	<tr><td>Name</td><td><input name="line_styname" id="line_styname" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>Color</td><td><input name="line_color" id="line_color" type="text" size="25" value="Hex Value"></td></tr>
@@ -329,8 +329,8 @@ div id.maptoolsbar
     	<tr><td>Text bgstyle_weight</td><td><input name="line_txtbgweight" id="line_txtbgweight" type="Text" size="25" value="A Number"></td></tr>
     	<tr><td>Text bgstyle_opacity</td><td><input name="line_txtbgop" id="line_txtbgop" type="Text" size="25" value="A Number"></td></tr>
     	<tr><td>Text bgstyle_zindex</td><td><input name="line_txtbgzi" id="line_txtbgzi" type="Text" size="25" value="A Number"></td></tr>
-		</table>    
-    
+		</table>
+
     <h3>Polygon Tools</h3>
 		<table>
     	<tr><td><b>Polygon</b></td></tr>
@@ -353,7 +353,7 @@ div id.maptoolsbar
     	<tr><td>Border Text</td><td><input name="poly_bordertext" id="poly_bordertext" type="text" size="25" value="Some Value"></td></tr>
     	<tr><td>zIndex</td><td><input name="poly_zi" id="poly_zi" type="text" size="25" value="A Number"></td></tr>
     </table>
-		
+
     <h4>Polygon Style</h4>
 		<table>
     	<tr><td>Id</td><td><input name="poly_styid" id="poly_styid" type="text" value="[n]"></td>
@@ -362,6 +362,6 @@ div id.maptoolsbar
     	<tr><td>Weight</td><td><input name="poly_weight" id="poly_weight" type="text" size="25" value="A Number"></td></tr>
     	<tr><td>Opacity</td><td><input name="poly_op" id="poly_op" type="text" size="25" value="A Number"></td></tr>
 		</table>
-		
+
 </div>
 </div>

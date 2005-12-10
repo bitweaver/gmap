@@ -15,21 +15,20 @@ $gBitSystem->verifyPermission('bit_gm_edit_map' );
 // Get the map for specified gmap_id
 require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 
-//Preview mode is handled by javascript on the client side.  
+//Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes
 
 
 //@todo wj: remove this part, as we are going to make an AJAX connection to a script that returns XML
 // Check if the page has changed
-if (!empty($_REQUEST["save_sample"])) {
-    
-    // Check if all Request values are delivered, and if not, set them
-    // to avoid error messages. This can happen if some features are
-    // disabled
-    if ($gContent->store( $_REQUEST ) ) {
+if (!empty($_REQUEST["save_map"])) {
+    if( $gContent->store( $_REQUEST ) ) {
         header("Location: ".$gContent->getDisplayUrl() );
         die;
     } else {
+    	$gContent->mInfo = $_REQUEST['gmap_store'];
+    	$gContent->mInfo['title'] = $_REQUEST['title'];
+    	$gContent->mInfo['data'] = $_REQUEST['edit'];
         $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
     }
 }
@@ -46,5 +45,10 @@ $gBitSmarty->assign( 'textarea_id', 'editsample' );
 $gBodyOnload[] = 'loadMap()';
 
 // Display the template
-$gBitSystem->display('bitpackage:gmap/edit_gmap.tpl', tra('Gmap') );
+if( $gContent->isValid() ) {
+	$mid = 'bitpackage:gmap/edit_gmap.tpl';
+} else {
+	$mid = 'bitpackage:gmap/create_gmap.tpl';
+}
+$gBitSystem->display( $mid, tra('Gmap') );
 ?>

@@ -7,13 +7,8 @@ $tables = array(
 //show_controls in bit_gmaps takes s,l,z,n  small, large, or none
 'bit_gmaps' => "
   gmap_id I4 AUTO PRIMARY,
-  user_id I4 NOTNULL,
-  modifier_user_id I4 NOTNULL,
-  created I8 NOTNULL,
-  last_modified I8 NOTNULL,
-  version I4 NOTNULL,
-  title C(255),
-  description C(255),
+  content_id I4 NOTNULL,
+  description C(200),
   width I4 DEFAULT 500,
   height I4 DEFAULT 300,
   lat F DEFAULT '40.77638178482896',
@@ -22,6 +17,7 @@ $tables = array(
   map_type C(128) DEFAULT 'G_HYBRID_TYPE',
   show_controls C(1) DEFAULT 's',
   show_scale C(1) DEFAULT '1',
+  allow_comments C(1) DEFAULT '1',
   show_typecontrols C(1) DEFAULT '1'
 ",
 

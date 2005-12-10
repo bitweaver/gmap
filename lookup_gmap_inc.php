@@ -5,24 +5,18 @@
 
 	// if we already have a gContent, we assume someone else created it for us, and has properly loaded everything up.
 	if( empty( $gContent ) || !is_object( $gContent ) || !$gContent->isValid() ) {
-		// if sample_id supplied, use that
 		if (!empty($_REQUEST['gmap_id']) && is_numeric($_REQUEST['gmap_id'])) {
+			// if sample_id supplied, use that
 			$gContent = new BitGmap( $_REQUEST['gmap_id'] );
-
-		// if content_id supplied, use that
 		} elseif (!empty($_REQUEST['content_id']) && is_numeric($_REQUEST['content_id'])) {
+			// if content_id supplied, use that
 			$gContent = new BitGmap( NULL, $_REQUEST['content_id'] );
-
-		// otherwise create new object
 		} else {
+			// otherwise create new object
 			$gContent = new BitGmap();
 		}
+		$gContent->load();
 
-		//handle legacy forms that use plain 'sample' form variable name
-		// TODO not sure what this does - wolff_borg
-		if( empty( $gContent->mGmapId ) && empty( $gContent->mContentId )  ) {
-		}
-		$gContent->getMap();
 		$gBitSmarty->assign_by_ref( "gContent", $gContent );
 	}
 ?>
