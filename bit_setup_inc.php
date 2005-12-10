@@ -4,7 +4,7 @@
 
 	if($gBitSystem->isPackageActive( 'gmap' ) ) {
 		if ($gBitUser->hasPermission( 'bit_gm_view_map' )) {
-			$gBitSystem->registerAppMenu( 'gmap', 'Gmap', GMAP_PKG_URL.'index.php', 'bitpackage:gmap/menu_gmap.tpl', 'gmap');
+			$gBitSystem->registerAppMenu( GMAP_PKG_DIR, 'Gmap', GMAP_PKG_URL.'index.php', 'bitpackage:gmap/menu_gmap.tpl', 'gmap');
 		}
 
 		/* @todo wj: either of these wanted for gmap (source: WikiPackage)?
