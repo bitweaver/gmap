@@ -487,12 +487,12 @@ class BitGmap extends LibertyAttachable {
 	function verify( &$pParamHash ) {
 	
 		$pParamHash['gmap_store'] = array();
-	
+
 		if( !empty( $pParamHash['map_desc'] ) ) {
 			$pParamHash['gmap_store']['description'] = $pParamHash['map_desc'];
 		}
-	
-		if( !empty( $pParamHash['map_w'] ) && is_numeric( $pParamHash['map_w'] ) ) {
+		
+		if( ( !empty( $pParamHash['map_w'] ) && is_numeric( $pParamHash['map_w'] ) ) || $pParamHash['map_w'] == 0 ) {
 			$pParamHash['gmap_store']['width'] = $pParamHash['map_w'];
 		}
 
@@ -538,7 +538,6 @@ class BitGmap extends LibertyAttachable {
 		if( $this->verify( $pParamHash ) ) {
 			$this->mDb->StartTrans();
 			if( parent::store( $pParamHash ) ) {
-				echo('updateContent<br/>');
 				if( $this->mGmapId ) {
 					// store the posted changes
 					$this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps", $pParamHash['gmap_store'], array( "name" => "gmap_id", "value" => $pParamHash['gmap_id'] ) );

@@ -367,7 +367,7 @@ function editPolyline(a, b){
 			bMapDesc = desc;
 			
 			var w = xml.documentElement.getElementsByTagName('w');
-			var width = w[0].firstChild.nodeValue + "px";
+			var width = w[0].firstChild.nodeValue;
 			bMapWidth = width;
 			
 			var h = xml.documentElement.getElementsByTagName('h');
@@ -411,7 +411,12 @@ function editPolyline(a, b){
       if (mapdesc){mapdesc.innerHTML=bMapDesc;}
 
       var mapdiv = document.getElementById('map');
-      if (mapdiv){mapdiv.style.width=bMapWidth; mapdiv.style.height=bMapHeight; map.onResize();}
+			if (bMapWidth !== '0'){
+			   var newWidth = bMapWidth + "px";
+				}else{
+			   var newWidth = 'auto';
+				}
+      if (mapdiv){mapdiv.style.width=newWidth; mapdiv.style.height=bMapHeight; map.onResize();}
 			
 			map.setMapType(bMapType);
 			

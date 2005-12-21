@@ -5,9 +5,9 @@
 {/if}
 
 <div class="header">
-	<h1>{$gContent->getTitle()}</h1>
+	<h1 id="mymaptitle">{$gContent->getTitle()}</h1>
 	{if $gContent->mInfo.description}
-		<h2>{$gContent->mInfo.description}</h2>
+		<h2 id="mymapdesc">{$gContent->mInfo.description}</h2>
 	{/if}
 	{include file="bitpackage:gmap/gmap_date_bar.tpl"}
 </div><!-- end .header -->
