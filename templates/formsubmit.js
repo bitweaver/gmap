@@ -17,7 +17,7 @@ function canceledit(i){
 function editMap(){
 				 	show('editmapform');
 
-    			document.getElementById('map_id').value = bMapID;
+    			document.getElementById('gmap_id').value = bMapID;
     			document.getElementById('map_title').value = bMapTitle;
     			document.getElementById('map_desc').value = bMapDesc;
     			document.getElementById('map_w').value = bMapWidth;
@@ -244,6 +244,7 @@ function editPolyline(a, b){
               }
               if (obj.childNodes[i].type == "button") {
   							 if (obj.childNodes[i].value == "Submit"){
+								 		getstr += obj.childNodes[i].name + "=" + obj.childNodes[i].value + "&";
   							 		part = obj.childNodes[i].name;
   							 }
   						}
@@ -287,7 +288,7 @@ function editPolyline(a, b){
          alert('Cannot create XMLHTTP instance');
          return false;
       }
-			if (part == "mapsubmit"){
+			if (part == "save_map"){
 			      http_request.onreadystatechange = alertMap;
 			}
 			if (part == "markersubmit"){
@@ -415,7 +416,7 @@ function editPolyline(a, b){
 			map.setMapType(bMapType);
 			
       //Add Map TYPE controls - buttons in the upper right corner
-  		if (bMapTypeCont == 1){
+  		if (bMapTypeCont == 'TRUE'){
   		map.removeControl(typecontrols);
   		map.addControl(typecontrols);
   		}else{
@@ -423,7 +424,7 @@ function editPolyline(a, b){
   		}
   		
   		//Add Scale controls
-  		if (bMapScale == 1){
+  		if (bMapScale == 'TRUE'){
   		map.removeControl(scale);
   		map.addControl(scale);
   		}else{

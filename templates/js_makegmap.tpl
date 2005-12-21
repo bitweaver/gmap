@@ -6,17 +6,17 @@ var smallcontrols;
 var largecontrols;
 var zoomcontrols;
 
-var bMapID = {$gContent->mInfo.gmap_id};
+var bMapID {if $gContent->mInfo.gmap_id} = {$gContent->mInfo.gmap_id}{/if};
 var bMapTitle = "{$gContent->mInfo.title}";
 var bMapDesc = "{$gContent->mInfo.description}";
-var bMapWidth = {$gContent->mInfo.width};
-var bMapHeight = {$gContent->mInfo.height};
+var bMapWidth = {if $gContent->mInfo.width == 0}'auto'{else}{$gContent->mInfo.width}{/if};
+var bMapHeight = {if $gContent->mInfo.height == 0}'auto'{else}{$gContent->mInfo.height}{/if};
 var bMapLat = {$gContent->mInfo.lat};
 var bMapLon = {$gContent->mInfo.lon};
 var bMapZoom = {$gContent->mInfo.zoom_level};
-var bMapScale = {$gContent->mInfo.show_scale}; //0,1
+var bMapScale = "{$gContent->mInfo.show_scale}"; //TRUE or FALSE
 var bMapControl = "{$gContent->mInfo.show_controls}"; //s,l,z,n
-var bMapTypeCont = {$gContent->mInfo.show_typecontrols};//0,1
+var bMapTypeCont = "{$gContent->mInfo.show_typecontrols}";//TRUE or FALSE
 var bMapType = "{$gContent->mInfo.map_type}";
 
 var bMapTypes = new Array();
@@ -116,12 +116,12 @@ function loadMap() {ldelim}
     zoomcontrols = new GSmallZoomControl();
 
 	//Add Map TYPE controls - buttons in the upper right corner
-	{if $gContent->mInfo.show_typecontrols eq '1'}
+	{if $gContent->mInfo.show_typecontrols eq 'TRUE'}
 		map.addControl(typecontrols);
 	{/if}
 
 	//Add Scale controls
-	{if $gContent->mInfo.show_scale eq '1'}
+	{if $gContent->mInfo.show_scale eq 'TRUE'}
 		map.addControl(scale);
 	{/if}
 

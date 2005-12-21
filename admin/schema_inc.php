@@ -16,9 +16,9 @@ $tables = array(
   zoom_level I4 DEFAULT 6,
   map_type C(128) DEFAULT 'G_HYBRID_TYPE',
   show_controls C(1) DEFAULT 's',
-  show_scale C(1) DEFAULT '1',
-  allow_comments C(1) DEFAULT '1',
-  show_typecontrols C(1) DEFAULT '1'
+  show_scale C(5) DEFAULT 'TRUE',
+  show_typecontrols C(5) DEFAULT 'TRUE',
+  allow_comments C(5) DEFAULT 'TRUE'
 ",
 
 //set_type in bit_gmaps_sets_keychain can be: init_markers, init_polylines, init_polygons, set_markers, set_polylines, set_polygons, map_types
@@ -41,17 +41,14 @@ $tables = array(
 
 'bit_gmaps_markers' => "
   marker_id I8 AUTO PRIMARY,
-  user_id I4 NOTNULL,
-  modifier_user_id I4 NOTNULL,
-  created I8 NOTNULL,
-  last_modified I8 NOTNULL,
-  version I4 NOTNULL,
+  content_id I4 NOTNULL,
   name C(255),
   lat F NOTNULL,
   lon F NOTNULL,
   window_data X,
   label_data X,
-  zindex I8
+  zindex I8 DEFAULT 0,
+	allow_comments C(5) DEFAULT 'TRUE'
 ",
 
 //types has two options: 0 => GIcon, 1 => XIcon

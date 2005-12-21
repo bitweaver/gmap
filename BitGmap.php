@@ -485,7 +485,13 @@ class BitGmap extends LibertyAttachable {
 //ALL STORE FUNCTIONS
 
 	function verify( &$pParamHash ) {
-
+	
+		$pParamHash['gmap_store'] = array();
+	
+		if( !empty( $pParamHash['map_desc'] ) ) {
+			$pParamHash['gmap_store']['description'] = $pParamHash['map_desc'];
+		}
+	
 		if( !empty( $pParamHash['map_w'] ) && is_numeric( $pParamHash['map_w'] ) ) {
 			$pParamHash['gmap_store']['width'] = $pParamHash['map_w'];
 		}
@@ -523,7 +529,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['gmap_store']['map_type'] = $pParamHash['map_type'];
 		}
 		if( !empty( $pParamHash['map_comm'] ) ) {
-			$pParamHash['gmap_store']['allow_comments'] = '1';
+			$pParamHash['gmap_store']['allow_comments'] = 'TRUE';
 		}
 		return( count( $this->mErrors ) == 0 );
 	}
@@ -532,6 +538,7 @@ class BitGmap extends LibertyAttachable {
 		if( $this->verify( $pParamHash ) ) {
 			$this->mDb->StartTrans();
 			if( parent::store( $pParamHash ) ) {
+				echo('updateContent<br/>');
 				if( $this->mGmapId ) {
 					// store the posted changes
 					$this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps", $pParamHash['gmap_store'], array( "name" => "gmap_id", "value" => $pParamHash['gmap_id'] ) );
@@ -544,20 +551,6 @@ class BitGmap extends LibertyAttachable {
 				// re-query to confirm results
 				$result = $this->load( FALSE );
 
-/*				$this->mRet = "<map>"
-							."<title>".$result->fields['title']."</title>"
-							."<desc>".$result->fields['description']."</desc>"
-							."<w>".$result->fields['width']."</w>"
-							."<h>".$result->fields['height']."</h>"
-							."<lat>".$result->fields['lat']."</lat>"
-							."<lon>".$result->fields['lon']."</lon>"
-							."<z>".$result->fields['zoom_level']."</z>"
-							."<maptype>".$result->fields['map_type']."</maptype>"
-							."<cont>".$result->fields['show_controls']."</cont>"
-							."<scale>".$result->fields['show_scale']."</scale>"
-							."<typecon>".$result->fields['show_typecontrols']."</typecon>"
-							."</map>";
-*/
 			} else {
 				$this->mDb->RollbackTrans();
 			}

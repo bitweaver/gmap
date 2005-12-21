@@ -8,7 +8,7 @@
 <div id="editmapform" style="display:none;">
     <h3>Map Tools</h3>
     <FORM action="javascript:;" name="mapform" id="mapform">
-		   <!-- Map Id --> <INPUT name="map_id" id="map_id" type="hidden" size="25" value=""><br/>
+		   <!-- Map Id --> <INPUT name="gmap_id" id="gmap_id" type="hidden" size="25" value=""><br/>
     	 Title <INPUT name="map_title" id="map_title" type="text" size="25" value=""><br/>
     	 Description <INPUT name="map_desc" id="map_desc" type="text" size="25" value=""><br/>
     	 Width <INPUT name="map_w" id="map_w" type="text" size="25" value=""><br/>
@@ -23,12 +23,12 @@
           <OPTION value="n" >None</OPTION>
           </SELECT><br/>
     	 Show Scale <SELECT name="map_showscale" id="map_showscale">
-          <OPTION value="1" >Yes</OPTION>
-          <OPTION value="0" >No</OPTION>
+          <OPTION value="TRUE" >Yes</OPTION>
+          <OPTION value="FALSE" >No</OPTION>
           </SELECT><br/>
     	 Show Map Type Buttons <SELECT name="map_showtypecont" id="map_showtypecont">
-          <OPTION value="1" >Yes</OPTION>
-          <OPTION value="0" >No</OPTION>
+          <OPTION value="TRUE" >Yes</OPTION>
+          <OPTION value="FALSE" >No</OPTION>
           </SELECT><br/>
     	 Default Map Type
     			<SELECT name="map_type" id="map_type">
@@ -37,7 +37,7 @@
           <OPTION value="G_HYBRID_TYPE" >Hybrid</OPTION>
    			</SELECT><br/>
     <!-- Allow Comments <INPUT name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
-    <INPUT type="button" name="mapsubmit" value="Submit" onclick="javascript:get('store_gmap.php', this.parentNode);"><br/>
+    <INPUT type="button" name="save_map" value="Submit" onclick="javascript:get('edit.php', this.parentNode);"><br/>
    	<INPUT type="button" name="closemapform" value="Cancel" onclick="javascript:canceledit('editmapform');">
      </FORM>
 </div>	

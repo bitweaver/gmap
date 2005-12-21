@@ -11,10 +11,7 @@
 	{include file="bitpackage:gmap/gmap_header.tpl"}
 
 	<div class="body">
-		<a href="javascript:getEditTools();">Load Edit Tools</a>
-		<div id="map" style="width:{$gContent->mInfo.width}px; height:{$gContent->mInfo.height}px;"></div>
-		{include file="bitpackage:gmap/edit_marker_form.tpl"}
-		{include file="bitpackage:gmap/edit_polyline_form.tpl"}
-		<div id="editform">{include file="bitpackage:gmap/edit_gmap_form.tpl"}</div>
+		<div id="map" style="width:{if $gContent->mInfo.width == 0}auto{else}{$gContent->mInfo.width}px{/if}; height:{if $gContent->mInfo.height == 0}auto{else}{$gContent->mInfo.height}px{/if};"></div>
+		{include file="bitpackage:gmap/edit_form.html"}
 	</div> <!-- end .body -->
 </div>
