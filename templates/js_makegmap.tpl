@@ -144,7 +144,7 @@ function loadMap() {ldelim}
 		for(n=0; n<bIMData.length; n++){ldelim}
 			var point = new GPoint(parseFloat(bIMData[n].lon), parseFloat(bIMData[n].lat));
 				bIMData[n].marker = new GMarker(point);
-				bIMData[n].marker.my_html = "<div style='white-space: nowrap;'><div class='editbtn'><a href='javascript:editMarker(\"I\","+n+")'>edit<a></div><strong>"+bIMData[n].name+"</strong><p>"+bIMData[n].window_data+"</p></div>";
+				bIMData[n].marker.my_html = "<div style='white-space: nowrap;'><!--<div class='editbtn'><a href='javascript:editMarker(\"I\","+n+")'>edit</a></div>--><strong>"+bIMData[n].title+"</strong><p>"+bIMData[n].data+"</p></div>";
 				map.addOverlay(bIMData[n].marker);
 				//add the marker label if it exists
 				if (bIMData[n].label_data){ldelim}
@@ -162,7 +162,7 @@ function loadMap() {ldelim}
 	for(n=0; n<bSMData.length; n++){ldelim}
 		var point = new GPoint(parseFloat(bSMData[n].lon), parseFloat(bSMData[n].lat));
 			var bSMData[n].marker = new GMarker(point);
-			var bSMData[n].marker.my_html = "<div style='white-space: nowrap;'><h3>"+bSMData[n].name+"</h3><p>"+bSMData[n].window_data+"</p></div>";
+			var bSMData[n].marker.my_html = "<div style='white-space: nowrap;'><h3>"+bSMData[n].title+"</h3><p>"+bSMData[n].data+"</p></div>";
 			//@todo this needs to come out when side panel is added to engine.
 			map.addOverlay(bSMData[n].marker);
 			//@todo marker label construction needs to be added via the side panel

@@ -159,14 +159,15 @@ class BitGmap extends LibertyAttachable {
 		if ($gmap_id && is_numeric($gmap_id)) {
 
 		 	$bindVars = array((int)$gmap_id, $settype);
-			$query = "SELECT bmm.*, bms.*
+			$query = "SELECT bmm.*, tc.*, bms.* 
                 FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."bit_gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."bit_gmaps_markers` bmm, `".BIT_DB_PREFIX."bit_gmaps_marker_sets` bms
+								INNER JOIN `".BIT_DB_PREFIX."tiki_content` tc ON( bmm.`content_id`=tc.`content_id` )
                 WHERE bsk.`gmap_id` = ?
                 AND bsk.`set_type` = ?
                 AND bms.`set_id` = bsk.`set_id`
                 AND bmk.`set_id` = bms.`set_id`
                 AND bmm.`marker_id` = bmk.`marker_id`";
-
+								
 			$result = $this->mDb->query( $query, $bindVars );
 
 			$ret = array();

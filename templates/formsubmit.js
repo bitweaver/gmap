@@ -84,21 +84,34 @@ function editMarkers(){
 				for (i=0; i<bIMData.length; i++) {
 	
 					if( i < (bIMData.length-1) ){
-    				var newMarkerForm = document.getElementById('markerform_0').cloneNode(true);				
+    				var newMarkerForm = document.getElementById('markerform_0').cloneNode(true);
 						newMarkerForm.id = "markerform_"+(i+1);
 						document.getElementById('editmarkertable').appendChild(newMarkerForm);
 					}
 
-        	document.getElementsByName('marker_id').item(i).value = bIMData[i].marker_id;
-        	document.getElementsByName('marker_name').item(i).value = bIMData[i].name;
-        	document.getElementsByName('marker_lat').item(i).value = bIMData[i].lat;
-        	document.getElementsByName('marker_lon').item(i).value = bIMData[i].lon;
-        	document.getElementsByName('marker_wintext').item(i).value = bIMData[i].window_data;
-        	document.getElementsByName('marker_labeltext').item(i).value = bIMData[i].label_data;
-        	document.getElementsByName('marker_zi').item(i).value = bIMData[i].zindex;
-        	document.getElementsByName('marker_array').item(i).value = bIMData[i].array;
-        	document.getElementsByName('marker_array_n').item(i).value = bIMData[i].array_n;
-					
+					form = document.getElementById('markerform_'+(i));
+
+        	form.marker_id.value = bIMData[i].marker_id;
+        	form.title.value = bIMData[i].title;
+        	form.marker_lat.value = bIMData[i].lat;
+        	form.marker_lon.value = bIMData[i].lon;
+        	form.data.value = bIMData[i].data;
+        	form.marker_labeltext.value = bIMData[i].label_data;
+        	form.marker_zi.value = bIMData[i].zindex;
+        	form.marker_array.value = bIMData[i].array;
+        	form.marker_array_n.value = bIMData[i].array_n;
+
+/*										
+        	form.getElementsByName('marker_id').item(i).value = bIMData[i].marker_id;
+        	form.getElementsByName('title').item(i).value = bIMData[i].title;
+        	form.getElementsByName('marker_lat').item(i).value = bIMData[i].lat;
+        	form.getElementsByName('marker_lon').item(i).value = bIMData[i].lon;
+        	form.getElementsByName('data').item(i).value = bIMData[i].data;
+        	form.getElementsByName('marker_labeltext').item(i).value = bIMData[i].label_data;
+        	form.getElementsByName('marker_zi').item(i).value = bIMData[i].zindex;
+        	form.getElementsByName('marker_array').item(i).value = bIMData[i].array;
+        	form.getElementsByName('marker_array_n').item(i).value = bIMData[i].array_n;
+		*/			
     			/* @todo include the following 
             bIMData[i].set_id;
             bIMData[i].style_id;
@@ -291,7 +304,7 @@ function editPolyline(a, b){
 			if (part == "save_map"){
 			      http_request.onreadystatechange = alertMap;
 			}
-			if (part == "markersubmit"){
+			if (part == "save_marker"){
 			      http_request.onreadystatechange = alertMarker;
 			}
 			if (part == "polylinesubmit"){
@@ -371,7 +384,7 @@ function editPolyline(a, b){
 			bMapWidth = width;
 			
 			var h = xml.documentElement.getElementsByTagName('h');
-			var height = h[0].firstChild.nodeValue + "px";
+			var height = h[0].firstChild.nodeValue;
 			bMapHeight = height;
 			
 			var lt = xml.documentElement.getElementsByTagName('lat');
@@ -411,12 +424,17 @@ function editPolyline(a, b){
       if (mapdesc){mapdesc.innerHTML=bMapDesc;}
 
       var mapdiv = document.getElementById('map');
-			if (bMapWidth !== '0'){
+			if (bMapWidth !== '0' && bMapWidth !== 0){
 			   var newWidth = bMapWidth + "px";
 				}else{
 			   var newWidth = 'auto';
 				}
-      if (mapdiv){mapdiv.style.width=newWidth; mapdiv.style.height=bMapHeight; map.onResize();}
+			if (bMapHeight !== '0' && bMapHeight !== 0){
+			   var newHeight = bMapHeight + "px";
+				}else{
+			   var newHeight = 'auto';
+				}
+      if (mapdiv){mapdiv.style.width=newWidth; mapdiv.style.height=newHeight; map.onResize();}
 			
 			map.setMapType(bMapType);
 			
@@ -462,9 +480,9 @@ function editPolyline(a, b){
 			var id = xml.documentElement.getElementsByTagName('id');			
 			var marker_id = id[0].firstChild.nodeValue;
 
-			var nm = xml.documentElement.getElementsByTagName('name');
-			var name = nm[0].firstChild.nodeValue;			
-	 		m.name = name;
+			var tl = xml.documentElement.getElementsByTagName('title');
+			var title = tl[0].firstChild.nodeValue;			
+	 		m.title = title;
 			
 			var lt = xml.documentElement.getElementsByTagName('lat');
 			var lat = parseFloat(lt[0].firstChild.nodeValue);
@@ -476,7 +494,7 @@ function editPolyline(a, b){
 
 			var dt = xml.documentElement.getElementsByTagName('data');
 			var data = dt[0].firstChild.nodeValue;			
-	 		m.window_data = data;
+	 		m.data = data;
 
 			var l = xml.documentElement.getElementsByTagName('label');
 			var label = l[0].firstChild.nodeValue;			
@@ -491,7 +509,7 @@ function editPolyline(a, b){
 			m.marker.point.y = parseFloat(m.lat);
 			
 			//update infoWindow html
-			m.marker.my_html = "<div style='white-space: nowrap;'><div><a href='javascript:editMarker(\""+editArray+"\","+editObjectN+"])'>edit<a></div><strong>"+m.name+"</strong><p>"+m.window_data+"</p></div>";
+			m.marker.my_html = "<div style='white-space: nowrap;'><div><a href='javascript:editMarker(\""+editArray+"\","+editObjectN+"])'>edit<a></div><strong>"+m.title+"</strong><p>"+m.data+"</p></div>";
 			m.marker.openInfoWindowHtml(m.marker.my_html);
 
 			//update label

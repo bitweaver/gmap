@@ -49,7 +49,7 @@
 		<div class="table" id="editmarkertable">
     	<div class="tableheader">
 				<div style="float:left; padding:0 .4em; width:30px"> Id </div>
-				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
+				<div style="float:left; padding:0 .4em; width:90px"> Title </div>
 				<div style="float:left; padding:0 .4em; width:90px"> Latitude </div>
 				<div style="float:left; padding:0 .4em; width:90px"> Longitude </div>
 				<div style="float:left; padding:0 .4em; width:140px"> Window Text </div>
@@ -60,15 +60,15 @@
 			<FORM action="javascript:;" name="markerform_0" id="markerform_0">
 			<div class="data">
   			<div style="float:left; padding:0 .4em; width:30px"><INPUT name="marker_id" type="text" size="3" value="a number"></div>
-      	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="marker_name" type="text" size="15" value=""></div>
+      	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="title" type="text" size="15" value="a title"></div>
       	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="marker_lat" type="text" size="15" value=""></div>
       	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="marker_lon" type="text" size="15" value=""></div>
-      	<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_wintext" cols="15" rows="3"></textarea></div>
+      	<div style="float:left; padding:0 .4em; width:140px"><textarea name="data" cols="15" rows="3"></textarea></div>
       	<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
       	<div style="float:left; padding:0 .4em; width:50px"><INPUT name="marker_zi" type="text" size="3" value="undefined"></div>
       	<div style="float:left; padding:0;"><INPUT name="marker_array" type="hidden" size="3" value=""></div>
       	<div style="float:left; padding:0;"><INPUT name="marker_array_n" type="hidden" size="3" value=""></div>
-      	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="markersubmit" value="Submit" onclick="javascript:get('store_marker.php', this.form, this.form.marker_array.value, this.form.marker_array_n.value);"></div>
+      	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="save_marker" value="Submit" onclick="javascript:get('edit_marker.php', this.form, this.form.marker_array.value, this.form.marker_array_n.value);"></div>
       	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="locate" value="Locate" onclick="javascript:bIMData[this.form.marker_array_n.value].marker.openInfoWindowHtml(bIMData[this.form.marker_array_n.value].marker.my_html);"></div>
 			</div>
 			</FORM>
