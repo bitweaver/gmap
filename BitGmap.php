@@ -486,7 +486,7 @@ class BitGmap extends LibertyAttachable {
 //ALL STORE FUNCTIONS
 
 	function verify( &$pParamHash ) {
-	
+
 		$pParamHash['gmap_store'] = array();
 
 		if( !empty( $pParamHash['map_desc'] ) ) {
@@ -560,57 +560,56 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	// @todo would be nice if this could take an array of marker ids to update several at once.
-	function storeMarkerData( &$pParamHash ) {
-			// store the posted changes
-			$table = BIT_DB_PREFIX."bit_gmaps_markers";
-			$this->mDb->StartTrans();
-			$locId = array( "name" => "marker_id", "value" => $pParamHash['marker_id'] );
-			$rslt = $this->mDb->associateUpdate( $table, $pParamHash, $locId );
-			$this->mDb->CompleteTrans();
+	//storage of markers is handled by the marker class in BitGmapMarker.php
 
-			// re-query to confirm results
-			$result = $this->getMarkerData($pParamHash['marker_id']);
 
-			$this->mRet = "<marker>"
-      			  ."<id>".$result->fields['marker_id']."</id>"
-              ."<mod_id>".$result->fields['modifier_user_id']."</mod_id>"
-              ."<last_mod>".$result->fields['last_modified']."</last_mod>"
-              ."<name>".$result->fields['name']."</name>"
-              ."<lat>".$result->fields['lat']."</lat>"
-              ."<lon>".$result->fields['lon']."</lon>"
-              ."<data>".$result->fields['window_data']."</data>"
-              ."<label>".$result->fields['label_data']."</label>"
-              ."<z>".$result->fields['zindex']."</z>"
-						 ."</marker>";
+	function verifyPolyline( &$pParamHash ) {
+
+		$pParamHash['polyline_store'] = array();
+
+		if( !empty( $pParamHash['line_name'] ) ) {
+			$pParamHash['polyline_store']['name'] = $pParamHash['line_name'];
+		}
+
+		if( !empty( $pParamHash['line_type'] ) ) {
+			$pParamHash['polyline_store']['type'] = $pParamHash['line_type'];
+		}
+				
+		if( !empty( $pParamHash['line_data'] ) ) {
+			$pParamHash['polyline_store']['points_data'] = $pParamHash['line_data'];
+		}
+
+		if( !empty( $pParamHash['line_bordertext'] ) ) {
+			$pParamHash['polyline_store']['border_text'] = $pParamHash['line_bordertext'];
+		}
+
+		if( !empty( $pParamHash['line_z'] ) && is_numeric( $pParamHash['line_z'] ) ) {
+			$pParamHash['polyline_store']['zindex'] = $pParamHash['line_z'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
 	}
-
-
-
-
-	// @todo would be nice if this could take an array of marker ids to update several at once.
-	function storePolylineData( &$pParamHash ) {
-			// store the posted changes
-			$table = BIT_DB_PREFIX."bit_gmaps_polylines";
+	
+	function storePolyline( &$pParamHash ) {
+	echo('sp');
+		if( $this->verifyPolyline( $pParamHash ) ) {
 			$this->mDb->StartTrans();
-			$locId = array( "name" => "polyline_id", "value" => $pParamHash['polyline_id'] );
-			$rslt = $this->mDb->associateUpdate( $table, $pParamHash, $locId );
-			$this->mDb->CompleteTrans();
+			if( parent::storePolyline( $pParamHash ) ) {
+					// store the posted changes
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps_polylines", $pParamHash['polyline_store'], array( "name" => "polyline_id", "value" => $pParamHash['polyline_id'] ) );
 
-			// re-query to confirm results
-			$result = $this->getPolylineData($pParamHash['polyline_id']);
+				$this->mDb->CompleteTrans();
 
-			$this->mRet = "<polyline>"
-      			  ."<id>".$result->fields['polyline_id']."</id>"
-              ."<name>".$result->fields['name']."</name>"
-              ."<type>".$result->fields['type']."</type>"
-              ."<points>".$result->fields['points_data']."</points>"
-              ."<border>".$result->fields['border_text']."</border>"
-              ."<z>".$result->fields['zindex']."</z>"
-						 ."</polyline>";
+				// re-query to confirm results
+				$result = $this->getPolylineData($pParamHash['polyline_id']);
+
+			} else {
+				$this->mDb->RollbackTrans();
+			}
+		}
+		return( count( $this->mInfo ) );
 	}
-
-
+	
 
 
 	/**

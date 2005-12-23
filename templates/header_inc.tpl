@@ -9,6 +9,7 @@
 
 {* @todo make include of formsubmit conditional *}
 <script src="templates/formsubmit.js" type="text/javascript"></script>
+<script src="http://www.wjamesphoto.com/bw/themes/js/prototype.js" type="text/javascript"></script>
 
 <style type="text/css">
 	textarea	{ldelim}font-size:.9em;{rdelim}

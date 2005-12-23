@@ -63,7 +63,7 @@
       	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="title" type="text" size="15" value="a title"></div>
       	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="marker_lat" type="text" size="15" value=""></div>
       	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="marker_lon" type="text" size="15" value=""></div>
-      	<div style="float:left; padding:0 .4em; width:140px"><textarea name="data" cols="15" rows="3"></textarea></div>
+      	<div style="float:left; padding:0 .4em; width:140px"><textarea name="edit" cols="15" rows="3"></textarea></div>
       	<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
       	<div style="float:left; padding:0 .4em; width:50px"><INPUT name="marker_zi" type="text" size="3" value="undefined"></div>
       	<div style="float:left; padding:0;"><INPUT name="marker_array" type="hidden" size="3" value=""></div>
@@ -92,7 +92,7 @@
 			</div>
 			<FORM action="javascript:;" name="polylineform_0" id="polylineform_0">
 			<div class="data">
-  			<div style="float:left; padding:0 .4em; width:30px"><INPUT name="line_id" type="text" size="3" value="a number"></div>
+  			<div style="float:left; padding:0 .4em; width:30px"><INPUT name="polyline_id" type="text" size="3" value="a number"></div>
       	<div style="float:left; padding:0 .4em; width:80px"><INPUT name="line_name" type="text" size="15" value=""></div>
       	<div style="float:left; padding:0 .4em; width:90px"><SELECT name="line_type">
                                                    				  <option>Default</option>
@@ -102,7 +102,7 @@
       	<div style="float:left; padding:0 .4em; width:50px"><INPUT name="line_z" type="text" size="3" value=""></div>
       	<div style="float:left; padding:0;"><INPUT name="line_array" type="hidden" size="3" value=""></div>
       	<div style="float:left; padding:0;"><INPUT name="line_array_n" type="hidden" size="3" value=""></div>
-      	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="polylinesubmit" value="Submit" onclick="javascript:get('store_polyline.php', this.form, this.form.line_array.value, this.form.line_array_n.value);"></div>
+      	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="save_polyline" value="Submit" onclick="javascript:get('edit_polyline.php', this.form, this.form.line_array.value, this.form.line_array_n.value);"></div>
       	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="locate" value="Locate" onclick="javascript:alert('need an idea, maybe center on it?');"></div>
 			</div>
 			</FORM>

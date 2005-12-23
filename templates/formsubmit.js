@@ -95,23 +95,12 @@ function editMarkers(){
         	form.title.value = bIMData[i].title;
         	form.marker_lat.value = bIMData[i].lat;
         	form.marker_lon.value = bIMData[i].lon;
-        	form.data.value = bIMData[i].data;
+        	form.edit.value = bIMData[i].data;
         	form.marker_labeltext.value = bIMData[i].label_data;
         	form.marker_zi.value = bIMData[i].zindex;
         	form.marker_array.value = bIMData[i].array;
         	form.marker_array_n.value = bIMData[i].array_n;
 
-/*										
-        	form.getElementsByName('marker_id').item(i).value = bIMData[i].marker_id;
-        	form.getElementsByName('title').item(i).value = bIMData[i].title;
-        	form.getElementsByName('marker_lat').item(i).value = bIMData[i].lat;
-        	form.getElementsByName('marker_lon').item(i).value = bIMData[i].lon;
-        	form.getElementsByName('data').item(i).value = bIMData[i].data;
-        	form.getElementsByName('marker_labeltext').item(i).value = bIMData[i].label_data;
-        	form.getElementsByName('marker_zi').item(i).value = bIMData[i].zindex;
-        	form.getElementsByName('marker_array').item(i).value = bIMData[i].array;
-        	form.getElementsByName('marker_array_n').item(i).value = bIMData[i].array_n;
-		*/			
     			/* @todo include the following 
             bIMData[i].set_id;
             bIMData[i].style_id;
@@ -148,18 +137,20 @@ function editPolylines(){
 						document.getElementById('editpolylinetable').appendChild(newPolylineForm);
 					}
 
-        	document.getElementsByName('line_id').item(i).value = bILData[i].polyline_id;
-        	document.getElementsByName('line_name').item(i).value = bILData[i].name;
+					form = document.getElementById('polylineform_'+(i));					
+					
+        	form.polyline_id.value = bILData[i].polyline_id;
+        	form.line_name.value = bILData[i].name;
         	for (var j=0; j < 2; j++) {
-             if (document.getElementsByName('line_type').item(i).options[j].value == bILData[i].type){
-                document.getElementsByName('line_type').item(i).options[j].selected=true;
+             if (form.line_type.options[j].value == bILData[i].type){
+                form.line_type.options[j].selected=true;
              }
           }					
-        	document.getElementsByName('line_data').item(i).value = bILData[i].points_data;
-        	document.getElementsByName('line_bordertext').item(i).value = bILData[i].border_text;
-        	document.getElementsByName('line_z').item(i).value = bILData[i].zindex;
-        	document.getElementsByName('line_array').item(i).value = bILData[i].array;
-        	document.getElementsByName('line_array_n').item(i).value = bILData[i].array_n;
+        	form.line_data.value = bILData[i].points_data;
+        	form.line_bordertext.value = bILData[i].border_text;
+        	form.line_z.value = bILData[i].zindex;
+        	form.line_array.value = bILData[i].array;
+        	form.line_array_n.value = bILData[i].array_n;
 					
     			/* @todo include the following 
             bILData[i].set_id;
@@ -214,162 +205,38 @@ function editPolyline(a, b){
    var http_request = false;
 
 	 
-   //get translates the DOM of any FORM into a string of values for php
-	 //also relays the url of the php script to makeRequest().
-   function get(url, o, a, n) {
+	 function get(u, f, a, n){
 			editArray = a;
 			editObjectN = n;
-      var getstr = "?";
-			var part = "";
-			function parseObj(obj){
-        for (i=0; i<obj.childNodes.length; i++) {
+	 		var data;
+      data = Form.serialize(f);
 
-					 if (obj.childNodes[i].tagName == "DIV"){
-					 		var newObj = obj.childNodes[i].getElementsByTagName("DIV");
-							for (x=0; x<newObj.length; x++){
-  								parseObj(newObj.item(x));
-							}
-					 }
 
-					 if (obj.childNodes[i].tagName == "TABLE"){
-					 		for (j=0; j<obj.childNodes[i].rows.length; j++){
-									for (k=0; k<obj.childNodes[i].rows[j].cells.length; k++){
-											parseObj(obj.childNodes[i].rows[j].cells[k]);
-									};
-							};
-					 }
-					 					   			
-           if (obj.childNodes[i].tagName == "INPUT") {
-              if (obj.childNodes[i].type == "text" || "hidden") {
-                 getstr += obj.childNodes[i].name + "=" + obj.childNodes[i].value + "&";
-              }
-              if (obj.childNodes[i].type == "checkbox") {
-                 if (obj.childNodes[i].checked) {
-                    getstr += obj.childNodes[i].name + "=" + obj.childNodes[i].value + "&";
-                 } else {
-                    getstr += obj.childNodes[i].name + "=&";
-                 }
-              }
-              if (obj.childNodes[i].type == "radio") {
-                 if (obj.childNodes[i].checked) {
-                    getstr += obj.childNodes[i].name + "=" + obj.childNodes[i].value + "&";
-                 }
-              }
-              if (obj.childNodes[i].type == "button") {
-  							 if (obj.childNodes[i].value == "Submit"){
-								 		getstr += obj.childNodes[i].name + "=" + obj.childNodes[i].value + "&";
-  							 		part = obj.childNodes[i].name;
-  							 }
-  						}
-           }   
-           if (obj.childNodes[i].tagName == "SELECT") {
-              var sel = obj.childNodes[i];
-              getstr += sel.name + "=" + sel.options[sel.selectedIndex].value + "&";
-           }
-           if (obj.childNodes[i].tagName == "TEXTAREA") {
-              getstr += obj.childNodes[i].name + "=" + obj.childNodes[i].value + "&";
-           }
-        }
+			if ( Form.getInputs(f, 'button', 'save_map') != '' ){
+			alert('mapupdate');
+				 data += '&save_map=true';
+				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMap } );				 
 			}
-			parseObj(o);
-			getstr = url + getstr;
-      makeRequest(getstr, part);
-   }	 
-	 
-	 
-	 
-   //makeRequest handles any XMLHttpRequest relaying a url and a string of values
-   function makeRequest(url, part) {
-	 		// for url checking:
-			// document.getElementById('alertmsg').innerHTML = url;
-      http_request = false;
-      if (window.XMLHttpRequest) { // Mozilla, Safari,...
-         http_request = new XMLHttpRequest();
-         if (http_request.overrideMimeType) {
-            http_request.overrideMimeType('text/xml');
-         }
-      } else if (window.ActiveXObject) { // IE
-         try {
-            http_request = new ActiveXObject("Msxml2.XMLHTTP");
-         } catch (e) {
-            try {
-               http_request = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (e) {}
-         }
-      }
-      if (!http_request) {
-         alert('Cannot create XMLHTTP instance');
-         return false;
-      }
-			if (part == "save_map"){
-			      http_request.onreadystatechange = alertMap;
+		
+			if ( Form.getInputs(f, 'button', 'save_marker') != '' ){
+			alert('markerupdate');
+				 data += '&save_marker=true';
+				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMarker } );				 
 			}
-			if (part == "save_marker"){
-			      http_request.onreadystatechange = alertMarker;
+		 
+			if ( Form.getInputs(f, 'button', 'save_polyline') != '' ){
+			alert('polylineupdate');
+				 data += '&save_polyline=true';
+				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updatePolyline } );				 
 			}
-			if (part == "polylinesubmit"){
-			      http_request.onreadystatechange = alertPolyline;
-			}
-			if (part == "polygonsubmit"){
-			      http_request.onreadystatechange = alertPolygon;
-			}
-      http_request.open('GET', url, true);
-      http_request.send(null);
-   }
-	 
-	 
 
-   function alertMap() {
-      if (http_request.readyState == 4) {
-         if (http_request.status == 200) {
-				 		//alert(http_request.responseText);
-            var result = http_request.responseXML;
-						updateMap(result);
-         } else {
-            alert('There was a problem connecting to the server, please contact the site admin.');
-         }
-      }
-   }
-
-   function alertMarker() {
-      if (http_request.readyState == 4) {
-         if (http_request.status == 200) {
-				 		//alert(http_request.responseText);
-            var result = http_request.responseXML;
-						updateMarker(result);
-         } else {
-            alert('There was a problem connecting to the server, please contact the site admin.');
-         }
-      }
-   }
-	 
-   function alertPolyline() {
-      if (http_request.readyState == 4) {
-         if (http_request.status == 200) {
-				 		//alert(http_request.responseText);
-            var result = http_request.responseXML;
-						updatePolyline(result);
-         } else {
-            alert('There was a problem connecting to the server, please contact the site admin.');
-         }
-      }
-   }
-	 
-   function alertPolygon() {
-      if (http_request.readyState == 4) {
-         if (http_request.status == 200) {
-				 		//alert(http_request.responseText);
-            var result = http_request.responseXML;
-						updatePolygon(result);
-         } else {
-            alert('There was a problem connecting to the server, please contact the site admin.');
-         }
-      }
-   }
+	 }
 
 
 
-	 function updateMap(xml){
+	 function updateMap(rslt){
+      var xml = rslt.responseXML;
+
 	 		//shorten var names
 			var t = xml.documentElement.getElementsByTagName('title');
 			var title = t[0].firstChild.nodeValue;
@@ -472,7 +339,9 @@ function editPolyline(a, b){
 
 	 
 	 	 
-	 function updateMarker(xml){
+	 function updateMarker(rslt){
+      var xml = rslt.responseXML;
+						
 	 		var m; //the marker data we are changing
 			if (editArray == "I"){m = bIMData[editObjectN]}else{m = bSMData[editObjectN]};
 
@@ -509,7 +378,7 @@ function editPolyline(a, b){
 			m.marker.point.y = parseFloat(m.lat);
 			
 			//update infoWindow html
-			m.marker.my_html = "<div style='white-space: nowrap;'><div><a href='javascript:editMarker(\""+editArray+"\","+editObjectN+"])'>edit<a></div><strong>"+m.title+"</strong><p>"+m.data+"</p></div>";
+			m.marker.my_html = "<div style='white-space: nowrap;'><strong>"+m.title+"</strong><p>"+m.data+"</p></div>";
 			m.marker.openInfoWindowHtml(m.marker.my_html);
 
 			//update label
@@ -526,7 +395,9 @@ function editPolyline(a, b){
 	 
 
 	
-	 function updatePolyline(xml){
+	 function updatePolyline(rslt){
+      var xml = rslt.responseXML;
+
 	 		var pl; //the marker data we are changing
 			if (editArray == "I"){pl = bILData[editObjectN]}else{pl = bSLData[editObjectN]};			
 			
