@@ -213,21 +213,18 @@ function editPolyline(a, b){
 
 
 			if ( Form.getInputs(f, 'button', 'save_map') != '' ){
-			alert('mapupdate');
 				 data += '&save_map=true';
-				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMap } );				 
+				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMap } );
 			}
 		
 			if ( Form.getInputs(f, 'button', 'save_marker') != '' ){
-			alert('markerupdate');
 				 data += '&save_marker=true';
-				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMarker } );				 
+				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMarker } );
 			}
 		 
 			if ( Form.getInputs(f, 'button', 'save_polyline') != '' ){
-			alert('polylineupdate');
 				 data += '&save_polyline=true';
-				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updatePolyline } );				 
+				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updatePolyline } );
 			}
 
 	 }
