@@ -23,7 +23,8 @@ $gContent = new BitGmap();
 
 //Check if this is a update or a new map
 if (!empty($_REQUEST["save_polyline"])) {
-    if( $gContent->storePolyline( $_REQUEST ) ) {		
+    if( $gContent->storePolyline( $_REQUEST ) ) {
+				
 				//if store is successful we return XML
 				$mRet = "<polyline>"
       			  ."<id>".$result->fields['polyline_id']."</id>"
