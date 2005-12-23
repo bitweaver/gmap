@@ -45,19 +45,25 @@ function editMap(){
           }
 					
     			var mapTypeRoot = document.getElementById('map_type');
-					var newMapType = mapTypeRoot.options[0].cloneNode(false);
-					for (i=0; i<bMapTypesData.length; i++){ 
-   					  mapTypeRoot.appendChild(newMapType);
-    					mapTypeRoot.options[i+3].value = bMapTypesData[i].map_typename;
-    					mapTypeRoot.options[i+3].text = bMapTypesData[i].map_typename;
-					}
+
+					var mapTypeCount = 2;
 					
-        	for (var i=0; i < (bMapTypesData.length+2); i++) {
+					if (typeof(bMapTypesData) != 'undefined'){
+						mapTypeCount += bMapTypesData.length;					
+						var newMapType = mapTypeRoot.options[0].cloneNode(false);
+  					for (i=0; i<bMapTypesData.length; i++){
+     					  mapTypeRoot.appendChild(newMapType);
+      					mapTypeRoot.options[i+3].value = bMapTypesData[i].map_typename;
+      					mapTypeRoot.options[i+3].text = bMapTypesData[i].map_typename;
+  					}
+					}
+						
+          for (var i=0; i<mapTypeCount; i++) {
              if (document.getElementById('map_type').options[i].value == bMapType){
                 document.getElementById('map_type').options[i].selected=true;
              }
           }
-				
+									
     			/*@todo create value for comments
 					  document.getElementById('map_comm').value = ?; for type="checkbox
 					 */
