@@ -602,7 +602,7 @@ class BitGmap extends LibertyAttachable {
 				$result = $this->getPolylineData($pParamHash['polyline_id']);
 
 		}
-		count( $result );
+		return count( $result );
 	}
 	
 
