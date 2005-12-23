@@ -217,7 +217,6 @@ function editPolyline(a, b){
 	 		var data;
       data = Form.serialize(f);
 
-
 			if ( Form.getInputs(f, 'button', 'save_map') != '' ){
 				 data += '&save_map=true';
 				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMap } );

@@ -583,7 +583,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polyline_store']['border_text'] = $pParamHash['line_bordertext'];
 		}
 
-		if( !empty( $pParamHash['line_z'] ) && is_numeric( $pParamHash['line_z'] ) ) {
+		if( ( !empty( $pParamHash['line_z'] ) && is_numeric( $pParamHash['line_z'] ) ) || $pParamHash['line_z'] == 0 ) {
 			$pParamHash['polyline_store']['zindex'] = $pParamHash['line_z'];
 		}
 		
