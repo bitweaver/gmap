@@ -16,5 +16,6 @@
 	.cell		{ldelim}float:left; background:#ccc; width:100px; padding-left:3px; padding-right:3px;{rdelim}
 	.data		{ldelim}clear:both;{rdelim}
 	.editform	{ldelim}width:860px; background-color:#fff;{rdelim}
+	.table		{ldelim}clear:both;{rdelim}
 </style>
 {/if}

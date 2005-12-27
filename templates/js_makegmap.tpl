@@ -139,15 +139,14 @@ function loadMap() {ldelim}
     map.centerAndZoom(new GPoint(bMapLon, bMapLat), bMapZoom);
 
 	//@todo this needs to be more complex and account for all the variety of types and styles
-	//@todo wrap "edit" link in permission
 	{if count($gContent->mMapInitMarkers) > 0}
 		for(n=0; n<bIMData.length; n++){ldelim}
 			var point = new GPoint(parseFloat(bIMData[n].lon), parseFloat(bIMData[n].lat));
 				bIMData[n].marker = new GMarker(point);
-				bIMData[n].marker.my_html = "<div style='white-space: nowrap;'><!--<div class='editbtn'><a href='javascript:editMarker(\"I\","+n+")'>edit</a></div>--><strong>"+bIMData[n].title+"</strong><p>"+bIMData[n].data+"</p></div>";
+				bIMData[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+bIMData[n].title+"</strong><p>"+bIMData[n].data+"</p></div>";
 				map.addOverlay(bIMData[n].marker);
 				//add the marker label if it exists
-				if (bIMData[n].label_data){ldelim}
+				if (typeof(bIMData[n].label_data) != 'undefined'){ldelim}
 					var topElement = bIMData[n].marker.iconImage;
 					if (bIMData[n].marker.transparentIcon) {ldelim}topElement = bIMData[n].marker.transparentIcon;{rdelim}
 					if (bIMData[n].marker.imageMap) {ldelim}topElement = bIMData[n].marker.imageMap;{rdelim}

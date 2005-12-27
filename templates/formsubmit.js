@@ -1,50 +1,64 @@
-//MAP EDITING FUNCTIONS
+// We use Prototype library where ever possible.
+// The most common use if substituting '$()' with '$()'
+// MAP EDITING FUNCTIONS
 
+// for tracking which object we are updating
 var editArray;
 var editObjectN;
 
 
-function show (i){
-				 document.getElementById(i).style.display = "block";
-};
+// for sorting arrays
+function sortOn(a,b){ 
+				 return a['set_id']-b['set_id']; 
+		} 
 
+function sortIt(pParamHash){
+		pParamHash.sort(sortOn); 
+}
+
+
+// for displaying and hiding menu parts
+function show (i){
+				 $(i).style.display = "block";
+};
 
 function canceledit(i){
-   			document.getElementById(i).style.display = "none";	
+   			$(i).style.display = "none";	
 };
 
 
+// builds the map editing form
 function editMap(){
 				 	show('editmapform');
 
-    			document.getElementById('gmap_id').value = bMapID;
-    			document.getElementById('map_title').value = bMapTitle;
-    			document.getElementById('map_desc').value = bMapDesc;
-    			document.getElementById('map_w').value = bMapWidth;
-    			document.getElementById('map_h').value = bMapHeight;
-    			document.getElementById('map_lat').value = bMapLat;
-    			document.getElementById('map_lon').value = bMapLon;
-    			document.getElementById('map_z').value = bMapZoom;
+    			$('gmap_id').value = bMapID;
+    			$('map_title').value = bMapTitle;
+    			$('map_desc').value = bMapDesc;
+    			$('map_w').value = bMapWidth;
+    			$('map_h').value = bMapHeight;
+    			$('map_lat').value = bMapLat;
+    			$('map_lon').value = bMapLon;
+    			$('map_z').value = bMapZoom;
 
         	for (var i=0; i < 4; i++) {
-             if (document.getElementById('map_showcont').options[i].value == bMapControl){
-                document.getElementById('map_showcont').options[i].selected=true;
+             if ($('map_showcont').options[i].value == bMapControl){
+                $('map_showcont').options[i].selected=true;
              }
           }
 
         	for (var i=0; i < 2; i++) {
-             if (document.getElementById('map_showscale').options[i].value == bMapScale){
-                document.getElementById('map_showscale').options[i].selected=true;
+             if ($('map_showscale').options[i].value == bMapScale){
+                $('map_showscale').options[i].selected=true;
              }
           }
 					
         	for (var i=0; i < 2; i++) {
-             if (document.getElementById('map_showtypecont').options[i].value == bMapTypeCont){
-                document.getElementById('map_showtypecont').options[i].selected=true;
+             if ($('map_showtypecont').options[i].value == bMapTypeCont){
+                $('map_showtypecont').options[i].selected=true;
              }
           }
 					
-    			var mapTypeRoot = document.getElementById('map_type');
+    			var mapTypeRoot = $('map_type');
 
 					var mapTypeCount = 2;
 					
@@ -59,63 +73,184 @@ function editMap(){
 					}
 						
           for (var i=0; i<mapTypeCount; i++) {
-             if (document.getElementById('map_type').options[i].value == bMapType){
-                document.getElementById('map_type').options[i].selected=true;
+             if ($('map_type').options[i].value == bMapType){
+                $('map_type').options[i].selected=true;
              }
           }
 									
     			/*@todo create value for comments
-					  document.getElementById('map_comm').value = ?; for type="checkbox
+					  $('map_comm').value = ?; for type="checkbox
 					 */
 };
 
 
 
-/* @todo needs to support markers in bSMData as well as bIMData */
-function editMarkers(){				
-   			show('editmarkerform');
 
-				/* get rid of any extra fields we may have created 
-				 * if this has been called once before
-				 * this way we dont add any extra fields
-				 */
-				for (i=1; i<bIMData.length; i++){
-				 if(document.getElementById('markerform_'+i)){
-    				var extraMarkerForm = document.getElementById('markerform_'+i);
-						document.getElementById('editmarkertable').removeChild(extraMarkerForm);
-					}
-				}
+function editMarkers(){
+		// We assume editMarkers has been called before and remove any previously existing sets
+		// Step through the Marker Array
+		/* 
+		 * @todo it would probably be better 
+		 * to keep a list of all marker sets 
+		 * used on map and then remove forms 
+		 * based on that list.
+		 */
 
-				/* add more fields and fill them with data */
-				for (i=0; i<bIMData.length; i++) {
+		
+		for (d=0; d<bIMData.length; d++) {
+
+			var getElem = "markerset_"+bIMData[d].set_id;
+
+			if ( $(getElem) ) {
+    		var extraMarkerForm = $(getElem);
+				$('editmarkerform').removeChild(extraMarkerForm);
+			}
+		}
+		
 	
-					if( i < (bIMData.length-1) ){
-    				var newMarkerForm = document.getElementById('markerform_0').cloneNode(true);
-						newMarkerForm.id = "markerform_"+(i+1);
-						document.getElementById('editmarkertable').appendChild(newMarkerForm);
+		// Sort The Marker Array on set_id
+		sortIt(bIMData);
+		
+    // Display the Edit Form Div and Cancel Button
+   	show('editmarkerform');
+		show('editmarkercancel');
+		
+    // Set the set_id check
+		var setIdCheck;
+		var markerTableCount;
+		
+    // Step through the Marker Array
+		for (i=0; i<bIMData.length; i++) {
+    	 // Check the set_id
+			 if ( bIMData[i].set_id != setIdCheck ){
+    	 // if not same 
+			 		var newMarkerSet;
+					var setKids;
+					var menuKids;
+					var setForm;
+					var formKids;
+					var allMarkersForm;
+					var allMarkKids;
+
+			 		// change Check
+					setIdCheck = bIMData[i].set_id;
+					
+					// reset the table count
+					markerTableCount = 0;
+					
+    	 		// clone set table and change ids
+    			newMarkerSet = $('markerset_n').cloneNode(true);
+					newMarkerSet.id = "markerset_"+(setIdCheck);
+									
+					// this gets ugly...										
+					setKids = newMarkerSet.childNodes;
+          for (var j = 0; j < setKids.length; j++) { 
+						if (setKids[j].id == "editsetmenu_n"){
+							 setKids[j].id = "editsetmenu_"+(setIdCheck);
+							 menuKids = setKids[j].childNodes;
+						}
+						if (setKids[j].id == "setform_n"){
+							 setKids[j].id = "setform_"+(setIdCheck);    					
+							 setForm = setKids[j];
+						}
+          }
+					
+					formKids = setForm.childNodes;
+          for (var k = 0; k < formKids.length; k++) {
+						if (formKids[k].id == "editmarkertable_n"){
+							 formKids[k].id = "editmarkertable_"+(setIdCheck);
+						}
+						if (formKids[j].id == "allavailmarkers_n"){
+							 formKids[j].id = "allavailmarkers_"+(setIdCheck);
+							 allMarkersForm = formKids[j];
+						}
 					}
 
-					form = document.getElementById('markerform_'+(i));
+					allMarkKids = allMarkersForm.childNodes;
+          for (var l = 0; l < allMarkKids.length; l++) {
+						if (allMarkKids[l].id == "addmarkertable_n"){
+							 allMarkKids[l].id = "addmarkertable_"+(setIdCheck);
+						}
+					}
+													
+					// Update the set's menu
+          for (var m = 0; m < menuKids.length; m++) {
+						if (menuKids[m].id == "setid"){
+    					menuKids[m].innerHTML = "setid: "+bIMData[i].set_id;
+						}
+						if (menuKids[m].id == "setstyle"){
+    					menuKids[m].innerHTML = bIMData[i].style_id;
+						}
+						if (menuKids[m].id == "seticon"){
+    					menuKids[m].innerHTML = bIMData[i].icon_id;
+						}
+						if (menuKids[m].id == "seteditmarkers"){
+    					menuKids[m].href = "javascript:editSet("+setIdCheck+");";
+						}
+						if (menuKids[m].id == "setaddmarkers"){
+    					menuKids[m].href = "javascript:editSet("+setIdCheck+"); editAllMarkers("+setIdCheck+");";
+						}
+						if (menuKids[m].id == "seteditstyle"){
+    					menuKids[m].href = "";
+						}
+						if (menuKids[m].id == "setremove"){
+    					menuKids[m].href = "";
+						}
+						if (menuKids[m].id == "setdelete"){
+    					menuKids[m].href = "";
+						}
+						if (menuKids[m].id == "setdesc"){
+    					menuKids[m].innerHTML = "MarkerSet description - feature coming soon.";					
+						}
+          }							
+					
+    	 		// add form to set table
+					$('editmarkerform').appendChild(newMarkerSet);
+					show('markerset_'+(setIdCheck));
+					
+			 }
 
-        	form.marker_id.value = bIMData[i].marker_id;
-        	form.title.value = bIMData[i].title;
-        	form.marker_lat.value = bIMData[i].lat;
-        	form.marker_lon.value = bIMData[i].lon;
-        	form.edit.value = bIMData[i].data;
-        	form.marker_labeltext.value = bIMData[i].label_data;
-        	form.marker_zi.value = bIMData[i].zindex;
-        	form.marker_array.value = bIMData[i].array;
-        	form.marker_array_n.value = bIMData[i].array_n;
+		 
+			 //add marker form
+				var formCont = $("editmarkertable_"+(setIdCheck));
+  			formContKids = formCont.childNodes;
+        for (var n = 0; n < formContKids.length; n++) {
+  				if (formContKids[n].id == "markerform_n"){
+        			var newMarkerForm = formContKids[n].cloneNode(true);
+    					newMarkerForm.id = "markerform_"+(i);
+    					$('editmarkertable_'+(setIdCheck)).appendChild(newMarkerForm);
+							show('markerform_'+(i));
+							break;
+					}
+			  }
+				
+				// populate set table values
+				form = $('markerform_'+(i));
 
-    			/* @todo include the following 
+        form.marker_id.value = bIMData[i].marker_id;
+        form.title.value = bIMData[i].title;
+        form.marker_lat.value = bIMData[i].lat;
+        form.marker_lon.value = bIMData[i].lon;
+        form.edit.value = bIMData[i].data;
+        form.marker_labeltext.value = bIMData[i].label_data;
+        form.marker_zi.value = bIMData[i].zindex;
+        form.marker_array.value = bIMData[i].array;
+        form.marker_array_n.value = bIMData[i].array_n;
+				
+    		/* @todo include the following 
             bIMData[i].set_id;
             bIMData[i].style_id;
             bIMData[i].icon_id;
-    				*/					
-				}
+    				*/
+						
+		}
 };
 
 
+
+function editSet(n){
+				show('setform_'+n);
+}
 
 
 
@@ -128,9 +263,9 @@ function editPolylines(){
 				 * this way we dont add any extra fields
 				 */
 				for (i=1; i<bILData.length; i++){
-				 if(document.getElementById('polylineform_'+i)){
-    				var extraPolylineForm = document.getElementById('polylineform_'+i);
-						document.getElementById('editpolylinetable').removeChild(extraPolylineForm);
+				 if($('polylineform_'+i)){
+    				var extraPolylineForm = $('polylineform_'+i);
+						$('editpolylinetable').removeChild(extraPolylineForm);
 					}
 				}
 
@@ -138,12 +273,12 @@ function editPolylines(){
 				for (i=0; i<bILData.length; i++) {
 	
 					if( i < (bILData.length-1) ){
-    				var newPolylineForm = document.getElementById('polylineform_0').cloneNode(true);				
+    				var newPolylineForm = $('polylineform_0').cloneNode(true);				
 						newPolylineForm.id = "polylineform_"+(i+1);
-						document.getElementById('editpolylinetable').appendChild(newPolylineForm);
+						$('editpolylinetable').appendChild(newPolylineForm);
 					}
 
-					form = document.getElementById('polylineform_'+(i));					
+					form = $('polylineform_'+(i));					
 					
         	form.polyline_id.value = bILData[i].polyline_id;
         	form.line_name.value = bILData[i].name;
@@ -167,40 +302,6 @@ function editPolylines(){
 
 
 
-
-/* First Attempts at Editing Functions - we may still want to use these
-function editMarker(a, b){
-				var m; //the marker data we are changing
-				b = parseFloat(b);
-				if (a == "I"){m = bIMData[b]}else{m = bSMData[b]};
-   			show('editmarkerform');
-    			document.getElementById('marker_id').value = m.marker_id;
-        	document.getElementById('marker_name').value = m.name;
-        	document.getElementById('marker_lat').value = m.lat;
-        	document.getElementById('marker_lon').value = m.lon;
-        	document.getElementById('marker_wintext').value = m.window_data;
-        	document.getElementById('marker_labeltext').value = m.label_data;
-        	document.getElementById('marker_zi').value = m.zindex;
-				editArray = a;
-				editObjectN = b;
-};
-
-
-function editPolyline(a, b){
-				var pl; //the marker data we are changing
-				b = parseFloat(b);
-				if (a == "I"){pl = bILData[b]}else{pl = bSLData[b]};
-   			document.getElementById('editpolylineform').style.display = "block";
-    			document.getElementById('line_id').value = pl.polyline_id;
-    			document.getElementById('line_name').value = pl.name;
-    			document.getElementById('line_type').value = pl.type;
-    			document.getElementById('line_data').value = pl.points_data;
-    			document.getElementById('line_bordertext').value = pl.border_text;
-    			document.getElementById('line_z').value = pl.zindex;
-				editArray = a;
-				editObjectN = b;
-};
-*/
 
 
 
@@ -286,13 +387,13 @@ function editPolyline(a, b){
 			
 
 			//replace everything	
-      var maptile = document.getElementById('mymaptitle');
+      var maptile = $('mymaptitle');
       if (maptile){maptile.innerHTML=bMapTitle;}
 
-      var mapdesc = document.getElementById('mymapdesc');
+      var mapdesc = $('mymapdesc');
       if (mapdesc){mapdesc.innerHTML=bMapDesc;}
 
-      var mapdiv = document.getElementById('map');
+      var mapdiv = $('map');
 			if (bMapWidth !== '0' && bMapWidth !== 0){
 			   var newWidth = bMapWidth + "px";
 				}else{
