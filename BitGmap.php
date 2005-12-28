@@ -598,6 +598,8 @@ class BitGmap extends LibertyAttachable {
 			if ( !empty( $pParamHash['polyline_id'] ) ) {
 				 $this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps_polylines", $pParamHash['polyline_store'], array( "name" => "polyline_id", "value" => $pParamHash['polyline_id'] ) );
 			}else{
+				 $pParamHash['polyline_id'] = $this->mDb->GenID( 'bit_gmaps_polylines_polyline_id_seq' );
+				 $pParamHash['polyline_store']['polyline_id'] = $pParamHash['polyline_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_polylines", $pParamHash['polyline_store'] );
 			}
 			$this->mDb->CompleteTrans();

@@ -87,6 +87,14 @@ function editMap(){
 
 
 function editMarkers(){
+		// Sort The Marker Array on set_id
+		sortIt(bIMData);
+		
+    // Display the Edit Form Div and Cancel Button
+   	show('editmarkerform');
+		show('editmarkercancel');
+
+
 		// We assume editMarkers has been called before and remove any previously existing sets
 		// Step through the Marker Array
 		/* 
@@ -107,14 +115,7 @@ function editMarkers(){
 			}
 		}
 		
-	
-		// Sort The Marker Array on set_id
-		sortIt(bIMData);
-		
-    // Display the Edit Form Div and Cancel Button
-   	show('editmarkerform');
-		show('editmarkercancel');
-		
+			
     // Set the set_id check
 		var setIdCheck;
 		var markerTableCount;

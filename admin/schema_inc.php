@@ -29,14 +29,20 @@ $tables = array(
 	CONSTRAINTS ', CONSTRAINT `bit_gmaps_map_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."bit_gmaps`( `gmap_id` )'
 ",
 
-//basetype values: 0 => Streetmap 1 => Satellite, 2 => Hybrid
+//basetype and alttype values: 0 => Streetmap 1 => Satellite, 2 => Hybrid
 'bit_gmaps_map_types' => "
   maptype_id I4 AUTO PRIMARY,
   name C(64),
   description C(255),
+	copyright C(64),
   basetype I2 DEFAULT 0,
+	alttype I2 DEFAULT 0,
+	bounds X,
+	maxzoom C(4),
 	maptiles_url X,
-	hybridtiles_url X
+	lowresmaptiles_url X DEFAULT 'google',
+	hybridtiles_url X,
+	lowreshybridtiles_url X DEFAULT 'google'
 ",
 
 'bit_gmaps_markers' => "
@@ -221,16 +227,26 @@ $indices = array (
 $gBitInstaller->registerSchemaIndexes( GMAP_PKG_NAME, $indices );
 
 
-//@todo wj: what the devil is this for?
 // ### Sequences
 $sequences = array (
-	'bit_gmaps_gmap_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_gmap_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_map_types_maptype_id_seq' => array( 'start' => 1 ),	
+  'bit_gmaps_markers_marker_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_icon_styles_icon_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_marker_styles_style_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_marker_sets_set_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_polylines_polyline_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_polyline_styles_style_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_polyline_sets_set_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_polygons_polygon_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_polygon_styles_style_id_seq' => array( 'start' => 1 ),
+  'bit_gmaps_polygon_sets_set_id_seq' => array( 'start' => 1 ),
 );
 $gBitInstaller->registerSchemaSequences( GMAP_PKG_NAME, $sequences );
 
 
-//@todo wj:Everything below here still needs customizing!
 
+//@todo wj:Everything below here still needs customizing!
 
 // ### Default UserPermissions
 $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
