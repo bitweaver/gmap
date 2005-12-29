@@ -6,6 +6,7 @@
 var editArray;
 var editObjectN;
 var editSetId;
+var editMarkerId;
 
 
 // for sorting arrays
@@ -190,16 +191,16 @@ function editMarkers(){
       		menuKids[f].href = "javascript:editSet("+newSetId+");";
   			}
   			if (menuKids[f].id == "setaddmarkers"){
-      		menuKids[f].href = "javascript:editSet("+newSetId+"); editAllMarkers("+newSetId+");";
+      		menuKids[f].href = "javascript:alert('feature coming soon');"; //"javascript:editSet("+newSetId+"); editAllMarkers("+newSetId+");";
   			}
   			if (menuKids[f].id == "seteditstyle"){
-      		menuKids[f].href = "";
+      		menuKids[f].href = "javascript:alert('feature coming soon');";
   			}
   			if (menuKids[f].id == "setremove"){
-      		menuKids[f].href = "";
+      		menuKids[f].href = "javascript:alert('feature coming soon');";
   			}
   			if (menuKids[f].id == "setdelete"){
-      		menuKids[f].href = "";
+      		menuKids[f].href = "javascript:alert('feature coming soon');";
   			}
   			if (menuKids[f].id == "setdesc"){
       		menuKids[f].innerHTML = bMSetData[b].description;
@@ -210,10 +211,11 @@ function editMarkers(){
   		$('editmarkerform').appendChild(newMarkerSet);
   		show('markerset_'+newSetId);  
   	}
-		
 
+		
   	//for length of markers add form to setelement on matching set_id
   	for (g=0; g<bIMData.length; g++) {
+			if (bIMData[g]!= null){
 				//add marker form...again a little ugly here
 				var formCont = $("editmarkertable_"+bIMData[g].set_id);
   			formContKids = formCont.childNodes;
@@ -227,9 +229,10 @@ function editMarkers(){
 					}
 			  }
 				
-				// populate set table values
+				// populate set form values
 				form = $('markerform_'+g);
 
+        form.set_id.value = bIMData[g].set_id;
         form.marker_id.value = bIMData[g].marker_id;
         form.title.value = bIMData[g].title;
         form.marker_lat.value = bIMData[g].lat;
@@ -238,7 +241,8 @@ function editMarkers(){
         form.marker_labeltext.value = bIMData[g].label_data;
         form.marker_zi.value = bIMData[g].zindex;
         form.marker_array.value = bIMData[g].array;
-        form.marker_array_n.value = bIMData[g].array_n;				
+        form.marker_array_n.value = bIMData[g].array_n;
+			}
 		}
 
 	}
@@ -310,6 +314,12 @@ function editPolylines(){
 
    var http_request = false;
 
+	 function remove(u, m, s){
+			data = "marker_id=" + m.value + "&set_id=" + s.value + "&remove_marker=true";
+			editSetId = s.value;
+			editMarkerId = m.value;
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: removeMarker } );
+	 }
 	 
 	 function get(u, f, a, n){
 			editArray = a;
@@ -351,49 +361,37 @@ function editPolylines(){
 
 	 		//shorten var names
 			var t = xml.documentElement.getElementsByTagName('title');
-			var title = t[0].firstChild.nodeValue;
-			bMapTitle = title;
+			bMapTitle = t[0].firstChild.nodeValue;
 			
 			var d = xml.documentElement.getElementsByTagName('desc');
-			var desc = d[0].firstChild.nodeValue;
-			bMapDesc = desc;
+			bMapDesc = d[0].firstChild.nodeValue;
 			
 			var w = xml.documentElement.getElementsByTagName('w');
-			var width = w[0].firstChild.nodeValue;
-			bMapWidth = width;
+			bMapWidth = w[0].firstChild.nodeValue;
 			
 			var h = xml.documentElement.getElementsByTagName('h');
-			var height = h[0].firstChild.nodeValue;
-			bMapHeight = height;
+			bMapHeight = h[0].firstChild.nodeValue;
 			
 			var lt = xml.documentElement.getElementsByTagName('lat');
-			var lat = parseFloat(lt[0].firstChild.nodeValue);
-			bMapLat = lat;
+			bMapLat = parseFloat(lt[0].firstChild.nodeValue);
 			
 			var ln = xml.documentElement.getElementsByTagName('lon');
-			var lon = parseFloat(ln[0].firstChild.nodeValue);
-			bMapLon = lon;
+			bMapLon = parseFloat(ln[0].firstChild.nodeValue);
 			
 			var z = xml.documentElement.getElementsByTagName('z');
-			var zoom = parseInt(z[0].firstChild.nodeValue);
-			bMapZoom = zoom;
+			bMapZoom = parseInt(z[0].firstChild.nodeValue);
 			
 			var ss = xml.documentElement.getElementsByTagName('scale');
-			var show_scale = ss[0].firstChild.nodeValue;
-			bMapScale = show_scale;
+			bMapScale = ss[0].firstChild.nodeValue;
 			
 			var sc = xml.documentElement.getElementsByTagName('cont');
-			var show_cont = sc[0].firstChild.nodeValue;
-			bMapControl = show_cont;
+			bMapControl = sc[0].firstChild.nodeValue;
 			
 			var sm = xml.documentElement.getElementsByTagName('typecon');
-			var show_typecont = sm[0].firstChild.nodeValue;
-			bMapTypeCont = show_typecont;
+			bMapTypeCont = sm[0].firstChild.nodeValue;
 			
 			var mt = xml.documentElement.getElementsByTagName('maptype');
-			var maptype = bMapTypes[mt[0].firstChild.nodeValue];
-			bMapType = maptype;
-			
+			bMapType = bMapTypes[mt[0].firstChild.nodeValue];			
 
 			//replace everything	
       var maptile = $('mymaptitle');
@@ -518,28 +516,22 @@ function editPolylines(){
 			
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('id');			
-			var markerid = id[0].firstChild.nodeValue;
-			bIMData[n].marker_id = markerid;
+			bIMData[n].marker_id = id[0].firstChild.nodeValue;
 
 			var tl = xml.documentElement.getElementsByTagName('title');
-			var title = tl[0].firstChild.nodeValue;			
-	 		bIMData[n].title = title;
+			bIMData[n].title = tl[0].firstChild.nodeValue;			
 			
 			var lt = xml.documentElement.getElementsByTagName('lat');
-			var lat = parseFloat(lt[0].firstChild.nodeValue);
-	 		bIMData[n].lat = lat;
+			bIMData[n].lat = parseFloat(lt[0].firstChild.nodeValue);
 			
 			var ln = xml.documentElement.getElementsByTagName('lon');
-			var lon = parseFloat(ln[0].firstChild.nodeValue);
-	 		bIMData[n].lon = lon;
+			bIMData[n].lon = parseFloat(ln[0].firstChild.nodeValue);
 
 			var dt = xml.documentElement.getElementsByTagName('data');
-			var data = dt[0].firstChild.nodeValue;			
-	 		bIMData[n].data = data;
+			bIMData[n].data = dt[0].firstChild.nodeValue;			
 
 			var l = xml.documentElement.getElementsByTagName('label');
-			var label = l[0].firstChild.nodeValue;			
-	 		bIMData[n].label_data = label;
+			bIMData[n].label_data = l[0].firstChild.nodeValue;			
 
 			//@todo this is such a crappy way to get this number
 			for(var a=0; a<bMSetData.length; a++){
@@ -554,8 +546,7 @@ function editPolylines(){
 			bIMData[n].icon_id = parseFloat(bMSetData[s].icon_id);
 			
 			var z = xml.documentElement.getElementsByTagName('z');
-			var zindex = parseInt(z[0].firstChild.nodeValue);
-			bIMData[n].zindex = zindex;
+			bIMData[n].zindex = parseInt(z[0].firstChild.nodeValue);
 
 			bIMData[n].array = "I";
 			bIMData[n].array_n = parseFloat(n);
@@ -578,6 +569,9 @@ function editPolylines(){
 
 			// clear the form
 			$('markerform_new').reset();
+			// update the sets menus
+			editMarkers();
+			editSet(editSetId);
 	}
 
 	 
@@ -638,3 +632,15 @@ function editPolylines(){
 
 	}
 
+
+	function removeMarker(){
+			for (var i=0; i<bIMData.length; i++){
+					if (bIMData[i].marker_id == editMarkerId){
+						map.removeOverlay(bIMData[i].marker);
+						bIMData[i] = null;
+						break;
+					}
+			}
+			editMarkers();
+			editSet(editSetId);
+	}

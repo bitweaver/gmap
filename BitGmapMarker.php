@@ -147,6 +147,40 @@ class BitGmapMarker extends LibertyAttachable {
 		return( count( $this->mInfo ) );
 	}
 
+
+	
+	function verifyRemove( &$pParamHash ) {
+	
+		$pParamHash['marker_remove'] = array();
+
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['marker_remove']['set_id'] = $pParamHash['set_id'];
+		}
+		
+		if( !empty( $pParamHash['marker_id'] ) && is_numeric( $pParamHash['marker_id'] ) ) {
+			$pParamHash['marker_remove']['marker_id'] = $pParamHash['marker_id'];
+		}
+
+		return( count( $this->mErrors ) == 0 );
+				
+	}	
+	/**
+	* This function removes a marker from a set
+	**/
+	function removeFromSet(&$pParamHash) {
+		$ret = FALSE;
+		if( $this->verifyRemove( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_marker_keychain` 
+			WHERE `set_id` = ?
+			AND `marker_id` =?";
+			$result = $this->mDb->query( $query, $pParamHash['marker_remove'] );
+			$ret = TRUE;
+			$this->mDb->CompleteTrans();
+		}
+		return $ret;
+	}
+	
 }
 
 ?>
