@@ -30,7 +30,7 @@ if (!empty($_REQUEST["save_marker"])) {
               ."<data>".$gContent->mInfo['data']."</data>"
               ."<label>".$gContent->mInfo['label_data']."</label>"
               ."<z>".$gContent->mInfo['zindex']."</z>"
-						 ."</marker>";
+						 	."</marker>";
 
 				//@todo replace in xml when I know what I am doing
 				//	."<data>".$gContent->parseData()."</data>"

@@ -89,6 +89,7 @@ class BitGmapMarker extends LibertyAttachable {
 	function verify( &$pParamHash ) {
 
 		$pParamHash['marker_store'] = array();
+		$pParamHash['keychain_store'] = array();
 		
 		if( !empty( $pParamHash['marker_lat'] ) && is_numeric( $pParamHash['marker_lat'] ) ) {
 			$pParamHash['marker_store']['lat'] = $pParamHash['marker_lat'];
@@ -110,6 +111,12 @@ class BitGmapMarker extends LibertyAttachable {
 			$pParamHash['marker_store']['allow_comments'] = 'TRUE';
 		}
 
+		// set values for updating the marker keychain		
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['keychain_store']['set_id'] = $pParamHash['set_id'];
+		}
+
+		
 		return( count( $this->mErrors ) == 0 );
 	}
 
@@ -123,7 +130,10 @@ class BitGmapMarker extends LibertyAttachable {
 					$this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps_markers", $pParamHash['marker_store'], array( "name" => "marker_id", "value" => $pParamHash['marker_id'] ) );
 				} else {
 					$pParamHash['marker_store']['content_id'] = $this->mContentId;
+					$pParamHash['marker_store']['marker_id'] = $this->mDb->GenID( 'bit_gmaps_markers_marker_id_seq' );
 					$this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_markers", $pParamHash['marker_store'] );
+					$pParamHash['keychain_store']['marker_id'] = $pParamHash['marker_store']['marker_id'];
+					$this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_marker_keychain", $pParamHash['keychain_store'] );													
 				}
 				$this->mDb->CompleteTrans();
 

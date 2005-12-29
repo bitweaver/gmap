@@ -42,4 +42,17 @@
 	{/section}
 {/if}
 
+{if count($gContent->mMapMarkerSetDetails) > 0}
+	var bMSetData = new Array();
+	{section name=markersetdata loop=$gContent->mMapMarkerSetDetails}
+		bMSetData[{$smarty.section.markersetdata.index}] = new Array();
+		bMSetData[{$smarty.section.markersetdata.index}].set_id = {$gContent->mMapMarkerSetDetails[markersetdata].set_id};
+		bMSetData[{$smarty.section.markersetdata.index}].name = "{$gContent->mMapMarkerSetDetails[markersetdata].name}";
+		bMSetData[{$smarty.section.markersetdata.index}].description = "{$gContent->mMapMarkerSetDetails[markersetdata].description}";
+		bMSetData[{$smarty.section.markersetdata.index}].style_id = {$gContent->mMapMarkerSetDetails[markersetdata].style_id};
+		bMSetData[{$smarty.section.markersetdata.index}].icon_id = {$gContent->mMapMarkerSetDetails[markersetdata].icon_id};
+		bMSetData[{$smarty.section.markersetdata.index}].set_type = "{$gContent->mMapMarkerSetDetails[markersetdata].set_type}";
+	{/section}
+{/if}
+
 //]]></script>

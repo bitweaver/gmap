@@ -5,6 +5,7 @@
 // for tracking which object we are updating
 var editArray;
 var editObjectN;
+var editSetId;
 
 
 // for sorting arrays
@@ -85,167 +86,163 @@ function editMap(){
 
 
 
-
-function editMarkers(){
-		// Sort The Marker Array on set_id
-		sortIt(bIMData);
+function newMarker(){
+    // Display the New Form Div and Cancel Button
+   	show('newmarkerform');
+		// Reset the Form
+		$('markerform_new').reset();
 		
-    // Display the Edit Form Div and Cancel Button
-   	show('editmarkerform');
-		show('editmarkercancel');
-
-
-		// We assume editMarkers has been called before and remove any previously existing sets
-		// Step through the Marker Array
-		/* 
-		 * @todo it would probably be better 
-		 * to keep a list of all marker sets 
-		 * used on map and then remove forms 
-		 * based on that list.
-		 */
-
+		// count of sets available
+		var setCount = bMSetData.length;
+		// shortcut to the Select Option we are adding to
+		var selectRoot = $('set_id');
 		
-		for (d=0; d<bIMData.length; d++) {
-
-			var getElem = "markerset_"+bIMData[d].set_id;
-
-			if ( $(getElem) ) {
-    		var extraMarkerForm = $(getElem);
-				$('editmarkerform').removeChild(extraMarkerForm);
-			}
+		//dupe it
+		if (typeof(bMSetData) != 'undefined'){
+				var newOption = selectRoot.options[0].cloneNode(false);
+  			for (i=0; i<bMSetData.length; i++){
+						if (i > 0){
+       			selectRoot.appendChild(newOption);
+						}
+				 		selectRoot.options[i].value = bMSetData[i].set_id;
+      			selectRoot.options[i].text = bMSetData[i].name;
+  			}
 		}
+};
+
+
+
+
+function editMarkers(){		
+  // Display the Edit Form Div and Cancel Button
+  show('editmarkerform');
+	show('editmarkercancel');
+
+	//if marker data exists
+	if ( typeof(bIMData) ) {
+	
+  	// We assume editMarkers has been called before and remove 
+  	// any previously existing sets from the UI
+  	for (var a=0; a<bMSetData.length; a++) {
+  		var getElem = "markerset_"+bMSetData[a].set_id;
+  		if ( $(getElem) ) {
+      	var extraMarkerForm = $(getElem);
+  			$('editmarkerform').removeChild(extraMarkerForm);
+  		}
+  	}
+  
+  	var newSetId;
+  	  	
+  	// add a new set UI for each marker set
+  	for (var b=0; b<bMSetData.length; b++) {
+		  	
+  		newSetId = bMSetData[b].set_id;
+  	
+  		// clone model set UI
+			var newMarkerSet = $('markerset_n').cloneNode(true);
+  		// give a new id to the new set UI
+  		newMarkerSet.id = "markerset_"+newSetId;
+  									
+  		// customize all the values of our new set UI this gets ugly...										
+  		setKids = newMarkerSet.childNodes;
+      for (var c=0; c<setKids.length; c++) { 
+  			if (setKids[c].id == "editsetmenu_n"){
+  				setKids[c].id = "editsetmenu_"+newSetId;
+  				menuKids = setKids[c].childNodes;
+  			}
+  			if (setKids[c].id == "setform_n"){
+  				setKids[c].id = "setform_"+newSetId;    					
+  				setForm = setKids[c];
+  			}
+      }
+  					
+  		formKids = setForm.childNodes;
+      for (var d=0; d<formKids.length; d++) {
+  			if (formKids[d].id == "editmarkertable_n"){
+  				formKids[d].id = "editmarkertable_"+newSetId;
+  			}
+  			if (formKids[d].id == "allavailmarkers_n"){
+  				formKids[d].id = "allavailmarkers_"+newSetId;
+  				allMarkersForm = formKids[d];
+  			}
+  		}
+  
+  		allMarkKids = allMarkersForm.childNodes;
+      for (var e=0; e<allMarkKids.length; e++) {
+  			if (allMarkKids[e].id == "addmarkertable_n"){
+  				allMarkKids[e].id = "addmarkertable_"+newSetId;
+  			}
+  		}
+  
+  		// Update the set's menu
+      for (var f=0; f<menuKids.length; f++) {
+  			if (menuKids[f].id == "setid"){
+      		menuKids[f].innerHTML = bMSetData[b].name;
+  			}
+  			if (menuKids[f].id == "setstyle"){
+      		menuKids[f].innerHTML = bMSetData[b].style_id;
+  			}
+  			if (menuKids[f].id == "seticon"){
+      		menuKids[f].innerHTML = bMSetData[b].icon_id;
+  			}
+  			if (menuKids[f].id == "seteditmarkers"){
+      		menuKids[f].href = "javascript:editSet("+newSetId+");";
+  			}
+  			if (menuKids[f].id == "setaddmarkers"){
+      		menuKids[f].href = "javascript:editSet("+newSetId+"); editAllMarkers("+newSetId+");";
+  			}
+  			if (menuKids[f].id == "seteditstyle"){
+      		menuKids[f].href = "";
+  			}
+  			if (menuKids[f].id == "setremove"){
+      		menuKids[f].href = "";
+  			}
+  			if (menuKids[f].id == "setdelete"){
+      		menuKids[f].href = "";
+  			}
+  			if (menuKids[f].id == "setdesc"){
+      		menuKids[f].innerHTML = bMSetData[b].description;
+  			}
+      }							
+  					
+      // add form to set table
+  		$('editmarkerform').appendChild(newMarkerSet);
+  		show('markerset_'+newSetId);  
+  	}
 		
-			
-    // Set the set_id check
-		var setIdCheck;
-		var markerTableCount;
-		
-    // Step through the Marker Array
-		for (i=0; i<bIMData.length; i++) {
-    	 // Check the set_id
-			 if ( bIMData[i].set_id != setIdCheck ){
-    	 // if not same 
-			 		var newMarkerSet;
-					var setKids;
-					var menuKids;
-					var setForm;
-					var formKids;
-					var allMarkersForm;
-					var allMarkKids;
 
-			 		// change Check
-					setIdCheck = bIMData[i].set_id;
-					
-					// reset the table count
-					markerTableCount = 0;
-					
-    	 		// clone set table and change ids
-    			newMarkerSet = $('markerset_n').cloneNode(true);
-					newMarkerSet.id = "markerset_"+(setIdCheck);
-									
-					// this gets ugly...										
-					setKids = newMarkerSet.childNodes;
-          for (var j = 0; j < setKids.length; j++) { 
-						if (setKids[j].id == "editsetmenu_n"){
-							 setKids[j].id = "editsetmenu_"+(setIdCheck);
-							 menuKids = setKids[j].childNodes;
-						}
-						if (setKids[j].id == "setform_n"){
-							 setKids[j].id = "setform_"+(setIdCheck);    					
-							 setForm = setKids[j];
-						}
-          }
-					
-					formKids = setForm.childNodes;
-          for (var k = 0; k < formKids.length; k++) {
-						if (formKids[k].id == "editmarkertable_n"){
-							 formKids[k].id = "editmarkertable_"+(setIdCheck);
-						}
-						if (formKids[j].id == "allavailmarkers_n"){
-							 formKids[j].id = "allavailmarkers_"+(setIdCheck);
-							 allMarkersForm = formKids[j];
-						}
-					}
-
-					allMarkKids = allMarkersForm.childNodes;
-          for (var l = 0; l < allMarkKids.length; l++) {
-						if (allMarkKids[l].id == "addmarkertable_n"){
-							 allMarkKids[l].id = "addmarkertable_"+(setIdCheck);
-						}
-					}
-													
-					// Update the set's menu
-          for (var m = 0; m < menuKids.length; m++) {
-						if (menuKids[m].id == "setid"){
-    					menuKids[m].innerHTML = "setid: "+bIMData[i].set_id;
-						}
-						if (menuKids[m].id == "setstyle"){
-    					menuKids[m].innerHTML = bIMData[i].style_id;
-						}
-						if (menuKids[m].id == "seticon"){
-    					menuKids[m].innerHTML = bIMData[i].icon_id;
-						}
-						if (menuKids[m].id == "seteditmarkers"){
-    					menuKids[m].href = "javascript:editSet("+setIdCheck+");";
-						}
-						if (menuKids[m].id == "setaddmarkers"){
-    					menuKids[m].href = "javascript:editSet("+setIdCheck+"); editAllMarkers("+setIdCheck+");";
-						}
-						if (menuKids[m].id == "seteditstyle"){
-    					menuKids[m].href = "";
-						}
-						if (menuKids[m].id == "setremove"){
-    					menuKids[m].href = "";
-						}
-						if (menuKids[m].id == "setdelete"){
-    					menuKids[m].href = "";
-						}
-						if (menuKids[m].id == "setdesc"){
-    					menuKids[m].innerHTML = "MarkerSet description - feature coming soon.";					
-						}
-          }							
-					
-    	 		// add form to set table
-					$('editmarkerform').appendChild(newMarkerSet);
-					show('markerset_'+(setIdCheck));
-					
-			 }
-
-		 
-			 //add marker form
-				var formCont = $("editmarkertable_"+(setIdCheck));
+  	//for length of markers add form to setelement on matching set_id
+  	for (g=0; g<bIMData.length; g++) {
+				//add marker form...again a little ugly here
+				var formCont = $("editmarkertable_"+bIMData[g].set_id);
   			formContKids = formCont.childNodes;
         for (var n = 0; n < formContKids.length; n++) {
   				if (formContKids[n].id == "markerform_n"){
         			var newMarkerForm = formContKids[n].cloneNode(true);
-    					newMarkerForm.id = "markerform_"+(i);
-    					$('editmarkertable_'+(setIdCheck)).appendChild(newMarkerForm);
-							show('markerform_'+(i));
+    					newMarkerForm.id = "markerform_"+g;
+    					$('editmarkertable_'+bIMData[g].set_id).appendChild(newMarkerForm);
+							show('markerform_'+g);
 							break;
 					}
 			  }
 				
 				// populate set table values
-				form = $('markerform_'+(i));
+				form = $('markerform_'+g);
 
-        form.marker_id.value = bIMData[i].marker_id;
-        form.title.value = bIMData[i].title;
-        form.marker_lat.value = bIMData[i].lat;
-        form.marker_lon.value = bIMData[i].lon;
-        form.edit.value = bIMData[i].data;
-        form.marker_labeltext.value = bIMData[i].label_data;
-        form.marker_zi.value = bIMData[i].zindex;
-        form.marker_array.value = bIMData[i].array;
-        form.marker_array_n.value = bIMData[i].array_n;
-				
-    		/* @todo include the following 
-            bIMData[i].set_id;
-            bIMData[i].style_id;
-            bIMData[i].icon_id;
-    				*/
-						
+        form.marker_id.value = bIMData[g].marker_id;
+        form.title.value = bIMData[g].title;
+        form.marker_lat.value = bIMData[g].lat;
+        form.marker_lon.value = bIMData[g].lon;
+        form.edit.value = bIMData[g].data;
+        form.marker_labeltext.value = bIMData[g].label_data;
+        form.marker_zi.value = bIMData[g].zindex;
+        form.marker_array.value = bIMData[g].array;
+        form.marker_array_n.value = bIMData[g].array_n;				
 		}
-};
+
+	}
+}
+
 
 
 
@@ -328,7 +325,17 @@ function editPolylines(){
 				 data += '&save_marker=true';
 				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMarker } );
 			}
-		 
+
+			if ( Form.getInputs(f, 'button', 'new_marker') != '' ){
+				 // here we still use save_marker because edit_marker.php looks for it
+				 data += '&save_marker=true';
+				 // yet again here is another instance where getting a value sucks, 
+				 // but neither js nor prototype make getting this info less than a nightmare
+				 var elms = Form.getElements(f);
+				 editSetId = elms[elms.length-1].value;  //we reference this later in addMarker()
+				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addMarker } );
+			}
+					 
 			if ( Form.getInputs(f, 'button', 'save_polyline') != '' ){
 				 data += '&save_polyline=true';
 				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updatePolyline } );
@@ -494,6 +501,79 @@ function editPolylines(){
 			}
 
 			m.marker.redraw(true);
+	}
+
+
+
+
+	 function addMarker(rslt){
+	 		var s;
+      var xml = rslt.responseXML;
+						
+	 		var m; //the marker data we are changing
+			//@todo modify this to handle either bIMData or bSMData sets
+			var n = bIMData.length;
+			bIMData[n] = new Array();
+			
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('id');			
+			var markerid = id[0].firstChild.nodeValue;
+			bIMData[n].marker_id = markerid;
+
+			var tl = xml.documentElement.getElementsByTagName('title');
+			var title = tl[0].firstChild.nodeValue;			
+	 		bIMData[n].title = title;
+			
+			var lt = xml.documentElement.getElementsByTagName('lat');
+			var lat = parseFloat(lt[0].firstChild.nodeValue);
+	 		bIMData[n].lat = lat;
+			
+			var ln = xml.documentElement.getElementsByTagName('lon');
+			var lon = parseFloat(ln[0].firstChild.nodeValue);
+	 		bIMData[n].lon = lon;
+
+			var dt = xml.documentElement.getElementsByTagName('data');
+			var data = dt[0].firstChild.nodeValue;			
+	 		bIMData[n].data = data;
+
+			var l = xml.documentElement.getElementsByTagName('label');
+			var label = l[0].firstChild.nodeValue;			
+	 		bIMData[n].label_data = label;
+
+			//@todo this is such a crappy way to get this number
+			for(var a=0; a<bMSetData.length; a++){
+					if (bMSetData[a].set_id == editSetId){
+						 s = a;
+						 break;						 						 
+					}
+			};
+			
+			bIMData[n].set_id = parseFloat(bMSetData[s].set_id);
+			bIMData[n].style_id = parseFloat(bMSetData[s].style_id);
+			bIMData[n].icon_id = parseFloat(bMSetData[s].icon_id);
+			
+			var z = xml.documentElement.getElementsByTagName('z');
+			var zindex = parseInt(z[0].firstChild.nodeValue);
+			bIMData[n].zindex = zindex;
+
+			bIMData[n].array = "I";
+			bIMData[n].array_n = parseFloat(n);
+
+			//create marker
+			//@todo this is redundant to the marker making loop toward the end of js_makegmap - consolidate in a function
+    	var point = new GPoint(parseFloat(bIMData[n].lon), parseFloat(bIMData[n].lat));
+    	bIMData[n].marker = new GMarker(point);
+    	bIMData[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+bIMData[n].title+"</strong><p>"+bIMData[n].data+"</p></div>";
+    	map.addOverlay(bIMData[n].marker);
+    	//add the marker label if it exists
+    	if (typeof(bIMData[n].label_data) != 'undefined'){
+    		var topElement = bIMData[n].marker.iconImage;
+    		if (bIMData[n].marker.transparentIcon) {topElement = bIMData[n].marker.transparentIcon;}
+    		if (bIMData[n].marker.imageMap) {topElement = bIMData[n].marker.imageMap;}
+    		topElement.setAttribute( "title" , bIMData[n].label_data );
+    	}
+			
+			bIMData[n].marker.openInfoWindowHtml(bIMData[n].marker.my_html);
 	}
 
 	 

@@ -94,6 +94,7 @@ class BitGmap extends LibertyAttachable {
 
 					$this->mMapInitMarkers = $this->getMarkers($lookupId, "init_markers");
 					$this->mMapSetMarkers = $this->getMarkers($lookupId, "set_markers");
+					$this->mMapMarkerSetDetails = $this->getMarkerSetsDetails($lookupId);
 					$this->mMapMarkerStyles = $this->getMarkerStyles($lookupId);
 					$this->mMapIconStyles = $this->getIconStyles($lookupId);
 
@@ -378,6 +379,28 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
+	
+	function getMarkerSetsDetails($gmap_id) {
+  		global $gBitSystem;
+  		$ret = NULL;
+  		if ($gmap_id && is_numeric($gmap_id)) {
+      $query = "SELECT DISTINCT bms.*, bmk.`set_type`
+                FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."bit_gmaps_marker_sets` bms
+                WHERE bmk.`gmap_id` = ?
+                AND bmk.`set_id` = bms.`set_id` 
+                AND ( bmk.`set_type` = 'set_markers' OR bmk.`set_type` = 'init_markers')
+                ORDER BY bms.`set_id` ASC";
+							
+			$result = $this->mDb->query( $query, array((int)$gmap_id) );
+
+			$ret = array();
+
+			while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		};
+		return $ret;
+	}
 
 
 
@@ -398,7 +421,9 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	//returns array of all marker sets
+	//returns array of all markers and associated set info
+	//@todo this needs to be reworked as it does not get associated marker data from the content table
+	//@tod0 should also be moved into the marker class
 	function getAllMarkerSets() {
 		global $gBitSystem;
 		$ret = NULL;
@@ -421,7 +446,9 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	//returns array of all markers and sets they are in
+	//returns array of all markers
+	//@todo this needs to be reworked as it does not get associated marker data from the content table
+	//@tod0 should also be moved into the marker class
 	function getAllMarkers() {
 		global $gBitSystem;
 		$ret = NULL;

@@ -45,10 +45,47 @@
 </div>	
 
 
+
+<div id="newmarkerform" class="editform" style="display:none;">
+		<h2>Add a New Marker</h2>		
+        <div class="tableheader">
+    				<div style="float:left; padding:0 .4em; width:90px"> Title </div>
+    				<div style="float:left; padding:0 .4em; width:90px"> Latitude </div>
+    				<div style="float:left; padding:0 .4em; width:90px"> Longitude </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Window Text </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Label Text </div>
+    				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
+    				<div style="float:left; padding:0 .4em; width:50px"> Set </div>
+    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
+    		</div>
+    		<div class="table" id="editmarkertable_new">
+    			<FORM action="javascript:;" name="markerform_new" id="markerform_new">
+    			<div class="data">
+          	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="title" type="text" size="15" value="a title"></div>
+          	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="marker_lat" type="text" size="15" value=""></div>
+          	<div style="float:left; padding:0 .4em; width:90px"><INPUT name="marker_lon" type="text" size="15" value=""></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="edit" cols="15" rows="3"></textarea></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
+          	<div style="float:left; padding:0 .4em; width:50px"><INPUT name="marker_zi" type="text" size="3" value="0"></div>
+          	<div style="float:left; padding:0 .4em; width:90px"><SELECT name="set_id" id="set_id">
+                                                                  <OPTION value="n" >someset</OPTION>
+                                          							   			</SELECT></div>
+          	<div style="float:left; padding:0 .4em; width:70px"><INPUT type="button" name="new_marker" value="Submit" onclick="javascript:get('edit_marker.php', this.form);"></div>
+    			</div>
+    			</FORM>
+  		  </div>
+		<div id="newmarkercancel" style="clear:both;"><INPUT type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:canceledit('newmarkerform');"></div>
+</div> <!-- end of newmarkerform -->
+
+
+
+
+
+
 <div id="editmarkerform" class="editform" style="display:none;">
 		<div id="editmarkermenu">
 				 <a id="emap" href="javascript:alert('this feature is coming soon');">Edit Marker Sets</a> | 
-				 <a id="emap" href="javascript:alert('this feature is coming soon');">New Marker</a> | 
+				 <a id="emap" href="javascript:newMarker();">New Marker</a> | 
 				 <a id="emap" href="javascript:alert('this feature is coming soon');">New Marker Set</a> | 
 				 <a id="emap" href="javascript:alert('this feature is coming soon');">Edit Marker Styles</a>
 		</div>
