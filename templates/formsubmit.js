@@ -314,6 +314,13 @@ function editPolylines(){
 
    var http_request = false;
 
+	 function expunge(u, m, s){
+			data = "marker_id=" + m.value + "&expunge_marker=true";
+			editSetId = s.value;
+			editMarkerId = m.value;
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: removeMarker } );
+	 }	 
+	 
 	 function remove(u, m, s){
 			data = "marker_id=" + m.value + "&set_id=" + s.value + "&remove_marker=true";
 			editSetId = s.value;

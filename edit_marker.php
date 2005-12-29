@@ -3,6 +3,8 @@
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
+//@todo consolidate the xml headers, they are all the same
+
 // Initialization
 require_once('../bit_setup_inc.php' );
 
@@ -64,9 +66,6 @@ if (!empty($_REQUEST["save_marker"])) {
 				//if store is successful we return XML
 				$mRet = "<remove>success</remove>";
 
-				//@todo replace in xml when I know what I am doing
-				//	."<data>".$gContent->parseData()."</data>"
-					
       	//since we are returning xml we must report so in the header
       	//we also need to tell the browser not to cache the page
       	//see: http://mapki.com/index.php?title=Dynamic_XML
@@ -85,6 +84,33 @@ if (!empty($_REQUEST["save_marker"])) {
       	print_r($mRet);
 
         die;								
+		}else{
+		//@todo - return some sort of remove failure message in the xml
+      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+    }
+}elseif (!empty($_REQUEST["expunge_marker"])) {
+    if( $gContent->expunge() ) {
+				//if store is successful we return XML
+				$mRet = "<remove>success</remove>";
+					
+      	//since we are returning xml we must report so in the header
+      	//we also need to tell the browser not to cache the page
+      	//see: http://mapki.com/index.php?title=Dynamic_XML
+        // Date in the past
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
+        // always modified
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        // HTTP/1.1
+        header("Cache-Control: no-store, no-cache, must-revalidate");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        // HTTP/1.0
+        header("Pragma: no-cache");
+        //XML Header
+        header("content-type:text/xml");
+     		
+      	print_r($mRet);
+
+        die;
 		}else{
 		//@todo - return some sort of remove failure message in the xml
       $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );

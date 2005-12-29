@@ -127,7 +127,8 @@
           	<div style="float:left; padding:0;"><input name="marker_array_n" type="hidden" size="3" value=""></div>
           	<div style="float:left; padding:0 .4em; width:70px"><input type="button" name="save_marker" value="Submit" onclick="javascript:get('edit_marker.php', this.form, this.form.marker_array.value, this.form.marker_array_n.value);"></div>
           	<div style="float:left; padding:0 .4em; width:70px"><input type="button" name="locate" value="Locate" onclick="javascript:bIMData[this.form.marker_array_n.value].marker.openInfoWindowHtml(bIMData[this.form.marker_array_n.value].marker.my_html);"></div>
-            <div style="float:left; padding:0 .4em; width:70px"><input type="button" name="remove_marker" value="Remove From Set" onclick="javascript:remove('edit_marker.php', this.form.marker_id, this.form.set_id);"></div>
+            <div style="float:left; padding:0 .4em; width:70px"><input type="button" name="remove_marker" value="Remove" onclick="javascript:remove('edit_marker.php', this.form.marker_id, this.form.set_id);"></div>
+            <div style="float:left; padding:0 .4em; width:70px"><input type="button" name="expunge_marker" value="Delete" onclick="javascript:expunge('edit_marker.php', this.form.marker_id, this.form.set_id);"></div>
     			</div>
     			</form>
   		  </div>
