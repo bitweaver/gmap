@@ -46,6 +46,14 @@
 
 
 
+
+<!--marker editing forms -->
+<div id="editmarkermenu" style="display:none;">
+		<a id="emap" href="javascript:newMarker();">New Marker</a> | 
+		<a id="emap" href="javascript:alert('this feature is coming soon');">New Marker Set</a> | 
+		<a id="emap" href="javascript:alert('this feature is coming soon');">Edit Marker Styles</a>
+</div>
+
 <div id="newmarkerform" class="editform" style="display:none;">
 		<h2>Add a New Marker</h2>		
         <div class="tableheader">
@@ -77,18 +85,7 @@
 		<div id="newmarkercancel" style="clear:both;"><INPUT type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:canceledit('newmarkerform');"></div>
 </div> <!-- end of newmarkerform -->
 
-
-
-
-
-
 <div id="editmarkerform" class="editform" style="display:none;">
-		<div id="editmarkermenu">
-				 <a id="emap" href="javascript:alert('this feature is coming soon');">Edit Marker Sets</a> | 
-				 <a id="emap" href="javascript:newMarker();">New Marker</a> | 
-				 <a id="emap" href="javascript:alert('this feature is coming soon');">New Marker Set</a> | 
-				 <a id="emap" href="javascript:alert('this feature is coming soon');">Edit Marker Styles</a>
-		</div>
 		<h2>Marker Sets Associated With This Map</h2>		
 		<div id="markerset_n" style="display:none; clear:both;">
 			<div id="editsetmenu_n">
@@ -155,7 +152,8 @@
 		</div> <!-- end of markerset_n -->
 </div> <!-- end of editmarkerform -->
 
-<div id="editmarkercancel" style="display:none; clear:both;"><INPUT type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:canceledit('editmarkerform'); canceledit('editmarkercancel');"></div>
+<div id="editmarkercancel" style="display:none; clear:both;"><INPUT type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:canceledit('editmarkermenu'); canceledit('newmarkerform'); canceledit('editmarkerform'); canceledit('editmarkercancel');"></div>
+<!--end marker editing forms -->
 
 
 

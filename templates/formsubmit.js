@@ -115,6 +115,7 @@ function newMarker(){
 
 function editMarkers(){		
   // Display the Edit Form Div and Cancel Button
+	show('editmarkermenu');
   show('editmarkerform');
 	show('editmarkercancel');
 
@@ -574,6 +575,9 @@ function editPolylines(){
     	}
 			
 			bIMData[n].marker.openInfoWindowHtml(bIMData[n].marker.my_html);
+
+			// clear the form
+			$('markerform_new').reset();
 	}
 
 	 
