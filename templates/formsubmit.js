@@ -209,7 +209,7 @@ function editMarkers(){
   					
       // add form to set table
   		$('editmarkerform').appendChild(newMarkerSet);
-  		show('markerset_'+newSetId);  
+  		show('markerset_'+newSetId);
   	}
 
 		
