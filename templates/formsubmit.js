@@ -223,6 +223,14 @@ function editMarkers(){
   				if (formContKids[n].id == "markerform_n"){
         			var newMarkerForm = formContKids[n].cloneNode(true);
     					newMarkerForm.id = "markerform_"+g;
+							newMarkerForm.name = "markerform_"+g;
+							var nMFKids = newMarkerForm.childNodes;
+							for (var o=0; o<nMFKids.length; o++){
+							  if (nMFKids[o].id == "formdata_n"){
+									nMFKids[o].id = "formdata_"+g;
+									}
+							}
+							
     					$('editmarkertable_'+bIMData[g].set_id).appendChild(newMarkerForm);
 							show('markerform_'+g);
 							break;
@@ -242,9 +250,26 @@ function editMarkers(){
         form.marker_zi.value = bIMData[g].zindex;
         form.marker_array.value = bIMData[g].array;
         form.marker_array_n.value = bIMData[g].array_n;
+				
+				// just for a pretty button - js sucks it!
+				var linkParent = $('formdata_'+g);
+				var linkPKids = linkParent.childNodes;
+				for (var p=0; p<linkPKids.length; p++){
+						if (linkPKids[p].name == "save_marker_btn"){
+							 linkPKids[p].href = "javascript:storeMarker('edit_marker.php', document.markerform_"+g+");" ;
+						}
+						if (linkPKids[p].name == "locate_marker_btn"){
+							 linkPKids[p].href = "javascript:bIMData["+bIMData[g].array_n+"].marker.openInfoWindowHtml(bIMData["+bIMData[g].array_n+"].marker.my_html);" ;
+						}
+						if (linkPKids[p].name == "remove_marker_btn"){
+							 linkPKids[p].href = "javascript:removeMarker('edit_marker.php', document.markerform_"+g+");" ;
+						}
+						if (linkPKids[p].name == "expunge_marker_btn"){
+							 linkPKids[p].href = "javascript:expungeMarker('edit_marker.php', document.markerform_"+g+");" ;
+						}
+				}
 			}
-		}
-
+		}		
 	}
 }
 
@@ -313,54 +338,66 @@ function editPolylines(){
 //AJAX FUNCTIONS
 
    var http_request = false;
-
-	 function expunge(u, m, s){
-			data = "marker_id=" + m.value + "&expunge_marker=true";
-			editSetId = s.value;
-			editMarkerId = m.value;
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: removeMarker } );
-	 }	 
 	 
-	 function remove(u, m, s){
-			data = "marker_id=" + m.value + "&set_id=" + s.value + "&remove_marker=true";
-			editSetId = s.value;
-			editMarkerId = m.value;
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: removeMarker } );
-	 }
-	 
-	 function get(u, f, a, n){
-			editArray = a;
-			editObjectN = n;
+	 function storeMap(u, f){
 	 		var data;
       data = Form.serialize(f);
-
-			if ( Form.getInputs(f, 'button', 'save_map') != '' ){
-				 data += '&save_map=true';
-				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMap } );
-			}
-		
-			if ( Form.getInputs(f, 'button', 'save_marker') != '' ){
-				 data += '&save_marker=true';
-				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMarker } );
-			}
-
-			if ( Form.getInputs(f, 'button', 'new_marker') != '' ){
-				 // here we still use save_marker because edit_marker.php looks for it
-				 data += '&save_marker=true';
-				 // yet again here is another instance where getting a value sucks, 
-				 // but neither js nor prototype make getting this info less than a nightmare
-				 var elms = Form.getElements(f);
-				 editSetId = elms[elms.length-1].value;  //we reference this later in addMarker()
-				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addMarker } );
-			}
-					 
-			if ( Form.getInputs(f, 'button', 'save_polyline') != '' ){
-				 data += '&save_polyline=true';
-				 var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updatePolyline } );
-			}
-
+			data += '&save_map=true';
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMap } );
 	 }
 
+	 function storeNewMarker(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			data += '&save_marker=true';
+			var elm = Form.getElements(f);
+			editSetId = elm[elm.length-1].value;
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addMarker } );
+	 }
+	 
+	 function storeMarker(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			data += '&save_marker=true';
+			editArray = Form.getInputs(f, 'hidden', 'marker_array')[0].value; //marker_array
+			editObjectN = Form.getInputs(f, 'hidden', 'marker_array_n')[0].value; //marker_array_n
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMarker } );
+	 }
+	 
+	 function removeMarker(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
+			editMarkerId = Form.getInputs(f, 'hidden', 'marker_id')[0].value;
+			data = "marker_id=" + editMarkerId + "&set_id=" + editSetId + "&remove_marker=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: removeMarker } );
+	 }
+	 
+	 function expungeMarker(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			data = "marker_id=" + editMarkerId + "&expunge_marker=true";
+			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
+			editMarkerId = Form.getInputs(f, 'hidden', 'marker_id')[0].value;
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: removeMarker } );
+	 }	 
+
+	 function storePolyline(u, f){
+	 		//@todo - this needs to be updated
+			alert('to be rebuilt like markers');
+			/*
+	 		var data;
+      data = Form.serialize(f);
+			data += '&save_polyline=true';
+			editArray = Form.getInputs(f, 'hidden', 'marker_array')[0].value; //marker_array
+			editObjectN = Form.getInputs(f, 'hidden', 'marker_array_n')[0].value; //marker_array_n
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updatePolyline } );
+			*/
+	 }
+	 
+	 
+	 
+	 
 
 
 	 function updateMap(rslt){
