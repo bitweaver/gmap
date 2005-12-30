@@ -40,7 +40,7 @@
           <option value="G_HYBRID_TYPE" >Hybrid</option>
    			</select><br/>
     <!-- Allow Comments <input name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
-    <input type="button" name="save_map" value="Submit" onclick="javascript:get('edit.php', this.parentNode);"><br/>
+    <input type="button" name="save_map" value="Submit" onclick="javascript:storeMap('edit.php', this.parentNode);"><br/>
    	<input type="button" name="closemapform" value="Cancel" onclick="javascript:canceledit('editmapform');">
     </form>
 </div>	
