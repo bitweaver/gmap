@@ -33,19 +33,32 @@ $gBitSystem->verifyPackage('gmap' );
 $gBitSystem->verifyPermission('bit_gm_view_map' );
 
 if (!isset($_REQUEST['gmap_id'] ) ) {
-    $_REQUEST['gmap_id'] = $gBitSystem->getPreference("home_gmap");
+//@toodo how to set up this preference?
+//    $_REQUEST['gmap_id'] = $gBitSystem->getPreference("home_gmap");
+
+	 	require_once( GMAP_PKG_PATH.'BitGmap.php');
+
+	  $gmap = new BitGmap();
+    $listgmaps = $gmap->getList( $_REQUEST );
+    
+    
+    $gBitSmarty->assign_by_ref('control', $_REQUEST["control"]);
+    $gBitSmarty->assign_by_ref('list', $listgmaps["data"]);
+    
+    // Display the template
+    $gBitSystem->display('bitpackage:gmap/list_gmaps.tpl', tra('Gmap') );
+}else{
+    require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
+    
+    
+    //@todo wj: this line from wiki package - might want to use it
+    //include( BITMAP_PKG_URL.'display_gmap_inc.php' );
+    
+    //set onload function in body
+    $gBodyOnload[] = 'loadMap()';
+    
+    // Display the template
+    $gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Gmap') );
 }
-
-require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
-
-
-//@todo wj: this line from wiki package - might want to use it
-//include( BITMAP_PKG_URL.'display_gmap_inc.php' );
-
-//set onload function in body
-$gBodyOnload[] = 'loadMap()';
-
-// Display the template
-$gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Gmap') );
 
 ?>

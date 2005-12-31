@@ -640,6 +640,81 @@ class BitGmap extends LibertyAttachable {
 
 
 	/**
+	* This function generates a list of records from the tiki_content database for use in a list page
+	**/
+	function getList( &$pParamHash ) {
+		LibertyContent::prepGetList( $pParamHash );
+
+		$find = $pParamHash['find'];
+		$sort_mode = $pParamHash['sort_mode'];
+		$max_records = $pParamHash['max_records'];
+		$offset = $pParamHash['offset'];
+
+		if( is_array( $find ) ) {
+			// you can use an array of pages
+			$mid = " WHERE tc.`title` IN( ".implode( ',',array_fill( 0,count( $find ),'?' ) )." )";
+			$bindvars = $find;
+		} else if( is_string( $find ) ) {
+			// or a string
+			$mid = " WHERE UPPER( tc.`title` )like ? ";
+			$bindvars = array( '%' . strtoupper( $find ). '%' );
+		} else if( !empty( $pUserId ) ) {
+			// or a string
+			$mid = " WHERE tc.`creator_user_id` = ? ";
+			$bindvars = array( $pUserId );
+		} else {
+			$mid = "";
+			$bindvars = array();
+		}
+
+		$query = "SELECT bm.*, tc.`content_id`, tc.`title`, tc.`data`
+			FROM `".BIT_DB_PREFIX."bit_gmaps` bm INNER JOIN `".BIT_DB_PREFIX."tiki_content` tc ON( tc.`content_id` = bm.`content_id` )
+			".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." tc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'
+			ORDER BY ".$this->mDb->convert_sortmode( $sort_mode );
+		$query_cant = "select count( * )from `".BIT_DB_PREFIX."tiki_content` tc ".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." tc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'";
+		$result = $this->mDb->query( $query,$bindvars,$max_records,$offset );
+		$ret = array();
+		while( $res = $result->fetchRow() ) {
+			$ret[] = $res;
+		}
+		$pParamHash["data"] = $ret;
+
+		$pParamHash["cant"] = $this->mDb->getOne( $query_cant,$bindvars );
+
+		LibertyContent::postGetList( $pParamHash );
+		return $pParamHash;
+	}
+	
+	
+	
+	/**
+	* This function removes a sample entry
+	**/
+	function expunge() {
+		$ret = FALSE;
+		if( $this->isValid() ) {
+			$this->mDb->StartTrans();
+			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps` WHERE `content_id` = ?";
+			$result = $this->mDb->query( $query, array( $this->mContentId ) );
+			if( LibertyAttachable::expunge() ) {
+				$ret = TRUE;
+				$this->mDb->CompleteTrans();
+			} else {
+				$this->mDb->RollbackTrans();
+			}
+		}
+		return $ret;
+	}
+
+	/**
+	* Make sure sample is loaded and valid
+	**/
+	function isValid() {
+		return( !empty( $this->mGmapId ) );
+	}
+	
+	
+	/**
 	* Generates the URL to the sample page
 	* @param pExistsHash the hash that was returned by LibertyContent::pageExists
 	* @return the link to display the page.
