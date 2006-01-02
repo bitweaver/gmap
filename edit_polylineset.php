@@ -21,29 +21,25 @@ $gContent = new BitGmap();
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
 
-if (!empty($_REQUEST["save_polyline"])) {
-    if( $result = $gContent->storePolyline( $_REQUEST ) ) {
+if (!empty($_REQUEST["save_polylineset"])) {
+    if( $result = $gContent->storePolylineSet( $_REQUEST ) ) {
 
+				//@todo - returned results need to include all the associated style properties as well
 				//if store is successful we return XML
-				$mRet = "<polyline>"
-      		  ."<id>".$result->fields['polyline_id']."</id>"
-              ."<name>".$result->fields['name']."</name>"
-              ."<type>".$result->fields['type']."</type>"
-              ."<points>".$result->fields['points_data']."</points>"
-              ."<border>".$result->fields['border_text']."</border>"
-              ."<z>".$result->fields['zindex']."</z>"
-						  ."</polyline>";
-
-				//@todo replace in xml when I know what I am doing
-				//	."<data>".$gContent->parseData()."</data>"
-													
+				$mRet = "<polylineset>"
+      		  ."<set_id>".$result->fields['set_id']."</set_id>"
+      		  ."<name>".$result->fields['name']."</name>"
+      		  ."<description>".$result->fields['description']."</description>"
+      		  ."<style_id>".$result->fields['style_id']."</style_id>"
+						."</polylineset>";
+				
     }else{
 		//@todo - return some sort of store failure message in the xml
       $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
     }
 //Check if this to remove from a set, or to delete completely
-}elseif (!empty($_REQUEST["remove_polyline"])) {
-    if( $gContent->removePolylineFromSet( $_REQUEST ) ) {
+}elseif (!empty($_REQUEST["remove_polylineset"])) {
+    if( $gContent->removePolylineSetFromMap( $_REQUEST ) ) {
 				//if store is successful we return XML
 				$mRet = "<remove>success</remove>";
 
@@ -51,8 +47,8 @@ if (!empty($_REQUEST["save_polyline"])) {
 		//@todo - return some sort of remove failure message in the xml
       $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
     }
-}elseif (!empty($_REQUEST["expunge_polyline"])) {
-    if( $gContent->expungePolyline( $_REQUEST ) ) {
+}elseif (!empty($_REQUEST["expunge_polylineset"])) {
+    if( $gContent->expungePolylineSet( $_REQUEST ) ) {
 				//if store is successful we return XML
 				$mRet = "<remove>success</remove>";
 

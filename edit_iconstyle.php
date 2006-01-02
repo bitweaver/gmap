@@ -21,46 +21,35 @@ $gContent = new BitGmap();
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
 
-if (!empty($_REQUEST["save_polyline"])) {
-    if( $result = $gContent->storePolyline( $_REQUEST ) ) {
+if (!empty($_REQUEST["save_iconstyle"])) {
+    if( $result = $gContent->storeIconStyle( $_REQUEST ) ) {
 
+				//@todo - returned results need to include all the associated style properties as well
 				//if store is successful we return XML
-				$mRet = "<polyline>"
-      		  ."<id>".$result->fields['polyline_id']."</id>"
-              ."<name>".$result->fields['name']."</name>"
-              ."<type>".$result->fields['type']."</type>"
-              ."<points>".$result->fields['points_data']."</points>"
-              ."<border>".$result->fields['border_text']."</border>"
-              ."<z>".$result->fields['zindex']."</z>"
-						  ."</polyline>";
+				$mRet = "<iconstyle>"
+      		  ."<icon_id>".$result->fields['icon_id']."</icon_id>"
+      		  ."<name>".$result->fields['name']."</name>"
+      		  ."<type>".$result->fields['type']."</type>"
+      		  ."<image>".$result->fields['image']."</image>"
+      		  ."<icon_w>".$result->fields['icon_w']."</icon_w>"
+      		  ."<icon_h>".$result->fields['icon_h']."</icon_h>"
+      		  ."<shadow_image>".$result->fields['shadow_image']."</shadow_image>"
+      		  ."<shadow_w>".$result->fields['shadow_w']."</shadow_w>"
+      		  ."<shadow_h>".$result->fields['shadow_h']."</shadow_h>"
+      		  ."<rollover_image>".$result->fields['rollover_image']."</rollover_image>"
+      		  ."<icon_anchor_x>".$result->fields['icon_anchor_x']."</icon_anchor_x>"
+      		  ."<icon_anchor_y>".$result->fields['icon_anchor_y']."</icon_anchor_y>"
+      		  ."<infowindow_anchor_x>".$result->fields['infowindow_anchor_x']."</infowindow_anchor_x>"
+      		  ."<infowindow_anchor_y>".$result->fields['infowindow_anchor_y']."</infowindow_anchor_y>"
+						."</iconstyle>";
 
-				//@todo replace in xml when I know what I am doing
-				//	."<data>".$gContent->parseData()."</data>"
-													
     }else{
 		//@todo - return some sort of store failure message in the xml
       $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
     }
-//Check if this to remove from a set, or to delete completely
-}elseif (!empty($_REQUEST["remove_polyline"])) {
-    if( $gContent->removePolylineFromSet( $_REQUEST ) ) {
-				//if store is successful we return XML
-				$mRet = "<remove>success</remove>";
-
-		}else{
-		//@todo - return some sort of remove failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
-    }
-}elseif (!empty($_REQUEST["expunge_polyline"])) {
-    if( $gContent->expungePolyline( $_REQUEST ) ) {
-				//if store is successful we return XML
-				$mRet = "<remove>success</remove>";
-
-		}else{
-		//@todo - return some sort of remove failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
-    }
 }
+
+//@todo currently there is no function for deleting a style
 
 //since we are returning xml we must report so in the header
 //we also need to tell the browser not to cache the page

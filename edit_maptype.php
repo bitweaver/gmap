@@ -21,29 +21,32 @@ $gContent = new BitGmap();
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
 
-if (!empty($_REQUEST["save_polyline"])) {
-    if( $result = $gContent->storePolyline( $_REQUEST ) ) {
+if (!empty($_REQUEST["save_maptype"])) {
+    if( $result = $gContent->storeMapType( $_REQUEST ) ) {
 
 				//if store is successful we return XML
-				$mRet = "<polyline>"
-      		  ."<id>".$result->fields['polyline_id']."</id>"
-              ."<name>".$result->fields['name']."</name>"
-              ."<type>".$result->fields['type']."</type>"
-              ."<points>".$result->fields['points_data']."</points>"
-              ."<border>".$result->fields['border_text']."</border>"
-              ."<z>".$result->fields['zindex']."</z>"
-						  ."</polyline>";
-
-				//@todo replace in xml when I know what I am doing
-				//	."<data>".$gContent->parseData()."</data>"
-													
+				$mRet = "<maptype>"
+      		  ."<maptype_id>".$result->fields['maptype_id']."</maptype_id>"
+      		  ."<name>".$result->fields['name']."</name>"
+      		  ."<description>".$result->fields['description']."</description>"
+      		  ."<copyright>".$result->fields['copyright']."</copyright>"
+      		  ."<basetype>".$result->fields['basetype']."</basetype>"
+      		  ."<alttype>".$result->fields['alttype']."</alttype>"
+      		  ."<bounds>".$result->fields['bounds']."</bounds>"
+      		  ."<maxzoom>".$result->fields['maxzoom']."</maxzoom>"
+      		  ."<maptiles_url>".$result->fields['maptiles_url']."</maptiles_url>"
+      		  ."<lowresmaptiles_url>".$result->fields['lowresmaptiles_url']."</lowresmaptiles_url>"
+      		  ."<hybridtiles_url>".$result->fields['hybridtiles_url']."</hybridtiles_url>"
+      		  ."<lowreshybridtiles_url>".$result->fields['lowreshybridtiles_url']."</lowreshybridtiles_url>"
+						."</maptype>";
+																			
     }else{
 		//@todo - return some sort of store failure message in the xml
       $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
     }
 //Check if this to remove from a set, or to delete completely
-}elseif (!empty($_REQUEST["remove_polyline"])) {
-    if( $gContent->removePolylineFromSet( $_REQUEST ) ) {
+}elseif (!empty($_REQUEST["remove_maptype"])) {
+    if( $gContent->removeMapTypeFromMap( $_REQUEST ) ) {
 				//if store is successful we return XML
 				$mRet = "<remove>success</remove>";
 
@@ -51,8 +54,8 @@ if (!empty($_REQUEST["save_polyline"])) {
 		//@todo - return some sort of remove failure message in the xml
       $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
     }
-}elseif (!empty($_REQUEST["expunge_polyline"])) {
-    if( $gContent->expungePolyline( $_REQUEST ) ) {
+}elseif (!empty($_REQUEST["expunge_maptype"])) {
+    if( $gContent->expungeMapType( $_REQUEST ) ) {
 				//if store is successful we return XML
 				$mRet = "<remove>success</remove>";
 
