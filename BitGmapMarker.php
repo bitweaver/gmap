@@ -132,6 +132,7 @@ class BitGmapMarker extends LibertyAttachable {
 					$pParamHash['marker_store']['content_id'] = $this->mContentId;
 					$pParamHash['marker_store']['marker_id'] = $this->mDb->GenID( 'bit_gmaps_markers_marker_id_seq' );
 					$this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_markers", $pParamHash['marker_store'] );
+					// if its a new marker we also get a set_id for the keychain and automaticallly associate it with a marker set.
 					$pParamHash['keychain_store']['marker_id'] = $pParamHash['marker_store']['marker_id'];
 					$this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_marker_keychain", $pParamHash['keychain_store'] );													
 				}

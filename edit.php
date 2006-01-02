@@ -15,6 +15,8 @@ $gBitSystem->verifyPermission('bit_gm_edit_map' );
 // Get the map for specified gmap_id
 require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 
+// Tells smarty to include the Prototype js library
+$gBitSmarty->assign( 'loadAjax', TRUE );
 
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.

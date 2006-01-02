@@ -73,7 +73,7 @@ $tables = array(
   infowindow_anchor_y I4 DEFAULT 0
 ",
 
-//type options: 0 => GMarker, 1 => PdMarker, 1 => XMarker
+//type options: 0 => GMarker, 1 => PdMarker, 2 => XMarker
 //lable hover is PdMarker Class only
 //label opacity is PdMarker Class only
 //label hover styles is CSS for PdMarker Class

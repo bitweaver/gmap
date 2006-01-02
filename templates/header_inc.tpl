@@ -7,9 +7,7 @@
 {include file="bitpackage:gmap/js_makepolylines.tpl"}
 {include file="bitpackage:gmap/js_makegmap.tpl"}
 
-{* @todo make include of formsubmit conditional *}
 <script src="templates/formsubmit.js" type="text/javascript"></script>
-<script src="{$smarty.const.THEMES_PKG_URL}js/prototype.js" type="text/javascript"></script>
 
 <style type="text/css">
 	textarea	{ldelim}font-size:.9em;{rdelim}

@@ -153,6 +153,22 @@ class BitGmap extends LibertyAttachable {
 
 
 
+	//* Gets data for a given polyline.
+	// @ todo this should probably take an array so that we can get data for a bunch of markers if we want
+	function getMapTypeData($maptype_id) {
+		global $gBitSystem;
+		if ($maptype_id && is_numeric($maptype_id)) {
+			$query = "SELECT bmt.*
+			FROM `".BIT_DB_PREFIX."bit_gmaps_map_types` bmt
+			WHERE bmt.maptype_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$maptype_id));
+		}
+		return $result;
+	}
+	
+	
+	
+	
 	//returns array of marker data and associated style and icon style ids for given gmap_id and set_type
 	function getMarkers($gmap_id, $settype) {
 		global $gBitSystem;
@@ -285,8 +301,6 @@ class BitGmap extends LibertyAttachable {
 	function getPolylineData($polyline_id) {
 		global $gBitSystem;
 		if ($polyline_id && is_numeric($polyline_id)) {
-
-			//select map and get list of sets to look up
 			$query = "SELECT bm.*
 			FROM `".BIT_DB_PREFIX."bit_gmaps_polylines` bm
 			WHERE bm.polyline_id = ?";
@@ -325,7 +339,7 @@ class BitGmap extends LibertyAttachable {
 
 
 
-		//get all polyline data for given gmap_id and set_type
+	//get all polygon data for given gmap_id and set_type
 	function getPolygons($gmap_id, $settype) {
 		global $gBitSystem;
 		$ret = NULL;
@@ -510,6 +524,57 @@ class BitGmap extends LibertyAttachable {
 
 
 
+// ALL LIST FUNCTIONS	
+	
+	/**
+	* This function generates a list of records from the tiki_content database for use in a list page
+	**/
+	function getList( &$pParamHash ) {
+		LibertyContent::prepGetList( $pParamHash );
+
+		$find = $pParamHash['find'];
+		$sort_mode = $pParamHash['sort_mode'];
+		$max_records = $pParamHash['max_records'];
+		$offset = $pParamHash['offset'];
+
+		if( is_array( $find ) ) {
+			// you can use an array of pages
+			$mid = " WHERE tc.`title` IN( ".implode( ',',array_fill( 0,count( $find ),'?' ) )." )";
+			$bindvars = $find;
+		} else if( is_string( $find ) ) {
+			// or a string
+			$mid = " WHERE UPPER( tc.`title` )like ? ";
+			$bindvars = array( '%' . strtoupper( $find ). '%' );
+		} else if( !empty( $pUserId ) ) {
+			// or a string
+			$mid = " WHERE tc.`creator_user_id` = ? ";
+			$bindvars = array( $pUserId );
+		} else {
+			$mid = "";
+			$bindvars = array();
+		}
+
+		$query = "SELECT bm.*, tc.`content_id`, tc.`title`, tc.`data`
+			FROM `".BIT_DB_PREFIX."bit_gmaps` bm INNER JOIN `".BIT_DB_PREFIX."tiki_content` tc ON( tc.`content_id` = bm.`content_id` )
+			".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." tc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'
+			ORDER BY ".$this->mDb->convert_sortmode( $sort_mode );
+		$query_cant = "select count( * )from `".BIT_DB_PREFIX."tiki_content` tc ".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." tc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'";
+		$result = $this->mDb->query( $query,$bindvars,$max_records,$offset );
+		$ret = array();
+		while( $res = $result->fetchRow() ) {
+			$ret[] = $res;
+		}
+		$pParamHash["data"] = $ret;
+
+		$pParamHash["cant"] = $this->mDb->getOne( $query_cant,$bindvars );
+
+		LibertyContent::postGetList( $pParamHash );
+		return $pParamHash;
+	}
+	
+
+	
+	
 //ALL STORE FUNCTIONS
 
 	function verify( &$pParamHash ) {
@@ -587,9 +652,88 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	//storage of markers is handled by the marker class in BitGmapMarker.php
+	
+	
+	function verifyMapType( &$pParamHash ) {
 
+		$pParamHash['maptype_store'] = array();
 
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['maptype_store']['name'] = $pParamHash['name'];
+		}
+
+		if( !empty( $pParamHash['desc'] ) ) {
+			$pParamHash['maptype_store']['description'] = $pParamHash['desc'];
+		}
+
+		if( !empty( $pParamHash['copyright'] ) ) {
+			$pParamHash['maptype_store']['copyright'] = $pParamHash['copyright'];
+		}
+
+		if( !empty( $pParamHash['basetype'] ) && is_numeric( $pParamHash['basetype'] ) ) {
+			$pParamHash['maptype_store']['basetype'] = $pParamHash['basetype'];
+		}
+		
+		if( !empty( $pParamHash['alttype'] ) && is_numeric( $pParamHash['alttype'] ) ) {
+			$pParamHash['maptype_store']['alttype'] = $pParamHash['alttype'];
+		}
+
+		if( !empty( $pParamHash['bounds'] ) ) {
+			$pParamHash['maptype_store']['bounds'] = $pParamHash['bounds'];
+		}
+
+		if( !empty( $pParamHash['maxzoom'] ) && is_numeric( $pParamHash['maxzoom'] ) ) {
+			$pParamHash['maptype_store']['maxzoom'] = $pParamHash['maxzoom'];
+		}
+
+		if( !empty( $pParamHash['maptiles_url'] ) ) {
+			$pParamHash['maptype_store']['maptiles_url'] = $pParamHash['maptiles_url'];
+		}
+
+		if( !empty( $pParamHash['lowtiles_url'] ) ) {
+			$pParamHash['maptype_store']['lowresmaptiles_url'] = $pParamHash['lowtiles_url'];
+		}
+
+		if( !empty( $pParamHash['hybridtiles_url'] ) ) {
+			$pParamHash['maptype_store']['hybridtiles_url'] = $pParamHash['hybridtiles_url'];
+		}
+
+		if( !empty( $pParamHash['lowhybridtiles_url'] ) ) {
+			$pParamHash['maptype_store']['lowreshybridtiles_url'] = $pParamHash['lowhybridtiles_url'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+	}
+	
+	function storeMapType( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyMapType( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['maptype_id'] ) ) {
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps_map_types", $pParamHash['maptype_store'], array( "name" => "maptype_id", "value" => $pParamHash['maptype_id'] ) );
+			}else{
+				 $pParamHash['maptype_id'] = $this->mDb->GenID( 'bit_gmaps_map_types_maptype_id_seq' );
+				 $pParamHash['maptype_store']['maptype_id'] = $pParamHash['maptype_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_map_types", $pParamHash['maptype_store'] );
+			}
+			$this->mDb->CompleteTrans();
+
+			// re-query to confirm results
+			$result = $this->getMapTypeData($pParamHash['maptype_id']);
+		}
+		return $result;
+	}
+	
+	
+	
+	
+	//Storage of Markers is handled by the marker class in BitGmapMarker.php
+	
+
+	
+	
+	
 	function verifyPolyline( &$pParamHash ) {
 
 		$pParamHash['polyline_store'] = array();
@@ -613,6 +757,11 @@ class BitGmap extends LibertyAttachable {
 		if( ( !empty( $pParamHash['line_z'] ) && is_numeric( $pParamHash['line_z'] ) ) || $pParamHash['line_z'] == 0 ) {
 			$pParamHash['polyline_store']['zindex'] = $pParamHash['line_z'];
 		}
+
+		// set values for updating the marker keychain		
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['keychain_store']['set_id'] = $pParamHash['set_id'];
+		}
 		
 		return( count( $this->mErrors ) == 0 );
 	}
@@ -628,6 +777,9 @@ class BitGmap extends LibertyAttachable {
 				 $pParamHash['polyline_id'] = $this->mDb->GenID( 'bit_gmaps_polylines_polyline_id_seq' );
 				 $pParamHash['polyline_store']['polyline_id'] = $pParamHash['polyline_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_polylines", $pParamHash['polyline_store'] );
+				 // if its a new polyline we also get a set_id for the keychain and automaticallly associate it with a polyline set.
+				 $pParamHash['keychain_store']['polyline_id'] = $pParamHash['polyline_store']['polyline_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_polyline_keychain", $pParamHash['keychain_store'] );
 			}
 			$this->mDb->CompleteTrans();
 
@@ -639,56 +791,346 @@ class BitGmap extends LibertyAttachable {
 	
 
 
+
+	function verifyMarkerSet( &$pParamHash ) {
+
+		$pParamHash['markerset_store'] = array();
+		
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['markerset_store']['name'] = $pParamHash['name'];
+		}
+
+		if( !empty( $pParamHash['desc'] ) ) {
+			$pParamHash['markerset_store']['description'] = $pParamHash['desc'];
+		}
+		
+		if( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
+			$pParamHash['markerset_store']['style_id'] = $pParamHash['style_id'];
+		}
+		
+		if( !empty( $pParamHash['icon_id'] ) && is_numeric( $pParamHash['icon_id'] ) ) {
+			$pParamHash['markerset_store']['icon_id'] = $pParamHash['icon_id'];
+		}
+				
+		return( count( $this->mErrors ) == 0 );
+	}
+	
 	/**
-	* This function generates a list of records from the tiki_content database for use in a list page
+	* This function stores a marker set
 	**/
-	function getList( &$pParamHash ) {
-		LibertyContent::prepGetList( $pParamHash );
+	function storeMarkerSet( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyMarkerSet( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['set_id'] ) ) {
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps_marker_sets", $pParamHash['markerset_store'], array( "name" => "set_id", "value" => $pParamHash['set_id'] ) );
+			}else{
+				 $pParamHash['set_id'] = $this->mDb->GenID( 'bit_gmaps_marker_sets_set_id_seq' );
+				 $pParamHash['markerset_store']['set_id'] = $pParamHash['set_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_marker_sets", $pParamHash['markerset_store'] );
+			}
+			$this->mDb->CompleteTrans();
 
-		$find = $pParamHash['find'];
-		$sort_mode = $pParamHash['sort_mode'];
-		$max_records = $pParamHash['max_records'];
-		$offset = $pParamHash['offset'];
-
-		if( is_array( $find ) ) {
-			// you can use an array of pages
-			$mid = " WHERE tc.`title` IN( ".implode( ',',array_fill( 0,count( $find ),'?' ) )." )";
-			$bindvars = $find;
-		} else if( is_string( $find ) ) {
-			// or a string
-			$mid = " WHERE UPPER( tc.`title` )like ? ";
-			$bindvars = array( '%' . strtoupper( $find ). '%' );
-		} else if( !empty( $pUserId ) ) {
-			// or a string
-			$mid = " WHERE tc.`creator_user_id` = ? ";
-			$bindvars = array( $pUserId );
-		} else {
-			$mid = "";
-			$bindvars = array();
+			// re-query to confirm results
+			$result = $this->getMarkerSetData($pParamHash['set_id']);
 		}
-
-		$query = "SELECT bm.*, tc.`content_id`, tc.`title`, tc.`data`
-			FROM `".BIT_DB_PREFIX."bit_gmaps` bm INNER JOIN `".BIT_DB_PREFIX."tiki_content` tc ON( tc.`content_id` = bm.`content_id` )
-			".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." tc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'
-			ORDER BY ".$this->mDb->convert_sortmode( $sort_mode );
-		$query_cant = "select count( * )from `".BIT_DB_PREFIX."tiki_content` tc ".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." tc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'";
-		$result = $this->mDb->query( $query,$bindvars,$max_records,$offset );
-		$ret = array();
-		while( $res = $result->fetchRow() ) {
-			$ret[] = $res;
-		}
-		$pParamHash["data"] = $ret;
-
-		$pParamHash["cant"] = $this->mDb->getOne( $query_cant,$bindvars );
-
-		LibertyContent::postGetList( $pParamHash );
-		return $pParamHash;
+		return $result;
 	}
 	
 	
+	//@todo -  vertually same as verifyMarkerSet - consolidate
+	function verifyPolylineSet( &$pParamHash ) {
+
+		$pParamHash['polylineset_store'] = array();
+		
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['polylineset_store']['name'] = $pParamHash['name'];
+		}
+
+		if( !empty( $pParamHash['desc'] ) ) {
+			$pParamHash['polylineset_store']['description'] = $pParamHash['desc'];
+		}
+		
+		if( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
+			$pParamHash['polylineset_store']['style_id'] = $pParamHash['style_id'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+	}
 	
 	/**
-	* This function removes a sample entry
+	* This function stores a polyline set
+	**/
+	function storePolylineSet( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyMarkerSet( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['set_id'] ) ) {
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps_polyline_sets", $pParamHash['polylineset_store'], array( "name" => "set_id", "value" => $pParamHash['set_id'] ) );
+			}else{
+				 $pParamHash['set_id'] = $this->mDb->GenID( 'bit_gmaps_polyline_sets_set_id_seq' );
+				 $pParamHash['polylineset_store']['set_id'] = $pParamHash['set_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_polyline_sets", $pParamHash['polylineset_store'] );
+			}
+			$this->mDb->CompleteTrans();
+
+			// re-query to confirm results
+			$result = $this->getPolylineSetData($pParamHash['set_id']);
+		}
+		return $result;
+	}
+
+
+
+
+	function verifyMarkerStyle( &$pParamHash ) {
+
+		$pParamHash['markerstyle_store'] = array();
+
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['markerstyle_store']['name'] = $pParamHash['name'];
+		}
+		
+		if( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) {
+			$pParamHash['markerstyle_store']['type'] = $pParamHash['type'];
+		}
+		
+		if( !empty( $pParamHash['hover_opc'] ) && is_numeric( $pParamHash['hover_opc'] ) ) {
+			$pParamHash['markerstyle_store']['label_hover_opacity'] = $pParamHash['hover_opc'];
+		}
+		
+		if( !empty( $pParamHash['label_opc'] ) && is_numeric( $pParamHash['label_opc'] ) ) {
+			$pParamHash['markerstyle_store']['label_opacity'] = $pParamHash['label_opc'];
+		}
+		
+		if( !empty( $pParamHash['hover_styles'] ) ) {
+			$pParamHash['markerstyle_store']['label_hover_styles'] = $pParamHash['hover_styles'];
+		}
+		
+		if( !empty( $pParamHash['window_styles'] ) ) {
+			$pParamHash['markerstyle_store']['window_styles'] = $pParamHash['window_styles'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+	}
+	
+	function storeMarkerStyle( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyMarkerStyle( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['style_id'] ) ) {
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps_marker_styles", $pParamHash['markerstyle_store'], array( "name" => "style_id", "value" => $pParamHash['style_id'] ) );
+			}else{
+				 $pParamHash['style_id'] = $this->mDb->GenID( 'bit_gmaps_marker_styles_style_id_seq' );
+				 $pParamHash['markerstyle_store']['style_id'] = $pParamHash['style_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_marker_styles", $pParamHash['markerstyle_store'] );
+			}
+			$this->mDb->CompleteTrans();
+
+			// re-query to confirm results
+			$result = $this->getMarkerStyleData($pParamHash['style_id']);
+		}
+		return $result;
+	}
+
+
+
+
+	function verifyIconStyle( &$pParamHash ) {
+
+		$pParamHash['iconstyle_store'] = array();
+
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['iconstyle_store']['name'] = $pParamHash['name'];
+		}
+
+		if( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) {
+			$pParamHash['iconstyle_store']['type'] = $pParamHash['type'];
+		}
+		
+		if( !empty( $pParamHash['image'] ) ) {
+			$pParamHash['iconstyle_store']['image'] = $pParamHash['image'];
+		}
+		
+		if( !empty( $pParamHash['icon_w'] ) && is_numeric( $pParamHash['icon_w'] ) ) {
+			$pParamHash['iconstyle_store']['icon_w'] = $pParamHash['icon_w'];
+		}
+		
+		if( !empty( $pParamHash['icon_h'] ) && is_numeric( $pParamHash['icon_h'] ) ) {
+			$pParamHash['iconstyle_store']['icon_h'] = $pParamHash['icon_h'];
+		}
+		
+		if( !empty( $pParamHash['shadow_image'] ) ) {
+			$pParamHash['iconstyle_store']['shadow_image'] = $pParamHash['shadow_image'];
+		}
+		
+		if( !empty( $pParamHash['shadow_w'] ) && is_numeric( $pParamHash['shadow_w'] ) ) {
+			$pParamHash['iconstyle_store']['shadow_w'] = $pParamHash['shadow_w'];
+		}
+		
+		if( !empty( $pParamHash['shadow_h'] ) && is_numeric( $pParamHash['shadow_h'] ) ) {
+			$pParamHash['iconstyle_store']['shadow_h'] = $pParamHash['shadow_h'];
+		}
+		
+		if( !empty( $pParamHash['rollover_image'] ) ) {
+			$pParamHash['iconstyle_store']['rollover_image'] = $pParamHash['rollover_image'];
+		}
+
+		if( !empty( $pParamHash['icon_anchor_x'] ) && is_numeric( $pParamHash['icon_anchor_x'] ) ) {
+			$pParamHash['iconstyle_store']['icon_anchor_x'] = $pParamHash['icon_anchor_x'];
+		}
+		
+		if( !empty( $pParamHash['icon_anchor_y'] ) && is_numeric( $pParamHash['icon_anchor_y'] ) ) {
+			$pParamHash['iconstyle_store']['icon_anchor_y'] = $pParamHash['icon_anchor_y'];
+		}
+
+		if( !empty( $pParamHash['infowindow_anchor_x'] ) && is_numeric( $pParamHash['infowindow_anchor_x'] ) ) {
+			$pParamHash['iconstyle_store']['infowindow_anchor_x'] = $pParamHash['infowindow_anchor_x'];
+		}
+		
+		if( !empty( $pParamHash['infowindow_anchor_y'] ) && is_numeric( $pParamHash['infowindow_anchor_y'] ) ) {
+			$pParamHash['iconstyle_store']['infowindow_anchor_y'] = $pParamHash['infowindow_anchor_y'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+	}
+	
+	function storeIconStyle( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyIconStyle( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['icon_id'] ) ) {
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps_icon_styles", $pParamHash['iconstyle_store'], array( "name" => "icon_id", "value" => $pParamHash['icon_id'] ) );
+			}else{
+				 $pParamHash['icon_id'] = $this->mDb->GenID( 'bit_gmaps_icon_styles_icon_id_seq' );
+				 $pParamHash['iconstyle_store']['icon_id'] = $pParamHash['icon_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_icon_styles", $pParamHash['iconstyle_store'] );
+			}
+			$this->mDb->CompleteTrans();
+
+			// re-query to confirm results
+			$result = $this->getIconStyleData($pParamHash['icon_id']);
+		}
+		return $result;
+	}
+
+
+	
+
+	function verifyPolylineStyle( &$pParamHash ) {
+
+		$pParamHash['polylinestyle_store'] = array();
+
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['polylinestyle_store']['name'] = $pParamHash['name'];
+		}
+
+		if( !empty( $pParamHash['color'] ) ) {
+			$pParamHash['polylinestyle_store']['color'] = $pParamHash['color'];
+		}
+		
+		if( !empty( $pParamHash['weight'] ) && is_numeric( $pParamHash['weight'] ) ) {
+			$pParamHash['polylinestyle_store']['weight'] = $pParamHash['weight'];
+		}
+		
+		if( !empty( $pParamHash['opacity'] ) && is_numeric( $pParamHash['opacity'] ) ) {
+			$pParamHash['polylinestyle_store']['opacity'] = $pParamHash['opacity'];
+		}
+
+		if( !empty( $pParamHash['pattern'] ) ) {
+			$pParamHash['polylinestyle_store']['pattern'] = $pParamHash['pattern'];
+		}
+		
+		if( !empty( $pParamHash['segment_count'] ) && is_numeric( $pParamHash['segment_count'] ) ) {
+			$pParamHash['polylinestyle_store']['segment_count'] = $pParamHash['segment_count'];
+		}
+		
+		if( !empty( $pParamHash['begin_arrow'] ) && is_numeric( $pParamHash['begin_arrow'] ) ) {
+			$pParamHash['polylinestyle_store']['begin_arrow'] = $pParamHash['begin_arrow'];
+		}
+
+		if( !empty( $pParamHash['end_arrow'] ) && is_numeric( $pParamHash['end_arrow'] ) ) {
+			$pParamHash['polylinestyle_store']['end_arrow'] = $pParamHash['end_arrow'];
+		}
+		
+		if( !empty( $pParamHash['arrows_every'] ) && is_numeric( $pParamHash['arrows_every'] ) ) {
+			$pParamHash['polylinestyle_store']['arrows_every'] = $pParamHash['arrows_every'];
+		}
+		
+		if( !empty( $pParamHash['font'] ) ) {
+			$pParamHash['polylinestyle_store']['font'] = $pParamHash['font'];
+		}
+		
+		if( !empty( $pParamHash['text_every'] ) && is_numeric( $pParamHash['text_every'] ) ) {
+			$pParamHash['polylinestyle_store']['text_every'] = $pParamHash['text_every'];
+		}
+
+		if( !empty( $pParamHash['text_fgstyle_color'] ) ) {
+			$pParamHash['polylinestyle_store']['text_fgstyle_color'] = $pParamHash['text_fgstyle_color'];
+		}
+		
+		if( !empty( $pParamHash['text_fgstyle_weight'] ) && is_numeric( $pParamHash['text_fgstyle_weight'] ) ) {
+			$pParamHash['polylinestyle_store']['text_fgstyle_weight'] = $pParamHash['text_fgstyle_weight'];
+		}
+		
+		if( !empty( $pParamHash['text_fgstyle_opacity'] ) && is_numeric( $pParamHash['text_fgstyle_opacity'] ) ) {
+			$pParamHash['polylinestyle_store']['text_fgstyle_opacity'] = $pParamHash['text_fgstyle_opacity'];
+		}
+		
+		if( !empty( $pParamHash['text_fgstyle_zindex'] ) && is_numeric( $pParamHash['text_fgstyle_zindex'] ) ) {
+			$pParamHash['polylinestyle_store']['text_fgstyle_zindex'] = $pParamHash['text_fgstyle_zindex'];
+		}
+		
+		if( !empty( $pParamHash['text_bgstyle_color'] ) ) {
+			$pParamHash['polylinestyle_store']['text_bgstyle_color'] = $pParamHash['text_bgstyle_color'];
+		}
+		
+		if( !empty( $pParamHash['text_bgstyle_weight'] ) && is_numeric( $pParamHash['text_bgstyle_weight'] ) ) {
+			$pParamHash['polylinestyle_store']['text_bgstyle_weight'] = $pParamHash['text_bgstyle_weight'];
+		}
+		
+		if( !empty( $pParamHash['text_bgstyle_opacity'] ) && is_numeric( $pParamHash['text_bgstyle_opacity'] ) ) {
+			$pParamHash['polylinestyle_store']['text_bgstyle_opacity'] = $pParamHash['text_bgstyle_opacity'];
+		}
+		
+		if( !empty( $pParamHash['text_bgstyle_zindex'] ) && is_numeric( $pParamHash['text_bgstyle_zindex'] ) ) {
+			$pParamHash['polylinestyle_store']['text_bgstyle_zindex'] = $pParamHash['text_bgstyle_zindex'];
+		}
+				
+		return( count( $this->mErrors ) == 0 );
+	}
+	
+	function storePolylineStyle( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyPolylineStyle( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['style_id'] ) ) {
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps_polyline_styles", $pParamHash['polylinestyle_store'], array( "name" => "style_id", "value" => $pParamHash['style_id'] ) );
+			}else{
+				 $pParamHash['style_id'] = $this->mDb->GenID( 'bit_gmaps_polyline_styles_style_id_seq' );
+				 $pParamHash['polylinestyle_store']['style_id'] = $pParamHash['style_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_polyline_styles", $pParamHash['polylinestyle_store'] );
+			}
+			$this->mDb->CompleteTrans();
+
+			// re-query to confirm results
+			$result = $this->getPolylineStyleData($pParamHash['style_id']);
+		}
+		return $result;
+	}
+		
+
+
+// ALL EXPUNGE FUNCTIONS	
+
+	
+	/**
+	* This function removes a map entry
 	**/
 	function expunge() {
 		$ret = FALSE;
@@ -706,13 +1148,336 @@ class BitGmap extends LibertyAttachable {
 		return $ret;
 	}
 
+
 	/**
-	* Make sure sample is loaded and valid
+	* This function deletes a maptype and all references to it in the map sets keychain
+	**/
+	function expungeMapType(&$pParamHash) {
+		$ret = FALSE;
+		if( $this->isValid() ) {
+  		$this->mDb->StartTrans();
+  		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_map_types` 
+  		WHERE `maptype_id` =?";
+  		$result = $this->mDb->query( $query, array( $pParamHash['maptype_id'] ) );
+  		$this->mDb->CompleteTrans();
+			
+			// delete all references to the maptype from the map sets keychain
+			$this->mDb->StartTrans();
+  		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
+  			WHERE `set_id` =?
+  			AND `set_type` ='map_types'";
+			$result = $this->mDb->query( $query, array( $pParamHash['maptype_id'] ) );
+			$this->mDb->CompleteTrans();
+  		$ret = TRUE;			
+		}
+		return $ret;
+	}	
+
+	
+	/**
+	* This function deletes a polyline and all references to it in the polyline keychain
+	**/
+	function expungePolyline(&$pParamHash) {
+		$ret = FALSE;
+		if( $this->isValid() ) {
+  		$this->mDb->StartTrans();
+  		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polylines` 
+  		WHERE `polyline_id` =?";
+  		$result = $this->mDb->query( $query, array( $pParamHash['polyline_id'] ) );
+  		$this->mDb->CompleteTrans();
+			
+			// delete all references to the polyline from the polyline keychain
+			$this->mDb->StartTrans();
+			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_keychain` WHERE `polyline_id` =?";				
+			$result = $this->mDb->query( $query, array( $pParamHash['polyline_id'] ) );
+			$this->mDb->CompleteTrans();
+  		$ret = TRUE;			
+		}
+		return $ret;
+	}
+	
+
+	
+	function verifyExpungeMarkerSet( &$pParamHash ) {
+	
+		$pParamHash['markerset_remove'] = array();
+
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['markerset_remove']['set_id'] = $pParamHash['set_id'];
+		}
+		
+		if( !empty( $pParamHash['set_type'] ) ) {
+			$pParamHash['markerset_remove']['set_type'] = $pParamHash['set_type'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+				
+	}	
+	/**
+	* This function deletes a marker set
+	**/
+	function expungeMarkerSet(&$pParamHash) {
+		$ret = FALSE;
+		if( $this->isValid() ) {
+  		if( $this->verifyExpungeMarkerSet( $pParamHash ) ) {
+    		$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_marker_sets` 
+    		WHERE `set_id` =?";
+    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
+    		$this->mDb->CompleteTrans();
+  			
+  			// delete all references to the marker set from the map sets keychain
+  			$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
+    			WHERE `set_id` =?
+    			AND `set_type` =?";
+  			$result = $this->mDb->query( $query, $pParamHash['markerset_remove'] );
+  			$this->mDb->CompleteTrans();
+    		$ret = TRUE;
+			}
+		}
+		return $ret;
+	}	
+
+
+	//@todo - this is identical to verifyExpungeMarkerSet -- could probably consolidate	
+	function verifyExpungePolylineSet( &$pParamHash ) {
+	
+		$pParamHash['polylineset_remove'] = array();
+
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['polylineset_remove']['set_id'] = $pParamHash['set_id'];
+		}
+		
+		if( !empty( $pParamHash['set_type'] ) ) {
+			$pParamHash['polylineset_remove']['set_type'] = $pParamHash['set_type'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+				
+	}	
+	/**
+	* This function deletes a polyline set
+	**/
+	function expungePolylineSet(&$pParamHash) {
+		$ret = FALSE;
+		if( $this->isValid() ) {
+  		if( $this->verifyExpungePolylineSet( $pParamHash ) ) {
+    		$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_sets` 
+    		WHERE `set_id` =?";
+    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
+    		$this->mDb->CompleteTrans();
+  			
+  			// delete all references to the polyline set from the map sets keychain
+  			$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
+    			WHERE `set_id` =?
+    			AND `set_type` =?";
+  			$result = $this->mDb->query( $query, $pParamHash['polylineset_remove'] );
+  			$this->mDb->CompleteTrans();
+    		$ret = TRUE;
+			}
+		}
+		return $ret;
+	}	
+
+
+
+
+	//@todo all these - question - what to do if it is being used by sets? step through and delete? don't delete?:
+	/**
+	* This function deletes a marker style
+	**/
+	/**
+	* This function deletes a icon style
+	**/	
+	/**
+	* This function deletes a polyline style
+	**/
+
+
+	
+	// Marker set disassociation is handled in BitGmapMarker.php
+	
+	
+	function verifyMapTypeRemove( &$pParamHash ) {
+	
+		$pParamHash['maptype_remove'] = array();
+
+		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
+			$pParamHash['maptype_remove']['gmap_id'] = $pParamHash['gmap_id'];
+		}
+		
+		if( !empty( $pParamHash['maptype_id'] ) && is_numeric( $pParamHash['maptype_id'] ) ) {
+			$pParamHash['maptype_remove']['set_id'] = $pParamHash['maptype_id'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+				
+	}	
+	/**
+	* This function removes a maptype from a map
+	**/
+	function removeMapTypeFromMap(&$pParamHash) {
+		$ret = FALSE;
+		if( $this->isValid() ) {
+  		if( $this->verifyPolylineRemove( $pParamHash ) ) {
+  			$this->mDb->StartTrans();
+  			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
+  			WHERE `gmap_id` = ?
+  			AND `set_id` =?
+  			AND `set_type` ='map_types'";
+  			$result = $this->mDb->query( $query, $pParamHash['maptype_remove'] );
+  			$ret = TRUE;
+  			$this->mDb->CompleteTrans();
+  		}
+		}
+		return $ret;
+	}
+	
+
+
+	
+	function verifyPolylineRemove( &$pParamHash ) {
+	
+		$pParamHash['polyline_remove'] = array();
+
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['polyline_remove']['set_id'] = $pParamHash['set_id'];
+		}
+		
+		if( !empty( $pParamHash['polyline_id'] ) && is_numeric( $pParamHash['polyline_id'] ) ) {
+			$pParamHash['polyline_remove']['polyline_id'] = $pParamHash['polyline_id'];
+		}
+
+		return( count( $this->mErrors ) == 0 );
+				
+	}	
+	/**
+	* This function removes a polyline from a set
+	**/
+	function removePolylineFromSet(&$pParamHash) {
+		$ret = FALSE;
+		if( $this->isValid() ) {
+  		if( $this->verifyPolylineRemove( $pParamHash ) ) {
+  			$this->mDb->StartTrans();
+  			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_keychain` 
+  			WHERE `set_id` = ?
+  			AND `polyline_id` =?";
+  			$result = $this->mDb->query( $query, $pParamHash['polyline_remove'] );
+  			$ret = TRUE;
+  			$this->mDb->CompleteTrans();
+  		}
+		}
+		return $ret;
+	}
+
+
+
+	
+	function verifyMarkerSetRemove( &$pParamHash ) {
+	
+		$pParamHash['markerset_remove'] = array();
+
+		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
+			$pParamHash['markerset_remove']['gmap_id'] = $pParamHash['gmap_id'];
+		}
+		
+		if( !empty( $pParamHash['markerset_id'] ) && is_numeric( $pParamHash['markerset_id'] ) ) {
+			$pParamHash['markerset_remove']['set_id'] = $pParamHash['markerset_id'];
+		}
+
+		if( !empty( $pParamHash['set_type'] ) ) {
+			$pParamHash['markerset_remove']['set_type'] = $pParamHash['set_type'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+				
+	}	
+	/**
+	* This function removes a marker set from a map
+	**/
+	function removeMarkerSetFromMap(&$pParamHash) {
+		$ret = FALSE;
+		if( $this->isValid() ) {
+  		if( $this->verifyMarkerSetRemove( $pParamHash ) ) {
+  			$this->mDb->StartTrans();
+  			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
+  			WHERE `gmap_id` = ?
+  			AND `set_id` =?
+        AND `set_type` = ?";
+  			$result = $this->mDb->query( $query, $pParamHash['markerset_remove'] );
+  			$ret = TRUE;
+  			$this->mDb->CompleteTrans();
+  		}
+		}
+		return $ret;
+	}
+
+	
+	//@todo - this and the remove function look identical to the removeMarkerSetFromMap function - consolidate - perhaps with removeMapTypeFromMap too
+	function verifyPolylineSetRemove( &$pParamHash ) {
+	
+		$pParamHash['polylineset_remove'] = array();
+
+		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
+			$pParamHash['polylineset_remove']['gmap_id'] = $pParamHash['gmap_id'];
+		}
+		
+		if( !empty( $pParamHash['polylineset_id'] ) && is_numeric( $pParamHash['polylineset_id'] ) ) {
+			$pParamHash['polylineset_remove']['set_id'] = $pParamHash['polylineset_id'];
+		}
+
+		if( !empty( $pParamHash['set_type'] ) ) {
+			$pParamHash['polylineset_remove']['set_type'] = $pParamHash['set_type'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+				
+	}	
+	/**
+	* This function removes a polyline set from a map
+	**/
+	function removePolylineSetFromMap(&$pParamHash) {
+		$ret = FALSE;
+		if( $this->isValid() ) {
+  		if( $this->verifyPolylineSetRemove( $pParamHash ) ) {
+  			$this->mDb->StartTrans();
+  			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
+  			WHERE `gmap_id` = ?
+  			AND `set_id` =?
+        AND `set_type` = ?";
+  			$result = $this->mDb->query( $query, $pParamHash['polylineset_remove'] );
+  			$ret = TRUE;
+  			$this->mDb->CompleteTrans();
+  		}
+		}
+		return $ret;
+	}
+
+
+	
+	//@todo all these:	
+	/**
+	* This function removes a marker style from a marker set
+	**/
+
+	/**
+	* This function removes a icon style from a marker set
+	**/
+	
+	/**
+	* This function removes a polyline style from a polyline set
+	**/
+
+	
+	/**
+	* Make sure gmap is loaded and valid
 	**/
 	function isValid() {
 		return( !empty( $this->mGmapId ) );
 	}
-	
 	
 	/**
 	* Generates the URL to the sample page

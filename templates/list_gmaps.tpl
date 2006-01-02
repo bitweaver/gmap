@@ -39,11 +39,11 @@
 				{section name=changes loop=$list}
 					<tr class="{cycle values="even,odd"}">
 {*						{if $gmap_list_gmap_id eq 'y'}           *}
-							<td><a href="{$smarty.const.GMAP_PKG_URL}index.php?gmap_id={$list[changes].gmap_id|escape:"url"}" title="{$list[changes].gmap_id}">{$list[changes].gmap_id|truncate:20:"...":true}</a></td>
+							<td>{$list[changes].gmap_id|truncate:20:"...":true}</td>
 {*						{/if}
 
 {*						{if $gmap_list_title eq 'y'}						 *}
-							<td>{$list[changes].title}</td>
+							<td><a href="{$smarty.const.GMAP_PKG_URL}index.php?gmap_id={$list[changes].gmap_id|escape:"url"}" title="{$list[changes].gmap_id}">{$list[changes].title}</a></td>
 {*						{/if}													 					 *}
 
 {*						{if $gmap_list_description eq 'y'}			 *}
