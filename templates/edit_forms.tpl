@@ -222,7 +222,7 @@
 				 <a id="seteditpolylines" href="javascript:editPolylineSet('n');">Edit These Polylines</a> | 
 				 <a id="setaddpolylines" href="javascript:editSet('n'); show('allavailmarkers_n');">Add Polylines to This Set</a> | 
 				 <a id="seteditstyle" href="javascript:alert('this feature is coming soon');">Edit Set Style</a> | 
-				 <a id="setremove" href="javascript:alert('this feature is coming soon');">Remove Set From Map</a> | 
+				 <a id="setremove" href="javascript:removePolylineSet('edit_polylineset.php', set_id, set_type);">Remove Set From Map</a> | 
 				 <a id="setdelete" href="javascript:alert('this feature is coming soon');">Delete Set</a>
 		  	 <br/><span id="setdesc">Description Here</span>
 			</div>

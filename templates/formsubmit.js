@@ -325,17 +325,20 @@ function editPolylines(){
   	// We assume editPolylines has been called before and remove 
   	// any previously existing sets from the UI
   	for (var a=0; a<bLSetData.length; a++) {
-  		var getElem = "polylineset_"+bLSetData[a].set_id;
-  		if ( $(getElem) ) {
-      	var extraPolylineForm = $(getElem);
-  			$('editpolylineform').removeChild(extraPolylineForm);
-  		}
+  		if (bLSetData[a]!= null){
+    		var getElem = "polylineset_"+bLSetData[a].set_id;
+    		if ( $(getElem) ) {
+        	var extraPolylineForm = $(getElem);
+    			$('editpolylineform').removeChild(extraPolylineForm);
+    		}
+			}
   	}
   
   	var newSetId;
   	  	
   	// add a new set UI for each marker set
   	for (var b=0; b<bLSetData.length; b++) {
+  	if (bLSetData[b]!= null){
 		  	
   		newSetId = bLSetData[b].set_id;
   	
@@ -393,7 +396,7 @@ function editPolylines(){
       		menuKids[f].href = "javascript:alert('feature coming soon');";
   			}
   			if (menuKids[f].id == "setremove"){
-      		menuKids[f].href = "javascript:alert('feature coming soon');";
+      		menuKids[f].href = "javascript:removePolylineSet('edit_polylineset.php', "+bLSetData[b].set_id+", 'I');";  //this needs to be modified to account for I or S set type
   			}
   			if (menuKids[f].id == "setdelete"){
       		menuKids[f].href = "javascript:alert('feature coming soon');";
@@ -407,7 +410,7 @@ function editPolylines(){
   		$('editpolylineform').appendChild(newPolylineSet);
   		show('polylineset_'+newSetId);
   	}
-
+		}
 		
   	//for length of polylines add form to setelement on matching set_id
   	for (g=0; g<bILData.length; g++) {
@@ -567,6 +570,16 @@ function editPolylineSet(n){
 			editPolylineId = Form.getInputs(f, 'hidden', 'polyline_id')[0].value;
 			data = "polyline_id=" + editPolylineId + "&set_id=" + editSetId + "&remove_polyline=true";
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolyline } );
+	 }
+
+	 function removePolylineSet(u, s, t){
+	 		var data;
+			var st;
+      editArray = t;
+			editSetId = s;
+			if (t == 'I') {st = 'init_polylines';}else{st = 'set_polylines';};
+			data = "set_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_polylineset=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolylineSet } );
 	 }
 	 
 	 function expungePolyline(u, f){
@@ -981,3 +994,33 @@ function editPolylineSet(n){
 			editPolylines();
 			editPolylineSet(editSetId);
 	}
+
+
+	function updateRemovePolylineSet(){
+  	if (editArray == 'I') {
+  			for (var i=0; i<bILData.length; i++){
+  					if ( ( bILData[i] != null ) && ( bILData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bILData[i].marker);
+  						bILData[i] = null;
+  					}
+  			}
+  	}else{
+  			for (var i=0; i<bSLData.length; i++){
+  					if ( ( bSLData[i] != null ) && ( bSLData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bSLData[i].marker);
+  						bSLData[i] = null;
+  					}
+  			}
+		}		
+		for (var j=0; j<bLSetData.length; j++){
+  			if ( ( bLSetData[j] != null ) && ( bLSetData[j].set_id == editSetId ) ){
+      		var getElem = "polylineset_"+bLSetData[j].set_id;
+      		if ( $(getElem) ) {
+          	var extraPolylineForm = $(getElem);
+      			$('editpolylineform').removeChild(extraPolylineForm);
+      		}
+  				bLSetData[j] = null;
+  			}
+		}
+	}
+	
