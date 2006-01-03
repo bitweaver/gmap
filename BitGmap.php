@@ -1236,6 +1236,7 @@ class BitGmap extends LibertyAttachable {
 	function expungeMapType(&$pParamHash) {
 		$ret = FALSE;
 
+		if( !empty( $pParamHash['maptype_id'] ) && is_numeric( $pParamHash['maptype_id'] ) ) {
   		$this->mDb->StartTrans();
   		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_map_types` 
   		WHERE `maptype_id` =?";
@@ -1250,7 +1251,8 @@ class BitGmap extends LibertyAttachable {
 			$result = $this->mDb->query( $query, array( $pParamHash['maptype_id'] ) );
 			$this->mDb->CompleteTrans();
   		$ret = TRUE;			
-
+		}
+		
 		return $ret;
 	}	
 
@@ -1261,6 +1263,7 @@ class BitGmap extends LibertyAttachable {
 	function expungePolyline(&$pParamHash) {
 		$ret = FALSE;
 
+		if( !empty( $pParamHash['polyline_id'] ) && is_numeric( $pParamHash['polyline_id'] ) ) {
   		$this->mDb->StartTrans();
   		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polylines` 
   		WHERE `polyline_id` =?";
@@ -1272,7 +1275,8 @@ class BitGmap extends LibertyAttachable {
 			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_keychain` WHERE `polyline_id` =?";				
 			$result = $this->mDb->query( $query, array( $pParamHash['polyline_id'] ) );
 			$this->mDb->CompleteTrans();
-  		$ret = TRUE;			
+  		$ret = TRUE;
+		}
 
 		return $ret;
 	}
@@ -1372,12 +1376,12 @@ class BitGmap extends LibertyAttachable {
 	function removeMapTypeFromMap(&$pParamHash) {
 		$ret = FALSE;
 
-  		if( $this->verifyPolylineRemove( $pParamHash ) ) {
+  		if( $this->verifyMapTypeRemove( $pParamHash ) ) {
   			$this->mDb->StartTrans();
   			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
   			WHERE `gmap_id` = ?
   			AND `set_id` =?
-  			AND `set_type` ='map_types'";
+  			AND `set_type` = 'map_types'";
   			$result = $this->mDb->query( $query, $pParamHash['maptype_remove'] );
   			$ret = TRUE;
   			$this->mDb->CompleteTrans();
