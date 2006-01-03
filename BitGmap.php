@@ -100,6 +100,7 @@ class BitGmap extends LibertyAttachable {
 
 					$this->mMapInitLines = $this->getPolylines($lookupId, "init_polylines");
 					$this->mMapSetLines = $this->getPolylines($lookupId, "set_polylines");
+					$this->mMapPolylineSetDetails = $this->getPolylineSetsDetails($lookupId);
 					$this->mMapLinesStyles = $this->getPolylineStyles($lookupId);
 
 					$this->mMapInitPolys = $this->getPolygons($lookupId, "init_polygons");
@@ -499,6 +500,30 @@ class BitGmap extends LibertyAttachable {
 
 
 
+	function getPolylineSetsDetails($gmap_id) {
+  		global $gBitSystem;
+  		$ret = NULL;
+  		if ($gmap_id && is_numeric($gmap_id)) {
+      $query = "SELECT DISTINCT bms.*, bmk.`set_type`
+                FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."bit_gmaps_polyline_sets` bms
+                WHERE bmk.`gmap_id` = ?
+                AND bmk.`set_id` = bms.`set_id` 
+                AND ( bmk.`set_type` = 'set_polylines' OR bmk.`set_type` = 'init_polylines')
+                ORDER BY bms.`set_id` ASC";
+							
+			$result = $this->mDb->query( $query, array((int)$gmap_id) );
+
+			$ret = array();
+
+			while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		};
+		return $ret;
+	}
+	
+	
+	
 //GENERAL LOOKUP FUNCTIONS
 
 	//get all mapTypes data in database
@@ -819,24 +844,24 @@ class BitGmap extends LibertyAttachable {
 
 		$pParamHash['polyline_store'] = array();
 
-		if( !empty( $pParamHash['line_name'] ) ) {
-			$pParamHash['polyline_store']['name'] = $pParamHash['line_name'];
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['polyline_store']['name'] = $pParamHash['name'];
 		}
 
-		if( !empty( $pParamHash['line_type'] ) ) {
-			$pParamHash['polyline_store']['type'] = $pParamHash['line_type'];
+		if( !empty( $pParamHash['type'] ) ) {
+			$pParamHash['polyline_store']['type'] = $pParamHash['type'];
 		}
 				
-		if( !empty( $pParamHash['line_data'] ) ) {
-			$pParamHash['polyline_store']['points_data'] = $pParamHash['line_data'];
+		if( !empty( $pParamHash['points_data'] ) ) {
+			$pParamHash['polyline_store']['points_data'] = $pParamHash['points_data'];
 		}
 
-		if( !empty( $pParamHash['line_bordertext'] ) ) {
-			$pParamHash['polyline_store']['border_text'] = $pParamHash['line_bordertext'];
+		if( !empty( $pParamHash['border_text'] ) ) {
+			$pParamHash['polyline_store']['border_text'] = $pParamHash['border_text'];
 		}
 
-		if( ( !empty( $pParamHash['line_z'] ) && is_numeric( $pParamHash['line_z'] ) ) || $pParamHash['line_z'] == 0 ) {
-			$pParamHash['polyline_store']['zindex'] = $pParamHash['line_z'];
+		if( ( !empty( $pParamHash['zindex'] ) && is_numeric( $pParamHash['line_z'] ) ) || $pParamHash['zindex'] == 0 ) {
+			$pParamHash['polyline_store']['zindex'] = $pParamHash['zindex'];
 		}
 
 		// set values for updating the marker keychain		
@@ -847,7 +872,7 @@ class BitGmap extends LibertyAttachable {
 		return( count( $this->mErrors ) == 0 );
 	}
 	
-	function storePolyline( &$pParamHash ) {
+	function  storePolyline( &$pParamHash ) {
 		$return = FALSE;
 		if( $this->verifyPolyline( $pParamHash ) ) {
 			$this->mDb->StartTrans();

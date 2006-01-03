@@ -84,4 +84,18 @@
 	{/section}
 {/if}
 
+
+{if count($gContent->mMapPolylineSetDetails) > 0}
+	var bLSetData = new Array();
+	{section name=polylinesetdata loop=$gContent->mMapPolylineSetDetails}
+		bLSetData[{$smarty.section.polylinesetdata.index}] = new Array();
+		bLSetData[{$smarty.section.polylinesetdata.index}].set_id = {$gContent->mMapPolylineSetDetails[polylinesetdata].set_id};
+		bLSetData[{$smarty.section.polylinesetdata.index}].name = "{$gContent->mMapPolylineSetDetails[polylinesetdata].name}";
+		bLSetData[{$smarty.section.polylinesetdata.index}].description = "{$gContent->mMapPolylineSetDetails[polylinesetdata].description}";
+		bLSetData[{$smarty.section.polylinesetdata.index}].style_id = {$gContent->mMapPolylineSetDetails[polylinesetdata].style_id};
+		bLSetData[{$smarty.section.polylinesetdata.index}].set_type = "{$gContent->mMapPolylineSetDetails[polylinesetdata].set_type}";
+	{/section}
+{/if}
+
+
 //]]></script>

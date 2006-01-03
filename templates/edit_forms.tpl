@@ -51,9 +51,10 @@
 
 <!--marker editing forms -->
 <div id="editmarkermenu" style="display:none;">
-		<a id="emap" href="javascript:newMarker();">New Marker</a> | 
-		<a id="emap" href="javascript:alert('this feature is coming soon');">New Marker Set</a> | 
-		<a id="emap" href="javascript:alert('this feature is coming soon');">Edit Marker Styles</a>
+		<a href="javascript:newMarker();">New Marker</a> | 
+		<a href="javascript:alert('this feature is coming soon');">New Marker Set</a> | 
+		<a href="javascript:alert('this feature is coming soon');">Edit Marker Styles</a> | 
+		<a href="javascript:alert('this feature is coming soon');">Edit Marker Icons</a>
 </div>
 
 <div id="newmarkerform" class="editform" style="display:none;">
@@ -170,6 +171,54 @@
 
 
 
+
+
+
+
+<!--polyline editing forms -->
+<div id="editpolylinemenu" style="display:none;">
+		<a href="javascript:newPolyline();">New Polyline</a> | 
+		<a href="javascript:alert('this feature is coming soon');">New Polyline Set</a> | 
+		<a href="javascript:alert('this feature is coming soon');">Edit Polyline Styles</a>
+</div>
+
+<div id="newpolylineform" class="editform" style="display:none;">
+		<h2>Add a New Polyline</h2>		
+        <div class="tableheader">
+    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Type </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Points Data </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Border Text <br/>only for XPolyline type</div>
+    				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
+    				<div style="float:left; padding:0 .4em; width:50px"> Set </div>
+    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>						
+    		</div>
+    		<div class="table" id="editpolylinetable_new">
+    			<form action="javascript:;" name="polylineform_new" id="polylineform_new">
+    			<div class="data">
+          	<div style="float:left; padding:0 .4em; width:10px"><input name="new_polyline" type="hidden" value="true"></div>
+          	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><select name="type" >
+                                                                  <option value="0" >Google (Standard)</option>
+                                                                  <option value="1" >XPolyline</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
+          	<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>
+          	<div style="float:left; padding:0 .4em; width:90px"><select name="set_id" id="polylineset_id">
+                                                                  <option value="n" >someset</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:70px"><a name="new_polyline_btn" title="save" href="javascript:storeNewPolyline('edit_polyline.php', document.polylineform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+    			</div>
+    			</form>
+  		  </div>
+		<div id="newpolylinecancel" style="clear:both;"><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:canceledit('newpolylineform');"></div>
+</div> <!-- end of newpolylineform -->
+
+
+
+<!-- old edit polyline form 
+
 <div id="editpolylineform" class="editform" style="display:none;">
     <h3>Edit Polylines</h3>
 		<div class="table" id="editpolylinetable">
@@ -202,5 +251,5 @@
     <div style="clear:both;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:canceledit('editpolylineform');"></div>
 </div>
 
-
+-->
 

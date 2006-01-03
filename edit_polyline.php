@@ -26,12 +26,12 @@ if (!empty($_REQUEST["save_polyline"])) {
 
 				//if store is successful we return XML
 				$mRet = "<polyline>"
-      		  ."<id>".$result->fields['polyline_id']."</id>"
+      		    ."<polyline_id>".$result->fields['polyline_id']."</polyline_id>"
               ."<name>".$result->fields['name']."</name>"
               ."<type>".$result->fields['type']."</type>"
-              ."<points>".$result->fields['points_data']."</points>"
-              ."<border>".$result->fields['border_text']."</border>"
-              ."<z>".$result->fields['zindex']."</z>"
+              ."<points_data>".$result->fields['points_data']."</points_data>"
+              ."<border_text>".$result->fields['border_text']."</border_text>"
+              ."<zindex>".$result->fields['zindex']."</zindex>"
 						  ."</polyline>";
 
 				//@todo replace in xml when I know what I am doing
