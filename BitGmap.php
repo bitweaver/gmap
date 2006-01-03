@@ -1154,7 +1154,7 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function expungeMapType(&$pParamHash) {
 		$ret = FALSE;
-		if( $this->isValid() ) {
+
   		$this->mDb->StartTrans();
   		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_map_types` 
   		WHERE `maptype_id` =?";
@@ -1169,7 +1169,7 @@ class BitGmap extends LibertyAttachable {
 			$result = $this->mDb->query( $query, array( $pParamHash['maptype_id'] ) );
 			$this->mDb->CompleteTrans();
   		$ret = TRUE;			
-		}
+
 		return $ret;
 	}	
 
@@ -1218,7 +1218,7 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function expungeMarkerSet(&$pParamHash) {
 		$ret = FALSE;
-		if( $this->isValid() ) {
+
   		if( $this->verifyExpungeMarkerSet( $pParamHash ) ) {
     		$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_marker_sets` 
@@ -1235,7 +1235,7 @@ class BitGmap extends LibertyAttachable {
   			$this->mDb->CompleteTrans();
     		$ret = TRUE;
 			}
-		}
+
 		return $ret;
 	}	
 
@@ -1261,7 +1261,7 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function expungePolylineSet(&$pParamHash) {
 		$ret = FALSE;
-		if( $this->isValid() ) {
+
   		if( $this->verifyExpungePolylineSet( $pParamHash ) ) {
     		$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_sets` 
@@ -1278,7 +1278,7 @@ class BitGmap extends LibertyAttachable {
   			$this->mDb->CompleteTrans();
     		$ret = TRUE;
 			}
-		}
+
 		return $ret;
 	}	
 
@@ -1321,7 +1321,7 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function removeMapTypeFromMap(&$pParamHash) {
 		$ret = FALSE;
-		if( $this->isValid() ) {
+
   		if( $this->verifyPolylineRemove( $pParamHash ) ) {
   			$this->mDb->StartTrans();
   			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
@@ -1332,7 +1332,7 @@ class BitGmap extends LibertyAttachable {
   			$ret = TRUE;
   			$this->mDb->CompleteTrans();
   		}
-		}
+
 		return $ret;
 	}
 	
@@ -1359,6 +1359,7 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function removePolylineFromSet(&$pParamHash) {
 		$ret = FALSE;
+		
   		if( $this->verifyPolylineRemove( $pParamHash ) ) {
   			$this->mDb->StartTrans();
   			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_keychain` 
@@ -1368,6 +1369,7 @@ class BitGmap extends LibertyAttachable {
   			$ret = TRUE;
   			$this->mDb->CompleteTrans();
   		}
+			
 		return $ret;
 	}
 
@@ -1398,7 +1400,7 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function removeMarkerSetFromMap(&$pParamHash) {
 		$ret = FALSE;
-		if( $this->isValid() ) {
+
   		if( $this->verifyMarkerSetRemove( $pParamHash ) ) {
   			$this->mDb->StartTrans();
   			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
@@ -1409,7 +1411,7 @@ class BitGmap extends LibertyAttachable {
   			$ret = TRUE;
   			$this->mDb->CompleteTrans();
   		}
-		}
+
 		return $ret;
 	}
 
@@ -1439,7 +1441,7 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function removePolylineSetFromMap(&$pParamHash) {
 		$ret = FALSE;
-		if( $this->isValid() ) {
+
   		if( $this->verifyPolylineSetRemove( $pParamHash ) ) {
   			$this->mDb->StartTrans();
   			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
@@ -1450,7 +1452,7 @@ class BitGmap extends LibertyAttachable {
   			$ret = TRUE;
   			$this->mDb->CompleteTrans();
   		}
-		}
+
 		return $ret;
 	}
 
