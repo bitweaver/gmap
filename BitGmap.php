@@ -1179,7 +1179,7 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function expungePolyline(&$pParamHash) {
 		$ret = FALSE;
-		if( $this->isValid() ) {
+
   		$this->mDb->StartTrans();
   		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polylines` 
   		WHERE `polyline_id` =?";
@@ -1192,7 +1192,7 @@ class BitGmap extends LibertyAttachable {
 			$result = $this->mDb->query( $query, array( $pParamHash['polyline_id'] ) );
 			$this->mDb->CompleteTrans();
   		$ret = TRUE;			
-		}
+
 		return $ret;
 	}
 	
@@ -1359,7 +1359,6 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function removePolylineFromSet(&$pParamHash) {
 		$ret = FALSE;
-		if( $this->isValid() ) {
   		if( $this->verifyPolylineRemove( $pParamHash ) ) {
   			$this->mDb->StartTrans();
   			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_keychain` 
@@ -1369,7 +1368,6 @@ class BitGmap extends LibertyAttachable {
   			$ret = TRUE;
   			$this->mDb->CompleteTrans();
   		}
-		}
 		return $ret;
 	}
 

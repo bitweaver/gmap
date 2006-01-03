@@ -42,7 +42,7 @@ if (!empty($_REQUEST["save_polyline"])) {
       $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
     }
 //Check if this to remove from a set, or to delete completely
-}elseif (!empty($_REQUEST["remove_polyline"])) {
+}elseif ( !empty($_REQUEST["remove_polyline"]) ) {
     if( $gContent->removePolylineFromSet( $_REQUEST ) ) {
 				//if store is successful we return XML
 				$mRet = "<remove>success</remove>";
