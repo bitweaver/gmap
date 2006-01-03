@@ -1321,6 +1321,13 @@ class BitGmap extends LibertyAttachable {
     		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
     		$this->mDb->CompleteTrans();
   			
+  			// delete all references to the marker set from the marker keychain
+  			$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_marker_keychain` 
+    		WHERE `set_id` =?";
+    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
+    		$this->mDb->CompleteTrans();
+
   			// delete all references to the marker set from the map sets keychain
   			$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
@@ -1348,6 +1355,13 @@ class BitGmap extends LibertyAttachable {
     		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
     		$this->mDb->CompleteTrans();
   			
+  			// delete all references to the polyline set from the polyline keychain
+  			$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_keychain` 
+    		WHERE `set_id` =?";
+    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
+    		$this->mDb->CompleteTrans();
+
   			// delete all references to the polyline set from the map sets keychain
   			$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 

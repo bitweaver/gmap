@@ -203,7 +203,7 @@ function editMarkers(){
       		menuKids[f].href = "javascript:removeMarkerSet('edit_markerset.php', "+bMSetData[b].set_id+", 'I');";  //this needs to be modified to account for I or S set type
   			}
   			if (menuKids[f].id == "setdelete"){
-      		menuKids[f].href = "javascript:alert('feature coming soon');";
+      		menuKids[f].href = "javascript:expungeMarkerSet('edit_markerset.php', "+bMSetData[b].set_id+");";
   			}
   			if (menuKids[f].id == "setdesc"){
       		menuKids[f].innerHTML = bMSetData[b].description;
@@ -399,7 +399,7 @@ function editPolylines(){
       		menuKids[f].href = "javascript:removePolylineSet('edit_polylineset.php', "+bLSetData[b].set_id+", 'I');";  //this needs to be modified to account for I or S set type
   			}
   			if (menuKids[f].id == "setdelete"){
-      		menuKids[f].href = "javascript:alert('feature coming soon');";
+      		menuKids[f].href = "javascript:expungePolylineSet('edit_polylineset.php', "+bLSetData[b].set_id+");";
   			}
   			if (menuKids[f].id == "setdesc"){
       		menuKids[f].innerHTML = bLSetData[b].description;
@@ -545,6 +545,13 @@ function editPolylineSet(n){
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
 	 }	 
 
+	 function expungeMarkerSet(u, s){
+	 		var data;
+			editSetId = s;
+			data = "set_id=" + s + "&expunge_markerset=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateExpungeMarkerSet } );
+	 }
+
 	 function storeNewPolyline(u, f){
 	 		var data;
       data = Form.serialize(f);
@@ -591,9 +598,19 @@ function editPolylineSet(n){
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolyline } );
 	 }	 
 	 
+	 function expungePolylineSet(u, s){
+	 		var data;
+			editSetId = s;
+			data = "set_id=" + s + "&expunge_polylineset=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateExpungePolylineSet } );
+	 }
+
+	 
 	 
 
-
+	 
+// POST XML Request Functions	 
+	 
 	 function updateMap(rslt){
       var xml = rslt.responseXML;
 
@@ -982,6 +999,40 @@ function editPolylineSet(n){
 		}
 	}
 	
+
+	function updateExpungeMarkerSet(){
+  			for (var i=0; i<bIMData.length; i++){
+  					if ( ( bIMData[i] != null ) && ( bIMData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bIMData[i].marker);
+  						bIMData[i] = null;
+  					}
+  			}
+				/**  
+				 * This is turned off, cause when it doesn't exist it breaks. 
+				 * The thing to do is to always create the array, but not fill it out
+				 * if there are no markers, then all detection to see if the array exists
+				 * can be striped from the code
+				 **/
+				/*
+  			for (var i=0; i<bSMData.length; i++){
+  					if ( ( bSMData[i] != null ) && ( bSMData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bSMData[i].marker);
+  						bSMData[i] = null;
+  					}
+  			}
+				*/
+    		for (var j=0; j<bMSetData.length; j++){
+      			if ( ( bMSetData[j] != null ) && ( bMSetData[j].set_id == editSetId ) ){
+          		var getElem = "markerset_"+bMSetData[j].set_id;
+          		if ( $(getElem) ) {
+              	var extraMarkerForm = $(getElem);
+          			$('editmarkerform').removeChild(extraMarkerForm);
+          		}
+      				bMSetData[j] = null;
+      			}
+    		}
+	}
+
 	
 	function updateRemovePolyline(){
 			for (var i=0; i<bILData.length; i++){
@@ -1000,14 +1051,14 @@ function editPolylineSet(n){
   	if (editArray == 'I') {
   			for (var i=0; i<bILData.length; i++){
   					if ( ( bILData[i] != null ) && ( bILData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bILData[i].marker);
+  						map.removeOverlay(bILData[i].polyline);
   						bILData[i] = null;
   					}
   			}
   	}else{
   			for (var i=0; i<bSLData.length; i++){
   					if ( ( bSLData[i] != null ) && ( bSLData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bSLData[i].marker);
+  						map.removeOverlay(bSLData[i].polyline);
   						bSLData[i] = null;
   					}
   			}
@@ -1023,4 +1074,39 @@ function editPolylineSet(n){
   			}
 		}
 	}
+
+
+	function updateExpungePolylineSet(){
+  			for (var i=0; i<bILData.length; i++){
+  					if ( ( bILData[i] != null ) && ( bILData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bILData[i].polyline);
+  						bILData[i] = null;
+  					}
+  			}
+				/**  
+				 * This is turned off, cause when it doesn't exist it breaks. 
+				 * The thing to do is to always create the array, but not fill it out
+				 * if there are no markers, then all detection to see if the array exists
+				 * can be striped from the code
+				 **/
+				/*
+  			for (var i=0; i<bSLData.length; i++){
+  					if ( ( bSLData[i] != null ) && ( bSLData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bSLData[i].polyline);
+  						bSLData[i] = null;
+  					}
+  			}
+				*/
+    		for (var j=0; j<bLSetData.length; j++){
+      			if ( ( bLSetData[j] != null ) && ( bLSetData[j].set_id == editSetId ) ){
+          		var getElem = "polylineset_"+bLSetData[j].set_id;
+          		if ( $(getElem) ) {
+              	var extraPolylineForm = $(getElem);
+          			$('editpolylineform').removeChild(extraPolylineForm);
+          		}
+      				bLSetData[j] = null;
+      			}
+    		}
+	}
+
 	

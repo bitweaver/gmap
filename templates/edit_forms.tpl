@@ -101,7 +101,7 @@
 				 <a id="seteditstyle" href="javascript:alert('this feature is coming soon');">Edit Set Style</a> | 
 				 <a id="setediticon" href="javascript:alert('this feature is coming soon');">Edit Icon Style</a> | 				 
 				 <a id="setremove" href="javascript:removeMarkerSet('edit_markerset.php', set_id, set_type);">Remove Set From Map</a> | 
-				 <a id="setdelete" href="javascript:alert('this feature is coming soon');">Delete Set</a>
+				 <a id="setdelete" href="javascript:expungeMarkerSet('edit_markerset.php', set_id);">Delete Set</a>
 		  	 <br/><span id="setdesc">Description Here</span>
 			</div>
 			<div id="setform_n" style="display:none;">
@@ -223,7 +223,7 @@
 				 <a id="setaddpolylines" href="javascript:editSet('n'); show('allavailmarkers_n');">Add Polylines to This Set</a> | 
 				 <a id="seteditstyle" href="javascript:alert('this feature is coming soon');">Edit Set Style</a> | 
 				 <a id="setremove" href="javascript:removePolylineSet('edit_polylineset.php', set_id, set_type);">Remove Set From Map</a> | 
-				 <a id="setdelete" href="javascript:alert('this feature is coming soon');">Delete Set</a>
+				 <a id="setdelete" href="javascript:expungePolylineSet('edit_polylineset.php', set_id);">Delete Set</a>
 		  	 <br/><span id="setdesc">Description Here</span>
 			</div>
 			<div id="polylinesetform_n" style="display:none;">
