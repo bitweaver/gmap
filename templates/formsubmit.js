@@ -126,18 +126,21 @@ function editMarkers(){
   	// We assume editMarkers has been called before and remove 
   	// any previously existing sets from the UI
   	for (var a=0; a<bMSetData.length; a++) {
-  		var getElem = "markerset_"+bMSetData[a].set_id;
-  		if ( $(getElem) ) {
-      	var extraMarkerForm = $(getElem);
-  			$('editmarkerform').removeChild(extraMarkerForm);
-  		}
+  		if (bMSetData[a]!= null){
+    		var getElem = "markerset_"+bMSetData[a].set_id;
+    		if ( $(getElem) ) {
+        	var extraMarkerForm = $(getElem);
+    			$('editmarkerform').removeChild(extraMarkerForm);
+    		}
+			}
   	}
   
   	var newSetId;
   	  	
   	// add a new set UI for each marker set
   	for (var b=0; b<bMSetData.length; b++) {
-		  	
+  	if (bMSetData[b]!= null){
+									  	
   		newSetId = bMSetData[b].set_id;
   	
   		// clone model set UI
@@ -191,13 +194,13 @@ function editMarkers(){
       		menuKids[f].href = "javascript:editSet("+newSetId+");";
   			}
   			if (menuKids[f].id == "setaddmarkers"){
-      		menuKids[f].href = "javascript:alert('feature coming soon');"; //"javascript:editSet("+newSetId+"); editAllMarkers("+newSetId+");";
+      		menuKids[f].href = "javascript:alert('feature coming soon');";
   			}
   			if (menuKids[f].id == "seteditstyle"){
       		menuKids[f].href = "javascript:alert('feature coming soon');";
   			}
   			if (menuKids[f].id == "setremove"){
-      		menuKids[f].href = "javascript:alert('feature coming soon');";
+      		menuKids[f].href = "javascript:removeMarkerSet('edit_markerset.php', "+bMSetData[b].set_id+", 'I');";  //this needs to be modified to account for I or S set type
   			}
   			if (menuKids[f].id == "setdelete"){
       		menuKids[f].href = "javascript:alert('feature coming soon');";
@@ -211,7 +214,7 @@ function editMarkers(){
   		$('editmarkerform').appendChild(newMarkerSet);
   		show('markerset_'+newSetId);
   	}
-
+		}
 		
   	//for length of markers add form to setelement on matching set_id
   	for (g=0; g<bIMData.length; g++) {
@@ -518,6 +521,16 @@ function editPolylineSet(n){
 			editMarkerId = Form.getInputs(f, 'hidden', 'marker_id')[0].value;
 			data = "marker_id=" + editMarkerId + "&set_id=" + editSetId + "&remove_marker=true";
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
+	 }
+
+	 function removeMarkerSet(u, s, t){
+	 		var data;
+			var st;
+      editArray = t;
+			editSetId = s;
+			if (t == 'I') {st = 'init_markers';}else{st = 'set_markers';};
+			data = "markerset_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_markerset=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarkerSet } );
 	 }
 	 
 	 function expungeMarker(u, f){
@@ -926,7 +939,35 @@ function editPolylineSet(n){
 			editMarkers();
 			editSet(editSetId);
 	}
+
 	
+	function updateRemoveMarkerSet(){
+  	if (editArray == 'I') {
+  			for (var i=0; i<bIMData.length; i++){
+  					if ( ( bIMData[i] != null ) && ( bIMData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bIMData[i].marker);
+  						bIMData[i] = null;
+  					}
+  			}
+  	}else{
+  			for (var i=0; i<bSMData.length; i++){
+  					if ( ( bSMData[i] != null ) && ( bSMData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bSMData[i].marker);
+  						bSMData[i] = null;
+  					}
+  			}
+		}		
+		for (var j=0; j<bMSetData.length; j++){
+  			if ( ( bMSetData[j] != null ) && ( bMSetData[j].set_id == editSetId ) ){
+      		var getElem = "markerset_"+bMSetData[j].set_id;
+      		if ( $(getElem) ) {
+          	var extraMarkerForm = $(getElem);
+      			$('editmarkerform').removeChild(extraMarkerForm);
+      		}
+  				bMSetData[j] = null;
+  			}
+		}
+	}
 	
 	
 	function updateRemovePolyline(){

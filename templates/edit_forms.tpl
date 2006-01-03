@@ -100,7 +100,7 @@
 				 <a id="setaddmarkers" href="javascript:editSet('n'); show('allavailmarkers_n');">Add Markers to This Set</a> | 
 				 <a id="seteditstyle" href="javascript:alert('this feature is coming soon');">Edit Set Style</a> | 
 				 <a id="setediticon" href="javascript:alert('this feature is coming soon');">Edit Icon Style</a> | 				 
-				 <a id="setremove" href="javascript:alert('this feature is coming soon');">Remove Set From Map</a> | 
+				 <a id="setremove" href="javascript:removeMarkerSet('edit_markerset.php', set_id, set_type);">Remove Set From Map</a> | 
 				 <a id="setdelete" href="javascript:alert('this feature is coming soon');">Delete Set</a>
 		  	 <br/><span id="setdesc">Description Here</span>
 			</div>
