@@ -310,8 +310,8 @@ class BitGmap extends LibertyAttachable {
 		return $result;
 	}
 
-
-
+	
+	
 
 	//get all polylines for given gmap_id and set_types
 	function getPolylineStyles($gmap_id) {
@@ -338,6 +338,24 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
+	
+	
+	//* Gets data for a given polyline style.
+	// @ todo this should probably take an array so that we can get data for a bunch of styles if we want
+	function getPolylineStyleData($style_id) {
+		global $gBitSystem;
+		if ($style_id && is_numeric($style_id)) {
+			$query = "SELECT bs.*
+			FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_styles` bs
+			WHERE bs.style_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$style_id));
+
+		}
+		return $result;
+	}
+
+
+	
 
 	//get all polygon data for given gmap_id and set_type
 	function getPolygons($gmap_id, $settype) {
