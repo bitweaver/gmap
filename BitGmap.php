@@ -322,7 +322,7 @@ class BitGmap extends LibertyAttachable {
 		if ($gmap_id && is_numeric($gmap_id)) {
 
 		 	$bindVars = array((int)$gmap_id, $settype);
-			$query = "SELECT bmp.*, bps.*
+			$query = "SELECT bmp.*, bps.set_id, bps.style_id
 		 				 	  FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."bit_gmaps_polyline_keychain` bpk, `".BIT_DB_PREFIX."bit_gmaps_polylines` bmp, `".BIT_DB_PREFIX."bit_gmaps_polyline_sets` bps
 								WHERE bsk.`gmap_id` = ?
 								AND bsk.`set_type` = ?

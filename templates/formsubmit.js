@@ -7,7 +7,7 @@ var editArray;
 var editObjectN;
 var editSetId;
 var editMarkerId;
-
+var editPolylineId;
 
 // for sorting arrays
 function sortOn(a,b){ 
@@ -311,57 +311,162 @@ function newPolyline(){
 
 
 /* @todo needs to support markers in bSLData as well as bILData */
-function editPolylines(){				
+function editPolylines(){
 	show('editpolylinemenu');
-  show('editpolylinerform');
+  show('editpolylineform');
 	show('editpolylinecancel');
-
-	/* original function */
-				/* get rid of any extra fields we may have created 
-				 * if this has been called once before
-				 * this way we dont add any extra fields
-				 */
-				 /*
-				for (i=1; i<bILData.length; i++){
-				 if($('polylineform_'+i)){
-    				var extraPolylineForm = $('polylineform_'+i);
-						$('editpolylinetable').removeChild(extraPolylineForm);
-					}
-				}
-				*/
-
-				/* add more fields and fill them with data */
-				/*
-				for (i=0; i<bILData.length; i++) {
 	
-					if( i < (bILData.length-1) ){
-    				var newPolylineForm = $('polylineform_0').cloneNode(true);				
-						newPolylineForm.id = "polylineform_"+(i+1);
-						$('editpolylinetable').appendChild(newPolylineForm);
-					}
+	//if polyline data exists
+	if ( typeof(bILData) ) {
+	
+  	// We assume editPolylines has been called before and remove 
+  	// any previously existing sets from the UI
+  	for (var a=0; a<bLSetData.length; a++) {
+  		var getElem = "polylineset_"+bLSetData[a].set_id;
+  		if ( $(getElem) ) {
+      	var extraPolylineForm = $(getElem);
+  			$('editpolylineform').removeChild(extraPolylineForm);
+  		}
+  	}
+  
+  	var newSetId;
+  	  	
+  	// add a new set UI for each marker set
+  	for (var b=0; b<bLSetData.length; b++) {
+		  	
+  		newSetId = bLSetData[b].set_id;
+  	
+  		// clone model set UI
+			var newPolylineSet = $('polylineset_n').cloneNode(true);
+  		// give a new id to the new set UI
+  		newPolylineSet.id = "polylineset_"+newSetId;
+  									
+  		// customize all the values of our new set UI this gets ugly...										
+  		setKids = newPolylineSet.childNodes;
+      for (var c=0; c<setKids.length; c++) { 
+  			if (setKids[c].id == "editpolylinesetmenu_n"){
+  				setKids[c].id = "editpolylinesetmenu_"+newSetId;
+  				menuKids = setKids[c].childNodes;
+  			}
+  			if (setKids[c].id == "polylinesetform_n"){
+  				setKids[c].id = "polylinesetform_"+newSetId;    					
+  				setForm = setKids[c];
+  			}
+      }
+  					
+  		formKids = setForm.childNodes;
+      for (var d=0; d<formKids.length; d++) {
+  			if (formKids[d].id == "editpolylinetable_n"){
+  				formKids[d].id = "editpolylinetable_"+newSetId;
+  			}
+  			if (formKids[d].id == "allavailpolylines_n"){
+  				formKids[d].id = "allavailpolylines_"+newSetId;
+  				allPolylinesForm = formKids[d];
+  			}
+  		}
+  
+  		allPolyKids = allPolylinesForm.childNodes;
+      for (var e=0; e<allPolyKids.length; e++) {
+  			if (allPolyKids[e].id == "addpolylinetable_n"){
+  				allPolyKids[e].id = "addpolylinetable_"+newSetId;
+  			}
+  		}
+  
+  		// Update the set's menu
+      for (var f=0; f<menuKids.length; f++) {
+  			if (menuKids[f].id == "polylinesetid"){
+      		menuKids[f].innerHTML = bLSetData[b].name;
+  			}
+  			if (menuKids[f].id == "polylinesetstyle"){
+      		menuKids[f].innerHTML = bLSetData[b].style_id;
+  			}
+  			if (menuKids[f].id == "seteditpolylines"){
+      		menuKids[f].href = "javascript:editPolylineSet("+newSetId+");";
+  			}
+  			if (menuKids[f].id == "setaddpolylines"){
+      		menuKids[f].href = "javascript:alert('feature coming soon');";
+  			}
+  			if (menuKids[f].id == "seteditstyle"){
+      		menuKids[f].href = "javascript:alert('feature coming soon');";
+  			}
+  			if (menuKids[f].id == "setremove"){
+      		menuKids[f].href = "javascript:alert('feature coming soon');";
+  			}
+  			if (menuKids[f].id == "setdelete"){
+      		menuKids[f].href = "javascript:alert('feature coming soon');";
+  			}
+  			if (menuKids[f].id == "setdesc"){
+      		menuKids[f].innerHTML = bLSetData[b].description;
+  			}
+      }							
+  					
+      // add form to set table
+  		$('editpolylineform').appendChild(newPolylineSet);
+  		show('polylineset_'+newSetId);
+  	}
 
-					form = $('polylineform_'+(i));					
-					
-        	form.polyline_id.value = bILData[i].polyline_id;
-        	form.line_name.value = bILData[i].name;
-        	for (var j=0; j < 2; j++) {
-             if (form.line_type.options[j].value == bILData[i].type){
-                form.line_type.options[j].selected=true;
-             }
-          }					
-        	form.line_data.value = bILData[i].points_data;
-        	form.line_bordertext.value = bILData[i].border_text;
-        	form.line_z.value = bILData[i].zindex;
-        	form.line_array.value = bILData[i].array;
-        	form.line_array_n.value = bILData[i].array_n;
-					*/					
-    			/* @todo include the following 
-            bILData[i].set_id;
-            bILData[i].style_id;
-    				*/
-						/*
+		
+  	//for length of polylines add form to setelement on matching set_id
+  	for (g=0; g<bILData.length; g++) {
+			if (bILData[g]!= null){
+				//add marker form...again a little ugly here
+				var formCont = $("editpolylinetable_"+bILData[g].set_id);
+  			formContKids = formCont.childNodes;
+        for (var n = 0; n < formContKids.length; n++) {
+  				if (formContKids[n].id == "polylineform_n"){
+        			var newPolylineForm = formContKids[n].cloneNode(true);
+    					newPolylineForm.id = "polylineform_"+g;
+							newPolylineForm.name = "polylineform_"+g;
+							var nLFKids = newPolylineForm.childNodes;
+							for (var o=0; o<nLFKids.length; o++){
+							  if (nLFKids[o].id == "polylineformdata_n"){
+									nLFKids[o].id = "polylineformdata_"+g;
+									}
+							}
+							
+    					$('editpolylinetable_'+bILData[g].set_id).appendChild(newPolylineForm);
+							show('polylineform_'+g);
+							break;
+					}
+			  }
+				
+				// populate set form values
+				form = $('polylineform_'+g);
+
+        form.set_id.value = bILData[g].set_id;
+        form.polyline_id.value = bILData[g].polyline_id;
+        form.name.value = bILData[g].name;				
+        for (var r=0; r < 2; r++) {
+           if (form.type.options[r].value == bILData[g].type){
+              form.type.options[r].selected=true;
+           }
+        };
+        form.points_data.value = bILData[g].points_data;  //this might need to be a loop
+        form.border_text.value = bILData[g].border_text;
+        form.zindex.value = bILData[g].zindex;
+        form.polyline_array.value = bILData[g].array;
+        form.polyline_array_n.value = bILData[g].array_n;
+				
+				// just for a pretty button - js sucks it!
+				var linkParent = $('polylineformdata_'+g);
+				var linkPKids = linkParent.childNodes;
+				for (var p=0; p<linkPKids.length; p++){
+						if (linkPKids[p].name == "save_polyline_btn"){
+							 linkPKids[p].href = "javascript:storePolyline('edit_polyline.php', document.polylineform_"+g+");" ;
+						}
+						if (linkPKids[p].name == "locate_polyline_btn"){
+							 linkPKids[p].href = "javascript:alert('feature coming soon');" ;
+						}
+						if (linkPKids[p].name == "remove_polyline_btn"){
+							 linkPKids[p].href = "javascript:removePolyline('edit_polyline.php', document.polylineform_"+g+");" ;
+						}
+						if (linkPKids[p].name == "expunge_polyline_btn"){
+							 linkPKids[p].href = "javascript:expungePolyline('edit_polyline.php', document.polylineform_"+g+");" ;
+						}
 				}
-				 */
+			}
+		}		
+	}
 };
 
 
@@ -412,7 +517,7 @@ function editPolylineSet(n){
 			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
 			editMarkerId = Form.getInputs(f, 'hidden', 'marker_id')[0].value;
 			data = "marker_id=" + editMarkerId + "&set_id=" + editSetId + "&remove_marker=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: removeMarker } );
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
 	 }
 	 
 	 function expungeMarker(u, f){
@@ -421,7 +526,7 @@ function editPolylineSet(n){
 			data = "marker_id=" + editMarkerId + "&expunge_marker=true";
 			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
 			editMarkerId = Form.getInputs(f, 'hidden', 'marker_id')[0].value;
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: removeMarker } );
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
 	 }	 
 
 	 function storeNewPolyline(u, f){
@@ -433,7 +538,32 @@ function editPolylineSet(n){
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addPolyline } );
 	 }
 	 
+	 function storePolyline(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			data += '&save_polyline=true'; //@todo - I think this can come out, the value is in a hidden input field
+			editArray = Form.getInputs(f, 'hidden', 'polyline_array')[0].value;
+			editObjectN = Form.getInputs(f, 'hidden', 'polyline_array_n')[0].value;
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updatePolyline } );
+	 }
 	 
+	 function removePolyline(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
+			editPolylineId = Form.getInputs(f, 'hidden', 'polyline_id')[0].value;
+			data = "polyline_id=" + editPolylineId + "&set_id=" + editSetId + "&remove_polyline=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolyline } );
+	 }
+	 
+	 function expungePolyline(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
+			editPolylineId = Form.getInputs(f, 'hidden', 'polyline_id')[0].value;
+			data = "polyline_id=" + editPolylineId + "&expunge_polyline=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolyline } );
+	 }	 
 	 
 	 
 
@@ -660,58 +790,54 @@ function editPolylineSet(n){
 
 	
 	 function updatePolyline(rslt){
+	 		var s;
       var xml = rslt.responseXML;
-
-	 		var pl; //the marker data we are changing
-			if (editArray == "I"){pl = bILData[editObjectN]}else{pl = bSLData[editObjectN]};			
+						
+			var n = editObjectN;
 			
+			//@todo modify this to handle either bILData or bSLData sets
 	 		//shorten var names
-			var id = xml.documentElement.getElementsByTagName('id');			
-			var polyline_id = id[0].firstChild.nodeValue;
+			var id = xml.documentElement.getElementsByTagName('polyline_id');			
+			bILData[n].polyline_id = id[0].firstChild.nodeValue;
 
 			var nm = xml.documentElement.getElementsByTagName('name');
-			var name = nm[0].firstChild.nodeValue;			
-	 		pl.name = name;
+			bILData[n].name = nm[0].firstChild.nodeValue;			
 			
-			var ty = xml.documentElement.getElementsByTagName('type');
-			var type = ty[0].firstChild.nodeValue;
-	 		pl.type = type;
+			var tp = xml.documentElement.getElementsByTagName('type');
+			bILData[n].type = parseInt(tp[0].firstChild.nodeValue);
 			
-			var pt = xml.documentElement.getElementsByTagName('points');
-			var points_data = pt[0].firstChild.nodeValue;
-	 		pl.points_data = points_data.split(",");
+			var dt = xml.documentElement.getElementsByTagName('points_data');
+			var points_data = dt[0].firstChild.nodeValue;
+	 		bILData[n].points_data = points_data.split(",");
+			
+			var bt = xml.documentElement.getElementsByTagName('border_text');
+			bILData[n].border_text = bt[0].firstChild.nodeValue;			
 
-			var bt = xml.documentElement.getElementsByTagName('border');
-			var border_text = bt[0].firstChild.nodeValue;			
-	 		pl.border_text = border_text;
-			
-			var z = xml.documentElement.getElementsByTagName('z');
-			var zindex = parseInt(z[0].firstChild.nodeValue);
-			pl.zindex = zindex;
+			var zi = xml.documentElement.getElementsByTagName('zindex');
+			bILData[n].zindex = parseInt(zi[0].firstChild.nodeValue);			
 
 			//for now when updating a polyline, we dump the old version and make new.
-			//this will be more efficient if we can find a way to just change the poinst on the fly			
-			for (s=0; s<bLStyData.length; s++){
-      		if (bLStyData[s].style_id == pl.style_id){
-        		 var linecolor = "#"+bLStyData[s].color;
-        		 var lineweight = bLStyData[s].weight;
-        		 var lineopacity = bLStyData[s].opacity;
-        	}
-      }
+			//@todo this is redundant to the polyline making loop in js_makegmap.tpl - consolidate
+			for (q=0; q<bLStyData.length; q++){
+				if (bLStyData[q].style_id == bILData[n].style_id){
+					var linecolor = "#"+bLStyData[q].color;
+					var lineweight = bLStyData[q].weight;
+					var lineopacity = bLStyData[q].opacity;
+				}
+			}
 
 			var pointlist = new Array();
-    	for (p = 0; p < pl.points_data.length; p+=2 ){
-    				var point = new GPoint(
-    						parseFloat(pl.points_data[p]),
-    						parseFloat(pl.points_data[p+1])
-    				);
-    				pointlist.push(point);
-    		};
-
-			map.removeOverlay(pl.polyline);
-			pl.polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
-			map.addOverlay(pl.polyline);
-
+			for (p = 0; p < bILData[n].points_data.length; p+=2 ){
+				var point = new GPoint(
+					parseFloat(bILData[n].points_data[p]),
+					parseFloat(bILData[n].points_data[p+1])
+				);
+				pointlist.push(point);
+			};
+			
+			map.removeOverlay(bILData[n].polyline);
+			bILData[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
+			map.addOverlay(bILData[n].polyline);
 	}
 
 
@@ -760,7 +886,7 @@ function editPolylineSet(n){
 
 			//create polyline
 			for (q=0; q<bLStyData.length; q++){
-				if (bLStyData[s].style_id == bILData[n].style_id){
+				if (bLStyData[q].style_id == bILData[n].style_id){
 					var linecolor = "#"+bLStyData[q].color;
 					var lineweight = bLStyData[q].weight;
 					var lineopacity = bLStyData[q].opacity;
@@ -789,7 +915,7 @@ function editPolylineSet(n){
 	
 	
 	
-	function removeMarker(){
+	function updateRemoveMarker(){
 			for (var i=0; i<bIMData.length; i++){
 					if (bIMData[i].marker_id == editMarkerId){
 						map.removeOverlay(bIMData[i].marker);
@@ -799,4 +925,18 @@ function editPolylineSet(n){
 			}
 			editMarkers();
 			editSet(editSetId);
+	}
+	
+	
+	
+	function updateRemovePolyline(){
+			for (var i=0; i<bILData.length; i++){
+					if (bILData[i].polyline_id == editPolylineId){
+						map.removeOverlay(bILData[i].polyline);
+						bILData[i] = null;
+						break;
+					}
+			}
+			editPolylines();
+			editPolylineSet(editSetId);
 	}
