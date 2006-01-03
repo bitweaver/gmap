@@ -241,6 +241,21 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
+	//* Gets data for a given marker style.
+	// @ todo this should probably take an array so that we can get data for a bunch of styles if we want
+	function getMarkerStyleData($style_id) {
+		global $gBitSystem;
+		if ($style_id && is_numeric($style_id)) {
+			$query = "SELECT bs.*
+			FROM `".BIT_DB_PREFIX."bit_gmaps_marker_styles` bs
+			WHERE bs.style_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$style_id));
+
+		}
+		return $result;
+	}
+	
+		
 
 	//get all icon styles for a given gmap_id
 	function getIconStyles($gmap_id) {
@@ -268,6 +283,37 @@ class BitGmap extends LibertyAttachable {
 
 
 
+	//* Gets data for a given icon style.
+	// @ todo this should probably take an array so that we can get data for a bunch of styles if we want
+	function getIconStyleData($style_id) {
+		global $gBitSystem;
+		if ($style_id && is_numeric($style_id)) {
+			$query = "SELECT bs.*
+			FROM `".BIT_DB_PREFIX."bit_gmaps_icon_styles` bs
+			WHERE bs.icon_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$style_id));
+
+		}
+		return $result;
+	}
+	
+
+
+	//* Gets data for a given marker set.
+	// @ todo this should probably take an array so that we can get data for a bunch of sets if we want
+	function getMarkerSetData($set_id) {
+		global $gBitSystem;
+		if ($set_id && is_numeric($set_id)) {
+			$query = "SELECT bs.*
+			FROM `".BIT_DB_PREFIX."bit_gmaps_marker_sets` bs
+			WHERE bs.set_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$set_id));
+		}
+		return $result;
+	}
+
+	
+	
 	//get all polyline data for given gmap_id and set_type
 	function getPolylines($gmap_id, $settype) {
 		global $gBitSystem;
@@ -353,6 +399,23 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $result;
 	}
+
+
+
+	
+	//* Gets data for a given polyline set.
+	// @ todo this should probably take an array so that we can get data for a bunch of sets if we want
+	function getPolylineSetData($set_id) {
+		global $gBitSystem;
+		if ($set_id && is_numeric($set_id)) {
+			$query = "SELECT bs.*
+			FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_sets` bs
+			WHERE bs.set_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$set_id));
+		}
+		return $result;
+	}
+
 
 
 	
@@ -882,7 +945,7 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function storePolylineSet( &$pParamHash ) {
 		$return = FALSE;
-		if( $this->verifyMarkerSet( $pParamHash ) ) {
+		if( $this->verifyPolylineSet( $pParamHash ) ) {
 			$this->mDb->StartTrans();
 			// store the posted changes
 			if ( !empty( $pParamHash['set_id'] ) ) {
