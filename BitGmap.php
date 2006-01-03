@@ -1279,28 +1279,13 @@ class BitGmap extends LibertyAttachable {
 	
 
 	
-	function verifyExpungeMarkerSet( &$pParamHash ) {
-	
-		$pParamHash['markerset_remove'] = array();
-
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-			$pParamHash['markerset_remove']['set_id'] = $pParamHash['set_id'];
-		}
-		
-		if( !empty( $pParamHash['set_type'] ) ) {
-			$pParamHash['markerset_remove']['set_type'] = $pParamHash['set_type'];
-		}
-		
-		return( count( $this->mErrors ) == 0 );
-				
-	}	
 	/**
 	* This function deletes a marker set
 	**/
 	function expungeMarkerSet(&$pParamHash) {
 		$ret = FALSE;
 
-  		if( $this->verifyExpungeMarkerSet( $pParamHash ) ) {
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
     		$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_marker_sets` 
     		WHERE `set_id` =?";
@@ -1311,39 +1296,23 @@ class BitGmap extends LibertyAttachable {
   			$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
     			WHERE `set_id` =?
-    			AND `set_type` =?";
-  			$result = $this->mDb->query( $query, $pParamHash['markerset_remove'] );
+          AND ( `set_type` = 'set_markers' OR `set_type` = 'init_markers')";
+  			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
   			$this->mDb->CompleteTrans();
     		$ret = TRUE;
-			}
+		}
 
 		return $ret;
 	}	
 
 
-	//@todo - this is identical to verifyExpungeMarkerSet -- could probably consolidate	
-	function verifyExpungePolylineSet( &$pParamHash ) {
-	
-		$pParamHash['polylineset_remove'] = array();
-
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-			$pParamHash['polylineset_remove']['set_id'] = $pParamHash['set_id'];
-		}
-		
-		if( !empty( $pParamHash['set_type'] ) ) {
-			$pParamHash['polylineset_remove']['set_type'] = $pParamHash['set_type'];
-		}
-		
-		return( count( $this->mErrors ) == 0 );
-				
-	}	
 	/**
 	* This function deletes a polyline set
 	**/
 	function expungePolylineSet(&$pParamHash) {
 		$ret = FALSE;
 
-  		if( $this->verifyExpungePolylineSet( $pParamHash ) ) {
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
     		$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_polyline_sets` 
     		WHERE `set_id` =?";
@@ -1354,11 +1323,11 @@ class BitGmap extends LibertyAttachable {
   			$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_sets_keychain` 
     			WHERE `set_id` =?
-    			AND `set_type` =?";
-  			$result = $this->mDb->query( $query, $pParamHash['polylineset_remove'] );
+          AND ( `set_type` = 'set_polylines' OR `set_type` = 'init_polylines' )";					
+  			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
   			$this->mDb->CompleteTrans();
     		$ret = TRUE;
-			}
+		}
 
 		return $ret;
 	}	
@@ -1506,8 +1475,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylineset_remove']['gmap_id'] = $pParamHash['gmap_id'];
 		}
 		
-		if( !empty( $pParamHash['polylineset_id'] ) && is_numeric( $pParamHash['polylineset_id'] ) ) {
-			$pParamHash['polylineset_remove']['set_id'] = $pParamHash['polylineset_id'];
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['polylineset_remove']['set_id'] = $pParamHash['set_id'];
 		}
 
 		if( !empty( $pParamHash['set_type'] ) ) {
