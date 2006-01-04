@@ -1,7 +1,7 @@
 <script type="text/javascript">//<![CDATA[
 
+var bIMData = new Array();
 {if count($gContent->mMapInitMarkers) > 0}
-	var bIMData = new Array();
 	{section name=initmarkers loop=$gContent->mMapInitMarkers}
 		bIMData[{$smarty.section.initmarkers.index}] = new Array();
 		bIMData[{$smarty.section.initmarkers.index}].marker_id = {$gContent->mMapInitMarkers[initmarkers].marker_id};
@@ -21,8 +21,8 @@
 	{/section}
 {/if}
 
+var bSMData = new Array();
 {if count($gContent->mMapSetMarkers) > 0}
-	var bSMData = new Array();
 	{section name=setmarkers loop=$gContent->mMapSetMarkers}
 		bSMData[{$smarty.section.setmarkers.index}] = new Array();
 		bSMData[{$smarty.section.setmarkers.index}].marker_id = {$gContent->mMapSetMarkers[setmarkers].marker_id};
@@ -42,8 +42,8 @@
 	{/section}
 {/if}
 
+var bMSetData = new Array();
 {if count($gContent->mMapMarkerSetDetails) > 0}
-	var bMSetData = new Array();
 	{section name=markersetdata loop=$gContent->mMapMarkerSetDetails}
 		bMSetData[{$smarty.section.markersetdata.index}] = new Array();
 		bMSetData[{$smarty.section.markersetdata.index}].set_id = {$gContent->mMapMarkerSetDetails[markersetdata].set_id};
