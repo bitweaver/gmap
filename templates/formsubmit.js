@@ -208,7 +208,7 @@ function editMarkers(){
   				allMarkKids[e].id = "addmarkertable_"+newSetId;
   			}
   		}
-  
+			  
   		// Update the set's menu
       for (var f=0; f<menuKids.length; f++) {
   			if (menuKids[f].id == "setid"){
@@ -244,8 +244,7 @@ function editMarkers(){
   		$('editmarkerform').appendChild(newMarkerSet);
   		show('markerset_'+newSetId);
   	}
-		}
-
+		}			
 		
   	//for length of markers add form to setelement on matching set_id
   	for (g=0; g<bIMData.length; g++) {
@@ -975,7 +974,7 @@ function editPolylineSet(n){
 
 	function updateRemoveMarker(){
 			for (var i=0; i<bIMData.length; i++){
-					if (bIMData[i].marker_id == editMarkerId){
+					if ( ( bIMData[i] != null ) && ( bIMData[i].marker_id == editMarkerId ) ){
 						map.removeOverlay(bIMData[i].marker);
 						bIMData[i] = null;
 						break;
