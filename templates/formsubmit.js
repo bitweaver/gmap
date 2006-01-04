@@ -8,6 +8,7 @@ var editObjectN;
 var editSetId;
 var editMarkerId;
 var editPolylineId;
+var editSetType;
 
 // for sorting arrays
 function sortOn(a,b){ 
@@ -88,29 +89,36 @@ function editMap(){
 
 
 function newMarker(){
-    // Display the New Form Div and Cancel Button
+    // Display the New Marker Div and Cancel Button
    	show('newmarkerform');
+
 		// Reset the Form
 		$('markerform_new').reset();
 		
-		// count of sets available
-		var setCount = bMSetData.length;
 		// shortcut to the Select Option we are adding to
 		var selectRoot = $('set_id');
-		
-		//dupe it
-		if (typeof(bMSetData) != 'undefined'){
-				var newOption = selectRoot.options[0].cloneNode(false);
-  			for (i=0; i<bMSetData.length; i++){
-						if (i > 0){
-       			selectRoot.appendChild(newOption);
+
+		// we assume we have called this before and reset the options menu
+		selectRoot.options.length = 0;
+
+		// add option for each set available
+		if ( typeof(bMSetData) != 'undefined' ){
+  			for ( i=0; i<bMSetData.length; i++ ){
+						if ( bMSetData[i] != null ){
+               	selectRoot.options[selectRoot.options.length] = new Option( bMSetData[i].name, bMSetData[i].set_id );
 						}
-				 		selectRoot.options[i].value = bMSetData[i].set_id;
-      			selectRoot.options[i].text = bMSetData[i].name;
   			}
 		}
 };
 
+
+
+function newMarkerSet(){
+    // Display the New Form Div
+   	show('newmarkersetform');
+		// Reset the Form
+		$('markersetform_new').reset();
+};
 
 
 
@@ -140,7 +148,7 @@ function editMarkers(){
   	// add a new set UI for each marker set
   	for (var b=0; b<bMSetData.length; b++) {
   	if (bMSetData[b]!= null){
-									  	
+						
   		newSetId = bMSetData[b].set_id;
   	
   		// clone model set UI
@@ -215,6 +223,7 @@ function editMarkers(){
   		show('markerset_'+newSetId);
   	}
 		}
+
 		
   	//for length of markers add form to setelement on matching set_id
   	for (g=0; g<bIMData.length; g++) {
@@ -487,8 +496,11 @@ function editPolylineSet(n){
 
 
 
-
-//AJAX FUNCTIONS
+/*******************
+ *
+ *  AJAX FUNCTIONS
+ *
+ *******************/
 
    var http_request = false;
 	 
@@ -526,6 +538,15 @@ function editPolylineSet(n){
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
 	 }
 
+	 function storeNewMarkerSet(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			data += "&gmap_id=" + bMapID;
+			var elm = Form.getElements(f);
+			editSetType = elm[elm.length-1].value;
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addMarkerSet } );
+	 }
+
 	 function removeMarkerSet(u, s, t){
 	 		var data;
 			var st;
@@ -539,9 +560,9 @@ function editPolylineSet(n){
 	 function expungeMarker(u, f){
 	 		var data;
       data = Form.serialize(f);
-			data = "marker_id=" + editMarkerId + "&expunge_marker=true";
 			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
 			editMarkerId = Form.getInputs(f, 'hidden', 'marker_id')[0].value;
+			data = "marker_id=" + editMarkerId + "&expunge_marker=true";
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
 	 }	 
 
@@ -786,26 +807,26 @@ function editPolylineSet(n){
 			bIMData[n].data = dt[0].firstChild.nodeValue;			
 
 			var l = xml.documentElement.getElementsByTagName('label');
-			bIMData[n].label_data = l[0].firstChild.nodeValue;			
-
+			bIMData[n].label_data = l[0].firstChild.nodeValue;
+			
 			//@todo this is such a crappy way to get this number
-			for(var a=0; a<bMSetData.length; a++){
-					if (bMSetData[a].set_id == editSetId){
+			for(a=0; a<bMSetData.length; a++){
+					if ( ( bMSetData[a] != null ) && ( bMSetData[a].set_id == editSetId ) ){
 						 s = a;
 						 break;						 						 
 					}
 			};
-			
-			bIMData[n].set_id = parseFloat(bMSetData[s].set_id);
-			bIMData[n].style_id = parseFloat(bMSetData[s].style_id);
-			bIMData[n].icon_id = parseFloat(bMSetData[s].icon_id);
+
+			bIMData[n].set_id = parseInt(bMSetData[s].set_id);
+			bIMData[n].style_id = parseInt(bMSetData[s].style_id);
+			bIMData[n].icon_id = parseInt(bMSetData[s].icon_id);
 			
 			var z = xml.documentElement.getElementsByTagName('z');
 			bIMData[n].zindex = parseInt(z[0].firstChild.nodeValue);
 
 			bIMData[n].array = "I";
 			bIMData[n].array_n = parseFloat(n);
-
+			
 			//create marker
 			//@todo this is redundant to the marker making loop toward the end of js_makegmap - consolidate in a function
     	var point = new GPoint(parseFloat(bIMData[n].lon), parseFloat(bIMData[n].lat));
@@ -821,7 +842,7 @@ function editPolylineSet(n){
     	}
 			
 			bIMData[n].marker.openInfoWindowHtml(bIMData[n].marker.my_html);
-
+			
 			// clear the form
 			$('markerform_new').reset();
 			// update the sets menus
@@ -831,6 +852,39 @@ function editPolylineSet(n){
 
 	 
 
+	 function addMarkerSet(rslt){
+      var xml = rslt.responseXML;
+
+			//@todo modify this to handle either bIMData or bSMData sets
+			var n = bMSetData.length;
+			bMSetData[n] = new Array();
+						
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('set_id');			
+			bMSetData[n].set_id = parseInt(id[0].firstChild.nodeValue);
+
+			var nm = xml.documentElement.getElementsByTagName('name');
+			bMSetData[n].name = nm[0].firstChild.nodeValue;			
+			
+			var dc = xml.documentElement.getElementsByTagName('description');
+			bMSetData[n].description = dc[0].firstChild.nodeValue;			
+
+			var sy = xml.documentElement.getElementsByTagName('style_id');
+			bMSetData[n].style_id = parseInt(sy[0].firstChild.nodeValue);
+			
+			var ic = xml.documentElement.getElementsByTagName('icon_id');
+			bMSetData[n].icon_id = parseInt(ic[0].firstChild.nodeValue);
+
+  		bMSetData[n].set_type = editSetType;
+
+			// clear the form
+			$('markersetform_new').reset();
+			// update the sets menus
+			if ( $('newmarkerform').style.display == "block" ){ newMarker(); };
+			editMarkers();
+	 }
+	
+	
 	
 	 function updatePolyline(rslt){
 	 		var s;
@@ -1028,6 +1082,7 @@ function editPolylineSet(n){
               	var extraMarkerForm = $(getElem);
           			$('editmarkerform').removeChild(extraMarkerForm);
           		}
+							bMSetData[j].set_id = null;
       				bMSetData[j] = null;
       			}
     		}

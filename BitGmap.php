@@ -906,8 +906,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['markerset_store']['name'] = $pParamHash['name'];
 		}
 
-		if( !empty( $pParamHash['desc'] ) ) {
-			$pParamHash['markerset_store']['description'] = $pParamHash['desc'];
+		if( !empty( $pParamHash['description'] ) ) {
+			$pParamHash['markerset_store']['description'] = $pParamHash['description'];
 		}
 		
 		if( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
@@ -916,6 +916,15 @@ class BitGmap extends LibertyAttachable {
 		
 		if( !empty( $pParamHash['icon_id'] ) && is_numeric( $pParamHash['icon_id'] ) ) {
 			$pParamHash['markerset_store']['icon_id'] = $pParamHash['icon_id'];
+		}
+
+		// set values for updating the map set keychain	if its a new set
+		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
+			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
+		}
+
+		if( !empty( $pParamHash['set_type'] ) ) {
+			$pParamHash['keychain_store']['set_type'] = $pParamHash['set_type'];
 		}
 				
 		return( count( $this->mErrors ) == 0 );
@@ -934,7 +943,10 @@ class BitGmap extends LibertyAttachable {
 			}else{
 				 $pParamHash['set_id'] = $this->mDb->GenID( 'bit_gmaps_marker_sets_set_id_seq' );
 				 $pParamHash['markerset_store']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_marker_sets", $pParamHash['markerset_store'] );
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_marker_sets", $pParamHash['markerset_store'] );				 
+				 // if its a new markerset we also get a set_id for the keychain and automaticallly associate it with a map.
+				 $pParamHash['keychain_store']['set_id'] = $pParamHash['markerset_store']['set_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_sets_keychain", $pParamHash['keychain_store'] );				 
 			}
 			$this->mDb->CompleteTrans();
 

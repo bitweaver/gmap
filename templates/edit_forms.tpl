@@ -52,10 +52,46 @@
 <!--marker editing forms -->
 <div id="editmarkermenu" style="display:none;">
 		<a href="javascript:newMarker();">New Marker</a> | 
-		<a href="javascript:alert('this feature is coming soon');">New Marker Set</a> | 
+		<a href="javascript:newMarkerSet();">New Marker Set</a> | 
 		<a href="javascript:alert('this feature is coming soon');">Edit Marker Styles</a> | 
 		<a href="javascript:alert('this feature is coming soon');">Edit Marker Icons</a>
 </div>
+
+<div id="newmarkersetform" class="editform" style="display:none;">
+		<h2>Add a New Set of Markers</h2>		
+        <div class="tableheader">
+    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Description </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Style </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Icon </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Load Option </div>
+    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
+    		</div>
+    		<div class="table" id="editmarkersettable_new">
+    			<form action="javascript:;" name="markersetform_new" id="markersetform_new">
+    			<div class="data">
+          	<div style="float:left; padding:0 .4em; width:10px"><input name="save_markerset" type="hidden" value="true"></div>
+          	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="description" cols="15" rows="3"></textarea></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><select name="style_id" id="style_id">
+                                                                  <option value="0" >Google (standard)</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><select name="icon_id" id="icon_id">
+                                                                  <option value="0" >Google (standard)</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><select name="set_type" id="set_type">
+                                                                  <option value="init_markers" >On Page Load</option>
+                                                                  <option value="set_markers" >Side Panel Only</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:70px"><a name="new_markerset_btn" title="save" href="javascript:storeNewMarkerSet('edit_markerset.php', document.markersetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+    			</div>
+    			</form>
+  		  </div>
+		<div id="newmarkersetcancel" style="clear:both;"><input type="button" name="closemarkersetform" value="Cancel New Marker Set" onclick="javascript:canceledit('newmarkersetform');"></div>
+</div>
+<!-- end of newmarkersetform -->
+
+
 
 <div id="newmarkerform" class="editform" style="display:none;">
 		<h2>Add a New Marker</h2>		
@@ -88,6 +124,7 @@
   		  </div>
 		<div id="newmarkercancel" style="clear:both;"><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:canceledit('newmarkerform');"></div>
 </div> <!-- end of newmarkerform -->
+
 
 <div id="editmarkerform" class="editform" style="display:none;">
 		<h2>Marker Sets Associated With This Map</h2>		
