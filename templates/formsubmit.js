@@ -30,6 +30,13 @@ function canceledit(i){
 };
 
 
+
+/*******************
+ *
+ * MAP FORM FUNCTIONS
+ *
+ *******************/
+
 // builds the map editing form
 function editMap(){
 				 	show('editmapform');
@@ -86,7 +93,22 @@ function editMap(){
 					 */
 };
 
+function editMapTypes(){
+	show('editmaptypemenu');
+	show('editmaptypeform');
+	show('editmaptypecancel');
+};
 
+function newMapType(){};
+
+
+
+
+/*******************
+ *
+ * MARKER FORM FUNCTIONS
+ *
+ *******************/
 
 function newMarker(){
     // Display the New Marker Div and Cancel Button
@@ -295,6 +317,11 @@ function editSet(n){
 
 
 
+/*******************
+ *
+ * POLYLINE FORM FUNCTIONS
+ *
+ *******************/
 
 function newPolyline(){
     // Display the New Form Div and Cancel Button
@@ -511,6 +538,22 @@ function editPolylineSet(n){
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMap } );
 	 }
 
+	 function storeMapType(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMapType } );
+	 }
+	 
+	 function removeMapType(u, m){
+	 		var data = "maptype_id=" + m + "&gmap_id=" + bMapID + "&remove_maptype=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMapType } );
+	 }
+	 
+	 function expungeMapType(u, m){
+	 		var data = "maptype_id=" + m + "&expunge_maptype=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMapType } );
+	 }
+	 
 	 function storeNewMarker(u, f){
 	 		var data;
       data = Form.serialize(f);
@@ -524,8 +567,8 @@ function editPolylineSet(n){
 	 		var data;
       data = Form.serialize(f);
 			data += '&save_marker=true';
-			editArray = Form.getInputs(f, 'hidden', 'marker_array')[0].value; //marker_array
-			editObjectN = Form.getInputs(f, 'hidden', 'marker_array_n')[0].value; //marker_array_n
+			editArray = Form.getInputs(f, 'hidden', 'marker_array')[0].value;
+			editObjectN = Form.getInputs(f, 'hidden', 'marker_array_n')[0].value;
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMarker } );
 	 }
 	 
@@ -537,6 +580,15 @@ function editPolylineSet(n){
 			data = "marker_id=" + editMarkerId + "&set_id=" + editSetId + "&remove_marker=true";
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
 	 }
+
+	 function expungeMarker(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
+			editMarkerId = Form.getInputs(f, 'hidden', 'marker_id')[0].value;
+			data = "marker_id=" + editMarkerId + "&expunge_marker=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
+	 }	 
 
 	 function storeNewMarkerSet(u, f){
 	 		var data;
@@ -557,15 +609,6 @@ function editPolylineSet(n){
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarkerSet } );
 	 }
 	 
-	 function expungeMarker(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
-			editMarkerId = Form.getInputs(f, 'hidden', 'marker_id')[0].value;
-			data = "marker_id=" + editMarkerId + "&expunge_marker=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
-	 }	 
-
 	 function expungeMarkerSet(u, s){
 	 		var data;
 			editSetId = s;
@@ -629,8 +672,11 @@ function editPolylineSet(n){
 	 
 	 
 
-	 
-// POST XML Request Functions	 
+/*******************
+ *
+ * POST XML Map Functions
+ *
+ *******************/	 
 	 
 	 function updateMap(rslt){
       var xml = rslt.responseXML;
@@ -723,7 +769,48 @@ function editPolylineSet(n){
 	 }
 
 
+	 function updateMapType(rslt){
+      var xml = rslt.responseXML;
+
+			var n = bMapTypesData.length;
+  		bMapTypesData[n] = new Array();
+			
+			//@todo there are several more values to add, update when updated maptype stuff globally
+			// assign map type values data array
+			var id = xml.documentElement.getElementsByTagName('maptype_id');			
+  		bMapTypesData[n].map_typeid = id[0].firstChild.nodeValue;
+			var nm = xml.documentElement.getElementsByTagName('name');			
+  		bMapTypesData[n].map_typename = nm[0].firstChild.nodeValue;
+			var id = xml.documentElement.getElementsByTagName('basetype');			
+  		bMapTypesData[n].map_typebase = id[0].firstChild.nodeValue;
+			var id = xml.documentElement.getElementsByTagName('maptiles_url');			
+  		bMapTypesData[n].map_typetilesurl = id[0].firstChild.nodeValue;
+			var id = xml.documentElement.getElementsByTagName('hybridtiles_url');			
+  		bMapTypesData[n].map_typehybridtilesurl = id[0].firstChild.nodeValue;
+			
+			// attach the new map type to the map
+			addMapTypes( new Array(bMapTypesData[n]) );
+			
+			// set the map type to active
+			map.setMapType(bMapTypes[bMapTypesData[n].map_typename]);			
+	 }
+
 	 
+	 
+	 function updateRemoveMapType(rslt){
+	 		// remove by id the maptype form the mt array
+			// remove the maptype form the map
+			// recall editMapType
+	 }
+	 
+	 
+	 
+	 
+/*******************
+ *
+ * POST XML Marker Functions
+ *
+ *******************/	 
 	 	 
 	 function updateMarker(rslt){
       var xml = rslt.responseXML;
@@ -884,7 +971,93 @@ function editPolylineSet(n){
 			editMarkers();
 	 }
 	
+
+
+	function updateRemoveMarker(){
+			for (var i=0; i<bIMData.length; i++){
+					if (bIMData[i].marker_id == editMarkerId){
+						map.removeOverlay(bIMData[i].marker);
+						bIMData[i] = null;
+						break;
+					}
+			}
+			editMarkers();
+			editSet(editSetId);
+	}
+
 	
+	function updateRemoveMarkerSet(){
+  	if (editArray == 'I') {
+  			for (var i=0; i<bIMData.length; i++){
+  					if ( ( bIMData[i] != null ) && ( bIMData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bIMData[i].marker);
+  						bIMData[i] = null;
+  					}
+  			}
+  	}else{
+  			for (var i=0; i<bSMData.length; i++){
+  					if ( ( bSMData[i] != null ) && ( bSMData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bSMData[i].marker);
+  						bSMData[i] = null;
+  					}
+  			}
+		}		
+		for (var j=0; j<bMSetData.length; j++){
+  			if ( ( bMSetData[j] != null ) && ( bMSetData[j].set_id == editSetId ) ){
+      		var getElem = "markerset_"+bMSetData[j].set_id;
+      		if ( $(getElem) ) {
+          	var extraMarkerForm = $(getElem);
+      			$('editmarkerform').removeChild(extraMarkerForm);
+      		}
+  				bMSetData[j] = null;
+  			}
+		}
+	}
+	
+
+	function updateExpungeMarkerSet(){
+  			for (var i=0; i<bIMData.length; i++){
+  					if ( ( bIMData[i] != null ) && ( bIMData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bIMData[i].marker);
+  						bIMData[i] = null;
+  					}
+  			}
+				/**  
+				 * This is turned off, cause when it doesn't exist it breaks. 
+				 * The thing to do is to always create the array, but not fill it out
+				 * if there are no markers, then all detection to see if the array exists
+				 * can be striped from the code
+				 **/
+				/*
+  			for (var i=0; i<bSMData.length; i++){
+  					if ( ( bSMData[i] != null ) && ( bSMData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bSMData[i].marker);
+  						bSMData[i] = null;
+  					}
+  			}
+				*/
+    		for (var j=0; j<bMSetData.length; j++){
+      			if ( ( bMSetData[j] != null ) && ( bMSetData[j].set_id == editSetId ) ){
+          		var getElem = "markerset_"+bMSetData[j].set_id;
+          		if ( $(getElem) ) {
+              	var extraMarkerForm = $(getElem);
+          			$('editmarkerform').removeChild(extraMarkerForm);
+          		}
+							bMSetData[j].set_id = null;
+      				bMSetData[j] = null;
+      			}
+    		}
+	}
+	
+
+	
+	
+	
+/*******************
+ *
+ * POST XML Polyline Functions
+ *
+ *******************/	 
 	
 	 function updatePolyline(rslt){
 	 		var s;
@@ -1007,86 +1180,8 @@ function editPolylineSet(n){
 			// update the sets menus
 			editPolylines();
 			editPolylineSet(editSetId);
-	}
-
+	}	
 	
-	
-	
-	function updateRemoveMarker(){
-			for (var i=0; i<bIMData.length; i++){
-					if (bIMData[i].marker_id == editMarkerId){
-						map.removeOverlay(bIMData[i].marker);
-						bIMData[i] = null;
-						break;
-					}
-			}
-			editMarkers();
-			editSet(editSetId);
-	}
-
-	
-	function updateRemoveMarkerSet(){
-  	if (editArray == 'I') {
-  			for (var i=0; i<bIMData.length; i++){
-  					if ( ( bIMData[i] != null ) && ( bIMData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bIMData[i].marker);
-  						bIMData[i] = null;
-  					}
-  			}
-  	}else{
-  			for (var i=0; i<bSMData.length; i++){
-  					if ( ( bSMData[i] != null ) && ( bSMData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bSMData[i].marker);
-  						bSMData[i] = null;
-  					}
-  			}
-		}		
-		for (var j=0; j<bMSetData.length; j++){
-  			if ( ( bMSetData[j] != null ) && ( bMSetData[j].set_id == editSetId ) ){
-      		var getElem = "markerset_"+bMSetData[j].set_id;
-      		if ( $(getElem) ) {
-          	var extraMarkerForm = $(getElem);
-      			$('editmarkerform').removeChild(extraMarkerForm);
-      		}
-  				bMSetData[j] = null;
-  			}
-		}
-	}
-	
-
-	function updateExpungeMarkerSet(){
-  			for (var i=0; i<bIMData.length; i++){
-  					if ( ( bIMData[i] != null ) && ( bIMData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bIMData[i].marker);
-  						bIMData[i] = null;
-  					}
-  			}
-				/**  
-				 * This is turned off, cause when it doesn't exist it breaks. 
-				 * The thing to do is to always create the array, but not fill it out
-				 * if there are no markers, then all detection to see if the array exists
-				 * can be striped from the code
-				 **/
-				/*
-  			for (var i=0; i<bSMData.length; i++){
-  					if ( ( bSMData[i] != null ) && ( bSMData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bSMData[i].marker);
-  						bSMData[i] = null;
-  					}
-  			}
-				*/
-    		for (var j=0; j<bMSetData.length; j++){
-      			if ( ( bMSetData[j] != null ) && ( bMSetData[j].set_id == editSetId ) ){
-          		var getElem = "markerset_"+bMSetData[j].set_id;
-          		if ( $(getElem) ) {
-              	var extraMarkerForm = $(getElem);
-          			$('editmarkerform').removeChild(extraMarkerForm);
-          		}
-							bMSetData[j].set_id = null;
-      				bMSetData[j] = null;
-      			}
-    		}
-	}
 
 	
 	function updateRemovePolyline(){

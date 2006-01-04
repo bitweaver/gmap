@@ -768,8 +768,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['maptype_store']['name'] = $pParamHash['name'];
 		}
 
-		if( !empty( $pParamHash['desc'] ) ) {
-			$pParamHash['maptype_store']['description'] = $pParamHash['desc'];
+		if( !empty( $pParamHash['description'] ) ) {
+			$pParamHash['maptype_store']['description'] = $pParamHash['description'];
 		}
 
 		if( !empty( $pParamHash['copyright'] ) ) {
