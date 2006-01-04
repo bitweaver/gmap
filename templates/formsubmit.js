@@ -1185,7 +1185,7 @@ function editPolylineSet(n){
 	
 	function updateRemovePolyline(){
 			for (var i=0; i<bILData.length; i++){
-					if (bILData[i].polyline_id == editPolylineId){
+					if ( ( bILData[i] != null ) && ( bILData[i].polyline_id == editPolylineId ) ){
 						map.removeOverlay(bILData[i].polyline);
 						bILData[i] = null;
 						break;
