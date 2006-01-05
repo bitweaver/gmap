@@ -641,6 +641,22 @@ function editPolylineSet(n){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*******************
  *
  *  AJAX FUNCTIONS
@@ -657,22 +673,24 @@ function editPolylineSet(n){
 	 }
 
 	 function storeMapType(u, f){
-	 		var data;
-			var elm = Form.getElements(f);
-			editObjectN = elm[1].value;
-      data = Form.serialize(f);
+			editObjectN = Form.getInputs(f, 'hidden', 'array_n')[0].value;
+	 		var data = Form.serialize(f);
 			data += "&gmap_id=" + bMapID;
 			data.replace(/\:/g, '%3A');
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMapType } );
 	 }
 	 
-	 function removeMapType(u, m){
-	 		var data = "maptype_id=" + m + "&gmap_id=" + bMapID + "&remove_maptype=true";
+	 function removeMapType(u, f){
+			editObjectN = Form.getInputs(f, 'hidden', 'array_n')[0].value;
+			editSetId = Form.getInputs(f, 'hidden', 'maptype_id')[0].value;
+	 		var data = "maptype_id=" + editSetId + "&gmap_id=" + bMapID + "&remove_maptype=true";
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMapType } );
 	 }
 	 
-	 function expungeMapType(u, m){
-	 		var data = "maptype_id=" + m + "&expunge_maptype=true";
+	 function expungeMapType(u, f){
+			editObjectN = Form.getInputs(f, 'hidden', 'array_n')[0].value;
+			editSetId = Form.getInputs(f, 'hidden', 'maptype_id')[0].value;
+	 		var data = "maptype_id=" + editSetId + "&expunge_maptype=true";
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMapType } );
 	 }
 	 
@@ -801,6 +819,26 @@ function editPolylineSet(n){
 	 }
 
 	 
+
+
+
+
+
+
+
+
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+
+
+
+
+
 	 
 
 /*******************
@@ -904,11 +942,11 @@ function editPolylineSet(n){
       var xml = rslt.responseXML;
 
 			var n = editObjectN;
-alert(bMapTypesData[n].map_typename);		
+
+			//clear maptype in this location from the Map array of Types
+			bMapTypes[bMapTypesData[n].map_typename] = null;
 			//@todo there are several more values to add, update when updated maptype stuff globally
 			// assign map type values data array
-			bMapTypes[bMapTypesData[n].map_typename] = null;
-alert('type is null')
 			
 			var id = xml.documentElement.getElementsByTagName('maptype_id');			
   		bMapTypesData[n].map_typeid = id[0].firstChild.nodeValue;
@@ -941,15 +979,47 @@ alert('type is null')
 			
 			// set the map type to active
 			map.setMapType( bMapTypes[bMapTypesData[n].map_typename] );
-	 alert('added')
 	 }
 
 	 
 	 
 	 function updateRemoveMapType(rslt){
-	 		// remove by id the maptype form the mt array
-			// remove the maptype form the map
-			// recall editMapType
+			var n = editObjectN;
+			
+			// get maptype node value
+			var p = bMapTypesData[n].maptype_node;
+			
+			// remove the maptype ref form the map array of types
+			bMapTypes[bMapTypesData[n].map_typename] = null;
+			
+			// remove the controls
+  		map.removeControl(typecontrols);
+			
+			// remove it from the map			
+			map.mapTypes.splice(p, 1);
+			
+			// add the controls
+  		map.addControl(typecontrols);
+			
+			// @todo we should first check if the map is on display, and then if so flip to street
+			// we flip to street mode
+			map.setMapType(map.mapTypes[0]);
+			
+	 		// remove by id the maptype form
+    		for (var j=0; j<bMapTypesData.length; j++){
+      			if ( ( bMapTypesData[j] != null ) && ( bMapTypesData[j].map_typeid == editSetId ) ){
+          		var getElem = "editmaptypetable_" + bMapTypesData[j].map_typeid;
+          		if ( $(getElem) ) {
+              	var extraMapTypeForm = $(getElem);
+          			$('editmaptypeform').removeChild(extraMapTypeForm);
+          		}							
+							bMapTypesData[n].map_typeid = null;
+      				bMapTypesData[n] = null;
+							
+      			}
+    		}			
+
+				
 	 }
 	 
 	 
@@ -1010,8 +1080,10 @@ alert('type is null')
   				if (m.marker.imageMap) {topElement = m.marker.imageMap;}
   				topElement.setAttribute( "title" , m.label_data );
 			}
-
+						
 			m.marker.redraw(true);
+			//set the overlaying right
+			m.marker.setZIndex(Math.round(m.marker.getLatitude()*-100000));
 	}
 
 
