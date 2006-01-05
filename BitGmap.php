@@ -795,7 +795,7 @@ class BitGmap extends LibertyAttachable {
 		if( !empty( $pParamHash['maptiles_url'] ) ) {
 			$pParamHash['maptype_store']['maptiles_url'] = $pParamHash['maptiles_url'];
 		}
-
+		
 		if( !empty( $pParamHash['lowtiles_url'] ) ) {
 			$pParamHash['maptype_store']['lowresmaptiles_url'] = $pParamHash['lowtiles_url'];
 		}
@@ -806,6 +806,11 @@ class BitGmap extends LibertyAttachable {
 
 		if( !empty( $pParamHash['lowhybridtiles_url'] ) ) {
 			$pParamHash['maptype_store']['lowreshybridtiles_url'] = $pParamHash['lowhybridtiles_url'];
+		}
+
+		// set values for updating the marker keychain
+		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
+			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
 		}
 		
 		return( count( $this->mErrors ) == 0 );
@@ -822,6 +827,10 @@ class BitGmap extends LibertyAttachable {
 				 $pParamHash['maptype_id'] = $this->mDb->GenID( 'bit_gmaps_map_types_maptype_id_seq' );
 				 $pParamHash['maptype_store']['maptype_id'] = $pParamHash['maptype_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_map_types", $pParamHash['maptype_store'] );
+				 // if its a new markerset we also get a set_id for the keychain and automaticallly associate it with a map.
+				 $pParamHash['keychain_store']['set_id'] = $pParamHash['maptype_store']['maptype_id'];
+				 $pParamHash['keychain_store']['set_type'] = "map_types";
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_sets_keychain", $pParamHash['keychain_store'] );				 
 			}
 			$this->mDb->CompleteTrans();
 
@@ -864,7 +873,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polyline_store']['zindex'] = $pParamHash['zindex'];
 		}
 
-		// set values for updating the marker keychain		
+		// set values for updating the marker keychain
 		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
 			$pParamHash['keychain_store']['set_id'] = $pParamHash['set_id'];
 		}
@@ -966,15 +975,25 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylineset_store']['name'] = $pParamHash['name'];
 		}
 
-		if( !empty( $pParamHash['desc'] ) ) {
-			$pParamHash['polylineset_store']['description'] = $pParamHash['desc'];
+		if( !empty( $pParamHash['description'] ) ) {
+			$pParamHash['polylineset_store']['description'] = $pParamHash['description'];
 		}
 		
-		if( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
+		if( !empty( $pParamHash['style_id'] ) ) {
 			$pParamHash['polylineset_store']['style_id'] = $pParamHash['style_id'];
 		}
 		
 		return( count( $this->mErrors ) == 0 );
+		
+		// set values for updating the map set keychain	if its a new set
+		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
+			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
+		}
+
+		if( !empty( $pParamHash['set_type'] ) ) {
+			$pParamHash['keychain_store']['set_type'] = $pParamHash['set_type'];
+		}
+
 	}
 	
 	/**
@@ -991,6 +1010,9 @@ class BitGmap extends LibertyAttachable {
 				 $pParamHash['set_id'] = $this->mDb->GenID( 'bit_gmaps_polyline_sets_set_id_seq' );
 				 $pParamHash['polylineset_store']['set_id'] = $pParamHash['set_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_polyline_sets", $pParamHash['polylineset_store'] );
+				 // if its a new polylineset we also get a set_id for the keychain and automaticallly associate it with a map.
+				 $pParamHash['keychain_store']['set_id'] = $pParamHash['polylineset_store']['set_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_sets_keychain", $pParamHash['keychain_store'] );				 
 			}
 			$this->mDb->CompleteTrans();
 

@@ -21,7 +21,12 @@ $tables = array(
   allow_comments C(5) DEFAULT 'TRUE'
 ",
 
-//set_type in bit_gmaps_sets_keychain can be: init_markers, init_polylines, init_polygons, set_markers, set_polylines, set_polygons, map_types
+/*
+ * set_type in bit_gmaps_sets_keychain can be: 
+ * init_markers, init_polylines, init_polygons, 
+ * set_markers, set_polylines, set_polygons, 
+ * map_types
+ */
 'bit_gmaps_sets_keychain' => "
   gmap_id I4 NOTNULL,
 	set_type c(32),

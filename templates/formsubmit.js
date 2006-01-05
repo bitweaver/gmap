@@ -10,6 +10,15 @@ var editMarkerId;
 var editPolylineId;
 var editSetType;
 
+//an escaping function for encoding urls
+function URLencode(sStr) {
+    return escape(sStr).
+             replace(/\+/g, '%2B').
+                replace(/\"/g,'%22').
+                   replace(/\'/g, '%27').
+                      replace(/\//g,'%2F');
+  }	
+
 // for sorting arrays
 function sortOn(a,b){ 
 				 return a['set_id']-b['set_id']; 
@@ -97,9 +106,114 @@ function editMapTypes(){
 	show('editmaptypemenu');
 	show('editmaptypeform');
 	show('editmaptypecancel');
+
+	//if maptype data exists
+	if ( typeof( bMapTypesData ) ) {
+	
+  	// We assume editMapTypes has been called before and remove 
+  	// any previously existing sets from the UI
+  	for (var a=0; a<bMapTypesData.length; a++) {
+  		if ( bMapTypesData[a]!= null ){
+    		var getElem = "editmaptypetable_" + bMapTypesData[a].map_typeid;
+    		if ( $(getElem) ) {
+        	var extraMapTypeForm = $(getElem);
+    			$('editmaptypeform').removeChild(extraMapTypeForm);
+    		}
+			}
+  	}
+		
+  	var editMapTypeId;
+  	  	
+  	// for each maptype data set clone the form
+  	for (var b=0; b<bMapTypesData.length; b++) {
+  	if ( bMapTypesData[b]!= null ){
+						
+  		editMapTypeId = bMapTypesData[b].map_typeid;
+  	
+  		// clone the form container
+			var newMapType = $('editmaptypetable_n').cloneNode(true);
+  		// give a new id to the new form container
+  		newMapType.id = "editmaptypetable_"+editMapTypeId;
+			
+			// update the new form ids
+  		newMapTypeForm = newMapType.childNodes;
+      for ( var n = 0; n < newMapTypeForm.length; n++ ) {
+  				if ( newMapTypeForm[n].id == "maptypeform_n" ) {					
+        			 newMapTypeForm[n].id = "maptypeform_" + editMapTypeId;
+        			 newMapTypeForm[n].name = "maptypeform_" + editMapTypeId;					 
+							 var nMFKids = newMapTypeForm[n].childNodes;
+							 for (var o=0; o<nMFKids.length; o++){
+							   if (nMFKids[o].id == "maptypeformdata_n"){
+									 nMFKids[o].id = "maptypeformdata_" + editMapTypeId;
+								 }
+							 }
+					}
+			}
+  									
+      // add form to set table
+  		$('editmaptypeform').appendChild(newMapType);
+  		show( 'editmaptypetable_'+editMapTypeId );
+  		show( 'maptypeform_'+editMapTypeId );
+						
+			//@todo add cloning of the all maptypes form
+	  
+			// populate set form values
+			form = $('maptypeform_' + editMapTypeId);
+
+			form.array_n.value = b;
+      form.maptype_id.value = bMapTypesData[b].map_typeid;
+      form.name.value = bMapTypesData[b].map_typename;
+      //form.description.value = bMapTypesData[b].description;
+      //form.copyright.value = bMapTypesData[b].copyright;
+      //form.maxzoom.value = bMapTypesData[b].maxzoom;
+
+      for (var r=0; r < 3; r++) {
+         if (form.basetype.options[r].value == bMapTypesData[b].map_typebase){
+         		form.basetype.options[r].selected=true;
+         }
+      };
+			
+			/*
+      for (var r=0; r < 3; r++) {
+         if (form.alttype.options[r].value == bMapTypesData[b].alttype){
+         		form.alttype.options[r].selected=true;
+         }
+      };
+			*/
+			
+      form.maptiles_url.value = bMapTypesData[b].map_typetilesurl;
+      //form.lowtiles_url.value = bMapTypesData[b].lowtiles_url;
+      //form.hybridtiles_url.value = bMapTypesData[b].hybridtiles_url;
+      //form.lowhybridtiles_url.value = bMapTypesData[b].lowhybridtiles_url;
+							
+			// just for a pretty button - js sucks it!
+			var linkParent = $('maptypeformdata_'+editMapTypeId);
+			var linkPKids = linkParent.childNodes;
+			for (var p=0; p<linkPKids.length; p++){
+						if (linkPKids[p].name == "save_maptype_btn"){
+							 linkPKids[p].href = "javascript:storeMapType('edit_maptype.php', document.maptypeform_"+editMapTypeId+");" ;
+						}
+						if (linkPKids[p].name == "locate_maptype_btn"){
+							 linkPKids[p].href = "javascript:alert('feature coming soon');" ;
+						}
+						if (linkPKids[p].name == "remove_maptype_btn"){
+							 linkPKids[p].href = "javascript:removeMapType('edit_maptype.php', document.maptypeform_"+editMapTypeId+");" ;
+						}
+						if (linkPKids[p].name == "expunge_maptype_btn"){
+							 linkPKids[p].href = "javascript:expungeMapType('edit_maptype.php', document.maptypeform_"+editMapTypeId+");" ;
+						}
+			}
+  	}
+		}
+	}	
 };
 
-function newMapType(){};
+
+
+
+function newMapType(){
+		alert('feature coming soon');
+};
 
 
 
@@ -328,22 +442,27 @@ function newPolyline(){
 		// Reset the Form
 		$('polylineform_new').reset();
 		
-		// count of sets available
-		var setCount = bLSetData.length;
 		// shortcut to the Select Option we are adding to
 		var selectRoot = $('polylineset_id');
 		
-		//dupe it
-		if (typeof(bLSetData) != 'undefined'){
-				var newOption = selectRoot.options[0].cloneNode(false);
-  			for (i=0; i<bLSetData.length; i++){
-						if (i > 0){
-       			selectRoot.appendChild(newOption);
+		selectRoot.options.length = 0;
+
+		// add option for each set available
+		if ( typeof(bLSetData) != 'undefined' ){
+  			for ( i=0; i<bLSetData.length; i++ ){
+						if ( bLSetData[i] != null ){
+               	selectRoot.options[selectRoot.options.length] = new Option( bLSetData[i].name, bLSetData[i].set_id );
 						}
-				 		selectRoot.options[i].value = bLSetData[i].set_id;
-      			selectRoot.options[i].text = bLSetData[i].name;
   			}
-		}
+		}		
+};
+
+
+function newPolylineSet(){
+    // Display the New Form Div
+   	show('newpolylinesetform');
+		// Reset the Form
+		$('polylinesetform_new').reset();
 };
 
 
@@ -539,7 +658,11 @@ function editPolylineSet(n){
 
 	 function storeMapType(u, f){
 	 		var data;
+			var elm = Form.getElements(f);
+			editObjectN = elm[1].value;
       data = Form.serialize(f);
+			data += "&gmap_id=" + bMapID;
+			data.replace(/\:/g, '%3A');
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMapType } );
 	 }
 	 
@@ -642,6 +765,24 @@ function editPolylineSet(n){
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolyline } );
 	 }
 
+	 function expungePolyline(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
+			editPolylineId = Form.getInputs(f, 'hidden', 'polyline_id')[0].value;
+			data = "polyline_id=" + editPolylineId + "&expunge_polyline=true";
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolyline } );
+	 }	 
+	 
+	 function storeNewPolylineSet(u, f){
+	 		var data;
+      data = Form.serialize(f);
+			data += "&gmap_id=" + bMapID;
+			var elm = Form.getElements(f);
+			editSetType = elm[elm.length-1].value;
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addPolylineSet } );
+	 }
+
 	 function removePolylineSet(u, s, t){
 	 		var data;
 			var st;
@@ -651,15 +792,6 @@ function editPolylineSet(n){
 			data = "set_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_polylineset=true";
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolylineSet } );
 	 }
-	 
-	 function expungePolyline(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
-			editPolylineId = Form.getInputs(f, 'hidden', 'polyline_id')[0].value;
-			data = "polyline_id=" + editPolylineId + "&expunge_polyline=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolyline } );
-	 }	 
 	 
 	 function expungePolylineSet(u, s){
 	 		var data;
@@ -771,27 +903,45 @@ function editPolylineSet(n){
 	 function updateMapType(rslt){
       var xml = rslt.responseXML;
 
-			var n = bMapTypesData.length;
-  		bMapTypesData[n] = new Array();
-			
+			var n = editObjectN;
+alert(bMapTypesData[n].map_typename);		
 			//@todo there are several more values to add, update when updated maptype stuff globally
 			// assign map type values data array
+			bMapTypes[bMapTypesData[n].map_typename] = null;
+alert('type is null')
+			
 			var id = xml.documentElement.getElementsByTagName('maptype_id');			
   		bMapTypesData[n].map_typeid = id[0].firstChild.nodeValue;
+
 			var nm = xml.documentElement.getElementsByTagName('name');			
   		bMapTypesData[n].map_typename = nm[0].firstChild.nodeValue;
-			var id = xml.documentElement.getElementsByTagName('basetype');			
-  		bMapTypesData[n].map_typebase = id[0].firstChild.nodeValue;
-			var id = xml.documentElement.getElementsByTagName('maptiles_url');			
-  		bMapTypesData[n].map_typetilesurl = id[0].firstChild.nodeValue;
-			var id = xml.documentElement.getElementsByTagName('hybridtiles_url');			
-  		bMapTypesData[n].map_typehybridtilesurl = id[0].firstChild.nodeValue;
+
+			var bt = xml.documentElement.getElementsByTagName('basetype');			
+  		bMapTypesData[n].map_typebase = bt[0].firstChild.nodeValue;
+
+			var mt = xml.documentElement.getElementsByTagName('maptiles_url');			
+  		bMapTypesData[n].map_typetilesurl = mt[0].firstChild.nodeValue;
+
+			var ht = xml.documentElement.getElementsByTagName('hybridtiles_url');			
+  		bMapTypesData[n].map_typehybridtilesurl = ht[0].firstChild.nodeValue;
 			
+			var p = bMapTypesData[n].maptype_node;
+
 			// attach the new map type to the map
-			addMapTypes( new Array(bMapTypesData[n]) );
+			var baseid = bMapTypesData[n].map_typebase;
+			var typeid = bMapTypesData[n].map_typeid;
+			var typename = bMapTypesData[n].map_typename;
+			var result = copy_obj( map.mapTypes[baseid] );
+			result.baseUrls = new Array();
+			result.baseUrls[0] = bMapTypesData[n].map_typetilesurl;
+			result.typename = bMapTypesData[n].map_typename;
+			result.getLinkText = function() { return this.typename; };
+			map.mapTypes[p] = result;
+			bMapTypes[typename] = result;
 			
 			// set the map type to active
-			map.setMapType(bMapTypes[bMapTypesData[n].map_typename]);			
+			map.setMapType( bMapTypes[bMapTypesData[n].map_typename] );
+	 alert('added')
 	 }
 
 	 
@@ -1058,6 +1208,36 @@ function editPolylineSet(n){
  *
  *******************/	 
 	
+	 function addPolylineSet(rslt){
+      var xml = rslt.responseXML;
+
+			//@todo modify this to handle either bILData or bSLData sets
+			var n = bLSetData.length;
+			bLSetData[n] = new Array();
+						
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('set_id');			
+			bLSetData[n].set_id = parseInt(id[0].firstChild.nodeValue);
+
+			var nm = xml.documentElement.getElementsByTagName('name');
+			bLSetData[n].name = nm[0].firstChild.nodeValue;			
+			
+			var dc = xml.documentElement.getElementsByTagName('description');
+			bLSetData[n].description = dc[0].firstChild.nodeValue;			
+
+			var sy = xml.documentElement.getElementsByTagName('style_id');
+			bLSetData[n].style_id = parseInt(sy[0].firstChild.nodeValue);
+			
+  		bLSetData[n].set_type = editSetType;
+			
+			// clear the form
+			$('polylinesetform_new').reset();
+			// update the sets menus
+			if ( $('newpolylineform').style.display == "block" ){ newPolyline(); };
+			editPolylines();
+	 }
+
+
 	 function updatePolyline(rslt){
 	 		var s;
       var xml = rslt.responseXML;

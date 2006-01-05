@@ -57,9 +57,10 @@
 
 <div id="editmaptypeform" class="editform" style="display:none;">
 		<h2>Map Types Associated With This Map</h2>		
-    		<div class="table" id="editmaptypetable_n">
+    		<div class="table" id="editmaptypetable_n" style="display:none;">
     			<form action="javascript:;" name="maptypeform_n" id="maptypeform_n" style="display:none;">
-    			<div class="data">
+    			<div class="data" id="maptypeformdata_n">
+          	<div style="float:left; padding:0 .4em; width:10px"><input name="array_n" type="hidden" value="n"></div>
           	<div style="float:left; padding:0 .4em; width:10px"><input name="save_maptype" type="hidden" value="true"></div>
           	<div style="float:left; padding:0 .4em; width:10px"><input name="maptype_id" type="hidden" size="3" value="n"></div>
           	<div style="float:left; padding:0 .4em; width:140px">Name<br/><input name="name" type="text" size="25" value="a name">
@@ -68,21 +69,21 @@
           			 																					 <br/>Max Zoom<br/><input name="maxzoom" type="text" size="3" value="0"></div>
           	<div style="float:left; padding:0 .4em; width:90px">Base Map Type<br/><select name="basetype">
                                                                   <option value="0" >Street Map</option>
-                                                                  <option value="0" >Satellite</option>
-                                                                  <option value="0" >Hybrid</option>
+                                                                  <option value="1" >Satellite</option>
+                                                                  <option value="2" >Hybrid</option>
                                           							   			</select><br/>
           																											Alt Map Type<br/><select name="alttype">
                                                                   <option value="0" >Street Map</option>
-                                                                  <option value="0" >Satellite</option>
-                                                                  <option value="0" >Hybrid</option>
+                                                                  <option value="1" >Satellite</option>
+                                                                  <option value="2" >Hybrid</option>
                                           							   			</select></div>
           	<div style="float:left; padding:0 .4em; width:140px">Bounds<br/><textarea name="bounds" cols="15" rows="3"></textarea></div>
           	<div style="float:left; padding:0 .4em; width:140px">Map Tiles URL<br/><input name="maptiles_url" type="text" size="25" value="">
           			 																					 <br/>Low Res Map Tiles URL<br/><input name="lowtiles_url" type="text" size="25" value="google"></div>
-          	<div style="float:left; padding:0 .4em; width:140px">Hybrid Tiles URL<br/><input name="hybridtiles_url" type="text" size="25" value="">
+          	<div style="float:left; padding:0 .4em; width:140px">Hybrid Tiles URL<br/><input name="hybridtiles_url" type="text" size="25" value="none">
           			 																					 <br/>Low Res Hybrid Tiles URL<br/><input name="lowhybridtiles_url" type="text" size="25" value="google"></div>
           	 ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_maptype_btn" title="save" href="javascript:storeMapType('edit_maptype.php', document.maptypeform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-          	<a style="float:left; padding:0 .4em;" name="locate_maptype_btn" title="show on the map" href="javascript:alert('coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
+          	<a style="float:left; padding:0 .4em;" name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
           	<a style="float:left; padding:0 .4em;" name="remove_maptype_btn" title="remove from this map" href="javascript:removeMapType('edit_maptype.php', document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
           	<a style="float:left; padding:0 .4em;" name="expunge_maptype_btn" title="delete the maptype!" href="javascript:expungeMapType('edit_maptype.php', document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
     			</div>
@@ -267,9 +268,40 @@
 <!--polyline editing forms -->
 <div id="editpolylinemenu" style="display:none;">
 		<a href="javascript:newPolyline();">New Polyline</a> | 
-		<a href="javascript:alert('this feature is coming soon');">New Polyline Set</a> | 
+		<a href="javascript:newPolylineSet();">New Polyline Set</a> | 
 		<a href="javascript:alert('this feature is coming soon');">Edit Polyline Styles</a>
 </div>
+
+<div id="newpolylinesetform" class="editform" style="display:none;">
+		<h2>Add a New Set of Polylines</h2>		
+        <div class="tableheader">
+    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Description </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Style </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Load Option </div>
+    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
+    		</div>
+    		<div class="table" id="editpolylinesettable_new">
+    			<form action="javascript:;" name="polylinesetform_new" id="polylinesetform_new">
+    			<div class="data">
+          	<div style="float:left; padding:0 .4em; width:10px"><input name="save_polylineset" type="hidden" value="true"></div>
+          	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="description" cols="15" rows="3"></textarea></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><select name="style_id" id="style_id">
+                                                                  <option value="0" >Google (standard)</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><select name="set_type" id="set_type">
+                                                                  <option value="init_polylines" >On Page Load</option>
+                                                                  <option value="set_polylines" >Side Panel Only</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:70px"><a name="new_polylineset_btn" title="save" href="javascript:storeNewPolylineSet('edit_polylineset.php', document.polylinesetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+    			</div>
+    			</form>
+  		  </div>
+		<div id="newpolylinesetcancel" style="clear:both;"><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:canceledit('newpolylinesetform');"></div>
+</div>
+<!-- end of newpolylinesetform -->
+
 
 <div id="newpolylineform" class="editform" style="display:none;">
 		<h2>Add a New Polyline</h2>		

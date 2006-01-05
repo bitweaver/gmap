@@ -1,8 +1,8 @@
 <script type="text/javascript">
 //<![CDATA[
 
+var bILData = new Array();
 {if count($gContent->mMapInitLines) > 0}
-	var bILData = new Array();
 	{section name=initlines loop=$gContent->mMapInitLines}
 		bILData[{$smarty.section.initlines.index}] = new Array();
 		bILData[{$smarty.section.initlines.index}].polyline_id = {$gContent->mMapInitLines[initlines].polyline_id};
@@ -26,8 +26,9 @@
 	{/section}
 {/if}
 
+
+var bSLData = new Array();
 {if count($gContent->mMapSetLines) > 0}
-	var bSLData = new Array();
 	{section name=setlines loop=$gContent->mMapSetLines}
 		bSLData[{$smarty.section.setlines.index}] = new Array();
 		bSLData[{$smarty.section.setlines.index}].polyline_id = {$gContent->mMapSetLines[setlines].polyline_id};
@@ -50,8 +51,9 @@
 	{/section}
 {/if}
 
+
+var bLStyData = new Array();
 {if count($gContent->mMapInitLines) > 0 || count($gContent->mMapInitLines) > 0}
-	var bLStyData = new Array();
 	{section name=linestyles loop=$gContent->mMapLinesStyles}
 		bLStyData[{$smarty.section.linestyles.index}] = new Array();
 		bLStyData[{$smarty.section.linestyles.index}].style_id = {$gContent->mMapLinesStyles[linestyles].style_id};
@@ -85,8 +87,8 @@
 {/if}
 
 
+var bLSetData = new Array();
 {if count($gContent->mMapPolylineSetDetails) > 0}
-	var bLSetData = new Array();
 	{section name=polylinesetdata loop=$gContent->mMapPolylineSetDetails}
 		bLSetData[{$smarty.section.polylinesetdata.index}] = new Array();
 		bLSetData[{$smarty.section.polylinesetdata.index}].set_id = {$gContent->mMapPolylineSetDetails[polylinesetdata].set_id};

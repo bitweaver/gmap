@@ -54,8 +54,9 @@ function getEditHtml(){ldelim}
 	load();
 {rdelim};
 
+
+var bMapTypesData = new Array();
 {if count($gContent->mMapTypes) > 0}
-	var bMapTypesData = new Array();
 	{section name=maptypes loop=$gContent->mMapTypes}
 		bMapTypesData[{$smarty.section.maptypes.index}] = new Array();
 		bMapTypesData[{$smarty.section.maptypes.index}].map_typeid = {$gContent->mMapTypes[maptypes].maptype_id};
@@ -72,7 +73,6 @@ function getEditHtml(){ldelim}
 	// Copy Object Function
 	function copy_obj(o) {ldelim}var c = new Object(); for (var e in o) {ldelim} c[e] = o[e]; {rdelim} return c;{rdelim}
 
-
 	//@todo insert variables for zoomed out tiles path, and hybrid type tiles path
 	// Adds all MapTypes, it is called from loadMap()
 	function addMapTypes(pParamHash){ldelim}
@@ -85,6 +85,7 @@ function getEditHtml(){ldelim}
 			result.baseUrls[0] = pParamHash[n].map_typetilesurl;
 			result.typename = pParamHash[n].map_typename;;
 			result.getLinkText = function() {ldelim} return this.typename; {rdelim};
+			bMapTypesData[n].maptype_node = map.mapTypes.length;
 			map.mapTypes[map.mapTypes.length] = result;
 			bMapTypes[typename] = result;
 		{rdelim}
