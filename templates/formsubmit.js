@@ -212,7 +212,11 @@ function editMapTypes(){
 
 
 function newMapType(){
-		alert('feature coming soon');
+    // Display the New Marker Div and Cancel Button
+   	show('newmaptypeform');
+
+		// Reset the Form
+		$('maptypeform_new').reset();
 };
 
 
@@ -672,6 +676,13 @@ function editPolylineSet(n){
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMap } );
 	 }
 
+	 function storeNewMapType(u, f){
+	 		var data = Form.serialize(f);
+			data += "&gmap_id=" + bMapID;
+			data.replace(/\:/g, '%3A');
+			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addMapType } );
+	 }
+
 	 function storeMapType(u, f){
 			editObjectN = Form.getInputs(f, 'hidden', 'array_n')[0].value;
 	 		var data = Form.serialize(f);
@@ -938,6 +949,58 @@ function editPolylineSet(n){
 	 }
 
 
+
+	 function addMapType(rslt){
+      var xml = rslt.responseXML;
+
+			// create a spot for a new maptype in the data array
+			var n = bMapTypesData.length;
+			bMapTypesData[n] = new Array();
+			//@todo there are several more values to add, update when updated maptype stuff globally
+			// assign map type values data array
+			
+			var id = xml.documentElement.getElementsByTagName('maptype_id');			
+  		bMapTypesData[n].map_typeid = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');			
+  		bMapTypesData[n].map_typename = nm[0].firstChild.nodeValue;
+			var bt = xml.documentElement.getElementsByTagName('basetype');
+  		bMapTypesData[n].map_typebase = parseInt( bt[0].firstChild.nodeValue );
+			var mt = xml.documentElement.getElementsByTagName('maptiles_url');			
+  		bMapTypesData[n].map_typetilesurl = mt[0].firstChild.nodeValue;
+			var ht = xml.documentElement.getElementsByTagName('hybridtiles_url');			
+  		bMapTypesData[n].map_typehybridtilesurl = ht[0].firstChild.nodeValue;
+			
+			bMapTypesData[n].maptype_node = map.mapTypes.length;
+			
+			// attach the new map type to the map
+			var baseid = bMapTypesData[n].map_typebase;
+			var typeid = bMapTypesData[n].map_typeid;
+			var typename = bMapTypesData[n].map_typename;
+			var result = copy_obj( map.mapTypes[baseid] );
+
+			result.baseUrls = new Array();
+			result.baseUrls[0] = bMapTypesData[n].map_typetilesurl;
+			result.typename = bMapTypesData[n].map_typename;
+			result.getLinkText = function() { return this.typename; };
+			map.mapTypes[map.mapTypes.length] = result;
+			bMapTypes[typename] = result;
+			
+			// set the map type to active
+			map.setMapType(bMapTypes[typename]);
+
+			// update the controls
+  		map.removeControl(typecontrols);
+  		map.addControl(typecontrols);
+
+			// clear the form
+			$('maptypeform_new').reset();
+			// update the sets menus
+			editMapTypes();
+	 }
+
+
+
+	 
 	 function updateMapType(rslt){
       var xml = rslt.responseXML;
 

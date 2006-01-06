@@ -55,6 +55,39 @@
 		<a href="javascript:newMapType();">Add New Map Type</a>
 </div>
 
+<div id="newmaptypeform" class="editform" style="display:none;">
+		<h2>Add A New Map Type</h2>
+    		<div class="table" id="editmaptypetable_new">
+    			<form action="javascript:;" name="maptypeform_new" id="maptypeform_new">
+    			<div class="data" id="maptypeformdata_new">
+          	<div style="float:left; padding:0 .4em; width:10px"><input name="save_maptype" type="hidden" value="true"></div>
+          	<div style="float:left; padding:0 .4em; width:140px">Name<br/><input name="name" type="text" size="25" value="a name">
+          			 																					 <br/>Description<br/><input name="description" type="text" size="25" value="a name"></div>
+          	<div style="float:left; padding:0 .4em; width:60px">Copyright<br/><input name="copyright" type="text" size="10" value="">
+          			 																					 <br/>Max Zoom<br/><input name="maxzoom" type="text" size="3" value="0"></div>
+          	<div style="float:left; padding:0 .4em; width:90px">Base Map Type<br/><select name="basetype">
+                                                                  <option value="0" >Street Map</option>
+                                                                  <option value="1" >Satellite</option>
+                                                                  <option value="2" >Hybrid</option>
+                                          							   			</select><br/>
+          																											Alt Map Type<br/><select name="alttype">
+                                                                  <option value="0" >Street Map</option>
+                                                                  <option value="1" >Satellite</option>
+                                                                  <option value="2" >Hybrid</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:140px">Bounds<br/><textarea name="bounds" cols="15" rows="3"></textarea></div>
+          	<div style="float:left; padding:0 .4em; width:140px">Map Tiles URL<br/><input name="maptiles_url" type="text" size="25" value="">
+          			 																					 <br/>Low Res Map Tiles URL<br/><input name="lowtiles_url" type="text" size="25" value="google"></div>
+          	<div style="float:left; padding:0 .4em; width:140px">Hybrid Tiles URL<br/><input name="hybridtiles_url" type="text" size="25" value="none">
+          			 																					 <br/>Low Res Hybrid Tiles URL<br/><input name="lowhybridtiles_url" type="text" size="25" value="google"></div>
+          	 ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_maptype_btn" title="save" href="javascript:storeNewMapType('edit_maptype.php', document.maptypeform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+    			</div>
+    			</form>
+  		  </div>
+			<div id="newmaptypecancel" style="clear:both;"><input type="button" name="closenewmaptypeform" value="Cancel Adding A New Map Type" onclick="javascript:canceledit('newmaptypeform');"></div>
+</div> <!-- end of editmaptypeform -->
+
+
 <div id="editmaptypeform" class="editform" style="display:none;">
 		<h2>Map Types Associated With This Map</h2>		
     		<div class="table" id="editmaptypetable_n" style="display:none;">

@@ -56,6 +56,10 @@ function getEditHtml(){ldelim}
 
 
 var bMapTypesData = new Array();
+
+// Copy Object Function
+function copy_obj(o) {ldelim}var c = new Object(); for (var e in o) {ldelim} c[e] = o[e]; {rdelim} return c;{rdelim}
+
 {if count($gContent->mMapTypes) > 0}
 	{section name=maptypes loop=$gContent->mMapTypes}
 		bMapTypesData[{$smarty.section.maptypes.index}] = new Array();
@@ -69,9 +73,6 @@ var bMapTypesData = new Array();
 			bMapTypesData[{$smarty.section.maptypes.index}].map_typehybridtilesurl = "{$gContent->mMapTypes[maptypes].hybridtiles_url}";
 		{/if}
 	{/section}
-
-	// Copy Object Function
-	function copy_obj(o) {ldelim}var c = new Object(); for (var e in o) {ldelim} c[e] = o[e]; {rdelim} return c;{rdelim}
 
 	//@todo insert variables for zoomed out tiles path, and hybrid type tiles path
 	// Adds all MapTypes, it is called from loadMap()
