@@ -982,9 +982,7 @@ class BitGmap extends LibertyAttachable {
 		if( !empty( $pParamHash['style_id'] ) ) {
 			$pParamHash['polylineset_store']['style_id'] = $pParamHash['style_id'];
 		}
-		
-		return( count( $this->mErrors ) == 0 );
-		
+				
 		// set values for updating the map set keychain	if its a new set
 		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
 			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
@@ -994,6 +992,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['keychain_store']['set_type'] = $pParamHash['set_type'];
 		}
 
+		return( count( $this->mErrors ) == 0 );		
+		
 	}
 	
 	/**
