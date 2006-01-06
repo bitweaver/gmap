@@ -1,4 +1,8 @@
 <script type="text/javascript">//<![CDATA[
+
+// Copy Object Function
+function copy_obj(o) {ldelim}var c = new Object(); for (var e in o) {ldelim} c[e] = o[e]; {rdelim} return c;{rdelim}
+
 var map;
 var typecontrols;
 var scale;
@@ -18,59 +22,31 @@ var bMapScale = "{$gContent->mInfo.show_scale}"; //TRUE or FALSE
 var bMapControl = "{$gContent->mInfo.show_controls}"; //s,l,z,n
 var bMapTypeCont = "{$gContent->mInfo.show_typecontrols}";//TRUE or FALSE
 var bMapType = "{$gContent->mInfo.map_type}";
-
 var bMapTypes = new Array();
 
-function getEditTools(){ldelim}
-	var script = document.createElement('script');
-	script.type = 'text/javascript';
-	script.src = 'get_edit_script.php';
-	document.getElementsByTagName('head')[0].appendChild(script);
-
-	var xmlDoc = null ;
-	getEditHtml();
-{rdelim};
-
-
-function getEditHtml(){ldelim}
-	function load() {ldelim}
-		if (typeof window.ActiveXObject != 'undefined' ) {ldelim}
-			xmlDoc = new ActiveXObject("Microsoft.XMLHTTP");
-			xmlDoc.onreadystatechange = process ;
-		{rdelim} else {ldelim}
-			xmlDoc = new XMLHttpRequest();
-			xmlDoc.onload = process ;
-		{rdelim}
-		xmlDoc.open( "GET", "templates/edit_form.html", true );
-//				xmlDoc.overrideMimeType('text/html');
-		xmlDoc.send( null );
-	{rdelim}
-	function process() {ldelim}
-		if ( xmlDoc.readyState != 4 ) return ;
-//				alert("The HTML requested: " + xmlDoc.responseText)
-		document.getElementById("editform").innerHTML = xmlDoc.responseText ;
-	{rdelim}
-
-	load();
-{rdelim};
-
-
 var bMapTypesData = new Array();
-
-// Copy Object Function
-function copy_obj(o) {ldelim}var c = new Object(); for (var e in o) {ldelim} c[e] = o[e]; {rdelim} return c;{rdelim}
 
 {if count($gContent->mMapTypes) > 0}
 	{section name=maptypes loop=$gContent->mMapTypes}
 		bMapTypesData[{$smarty.section.maptypes.index}] = new Array();
-		bMapTypesData[{$smarty.section.maptypes.index}].map_typeid = {$gContent->mMapTypes[maptypes].maptype_id};
-		bMapTypesData[{$smarty.section.maptypes.index}].map_typename = "{$gContent->mMapTypes[maptypes].name}";
-		bMapTypesData[{$smarty.section.maptypes.index}].map_typebase = {$gContent->mMapTypes[maptypes].basetype};
+		bMapTypesData[{$smarty.section.maptypes.index}].maptype_id = {$gContent->mMapTypes[maptypes].maptype_id};
+		bMapTypesData[{$smarty.section.maptypes.index}].name = "{$gContent->mMapTypes[maptypes].name}";
+		bMapTypesData[{$smarty.section.maptypes.index}].description = "{$gContent->mMapTypes[maptypes].description}";
+		bMapTypesData[{$smarty.section.maptypes.index}].copyright = "{$gContent->mMapTypes[maptypes].copyright}";
+		bMapTypesData[{$smarty.section.maptypes.index}].basetype = {$gContent->mMapTypes[maptypes].basetype};
+		bMapTypesData[{$smarty.section.maptypes.index}].alttype = {$gContent->mMapTypes[maptypes].alttype};
+		bMapTypesData[{$smarty.section.maptypes.index}].maxzoom = {$gContent->mMapTypes[maptypes].maxzoom};
 		{if $gContent->mMapTypes[maptypes].maptiles_url != NULL}
-			bMapTypesData[{$smarty.section.maptypes.index}].map_typetilesurl = "{$gContent->mMapTypes[maptypes].maptiles_url}";
+			bMapTypesData[{$smarty.section.maptypes.index}].maptiles_url = "{$gContent->mMapTypes[maptypes].maptiles_url}";
+		{/if}
+		{if $gContent->mMapTypes[maptypes].lowresmaptiles_url != NULL}
+			bMapTypesData[{$smarty.section.maptypes.index}].lowresmaptiles_url = "{$gContent->mMapTypes[maptypes].lowresmaptiles_url}";
 		{/if}
 		{if $gContent->mMapTypes[maptypes].hybridtiles_url != NULL}
-			bMapTypesData[{$smarty.section.maptypes.index}].map_typehybridtilesurl = "{$gContent->mMapTypes[maptypes].hybridtiles_url}";
+			bMapTypesData[{$smarty.section.maptypes.index}].hybridtiles_url = "{$gContent->mMapTypes[maptypes].hybridtiles_url}";
+		{/if}
+		{if $gContent->mMapTypes[maptypes].lowreshybridtiles_url != NULL}
+			bMapTypesData[{$smarty.section.maptypes.index}].lowreshybridtiles_url = "{$gContent->mMapTypes[maptypes].lowreshybridtiles_url}";
 		{/if}
 	{/section}
 
@@ -78,20 +54,22 @@ function copy_obj(o) {ldelim}var c = new Object(); for (var e in o) {ldelim} c[e
 	// Adds all MapTypes, it is called from loadMap()
 	function addMapTypes(pParamHash){ldelim}
 		for (n=0; n < pParamHash.length; n++) {ldelim}
-			var baseid = pParamHash[n].map_typebase;
-			var typeid = pParamHash[n].map_typeid;
-			var typename = pParamHash[n].map_typename;
+			var baseid = pParamHash[n].basetype;
+//			var typeid = pParamHash[n].maptype_id;
+			var typename = pParamHash[n].name;
 			var result = copy_obj(map.mapTypes[baseid]);
 			result.baseUrls = new Array();
-			result.baseUrls[0] = pParamHash[n].map_typetilesurl;
-			result.typename = pParamHash[n].map_typename;;
+			result.baseUrls[0] = pParamHash[n].maptiles_url;
+			result.typename = typename;
 			result.getLinkText = function() {ldelim} return this.typename; {rdelim};
-			bMapTypesData[n].maptype_node = map.mapTypes.length;
+			bMapTypesData[n].maptype_node = map.mapTypes.length;  //@todo this needs to change to make a universal function - its too specific to the hash
 			map.mapTypes[map.mapTypes.length] = result;
 			bMapTypes[typename] = result;
 		{rdelim}
 	{rdelim};
 {/if}
+
+
 
 function loadMap() {ldelim}
     map = new GMap(document.getElementById('map'));
@@ -157,27 +135,6 @@ function loadMap() {ldelim}
 		{rdelim};
 	{/if}
 
-/*
-	//@todo this needs to be more complex and account for all the variety of types and styles
-	{if count($gContent->mMapSetMarkers) > 0}
-	for(n=0; n<bSMData.length; n++){ldelim}
-		var point = new GPoint(parseFloat(bSMData[n].lon), parseFloat(bSMData[n].lat));
-			var bSMData[n].marker = new GMarker(point);
-			var bSMData[n].marker.my_html = "<div style='white-space: nowrap;'><h3>"+bSMData[n].title+"</h3><p>"+bSMData[n].data+"</p></div>";
-			//@todo this needs to come out when side panel is added to engine.
-			map.addOverlay(bSMData[n].marker);
-			//@todo marker label construction needs to be added via the side panel
-			//add the marker label if it exists
-			if (bSMData[n].label_data != ""){ldelim}
-			var topElement = newmarker.iconImage;
-			if (newmarker.transparentIcon) {ldelim}topElement = newmarker.transparentIcon;{rdelim}
-			if (newmarker.imageMap) {ldelim}topElement = newmarker.imageMap;{rdelim}
-			topElement.setAttribute( "title" , bSMData[n].label_data );
-			{rdelim}
-	{rdelim};
-	{/if}
-*/
-
 	{if count($gContent->mMapInitLines) > 0}
 		for(n=0; n<bILData.length; n++){ldelim}
 			for (s=0; s<bLStyData.length; s++){ldelim}
@@ -210,8 +167,6 @@ function loadMap() {ldelim}
 			{rdelim}
 		{rdelim}
 	{rdelim});
-	
-	
 	
 {rdelim};
 

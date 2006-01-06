@@ -776,19 +776,19 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['maptype_store']['copyright'] = $pParamHash['copyright'];
 		}
 
-		if( !empty( $pParamHash['basetype'] ) && is_numeric( $pParamHash['basetype'] ) ) {
+		if( ( !empty( $pParamHash['basetype'] ) && is_numeric( $pParamHash['basetype'] ) ) || $pParamHash['basetype'] == 0 ) {
 			$pParamHash['maptype_store']['basetype'] = $pParamHash['basetype'];
 		}
 		
-		if( !empty( $pParamHash['alttype'] ) && is_numeric( $pParamHash['alttype'] ) ) {
+		if( ( !empty( $pParamHash['alttype'] ) && is_numeric( $pParamHash['alttype'] ) ) || $pParamHash['alttype'] == 0 ) {
 			$pParamHash['maptype_store']['alttype'] = $pParamHash['alttype'];
 		}
 
-		if( !empty( $pParamHash['bounds'] ) ) {
+		if( ( !empty( $pParamHash['bounds'] ) && is_numeric( $pParamHash['bounds'] ) ) || $pParamHash['bounds'] == 0 ) {
 			$pParamHash['maptype_store']['bounds'] = $pParamHash['bounds'];
 		}
 
-		if( !empty( $pParamHash['maxzoom'] ) && is_numeric( $pParamHash['maxzoom'] ) ) {
+		if( ( !empty( $pParamHash['maxzoom'] ) && is_numeric( $pParamHash['maxzoom'] ) ) || $pParamHash['maxzoom'] == 0 ) {
 			$pParamHash['maptype_store']['maxzoom'] = $pParamHash['maxzoom'];
 		}
 

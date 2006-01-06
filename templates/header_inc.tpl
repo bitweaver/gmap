@@ -1,6 +1,8 @@
 {if $smarty.const.ACTIVE_PACKAGE eq 'gmap'}
 <style type="text/css">
-	v\:* {ldelim}behavior:url(#default#VML);{rdelim}
+	v\:* {ldelim}
+	  behavior:url(#default#VML);
+  {rdelim}
 </style>
 <script src="http://maps.google.com/maps?file=api&v=1&key={$gBitSystem->getPreference('gmaps_api_key')}" type="text/javascript"></script>
 {include file="bitpackage:gmap/js_makemarkers.tpl"}

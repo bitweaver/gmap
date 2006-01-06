@@ -10,15 +10,6 @@ var editMarkerId;
 var editPolylineId;
 var editSetType;
 
-//an escaping function for encoding urls
-function URLencode(sStr) {
-    return escape(sStr).
-             replace(/\+/g, '%2B').
-                replace(/\"/g,'%22').
-                   replace(/\'/g, '%27').
-                      replace(/\//g,'%2F');
-  }	
-
 // for sorting arrays
 function sortOn(a,b){ 
 				 return a['set_id']-b['set_id']; 
@@ -28,7 +19,6 @@ function sortIt(pParamHash){
 		pParamHash.sort(sortOn); 
 }
 
-
 // for displaying and hiding menu parts
 function show (i){
 				 $(i).style.display = "block";
@@ -37,6 +27,10 @@ function show (i){
 function canceledit(i){
    			$(i).style.display = "none";	
 };
+
+
+
+
 
 
 
@@ -86,8 +80,8 @@ function editMap(){
 						var newMapType = mapTypeRoot.options[0].cloneNode(false);
   					for (i=0; i<bMapTypesData.length; i++){
      					  mapTypeRoot.appendChild(newMapType);
-      					mapTypeRoot.options[i+3].value = bMapTypesData[i].map_typename;
-      					mapTypeRoot.options[i+3].text = bMapTypesData[i].map_typename;
+      					mapTypeRoot.options[i+3].value = bMapTypesData[i].name;
+      					mapTypeRoot.options[i+3].text = bMapTypesData[i].name;
   					}
 					}
 						
@@ -114,7 +108,7 @@ function editMapTypes(){
   	// any previously existing sets from the UI
   	for (var a=0; a<bMapTypesData.length; a++) {
   		if ( bMapTypesData[a]!= null ){
-    		var getElem = "editmaptypetable_" + bMapTypesData[a].map_typeid;
+    		var getElem = "editmaptypetable_" + bMapTypesData[a].maptype_id;
     		if ( $(getElem) ) {
         	var extraMapTypeForm = $(getElem);
     			$('editmaptypeform').removeChild(extraMapTypeForm);
@@ -128,7 +122,7 @@ function editMapTypes(){
   	for (var b=0; b<bMapTypesData.length; b++) {
   	if ( bMapTypesData[b]!= null ){
 						
-  		editMapTypeId = bMapTypesData[b].map_typeid;
+  		editMapTypeId = bMapTypesData[b].maptype_id;
   	
   		// clone the form container
 			var newMapType = $('editmaptypetable_n').cloneNode(true);
@@ -161,30 +155,25 @@ function editMapTypes(){
 			form = $('maptypeform_' + editMapTypeId);
 
 			form.array_n.value = b;
-      form.maptype_id.value = bMapTypesData[b].map_typeid;
-      form.name.value = bMapTypesData[b].map_typename;
-      //form.description.value = bMapTypesData[b].description;
-      //form.copyright.value = bMapTypesData[b].copyright;
-      //form.maxzoom.value = bMapTypesData[b].maxzoom;
-
+      form.maptype_id.value = bMapTypesData[b].maptype_id;
+      form.name.value = bMapTypesData[b].name;
+      form.description.value = bMapTypesData[b].description;
+      form.copyright.value = bMapTypesData[b].copyright;
+      form.maxzoom.value = bMapTypesData[b].maxzoom;
       for (var r=0; r < 3; r++) {
-         if (form.basetype.options[r].value == bMapTypesData[b].map_typebase){
+         if (form.basetype.options[r].value == bMapTypesData[b].basetype){
          		form.basetype.options[r].selected=true;
          }
-      };
-			
-			/*
+      };			
       for (var r=0; r < 3; r++) {
          if (form.alttype.options[r].value == bMapTypesData[b].alttype){
          		form.alttype.options[r].selected=true;
          }
       };
-			*/
-			
-      form.maptiles_url.value = bMapTypesData[b].map_typetilesurl;
-      //form.lowtiles_url.value = bMapTypesData[b].lowtiles_url;
-      //form.hybridtiles_url.value = bMapTypesData[b].hybridtiles_url;
-      //form.lowhybridtiles_url.value = bMapTypesData[b].lowhybridtiles_url;
+      form.maptiles_url.value = bMapTypesData[b].maptiles_url;
+      form.lowtiles_url.value = bMapTypesData[b].lowresmaptiles_url;
+      form.hybridtiles_url.value = bMapTypesData[b].hybridtiles_url;
+      form.lowhybridtiles_url.value = bMapTypesData[b].lowreshybridtiles_url;
 							
 			// just for a pretty button - js sucks it!
 			var linkParent = $('maptypeformdata_'+editMapTypeId);
@@ -207,8 +196,6 @@ function editMapTypes(){
 		}
 	}	
 };
-
-
 
 
 function newMapType(){
@@ -252,14 +239,12 @@ function newMarker(){
 };
 
 
-
 function newMarkerSet(){
     // Display the New Form Div
    	show('newmarkersetform');
 		// Reset the Form
 		$('markersetform_new').reset();
 };
-
 
 
 function editMarkers(){		
@@ -960,27 +945,41 @@ function editPolylineSet(n){
 			// assign map type values data array
 			
 			var id = xml.documentElement.getElementsByTagName('maptype_id');			
-  		bMapTypesData[n].map_typeid = parseInt( id[0].firstChild.nodeValue );
+  		bMapTypesData[n].maptype_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
-  		bMapTypesData[n].map_typename = nm[0].firstChild.nodeValue;
+  		bMapTypesData[n].name = nm[0].firstChild.nodeValue;
+			var ds = xml.documentElement.getElementsByTagName('description');			
+  		bMapTypesData[n].description = ds[0].firstChild.nodeValue;
+			var cr = xml.documentElement.getElementsByTagName('copyright');			
+  		bMapTypesData[n].copyright = cr[0].firstChild.nodeValue;
 			var bt = xml.documentElement.getElementsByTagName('basetype');
-  		bMapTypesData[n].map_typebase = parseInt( bt[0].firstChild.nodeValue );
+  		bMapTypesData[n].basetype = parseInt( bt[0].firstChild.nodeValue );
+			var at = xml.documentElement.getElementsByTagName('alttype');
+  		bMapTypesData[n].alttype = parseInt( at[0].firstChild.nodeValue );
+			var bd = xml.documentElement.getElementsByTagName('bounds');			
+  		bMapTypesData[n].bounds = bd[0].firstChild.nodeValue;
+			var mz = xml.documentElement.getElementsByTagName('maxzoom');
+  		bMapTypesData[n].maxzoom = parseInt( mz[0].firstChild.nodeValue );
 			var mt = xml.documentElement.getElementsByTagName('maptiles_url');			
-  		bMapTypesData[n].map_typetilesurl = mt[0].firstChild.nodeValue;
+  		bMapTypesData[n].maptiles_url = mt[0].firstChild.nodeValue;
+			var lrmt = xml.documentElement.getElementsByTagName('lowresmaptiles_url');			
+  		bMapTypesData[n].lowresmaptiles_url = lrmt[0].firstChild.nodeValue;
 			var ht = xml.documentElement.getElementsByTagName('hybridtiles_url');			
-  		bMapTypesData[n].map_typehybridtilesurl = ht[0].firstChild.nodeValue;
+  		bMapTypesData[n].hybridtiles_url = ht[0].firstChild.nodeValue;
+			var lrht = xml.documentElement.getElementsByTagName('lowreshybridtiles_url');			
+  		bMapTypesData[n].lowreshybridtiles_url = lrht[0].firstChild.nodeValue;
 			
 			bMapTypesData[n].maptype_node = map.mapTypes.length;
 			
 			// attach the new map type to the map
-			var baseid = bMapTypesData[n].map_typebase;
-			var typeid = bMapTypesData[n].map_typeid;
-			var typename = bMapTypesData[n].map_typename;
+			var baseid = bMapTypesData[n].basetype;
+			var typeid = bMapTypesData[n].maptype_id;
+			var typename = bMapTypesData[n].name;
 			var result = copy_obj( map.mapTypes[baseid] );
 
 			result.baseUrls = new Array();
-			result.baseUrls[0] = bMapTypesData[n].map_typetilesurl;
-			result.typename = bMapTypesData[n].map_typename;
+			result.baseUrls[0] = bMapTypesData[n].maptiles_url;
+			result.typename = bMapTypesData[n].name;
 			result.getLinkText = function() { return this.typename; };
 			map.mapTypes[map.mapTypes.length] = result;
 			bMapTypes[typename] = result;
@@ -1007,41 +1006,51 @@ function editPolylineSet(n){
 			var n = editObjectN;
 
 			//clear maptype in this location from the Map array of Types
-			bMapTypes[bMapTypesData[n].map_typename] = null;
+			bMapTypes[bMapTypesData[n].name] = null;
 			//@todo there are several more values to add, update when updated maptype stuff globally
 			// assign map type values data array
 			
 			var id = xml.documentElement.getElementsByTagName('maptype_id');			
-  		bMapTypesData[n].map_typeid = id[0].firstChild.nodeValue;
-
+  		bMapTypesData[n].maptype_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
-  		bMapTypesData[n].map_typename = nm[0].firstChild.nodeValue;
-
-			var bt = xml.documentElement.getElementsByTagName('basetype');			
-  		bMapTypesData[n].map_typebase = bt[0].firstChild.nodeValue;
-
+  		bMapTypesData[n].name = nm[0].firstChild.nodeValue;
+			var ds = xml.documentElement.getElementsByTagName('description');			
+  		bMapTypesData[n].description = ds[0].firstChild.nodeValue;
+			var cr = xml.documentElement.getElementsByTagName('copyright');			
+  		bMapTypesData[n].copyright = cr[0].firstChild.nodeValue;
+			var bt = xml.documentElement.getElementsByTagName('basetype');
+  		bMapTypesData[n].basetype = parseInt( bt[0].firstChild.nodeValue );
+			var at = xml.documentElement.getElementsByTagName('alttype');
+  		bMapTypesData[n].alttype = parseInt( at[0].firstChild.nodeValue );
+			var bd = xml.documentElement.getElementsByTagName('bounds');			
+  		bMapTypesData[n].bounds = bd[0].firstChild.nodeValue;
+			var mz = xml.documentElement.getElementsByTagName('maxzoom');
+  		bMapTypesData[n].maxzoom = parseInt( mz[0].firstChild.nodeValue );
 			var mt = xml.documentElement.getElementsByTagName('maptiles_url');			
-  		bMapTypesData[n].map_typetilesurl = mt[0].firstChild.nodeValue;
-
+  		bMapTypesData[n].maptiles_url = mt[0].firstChild.nodeValue;
+			var lrmt = xml.documentElement.getElementsByTagName('lowresmaptiles_url');			
+  		bMapTypesData[n].lowresmaptiles_url = lrmt[0].firstChild.nodeValue;
 			var ht = xml.documentElement.getElementsByTagName('hybridtiles_url');			
-  		bMapTypesData[n].map_typehybridtilesurl = ht[0].firstChild.nodeValue;
-			
+  		bMapTypesData[n].hybridtiles_url = ht[0].firstChild.nodeValue;
+			var lrht = xml.documentElement.getElementsByTagName('lowreshybridtiles_url');			
+  		bMapTypesData[n].lowreshybridtiles_url = lrht[0].firstChild.nodeValue;
+						
 			var p = bMapTypesData[n].maptype_node;
 
 			// attach the new map type to the map
-			var baseid = bMapTypesData[n].map_typebase;
-			var typeid = bMapTypesData[n].map_typeid;
-			var typename = bMapTypesData[n].map_typename;
+			var baseid = bMapTypesData[n].basetype;
+			var typeid = bMapTypesData[n].maptype_id;
+			var typename = bMapTypesData[n].name;
 			var result = copy_obj( map.mapTypes[baseid] );
 			result.baseUrls = new Array();
-			result.baseUrls[0] = bMapTypesData[n].map_typetilesurl;
-			result.typename = bMapTypesData[n].map_typename;
+			result.baseUrls[0] = bMapTypesData[n].maptiles_url;
+			result.typename = bMapTypesData[n].name;
 			result.getLinkText = function() { return this.typename; };
 			map.mapTypes[p] = result;
 			bMapTypes[typename] = result;
 			
 			// set the map type to active
-			map.setMapType( bMapTypes[bMapTypesData[n].map_typename] );
+			map.setMapType( bMapTypes[bMapTypesData[n].name] );
 	 }
 
 	 
@@ -1053,7 +1062,7 @@ function editPolylineSet(n){
 			var p = bMapTypesData[n].maptype_node;
 			
 			// remove the maptype ref form the map array of types
-			bMapTypes[bMapTypesData[n].map_typename] = null;
+			bMapTypes[bMapTypesData[n].name] = null;
 			
 			// remove the controls
   		map.removeControl(typecontrols);
@@ -1070,13 +1079,13 @@ function editPolylineSet(n){
 			
 	 		// remove by id the maptype form
     		for (var j=0; j<bMapTypesData.length; j++){
-      			if ( ( bMapTypesData[j] != null ) && ( bMapTypesData[j].map_typeid == editSetId ) ){
-          		var getElem = "editmaptypetable_" + bMapTypesData[j].map_typeid;
+      			if ( ( bMapTypesData[j] != null ) && ( bMapTypesData[j].maptype_id == editSetId ) ){
+          		var getElem = "editmaptypetable_" + bMapTypesData[j].maptype_id;
           		if ( $(getElem) ) {
               	var extraMapTypeForm = $(getElem);
           			$('editmaptypeform').removeChild(extraMapTypeForm);
           		}							
-							bMapTypesData[n].map_typeid = null;
+							bMapTypesData[n].maptype_id = null;
       				bMapTypesData[n] = null;
 							
       			}
