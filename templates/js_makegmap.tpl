@@ -10,14 +10,14 @@ var smallcontrols;
 var largecontrols;
 var zoomcontrols;
 
-var bMapID {if $gContent->mInfo.gmap_id} = {$gContent->mInfo.gmap_id}{/if};
+var bMapID{if $gContent->mInfo.gmap_id} = {$gContent->mInfo.gmap_id}{/if};
 var bMapTitle = "{$gContent->mInfo.title}";
 var bMapDesc = "{$gContent->mInfo.description}";
-var bMapWidth = {$gContent->mInfo.width};
-var bMapHeight = {$gContent->mInfo.height};
+var bMapWidth{if $gContent->mInfo.width} = {$gContent->mInfo.width}{/if};
+var bMapHeight{if $gContent->mInfo.height} = {$gContent->mInfo.height}{/if};
 var bMapLat = {$gContent->mInfo.lat};
 var bMapLon = {$gContent->mInfo.lon};
-var bMapZoom = {$gContent->mInfo.zoom_level};
+var bMapZoom{if $gContent->mInfo.zoom_level} = {$gContent->mInfo.zoom_level}{/if};
 var bMapScale = "{$gContent->mInfo.show_scale}"; //TRUE or FALSE
 var bMapControl = "{$gContent->mInfo.show_controls}"; //s,l,z,n
 var bMapTypeCont = "{$gContent->mInfo.show_typecontrols}";//TRUE or FALSE
@@ -55,7 +55,6 @@ var bMapTypesData = new Array();
 	function addMapTypes(pParamHash){ldelim}
 		for (n=0; n < pParamHash.length; n++) {ldelim}
 			var baseid = pParamHash[n].basetype;
-//			var typeid = pParamHash[n].maptype_id;
 			var typename = pParamHash[n].name;
 			var result = copy_obj(map.mapTypes[baseid]);
 			result.baseUrls = new Array();
@@ -117,7 +116,7 @@ function loadMap() {ldelim}
 	{/if}
 
     map.centerAndZoom(new GPoint(bMapLon, bMapLat), bMapZoom);
-
+		
 	//@todo this needs to be more complex and account for all the variety of types and styles
 	{if count($gContent->mMapInitMarkers) > 0}
 		for(n=0; n<bIMData.length; n++){ldelim}

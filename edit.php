@@ -45,6 +45,7 @@ if (!empty($_REQUEST["save_map"])) {
     if( $gContent->store( $_REQUEST ) ) {
 				//if store is successful we return XML
 				$mRet = "<map>"
+					."<gmap_id>".$gContent->mInfo['gmap_id']."</gmap_id>"
 					."<title>".$gContent->getTitle()."</title>"
 					."<desc>".$gContent->mInfo['description']."</desc>"
 					."<w>".$gContent->mInfo['width']."</w>"

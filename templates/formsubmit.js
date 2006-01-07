@@ -42,6 +42,8 @@ function canceledit(i){
 
 // builds the map editing form
 function editMap(){
+
+				  $('mapform').reset();
 				 	show('editmapform');
 
     			$('gmap_id').value = bMapID;
@@ -657,7 +659,7 @@ function editPolylineSet(n){
 	 function storeMap(u, f){
 	 		var data;
       data = Form.serialize(f);
-			data += '&save_map=true';
+			data += "&save_map=true";
 			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMap } );
 	 }
 
@@ -844,10 +846,14 @@ function editPolylineSet(n){
  *******************/	 
 	 
 	 function updateMap(rslt){
+	 
       var xml = rslt.responseXML;
-
+			
 	 		//shorten var names
-			var t = xml.documentElement.getElementsByTagName('title');
+			var id = xml.documentElement.getElementsByTagName('gmap_id');
+			bMapID = id[0].firstChild.nodeValue;
+			
+ 			var t = xml.documentElement.getElementsByTagName('title');
 			bMapTitle = t[0].firstChild.nodeValue;
 			
 			var d = xml.documentElement.getElementsByTagName('desc');
@@ -930,7 +936,9 @@ function editPolylineSet(n){
   		map.addControl(zoomcontrols);
   		}
 			
-			map.centerAndZoom(new GPoint(bMapLon, bMapLat), bMapZoom);		
+			map.centerAndZoom(new GPoint(bMapLon, bMapLat), bMapZoom);
+			
+			editMap();
 	 }
 
 
