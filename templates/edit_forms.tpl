@@ -351,7 +351,7 @@
     			<form action="javascript:;" name="polylineform_new" id="polylineform_new">
     			<div class="data">
           	<div style="float:left; padding:0 .4em; width:10px"><input name="new_polyline" type="hidden" value="true"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
+          	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="new"></div>
           	<div style="float:left; padding:0 .4em; width:140px"><select name="type" >
                                                                   <option value="0" >Google (Standard)</option>
                                                                   <option value="1" >XPolyline</option>
@@ -363,10 +363,11 @@
                                                                   <option value="n" >someset</option>
                                           							   			</select></div>
           	<div style="float:left; padding:0 .4em; width:70px"><a name="new_polyline_btn" title="save" href="javascript:storeNewPolyline('edit_polyline.php', document.polylineform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+          	<a style="float:left; padding:0 .4em;" name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', 'new');">Use Drawing Assistant</a>
     			</div>
     			</form>
   		  </div>
-		<div id="newpolylinecancel" style="clear:both;"><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:canceledit('newpolylineform');"></div>
+		<div id="newpolylinecancel" style="clear:both;"><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:canceledit('newpolylineform'); removeAssistant();"></div>
 </div> <!-- end of newpolylineform -->
 
 <div id="editpolylineform" class="editform" style="display:none;">
@@ -412,7 +413,7 @@
           	<a style="float:left; padding:0 .4em;" name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
           	<a style="float:left; padding:0 .4em;" name="remove_polyline_btn" title="remove from this set" href="javascript:removePolyline('edit_polyline.php', document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
           	<a style="float:left; padding:0 .4em;" name="expunge_polyline_btn" title="delete the polyline!" href="javascript:expungePolyline('edit_polyline.php', document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
-          	<a style="float:left; padding:0 .4em;" name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', n);">Launch Drawing Assistant</a>
+          	<a style="float:left; padding:0 .4em;" name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', n);">Use Drawing Assistant</a>
     			</div>
     			</form>
   		  </div>

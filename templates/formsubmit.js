@@ -630,11 +630,11 @@ function editPolylineSet(n){
 }
 
 function cancelPolylineEdit(){
-		removeAssistant();
 		canceledit('editpolylinemenu'); 
 		canceledit('newpolylineform'); 
 		canceledit('editpolylineform'); 
 		canceledit('editpolylinecancel');
+		removeAssistant();
 }; 
 
 
@@ -1447,6 +1447,7 @@ function cancelPolylineEdit(){
 			map.removeOverlay(bILData[n].polyline);
 			bILData[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
 			map.addOverlay(bILData[n].polyline);
+			removeAssistant();
 	}
 
 
@@ -1519,6 +1520,7 @@ function cancelPolylineEdit(){
 			// update the sets menus
 			editPolylines();
 			editPolylineSet(editSetId);
+			removeAssistant();
 	}	
 	
 
@@ -1616,10 +1618,12 @@ function cancelPolylineEdit(){
  var bModForm;
  var bModElm; 
 	
- function addAssistant(a, b){  
+ function addAssistant(a, b){
+ 	removeAssistant();
  	if (a == 'polyline'){
 		bModForm = $('polylineform_'+b);
  		bModElm = bModForm.points_data; 
+		alert ('Polyline drawing assistant activated for '+ bModForm.name.value + ' polyline. \n Click to Draw!');
 		
 		bLastpoint = null;
 	  bTempPoints = [];
@@ -1649,6 +1653,9 @@ function cancelPolylineEdit(){
  }
 
  function removeAssistant(){
-    map.removeOverlay(bTP);
- 		GEvent.removeListener(bAssistant);
+   if (bAssistant != null){
+      map.removeOverlay(bTP);
+   		GEvent.removeListener(bAssistant);
+  		bAssistant = null;
+	 }
  } 
