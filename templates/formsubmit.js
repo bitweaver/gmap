@@ -405,6 +405,9 @@ function editMarkers(){
 						if (linkPKids[p].name == "expunge_marker_btn"){
 							 linkPKids[p].href = "javascript:expungeMarker('edit_marker.php', document.markerform_"+g+");" ;
 						}
+						if (linkPKids[p].name == "marker_assist_btn"){
+							 linkPKids[p].href = "javascript:addAssistant('marker', "+g+");" ;
+						}
 				}
 			}
 		}		
@@ -636,9 +639,6 @@ function cancelPolylineEdit(){
 		canceledit('editpolylinecancel');
 		removeAssistant();
 }; 
-
-
-
 
 
 
@@ -1616,13 +1616,15 @@ function cancelPolylineEdit(){
  var bTempPoints = new Array();	//create point array
  var bTP; //temporary polyline
  var bModForm;
- var bModElm; 
+ var bModPData; 
+ var bModMLat;
+ var bModMLon;
 	
  function addAssistant(a, b){
  	removeAssistant();
  	if (a == 'polyline'){
 		bModForm = $('polylineform_'+b);
- 		bModElm = bModForm.points_data; 
+ 		bModPData = bModForm.points_data; 
 		alert ('Polyline drawing assistant activated for '+ bModForm.name.value + ' polyline. \n Click to Draw!');
 		
 		bLastpoint = null;
@@ -1647,11 +1649,32 @@ function cancelPolylineEdit(){
 											}
                 		}
 										
-                		bModElm.value = msg;
+                		bModPData.value = msg;
               	});
 	}
- }
+	
+	if (a == 'marker'){
+		bModForm = $('markerform_'+b);
+ 		bModMLat = bModForm.marker_lat; 
+ 		bModMLon = bModForm.marker_lon; 
+		alert ('Marker ploting assistant activated for '+ bModForm.title.value + ' marker. \n Click to Position!');
+	
+  	bAssistant = GEvent.addListener(map, "click", function(overlay, point){
+                    if (point) {
+											if (bTP != null) {
+                    	  map.removeOverlay(bTP);
+											}
+											bTP = new GMarker(point);
+                      map.addOverlay(bTP);
+                      map.recenterOrPanToLatLng(point);
+											bModMLat.value = point.y;
+											bModMLon.value = point.x;											
+                    }
+      					});
+  }
+ }	
 
+	
  function removeAssistant(){
    if (bAssistant != null){
       map.removeOverlay(bTP);
