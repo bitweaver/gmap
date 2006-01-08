@@ -46,7 +46,7 @@ class BitGmapMarker extends LibertyAttachable {
 		$this->mContentTypeGuid = BITGMAPMARKER_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGMAPMARKER_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGMAPMARKER_CONTENT_TYPE_GUID,
-			'content_description' => 'Markers for the Gmap Package',
+			'content_description' => 'Marker for Google Maps',
 			'handler_class' => 'BitGmapMarker',
 			'handler_package' => 'gmap',
 			'handler_file' => 'BitGmapMarker.php',

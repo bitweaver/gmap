@@ -614,6 +614,9 @@ function editPolylines(){
 						if (linkPKids[p].name == "expunge_polyline_btn"){
 							 linkPKids[p].href = "javascript:expungePolyline('edit_polyline.php', document.polylineform_"+g+");" ;
 						}
+						if (linkPKids[p].name == "polyline_assist_btn"){
+							 linkPKids[p].href = "javascript:addAssistant('polyline', " + g + ");" ;
+						}
 				}
 			}
 		}		
@@ -623,11 +626,16 @@ function editPolylines(){
 
 
 function editPolylineSet(n){
-				show('polylinesetform_'+n);
+		show('polylinesetform_'+n);
 }
 
-
-
+function cancelPolylineEdit(){
+		removeAssistant();
+		canceledit('editpolylinemenu'); 
+		canceledit('newpolylineform'); 
+		canceledit('editpolylineform'); 
+		canceledit('editpolylinecancel');
+}; 
 
 
 
@@ -1590,4 +1598,57 @@ function editPolylineSet(n){
     		}
 	}
 
+
+
+
 	
+	
+	
+/******************
+ *
+ *  Editing Tools
+ *
+ ******************/
+ var bLastpoint;
+ var bAssistant;
+ var bTempPoints = new Array();	//create point array
+ var bTP; //temporary polyline
+ var bModForm;
+ var bModElm; 
+	
+ function addAssistant(a, b){  
+ 	if (a == 'polyline'){
+		bModForm = $('polylineform_'+b);
+ 		bModElm = bModForm.points_data; 
+		
+		bLastpoint = null;
+	  bTempPoints = [];
+  	bTP = new GPolyline(bTempPoints);
+  	map.addOverlay(bTP);		//create polyline object from points and add to map
+  
+  	bAssistant = GEvent.addListener(map, "click", function(overlay,point) {
+                		if(bLastpoint && bLastpoint.x==point.x && bLastpoint.y==point.y) return;
+                		bLastpoint = point;
+                		
+                		bTempPoints.push(point);
+                		map.removeOverlay(bTP);
+                		bTP = new GPolyline(bTempPoints);
+                		map.addOverlay(bTP);
+
+                		for(var i=0; i<bTempPoints.length; i++){
+											if (i == 0){
+												msg = bTempPoints[i].x + ', ' + bTempPoints[i].y;
+												}else{
+                				msg += ', ' + bTempPoints[i].x + ', ' + bTempPoints[i].y;
+											}
+                		}
+										
+                		bModElm.value = msg;
+              	});
+	}
+ }
+
+ function removeAssistant(){
+    map.removeOverlay(bTP);
+ 		GEvent.removeListener(bAssistant);
+ } 

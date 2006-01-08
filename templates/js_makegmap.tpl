@@ -3,6 +3,7 @@
 // Copy Object Function
 function copy_obj(o) {ldelim}var c = new Object(); for (var e in o) {ldelim} c[e] = o[e]; {rdelim} return c;{rdelim}
 
+
 var map;
 var typecontrols;
 var scale;
@@ -23,7 +24,6 @@ var bMapControl = "{$gContent->mInfo.show_controls}"; //s,l,z,n
 var bMapTypeCont = "{$gContent->mInfo.show_typecontrols}";//TRUE or FALSE
 var bMapType = "{$gContent->mInfo.map_type}";
 var bMapTypes = new Array();
-
 var bMapTypesData = new Array();
 
 {if count($gContent->mMapTypes) > 0}
@@ -49,25 +49,25 @@ var bMapTypesData = new Array();
 			bMapTypesData[{$smarty.section.maptypes.index}].lowreshybridtiles_url = "{$gContent->mMapTypes[maptypes].lowreshybridtiles_url}";
 		{/if}
 	{/section}
-
-	//@todo insert variables for zoomed out tiles path, and hybrid type tiles path
-	// Adds all MapTypes, it is called from loadMap()
-	function addMapTypes(pParamHash){ldelim}
-		for (n=0; n < pParamHash.length; n++) {ldelim}
-			var baseid = pParamHash[n].basetype;
-			var typename = pParamHash[n].name;
-			var result = copy_obj(map.mapTypes[baseid]);
-			result.baseUrls = new Array();
-			result.baseUrls[0] = pParamHash[n].maptiles_url;
-			result.typename = typename;
-			result.getLinkText = function() {ldelim} return this.typename; {rdelim};
-			bMapTypesData[n].maptype_node = map.mapTypes.length;  //@todo this needs to change to make a universal function - its too specific to the hash
-			map.mapTypes[map.mapTypes.length] = result;
-			bMapTypes[typename] = result;
-		{rdelim}
-	{rdelim};
 {/if}
 
+
+//@todo insert variables for zoomed out tiles path, and hybrid type tiles path
+// Adds all MapTypes, it is called from loadMap()
+function addMapTypes(pParamHash){ldelim}
+	for (n=0; n < pParamHash.length; n++) {ldelim}
+		var baseid = pParamHash[n].basetype;
+		var typename = pParamHash[n].name;
+		var result = copy_obj(map.mapTypes[baseid]);
+		result.baseUrls = new Array();
+		result.baseUrls[0] = pParamHash[n].maptiles_url;
+		result.typename = typename;
+		result.getLinkText = function() {ldelim} return this.typename; {rdelim};
+		bMapTypesData[n].maptype_node = map.mapTypes.length;  //@todo this needs to change to make a universal function - its too specific to the hash
+		map.mapTypes[map.mapTypes.length] = result;
+		bMapTypes[typename] = result;
+	{rdelim}
+{rdelim};
 
 
 function loadMap() {ldelim}
@@ -166,6 +166,13 @@ function loadMap() {ldelim}
 			{rdelim}
 		{rdelim}
 	{rdelim});
+
+	// Monitor the window resize event and let the map know when it occurs 
+  if (window.attachEvent) {ldelim} 
+      window.attachEvent("onresize", function() {ldelim} this.map.onResize() {rdelim} ); 
+  {rdelim} else {ldelim} 
+		  window.addEventListener("resize", function() {ldelim} this.map.onResize() {rdelim} , false); 
+  {rdelim}
 	
 {rdelim};
 
