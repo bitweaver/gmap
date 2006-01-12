@@ -665,163 +665,127 @@ function cancelPolylineEdit(){
    var http_request = false;
 	 
 	 function storeMap(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			data += "&save_map=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMap } );
+			doSimpleXMLHttpRequest(u, f).addCallback(updateMap); 
 	 }
 
 	 function storeNewMapType(u, f){
-	 		var data = Form.serialize(f);
-			data += "&gmap_id=" + bMapID;
-			data.replace(/\:/g, '%3A');
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addMapType } );
+	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID;
+			doSimpleXMLHttpRequest(str).addCallback( addMapType ); 
 	 }
 
-	 function storeMapType(u, f){
-			editObjectN = Form.getInputs(f, 'hidden', 'array_n')[0].value;
-	 		var data = Form.serialize(f);
-			data += "&gmap_id=" + bMapID;
-			data.replace(/\:/g, '%3A');
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMapType } );
+	 function storeMapType(u, f){	 
+			editObjectN = f.array_n.value;
+	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID;
+			doSimpleXMLHttpRequest(str).addCallback( updateMapType ); 
 	 }
 	 
 	 function removeMapType(u, f){
-			editObjectN = Form.getInputs(f, 'hidden', 'array_n')[0].value;
-			editSetId = Form.getInputs(f, 'hidden', 'maptype_id')[0].value;
-	 		var data = "maptype_id=" + editSetId + "&gmap_id=" + bMapID + "&remove_maptype=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMapType } );
+			editObjectN = f.array_n.value;
+			editSetId = f.maptype_id.value;
+	 		var str = u + "?" + "maptype_id=" + editSetId + "&gmap_id=" + bMapID + "&remove_maptype=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMapType ); 
 	 }
 	 
 	 function expungeMapType(u, f){
-			editObjectN = Form.getInputs(f, 'hidden', 'array_n')[0].value;
-			editSetId = Form.getInputs(f, 'hidden', 'maptype_id')[0].value;
-	 		var data = "maptype_id=" + editSetId + "&expunge_maptype=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMapType } );
+			editObjectN = f.array_n.value;
+			editSetId = f.maptype_id.value;
+	 		var str = u + "?" + "maptype_id=" + editSetId + "&expunge_maptype=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMapType ); 
 	 }
 	 
 	 function storeNewMarker(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			data += '&save_marker=true';
-			var elm = Form.getElements(f);
-			editSetId = elm[elm.length-1].value;
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addMarker } );
+			editSetId = f.set_id.value;
+	 		var str = u + "?" + queryString(f) + "&save_marker=true";
+			doSimpleXMLHttpRequest(str).addCallback( addMarker ); 
 	 }
 	 
 	 function storeMarker(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			data += '&save_marker=true';
-			editArray = Form.getInputs(f, 'hidden', 'marker_array')[0].value;
-			editObjectN = Form.getInputs(f, 'hidden', 'marker_array_n')[0].value;
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateMarker } );
+			editArray = f.marker_array.value;
+			editObjectN = f.marker_array_n.value;
+	 		var str = u + "?" + queryString(f) + "&save_marker=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateMarker ); 
 	 }
 	 
 	 function removeMarker(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
-			editMarkerId = Form.getInputs(f, 'hidden', 'marker_id')[0].value;
-			data = "marker_id=" + editMarkerId + "&set_id=" + editSetId + "&remove_marker=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
+			editSetId = f.set_id.value;
+			editMarkerId = f.marker_id.value;
+	 		var str = u + "?" + queryString(f) + "&remove_marker=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarker ); 
 	 }
 
 	 function expungeMarker(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
-			editMarkerId = Form.getInputs(f, 'hidden', 'marker_id')[0].value;
-			data = "marker_id=" + editMarkerId + "&expunge_marker=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarker } );
+			editSetId = f.set_id.value;
+			editMarkerId = f.marker_id.value;
+	 		var str = u + "?" + queryString(f) + "&expunge_marker=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarker ); 
 	 }	 
 
 	 function storeNewMarkerSet(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			data += "&gmap_id=" + bMapID;
-			var elm = Form.getElements(f);
-			editSetType = elm[elm.length-1].value;
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addMarkerSet } );
+			editSetType = f.set_type.value;
+	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID;
+			doSimpleXMLHttpRequest(str).addCallback( addMarkerSet ); 
 	 }
 
 	 function removeMarkerSet(u, s, t){
-	 		var data;
 			var st;
       editArray = t;
 			editSetId = s;
 			if (t == 'I') {st = 'init_markers';}else{st = 'set_markers';};
-			data = "markerset_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_markerset=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemoveMarkerSet } );
+			var str = u + "?" + "markerset_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_markerset=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarkerSet ); 
 	 }
 	 
 	 function expungeMarkerSet(u, s){
-	 		var data;
 			editSetId = s;
-			data = "set_id=" + s + "&expunge_markerset=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateExpungeMarkerSet } );
+			var str = u + "?" + "set_id=" + s + "&expunge_markerset=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateExpungeMarkerSet ); 
 	 }
 
-	 function storeNewPolyline(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			data += '&save_polyline=true';
-			var elm = Form.getElements(f);
-			editSetId = elm[elm.length-1].value;
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addPolyline } );
+	 function storeNewPolyline(u, f){			
+			editSetId = f.set_id.value;
+	 		var str = u + "?" + queryString(f) + "&save_polyline=true";
+			doSimpleXMLHttpRequest(str).addCallback( addPolyline );
 	 }
 	 
 	 function storePolyline(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			data += '&save_polyline=true'; //@todo - I think this can come out, the value is in a hidden input field
-			editArray = Form.getInputs(f, 'hidden', 'polyline_array')[0].value;
-			editObjectN = Form.getInputs(f, 'hidden', 'polyline_array_n')[0].value;
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updatePolyline } );
+			editArray = f.polyline_array.value;
+			editObjectN = f.polyline_array_n.value;
+			doSimpleXMLHttpRequest(u, f).addCallback( updatePolyline );
 	 }
 	 
 	 function removePolyline(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
-			editPolylineId = Form.getInputs(f, 'hidden', 'polyline_id')[0].value;
-			data = "polyline_id=" + editPolylineId + "&set_id=" + editSetId + "&remove_polyline=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolyline } );
+			editSetId = f.set_id.value;
+			editPolylineId = f.polyline_id.value;
+	 		var str = u + "?" + queryString(f) + "&remove_polyline=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolyline );
 	 }
 
 	 function expungePolyline(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			editSetId = Form.getInputs(f, 'hidden', 'set_id')[0].value;
-			editPolylineId = Form.getInputs(f, 'hidden', 'polyline_id')[0].value;
-			data = "polyline_id=" + editPolylineId + "&expunge_polyline=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolyline } );
+			editSetId = f.set_id.value;
+			editPolylineId = f.polyline_id.value;
+	 		var str = u + "?" + queryString(f) + "&expunge_polyline=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolyline );
 	 }	 
 	 
 	 function storeNewPolylineSet(u, f){
-	 		var data;
-      data = Form.serialize(f);
-			data += "&gmap_id=" + bMapID;
-			var elm = Form.getElements(f);
-			editSetType = elm[elm.length-1].value;
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: addPolylineSet } );
+			editSetType = f.set_type.value;
+	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID;
+			doSimpleXMLHttpRequest(str).addCallback( addPolylineSet );
 	 }
 
 	 function removePolylineSet(u, s, t){
-	 		var data;
 			var st;
       editArray = t;
 			editSetId = s;
 			if (t == 'I') {st = 'init_polylines';}else{st = 'set_polylines';};
-			data = "set_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_polylineset=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateRemovePolylineSet } );
+	 		var str = u + "?" + "set_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_polylineset=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolylineSet );
 	 }
 	 
 	 function expungePolylineSet(u, s){
-	 		var data;
 			editSetId = s;
-			data = "set_id=" + s + "&expunge_polylineset=true";
-			var newAjax = new Ajax.Request( u, {method: 'get', parameters: data, onComplete: updateExpungePolylineSet } );
+	 		var str = u + "?" + "set_id=" + s + "&expunge_polylineset=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateExpungePolylineSet );
 	 }
 
 	 
@@ -1682,3 +1646,4 @@ function cancelPolylineEdit(){
   		bAssistant = null;
 	 }
  } 
+

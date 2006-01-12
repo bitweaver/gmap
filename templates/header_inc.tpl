@@ -4,6 +4,11 @@
 	  behavior:url(#default#VML);
   {rdelim}
 </style>
+<script src="MochiKit/Base.js" type="text/javascript"></script>
+<script src="MochiKit/Iter.js" type="text/javascript"></script>
+<script src="MochiKit/Async.js" type="text/javascript"></script>
+<script src="MochiKit/DOM.js" type="text/javascript"></script>
+ 
 <script src="http://maps.google.com/maps?file=api&v=1&key={$gBitSystem->getPreference('gmaps_api_key')}" type="text/javascript"></script>
 {include file="bitpackage:gmap/js_makemarkers.tpl"}
 {include file="bitpackage:gmap/js_makepolylines.tpl"}

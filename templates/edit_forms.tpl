@@ -16,7 +16,8 @@
 <div id="editmapform" style="display:none;">
     <h3>Map Tools</h3>
     <form action="javascript:;" name="mapform" id="mapform">
-		   <!-- Map Id --> <input name="gmap_id" id="gmap_id" type="hidden" size="25" value=""><br/>
+		   <input name="save_map" type="hidden" size="25" value="true">
+		   <!-- Map Id --> <input name="gmap_id" id="gmap_id" type="hidden" size="25" value="">
     	 Title <input name="title" id="map_title" type="text" size="25" value=""><br/>
     	 Description <input name="map_desc" id="map_desc" type="text" size="25" value=""><br/>
     	 Width <input name="map_w" id="map_w" type="text" size="25" value=""><br/>
@@ -45,7 +46,7 @@
           <option value="G_HYBRID_TYPE" >Hybrid</option>
    			</select><br/>
     <!-- Allow Comments <input name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
-    <input type="button" name="save_map" value="Submit" onclick="javascript:storeMap('edit.php', this.parentNode);"><br/>
+    <input type="button" name="save_map_btn" value="Submit" onclick="javascript:storeMap('edit.php', this.parentNode);"><br/>
    	<input type="button" name="closemapform" value="Cancel" onclick="javascript:canceledit('editmapform');">
     </form>
 </div>	
