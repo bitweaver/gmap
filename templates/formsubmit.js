@@ -218,7 +218,14 @@ function newMapType(){
  *******************/
 
 function newMarker(){
-  	if (bMSetData.length == 0){
+		var check = false;
+  	for (var i=0; i<bMSetData.length; i++){
+  		if ( bMSetData[i] != null ){
+				check = true;
+  		}
+  	}
+
+  	if (check == false){
   		//set warning message, show it, fade it
   		$('errortext').innerHTML = "To add a marker, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new marker!";
 			show('editerror');
@@ -441,7 +448,14 @@ function editSet(n){
  *******************/
 
 function newPolyline(){
-  	if (bLSetData.length == 0){
+		var check = false;
+  	for (var i=0; i<bLSetData.length; i++){
+  		if ( bLSetData[i] != null ){
+				check = true;
+  		}
+  	}
+
+  	if (check == false){
   		//set warning message, show it, fade it
   		$('errortext').innerHTML = "To add a polyline, there first must be a polyline set associated with this map. Please create a new polyline set, then you can add your new polyline!";
 			show('editerror');
