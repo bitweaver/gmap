@@ -218,26 +218,36 @@ function newMapType(){
  *******************/
 
 function newMarker(){
-    // Display the New Marker Div and Cancel Button
-   	show('newmarkerform');
+  	if (bMSetData.length == 0){
+  		//set warning message, show it, fade it
+  		$('errortext').innerHTML = "To add a marker, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new marker!";
+			show('editerror');
+  		Fat.fade_all();
+  		//display new marker set form
+      newMarkerSet();
 
-		// Reset the Form
-		$('markerform_new').reset();
-		
-		// shortcut to the Select Option we are adding to
-		var selectRoot = $('set_id');
+		}else{
+      // Display the New Marker Div and Cancel Button
+     	show('newmarkerform');
 
-		// we assume we have called this before and reset the options menu
-		selectRoot.options.length = 0;
-
-		// add option for each set available
-		if ( typeof(bMSetData) != 'undefined' ){
-  			for ( i=0; i<bMSetData.length; i++ ){
-						if ( bMSetData[i] != null ){
-               	selectRoot.options[selectRoot.options.length] = new Option( bMSetData[i].name, bMSetData[i].set_id );
-						}
-  			}
-		}
+  		// Reset the Form
+  		$('markerform_new').reset();
+  		
+  		// shortcut to the Select Option we are adding to
+  		var selectRoot = $('set_id');
+  
+  		// we assume we have called this before and reset the options menu
+  		selectRoot.options.length = 0;
+  
+  		// add option for each set available
+  		if ( typeof(bMSetData) != 'undefined' ){
+    			for ( i=0; i<bMSetData.length; i++ ){
+  						if ( bMSetData[i] != null ){
+                 	selectRoot.options[selectRoot.options.length] = new Option( bMSetData[i].name, bMSetData[i].set_id );
+  						}
+    			}
+  		}
+		};
 };
 
 
@@ -431,24 +441,34 @@ function editSet(n){
  *******************/
 
 function newPolyline(){
-    // Display the New Form Div and Cancel Button
-   	show('newpolylineform');
-		// Reset the Form
-		$('polylineform_new').reset();
-		
-		// shortcut to the Select Option we are adding to
-		var selectRoot = $('polylineset_id');
-		
-		selectRoot.options.length = 0;
+  	if (bLSetData.length == 0){
+  		//set warning message, show it, fade it
+  		$('errortext').innerHTML = "To add a polyline, there first must be a polyline set associated with this map. Please create a new polyline set, then you can add your new polyline!";
+			show('editerror');
+  		Fat.fade_all();
+  		//display new polyline set form
+      newPolylineSet();
 
-		// add option for each set available
-		if ( typeof(bLSetData) != 'undefined' ){
-  			for ( i=0; i<bLSetData.length; i++ ){
-						if ( bLSetData[i] != null ){
-               	selectRoot.options[selectRoot.options.length] = new Option( bLSetData[i].name, bLSetData[i].set_id );
-						}
-  			}
-		}		
+		}else{
+      // Display the New Form Div and Cancel Button
+     	show('newpolylineform');
+  		// Reset the Form
+  		$('polylineform_new').reset();
+  		
+  		// shortcut to the Select Option we are adding to
+  		var selectRoot = $('polylineset_id');
+  		
+  		selectRoot.options.length = 0;
+  
+  		// add option for each set available
+  		if ( typeof(bLSetData) != 'undefined' ){
+    			for ( i=0; i<bLSetData.length; i++ ){
+  						if ( bLSetData[i] != null ){
+                 	selectRoot.options[selectRoot.options.length] = new Option( bLSetData[i].name, bLSetData[i].set_id );
+  						}
+    			}
+  		}
+		}
 };
 
 
@@ -721,6 +741,7 @@ function cancelPolylineEdit(){
 	 }	 
 
 	 function storeNewMarkerSet(u, f){
+			canceledit('editerror');
 			editSetType = f.set_type.value;
 	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID;
 			doSimpleXMLHttpRequest(str).addCallback( addMarkerSet ); 
@@ -768,6 +789,7 @@ function cancelPolylineEdit(){
 	 }	 
 	 
 	 function storeNewPolylineSet(u, f){
+			canceledit('editerror');
 			editSetType = f.set_type.value;
 	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID;
 			doSimpleXMLHttpRequest(str).addCallback( addPolylineSet );
