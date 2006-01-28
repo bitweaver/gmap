@@ -125,7 +125,7 @@
   		  </div>
 </div> <!-- end of editmaptypeform -->
 
-<div id="editmaptypecancel" style="display:none; clear:both;"><input type="button" name="closemaptypeform" value="Cancel Editing Map Types" onclick="javascript:canceledit('editmaptypemenu'); canceledit('editmaptypeform'); canceledit('editmaptypecancel');"></div>
+<div id="editmaptypecancel" style="display:none; clear:both;"><input type="button" name="closemaptypeform" value="Cancel Editing Map Types" onclick="javascript:canceledit('editmaptypemenu'); canceledit('editmaptypeform'); canceledit('editmaptypecancel'); canceledit('newmaptypeform')"></div>
 <!--end maptype editing forms -->
 
 
@@ -146,7 +146,7 @@
 
 
 <div id="newmarkersetform" class="editform" style="display:none;">
-		<h2>Add a New Set of Markers</h2>		
+		<h2>Add a New Marker Set</h2>		
         <div class="tableheader">
     				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Description </div>
@@ -175,7 +175,7 @@
     			</div>
     			</form>
   		  </div>
-		<div id="newmarkersetcancel" style="clear:both;"><input type="button" name="closemarkersetform" value="Cancel New Marker Set" onclick="javascript:canceledit('newmarkersetform');"></div>
+		<div id="newmarkersetcancel" style="clear:both;"><input type="button" name="closemarkersetform" value="Cancel New Marker Set" onclick="javascript:canceledit('newmarkersetform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newmarkersetform -->
 
@@ -210,7 +210,7 @@
     			</div>
     			</form>
   		  </div>
-		<div id="newmarkercancel" style="clear:both;"><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:canceledit('newmarkerform'); removeAssistant();"></div>
+		<div id="newmarkercancel" style="clear:both;"><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:canceledit('newmarkerform'); removeAssistant(); canceledit('editerror');"></div>
 </div> <!-- end of newmarkerform -->
 
 
@@ -289,7 +289,7 @@
 		</div> <!-- end of markerset_n -->
 </div> <!-- end of editmarkerform -->
 
-<div id="editmarkercancel" style="display:none; clear:both;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:canceledit('editmarkermenu'); canceledit('newmarkerform'); canceledit('editmarkerform'); canceledit('editmarkercancel');  removeAssistant();"></div>
+<div id="editmarkercancel" style="display:none; clear:both;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:canceledit('editmarkermenu'); canceledit('newmarkerform'); canceledit('editmarkerform'); canceledit('newmarkersetform'); canceledit('editmarkercancel');  removeAssistant();  canceledit('editerror');"></div>
 <!--end marker editing forms -->
 
 
@@ -309,7 +309,7 @@
 </div>
 
 <div id="newpolylinesetform" class="editform" style="display:none;">
-		<h2>Add a New Set of Polylines</h2>		
+		<h2>Add a New Polyline Set</h2>		
         <div class="tableheader">
     				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Description </div>
@@ -334,7 +334,7 @@
     			</div>
     			</form>
   		  </div>
-		<div id="newpolylinesetcancel" style="clear:both;"><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:canceledit('newpolylinesetform');"></div>
+		<div id="newpolylinesetcancel" style="clear:both;"><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:canceledit('newpolylinesetform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newpolylinesetform -->
 
@@ -370,7 +370,7 @@
     			</div>
     			</form>
   		  </div>
-		<div id="newpolylinecancel" style="clear:both;"><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:canceledit('newpolylineform'); removeAssistant();"></div>
+		<div id="newpolylinecancel" style="clear:both;"><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:canceledit('newpolylineform'); removeAssistant(); canceledit('editerror');"></div>
 </div> <!-- end of newpolylineform -->
 
 <div id="editpolylineform" class="editform" style="display:none;">
@@ -447,6 +447,6 @@
 		</div> <!-- end of polylineset_n -->
 </div> <!-- end of editpolylineform -->
 
-<div id="editpolylinecancel" style="display:none; clear:both;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:cancelPolylineEdit();"></div>
+<div id="editpolylinecancel" style="display:none; clear:both;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:cancelPolylineEdit(); canceledit('newpolylinesetform'); canceledit('editerror');"></div>
 <!--end polyline editing forms -->
 
