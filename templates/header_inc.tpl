@@ -15,9 +15,9 @@
 {include file="bitpackage:gmap/js_makegmap.tpl"}
 {include file="bitpackage:gmap/js_gmap_methods.tpl"}
 
-<script src="extensions/pdmarker.js" type="text/javascript"></script>
-<script src="extensions/gxmarker.1.js" type="text/javascript"></script>
-<script src="extensions/xmaps.1c.js" type="text/javascript"></script>
+<script src="libraries/pdmarker.js" type="text/javascript"></script>
+<script src="libraries/gxmarker.1.js" type="text/javascript"></script>
+<script src="libraries/xmaps.1c.js" type="text/javascript"></script>
 
 <script src="templates/formsubmit.js" type="text/javascript"></script>
 
