@@ -439,6 +439,114 @@ function editSet(n){
 }
 
 
+function newMarkerStyle(){
+		var check = false;
+  	for (var i=0; i<bMSetData.length; i++){
+  		if ( bMSetData[i] != null ){
+				check = true;
+  		}
+  	}
+
+  	if (check == false){
+  		//set warning message, show it, fade it
+  		$('errortext').innerHTML = "To add a marker style, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new marker style!";
+			show('editerror');
+  		Fat.fade_all();
+  		//display new marker set form
+      newMarkerSet();
+
+		}else{
+      // Display the New Marker Style Div
+   		show('newmarkerstyleform');
+
+  		// Reset the Form
+  		$('markerstyleform_new').reset();  		  
+		};
+}
+
+
+function editMarkerStyles(){
+		show('editmarkerstylesmenu');
+		show('editmarkerstyleform');
+		show('editmarkerstylescancel');
+
+	//if markerstyles data exists
+	if ( typeof( bMStyleData ) ) {
+
+  	// We assume editMarkerStyles has been called before and remove 
+  	// any previously existing sets from the UI
+  	for (var a=0; a<bMStyleData.length; a++) {
+  		if ( bMStyleData[a]!= null ){
+    		var getElem = "editmarkerstyletable_" + bMStyleData[a].style_id;
+    		if ( $(getElem) ) {
+        	var extraMarkerStyleForm = $(getElem);
+    			$('editmarkerstyleform').removeChild(extraMarkerStyleForm);
+    		}
+			}
+  	}
+
+  	var editMarkerStyleId;
+
+  	// for each markerstyle data set clone the form
+  	for (var b=0; b<bMStyleData.length; b++) {
+    	if ( bMStyleData[b]!= null ){  						
+
+    		editMarkerStyleId = bMStyleData [b].style_id;
+
+    		// clone the form container
+  			var newMarkerStyle = $('editmarkerstyletable_n').cloneNode(true);
+    		// give a new id to the new form container
+    		newMarkerStyle.id = "editmarkerstyletable_"+editMarkerStyleId;
+
+  			// update the new form ids
+    		newMarkerStyleForm = newMarkerStyle.childNodes;
+            for ( var n = 0; n < newMarkerStyleForm.length; n++ ) {
+        				if ( newMarkerStyleForm[n].id == "markerstyleform_n" ) {					
+              			 newMarkerStyleForm[n].id = "markerstyleform_" + editMarkerStyleId;
+              			 newMarkerStyleForm[n].name = "markerstyleform_" + editMarkerStyleId;					 
+      							 var nMSFKids = newMarkerStyleForm[n].childNodes;
+      							 for (var o=0; o<nMSFKids.length; o++){
+      							   if (nMSFKids[o].id == "markerstyleformdata_n"){
+      									 nMSFKids[o].id = "markerstyleformdata_" + editMarkerStyleId;
+      								 }
+      							 }
+      					}
+      		}
+
+        	// add form to style table
+    		$('editmarkerstyleform').appendChild(newMarkerStyle);
+    		show( 'editmarkerstyletable_'+editMarkerStyleId );
+    		show( 'markerstyleform_'+editMarkerStyleId );
+
+  			// populate set form values
+  			form = $('markerstyleform_' + editMarkerStyleId );
+
+            form.style_id.value = bMStyleData[b].style_id;
+            form.style_array_n.value = b;
+            form.name.value = bMStyleData[b].name;
+            for (var r=0; r < 3; r++) {
+               if (form.type.options[r].value == bMStyleData[b].type){
+               		form.type.options[r].selected=true;
+               }
+            };
+            form.label_hover_opacity.value = bMStyleData[b].label_hover_opacity;
+            form.label_opacity.value = bMStyleData[b].label_opacity;
+            form.label_hover_styles.value = bMStyleData[b].label_hover_styles;
+            form.window_styles.value = bMStyleData[b].window_styles;
+
+  			// just for a pretty button - js sucks it!
+  			var linkParent = $('markerstyleformdata_'+editMarkerStyleId);
+  			var linkPKids = linkParent.childNodes;
+  			for (var p=0; p<linkPKids.length; p++){
+  						if (linkPKids[p].name == "save_markerstyle_btn"){
+  							 linkPKids[p].href = "javascript:storeMarkerStyle('edit_markerstyle.php', document.markerstyleform_"+editMarkerStyleId+");" ;
+  						}
+				}
+
+  		}
+		}
+	}
+};
 
 
 /*******************
@@ -484,6 +592,7 @@ function newPolyline(){
   		}
 		}
 };
+
 
 
 function newPolylineSet(){
@@ -763,13 +872,24 @@ function cancelPolylineEdit(){
 
 	 function removeMarkerSet(u, s, t){
 			var st;
-      editArray = t;
+			editArray = t;
 			editSetId = s;
 			if (t == 'I') {st = 'init_markers';}else{st = 'set_markers';};
 			var str = u + "?" + "markerset_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_markerset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarkerSet ); 
 	 }
 	 
+	 function storeNewMarkerStyle(u, f){
+	 		var str = u + "?" + queryString(f);
+			doSimpleXMLHttpRequest(str).addCallback( addMarkerStyle ); 
+	 }
+
+	 function storeMarkerStyle(u, f){
+			editObjectN = f.style_array_n.value;
+	 		var str = u + "?" + queryString(f);
+			doSimpleXMLHttpRequest(str).addCallback( updateMarkerStyle ); 
+	 }
+
 	 function expungeMarkerSet(u, s){
 			editSetId = s;
 			var str = u + "?" + "set_id=" + s + "&expunge_markerset=true";
@@ -1179,65 +1299,72 @@ function cancelPolylineEdit(){
 
 	 function addMarker(rslt){
 	 		var s;
-      var xml = rslt.responseXML;
-						
-	 		var m; //the marker data we are changing
-			//@todo modify this to handle either bIMData or bSMData sets
-			var n = bIMData.length;
-			bIMData[n] = new Array();
-			
-	 		//shorten var names
-			var id = xml.documentElement.getElementsByTagName('id');			
-			bIMData[n].marker_id = id[0].firstChild.nodeValue;
-
-			var tl = xml.documentElement.getElementsByTagName('title');
-			bIMData[n].title = tl[0].firstChild.nodeValue;			
-			
-			var lt = xml.documentElement.getElementsByTagName('lat');
-			bIMData[n].lat = parseFloat(lt[0].firstChild.nodeValue);
-			
-			var ln = xml.documentElement.getElementsByTagName('lon');
-			bIMData[n].lon = parseFloat(ln[0].firstChild.nodeValue);
-
-			var dt = xml.documentElement.getElementsByTagName('data');
-			bIMData[n].data = dt[0].firstChild.nodeValue;			
-
-			var l = xml.documentElement.getElementsByTagName('label');
-			bIMData[n].label_data = l[0].firstChild.nodeValue;
-			
-			//@todo this is such a crappy way to get this number
 			for(a=0; a<bMSetData.length; a++){
 					if ( ( bMSetData[a] != null ) && ( bMSetData[a].set_id == editSetId ) ){
 						 s = a;
-						 break;						 						 
+						 editArray = bMSetData[a].set_type;
 					}
 			};
 
-			bIMData[n].set_id = parseInt(bMSetData[s].set_id);
-			bIMData[n].style_id = parseInt(bMSetData[s].style_id);
-			bIMData[n].icon_id = parseInt(bMSetData[s].icon_id);
+      var xml = rslt.responseXML;						
+	 		var m; //the marker data we are changing
+			var n;
+
+			/*  This is the new handler for the set types */
+			if (editArray == "init_markers"){
+  			n = bIMData.length;
+  			bIMData[n] = new Array();
+				m = bIMData[n];
+			}else{
+  			n = bSMData.length;
+  			bSMData[n] = new Array();
+				m = bSMData[n];
+			};
+			
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('id');			
+			m.marker_id = id[0].firstChild.nodeValue;
+
+			var tl = xml.documentElement.getElementsByTagName('title');
+			m.title = tl[0].firstChild.nodeValue;			
+			
+			var lt = xml.documentElement.getElementsByTagName('lat');
+			m.lat = parseFloat(lt[0].firstChild.nodeValue);
+			
+			var ln = xml.documentElement.getElementsByTagName('lon');
+			m.lon = parseFloat(ln[0].firstChild.nodeValue);
+
+			var dt = xml.documentElement.getElementsByTagName('data');
+			m.data = dt[0].firstChild.nodeValue;			
+
+			var l = xml.documentElement.getElementsByTagName('label');
+			m.label_data = l[0].firstChild.nodeValue;
+			
+			m.set_id = parseInt(bMSetData[s].set_id);
+			m.style_id = parseInt(bMSetData[s].style_id);
+			m.icon_id = parseInt(bMSetData[s].icon_id);
 			
 			var z = xml.documentElement.getElementsByTagName('z');
-			bIMData[n].zindex = parseInt(z[0].firstChild.nodeValue);
+			m.zindex = parseInt(z[0].firstChild.nodeValue);
 
-			bIMData[n].array = "I";
-			bIMData[n].array_n = parseFloat(n);
+			m.array = "I";
+			m.array_n = parseFloat(n);
 			
 			//create marker
 			//@todo this is redundant to the marker making loop toward the end of js_makegmap - consolidate in a function
-    	var point = new GPoint(parseFloat(bIMData[n].lon), parseFloat(bIMData[n].lat));
-    	bIMData[n].marker = new GMarker(point);
-    	bIMData[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+bIMData[n].title+"</strong><p>"+bIMData[n].data+"</p></div>";
-    	map.addOverlay(bIMData[n].marker);
+    	var point = new GPoint(parseFloat(m.lon), parseFloat(m.lat));
+    	m.marker = new GMarker(point);
+    	m.marker.my_html = "<div style='white-space: nowrap;'><strong>"+m.title+"</strong><p>"+m.data+"</p></div>";
+    	map.addOverlay(m.marker);
     	//add the marker label if it exists
-    	if (typeof(bIMData[n].label_data) != 'undefined'){
-    		var topElement = bIMData[n].marker.iconImage;
-    		if (bIMData[n].marker.transparentIcon) {topElement = bIMData[n].marker.transparentIcon;}
-    		if (bIMData[n].marker.imageMap) {topElement = bIMData[n].marker.imageMap;}
-    		topElement.setAttribute( "title" , bIMData[n].label_data );
+    	if (typeof(m.label_data) != 'undefined'){
+    		var topElement = m.marker.iconImage;
+    		if (m.marker.transparentIcon) {topElement = m.marker.transparentIcon;}
+    		if (m.marker.imageMap) {topElement = m.marker.imageMap;}
+    		topElement.setAttribute( "title" , m.label_data );
     	}
 			
-			bIMData[n].marker.openInfoWindowHtml(bIMData[n].marker.my_html);
+			m.marker.openInfoWindowHtml(m.marker.my_html);
 			
 			// clear the form
 			$('markerform_new').reset();
@@ -1358,6 +1485,107 @@ function cancelPolylineEdit(){
     		}
 	}
 	
+
+
+	 function addMarkerStyle(rslt){
+      var xml = rslt.responseXML;
+
+			// create a spot for a new markerstyle in the data array
+			var n = bMStyleData.length;
+			bMStyleData[n] = new Array();
+			var s = bMStyleData[n];
+
+			// assign markerstyle values data array			
+			var id = xml.documentElement.getElementsByTagName('style_id');			
+  		s.style_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');			
+  		s.name = nm[0].firstChild.nodeValue;
+			var tp = xml.documentElement.getElementsByTagName('type');			
+  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
+  		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
+			var lo = xml.documentElement.getElementsByTagName('label_opacity');			
+  		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
+			var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
+  		s.label_hover_styles = parseInt( lhs[0].firstChild.nodeValue );
+			var ws = xml.documentElement.getElementsByTagName('window_styles');			
+  		s.window_styles = parseInt( ws[0].firstChild.nodeValue );
+						
+			// clear the form
+			$('markerstyleform_new').reset();
+			// update the styles menus
+			editMarkerStyles();
+	 }
+
+
+
+	 function updateMarkerStyle(rslt){
+      var xml = rslt.responseXML;
+
+			//get the style we are updating
+			var s = bMStyleData[editObjectN];
+
+			// assign markerstyle values data array			
+			var id = xml.documentElement.getElementsByTagName('style_id');			
+  		s.style_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');			
+  		s.name = nm[0].firstChild.nodeValue;
+			var tp = xml.documentElement.getElementsByTagName('type');
+			var oldtp = s.type;
+  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
+  		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
+			var lo = xml.documentElement.getElementsByTagName('label_opacity');			
+  		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
+			var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
+  		s.label_hover_styles = lhs[0].firstChild.nodeValue;
+			var ws = xml.documentElement.getElementsByTagName('window_styles');			
+  		s.window_styles = ws[0].firstChild.nodeValue;
+
+			//@todo - this needs to be made to support more than just init_markers
+			//update all markers
+			//for each marker
+			var arrayId = "I";
+      	var a = bIMData;
+    	//if the length of the array is > 0
+    	if (a.length > 0){
+      	//loop through the array
+    		for(n=0; n<a.length; n++){
+      		//if the array item is not Null
+    			if (a[n]!= null){
+						if (a[n].style_id == s.style_id){
+							if (s.type != oldtp){
+  						//if style type is different
+	      					//unload the marker
+  							map.removeOverlay( a[n].marker );
+	      					//define new marker with new styles
+  							if (s.type == 0){
+  								defineGxMarker(arrayId, n, editObjectN);
+  							}else if (s.type == 1){
+  								definePdMarker(arrayId, n, editObjectN);
+  							}else if (s.type == 2){
+  								defineXMarker(arrayId, n, editObjectN);
+  							}
+							}
+						}
+					}
+				}
+			}
+
+
+			//add the replacement styles
+        var ttStyle = document.createElement('style');
+			var ttStyleProperties = document.createTextNode(".tip-" + s.name + " {" + s.label_hover_styles + "}");
+        ttStyle.setAttribute ("type", "text/css");
+        ttStyle.appendChild(ttStyleProperties);
+			document.body.appendChild(ttStyle);
+
+        var winStyle = document.createElement('style');
+			var winStyleProperties = document.createTextNode(".win-" + s.name + " {" + s.window_styles + "}");
+        winStyle.setAttribute ("type", "text/css");
+        winStyle.appendChild(winStyleProperties);
+			document.body.appendChild(winStyle);
+	 }
 
 	
 	

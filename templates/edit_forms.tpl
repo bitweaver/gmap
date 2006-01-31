@@ -140,7 +140,7 @@
 <div id="editmarkermenu" style="display:none;">
 		<a href="javascript:newMarker();">New Marker</a> | 
 		<a href="javascript:newMarkerSet();">New Marker Set</a> | 
-		<a href="javascript:alert('this feature is coming soon');">Edit Marker Styles</a> | 
+		<a href="javascript:editMarkerStyles();">Edit Marker Styles</a> | 
 		<a href="javascript:alert('this feature is coming soon');">Edit Marker Icons</a>
 </div>
 
@@ -180,6 +180,7 @@
 <!-- end of newmarkersetform -->
 
 
+
 <div id="newmarkerform" class="editform" style="display:none;">
 		<h2>Add a New Marker</h2>		
         <div class="tableheader">
@@ -212,6 +213,85 @@
   		  </div>
 		<div id="newmarkercancel" style="clear:both;"><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:canceledit('newmarkerform'); removeAssistant(); canceledit('editerror');"></div>
 </div> <!-- end of newmarkerform -->
+
+
+
+<div id="editmarkerstylesmenu" style="display:none;">
+		<a href="javascript:newMarkerStyle();">Add a New Marker Style</a>
+</div>
+
+
+<div id="newmarkerstyleform" class="editform" style="display:none;">
+		<h2>Add a New Marker Style</h2>		
+        <div class="tableheader">
+    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
+    				<div style="float:left; padding:0 .4em; width:90px"> Type </div>
+    				<div style="float:left; padding:0 .4em; width:70px"> Label Hover Opacity (%)</div>
+    				<div style="float:left; padding:0 .4em; width:70px"> Label Opacity (%)</div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Label Hover Styles (CSS)</div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Window Styles (CSS)</div>
+    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
+    		</div>
+    		<div class="table" id="editmarkerstyletable_new">
+    			<form action="javascript:;" name="markerstyleform_new" id="markerstyleform_new">
+    			<div class="data">
+                	<div style="float:left; padding:0 .4em; width:10px"><input name="save_markerstyle" type="hidden" value="true"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><select name="type">
+                                                                        <option value="0">GMarker</option>
+                                                                        <option value="1">PdMarker</option>
+                                                                        <option value="2">XMarker</option>
+                                                							   			</select></div>
+                	<div style="float:left; padding:0 .4em; width:70px"><input name="label_hover_opacity" type="text" size="5" value="70"></div>
+                	<div style="float:left; padding:0 .4em; width:70px"><input name="label_opacity" type="text" size="5" value="100"></div>
+                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="label_hover_styles" cols="15" rows="3"></textarea></div>
+                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="window_styles" cols="15" rows="3"></textarea></div>
+                	<div style="float:left; padding:0 .4em; width:70px"><a name="new_markerstyle_btn" title="save" href="javascript:storeNewMarkerStyle('edit_markerstyle.php', document.markerstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+    			</div>
+    			</form>
+  		  </div>
+		<div id="newmarkerstylecancel" style="clear:both;"><input type="button" name="closemarkerstyleform" value="Cancel New Marker Style" onclick="javascript:canceledit('newmarkerstyleform'); canceledit('editerror');"></div>
+</div>
+<!-- end of newmarkerstyleform -->
+
+
+<div id="editmarkerstyleform" class="editform" style="display:none;">
+		<h2>Marker Styles Associated with Marker Sets on This Map</h2>		
+        <div class="tableheader">
+    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
+    				<div style="float:left; padding:0 .4em; width:90px"> Type </div>
+    				<div style="float:left; padding:0 .4em; width:70px"> Label Hover Opacity (%)</div>
+    				<div style="float:left; padding:0 .4em; width:70px"> Label Opacity (%)</div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Label Hover Styles (CSS)</div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Window Styles (CSS)</div>
+    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
+    		</div>
+      		<div class="table" id="editmarkerstyletable_n">
+      			<form action="javascript:;" name="markerstyleform_n" id="markerstyleform_n" style="display:none;">
+      			<div class="data" id="markerstyleformdata_n">
+            	<div style="float:left; padding:0 .4em; width:10px"><input name="save_markerstyle" type="hidden" value="true"></div>
+            	<div style="float:left; padding:0 .4em; width:10px"><input name="style_array_n" type="hidden" value="true"></div>
+            	<div style="float:left; padding:0 .4em; width:10px"><input name="style_id" type="hidden" value="n"></div>
+            	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
+            	<div style="float:left; padding:0 .4em; width:90px"><select name="type">
+                                                                    <option value="0">GMarker</option>
+                                                                    <option value="1">PdMarker</option>
+                                                                    <option value="2">XMarker</option>
+                                            							   			</select></div>
+            	<div style="float:left; padding:0 .4em; width:70px"><input name="label_hover_opacity" type="text" size="5" value="70"></div>
+            	<div style="float:left; padding:0 .4em; width:70px"><input name="label_opacity" type="text" size="5" value="100"></div>
+            	<div style="float:left; padding:0 .4em; width:140px"><textarea name="label_hover_styles" cols="15" rows="3"></textarea></div>
+            	<div style="float:left; padding:0 .4em; width:140px"><textarea name="window_styles" cols="15" rows="3"></textarea></div>
+            	<a style="float:left; padding:0 .4em;" name="save_markerstyle_btn" title="save" href="javascript:storeMarkerStyle('edit_markerstyle.php', document.markerstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+      			</div>
+      			</form>
+    		  </div>
+</div> <!-- end of editmarkerstylesform -->
+
+<div id="editmarkerstylescancel" style="display:none; clear:both;"><input type="button" name="closemarkerstylesform" value="Cancel Editing Marker Styles" onclick="javascript:canceledit('editmarkerstylesmenu'); canceledit('newmarkerstyleform'); canceledit('editmarkerstyleform'); canceledit('editmarkerstylescancel');"></div>
+<!--end marker style editing forms -->
+
+
 
 
 <div id="editmarkerform" class="editform" style="display:none;">
@@ -289,7 +369,8 @@
 		</div> <!-- end of markerset_n -->
 </div> <!-- end of editmarkerform -->
 
-<div id="editmarkercancel" style="display:none; clear:both;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:canceledit('editmarkermenu'); canceledit('newmarkerform'); canceledit('editmarkerform'); canceledit('newmarkersetform'); canceledit('editmarkercancel');  removeAssistant();  canceledit('editerror');"></div>
+
+<div id="editmarkercancel" style="display:none; clear:both;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:canceledit('editmarkermenu'); canceledit('newmarkerform'); canceledit('editmarkerform'); canceledit('newmarkersetform'); canceledit('editmarkercancel'); canceledit('editmarkerstylesmenu'); canceledit('newmarkerstyleform'); canceledit('editmarkerstylesform'); canceledit('editmarkerstylescancel'); removeAssistant();  canceledit('editerror');"></div>
 <!--end marker editing forms -->
 
 

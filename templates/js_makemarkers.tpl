@@ -55,4 +55,44 @@ var bMSetData = new Array();
 	{/section}
 {/if}
 
+var bMStyleData = new Array();
+{if count($gContent->mMapMarkerStyles) > 0}
+	{section name=markerstyledata loop=$gContent->mMapMarkerStyles}
+		bMStyleData[{$smarty.section.markerstyledata.index}] = new Array();
+		bMStyleData[{$smarty.section.markerstyledata.index}].style_id = {$gContent->mMapMarkerStyles[markerstyledata].style_id};
+		bMStyleData[{$smarty.section.markerstyledata.index}].name = "{$gContent->mMapMarkerStyles[markerstyledata].name}";
+		bMStyleData[{$smarty.section.markerstyledata.index}].type = {$gContent->mMapMarkerStyles[markerstyledata].type};
+		bMStyleData[{$smarty.section.markerstyledata.index}].label_hover_opacity = {$gContent->mMapMarkerStyles[markerstyledata].label_hover_opacity};
+		bMStyleData[{$smarty.section.markerstyledata.index}].label_opacity = {$gContent->mMapMarkerStyles[markerstyledata].label_opacity};
+		bMStyleData[{$smarty.section.markerstyledata.index}].label_hover_styles = "{$gContent->mMapMarkerStyles[markerstyledata].label_hover_styles}";
+		bMStyleData[{$smarty.section.markerstyledata.index}].window_styles = "{$gContent->mMapMarkerStyles[markerstyledata].window_styles}";
+	{/section}
+{/if}
+
+var bMIconData = new Array();
+{if count($gContent->mMapIconStyles) > 0}
+	{section name=markericondata loop=$gContent->mMapIconStyles}
+		bMIconData[{$smarty.section.markericondata.index}] = new Array();
+		bMIconData[{$smarty.section.markericondata.index}].icon_id = {$gContent->mMapIconStyles[markericondata].icon_id};
+		bMIconData[{$smarty.section.markericondata.index}].name = "{$gContent->mMapIconStyles[markericondata].name}";
+		bMIconData[{$smarty.section.markericondata.index}].type = {$gContent->mMapIconStyles[markericondata].type};
+		bMIconData[{$smarty.section.markericondata.index}].image = "{$gContent->mMapIconStyles[markericondata].image}";
+		bMIconData[{$smarty.section.markericondata.index}].print_image = "{$gContent->mMapIconStyles[markericondata].print_image}";
+		bMIconData[{$smarty.section.markericondata.index}].moz_print_image = "{$gContent->mMapIconStyles[markericondata].moz_print_image}";
+		bMIconData[{$smarty.section.markericondata.index}].transparent = "{$gContent->mMapIconStyles[markericondata].transparent}";
+		bMIconData[{$smarty.section.markericondata.index}].shadow_image = "{$gContent->mMapIconStyles[markericondata].shadow_image}";
+		bMIconData[{$smarty.section.markericondata.index}].print_shadow = "{$gContent->mMapIconStyles[markericondata].print_shadow}";
+		bMIconData[{$smarty.section.markericondata.index}].image_map = {$gContent->mMapIconStyles[markericondata].image_map};
+		bMIconData[{$smarty.section.markericondata.index}].icon_w = {$gContent->mMapIconStyles[markericondata].icon_w};
+		bMIconData[{$smarty.section.markericondata.index}].icon_h = {$gContent->mMapIconStyles[markericondata].icon_h};
+		bMIconData[{$smarty.section.markericondata.index}].shadow_w = {$gContent->mMapIconStyles[markericondata].shadow_w};
+		bMIconData[{$smarty.section.markericondata.index}].shadow_h = {$gContent->mMapIconStyles[markericondata].shadow_h};
+		bMIconData[{$smarty.section.markericondata.index}].rollover_image = "{$gContent->mMapIconStyles[markericondata].rollover_image}";
+		bMIconData[{$smarty.section.markericondata.index}].icon_anchor_x = {$gContent->mMapIconStyles[markericondata].icon_anchor_x};
+		bMIconData[{$smarty.section.markericondata.index}].icon_anchor_y = {$gContent->mMapIconStyles[markericondata].icon_anchor_y};
+		bMIconData[{$smarty.section.markericondata.index}].infowindow_anchor_x = {$gContent->mMapIconStyles[markericondata].infowindow_anchor_x};
+		bMIconData[{$smarty.section.markericondata.index}].infowindow_anchor_y = {$gContent->mMapIconStyles[markericondata].infowindow_anchor_x};
+	{/section}
+{/if}
+
 //]]></script>

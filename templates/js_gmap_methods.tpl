@@ -21,6 +21,8 @@ function addMapTypes(pParamHash){ldelim}
 {rdelim};
 
 
+
+
 function attachMarkers(arrayId){ldelim}
 	//get the array we are working on
 	var a;
@@ -36,21 +38,121 @@ function attachMarkers(arrayId){ldelim}
 		for(n=0; n<a.length; n++){ldelim}
   		//if the array item is not Null
 			if (a[n]!= null){ldelim}
-    			var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
-    			a[n].marker = new GMarker(point);
-    			a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
-    			map.addOverlay(a[n].marker);
-    			//add the marker label if it exists
-    			if (typeof(a[n].label_data) != 'undefined'){ldelim}
-    				var topElement = a[n].marker.iconImage;
-    				if (a[n].marker.transparentIcon) {ldelim}topElement = a[n].marker.transparentIcon;{rdelim}
-    				if (a[n].marker.imageMap) {ldelim}topElement = a[n].marker.imageMap;{rdelim}
-    				topElement.setAttribute( "title" , a[n].label_data );
-    			{rdelim}
+
+				if (a[n].style_id == 0){ldelim}
+					defineGMarker(arrayId, n);
+				{rdelim}else{ldelim}
+					var stylen;
+					for (var b=0; b<bMStyleData.length; b++){ldelim}
+						if ( bMStyleData[b].style_id == a[n].style_id ){ldelim}
+							stylen = b;
+						{rdelim}
+					{rdelim}
+
+					if ( bMStyleData[stylen].type == 0){ldelim}
+						defineGxMarker(arrayId, n, stylen);
+					{rdelim}else if ( bMStyleData[stylen].type == 1){ldelim}
+						definePdMarker(arrayId, n, stylen);
+					{rdelim}else if ( bMStyleData[stylen].type == 2){ldelim}
+						defineXMarker(arrayId, n, stylen);
+					{rdelim}
+
+				{rdelim}
+
 			{rdelim}
 		{rdelim}
 	{rdelim};
 {rdelim};
+
+
+
+
+function defineGMarker(i, n){ldelim}
+	var a;
+	if (arrayId == "I"){ldelim}
+  	a = bIMData;
+	{rdelim}else{ldelim}
+  	a = bSMData;
+	{rdelim};
+
+  var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
+  a[n].marker = new GMarker(point);
+  a[n].marker.style_id = 0;
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
+  map.addOverlay(a[n].marker);
+  //add the marker label if it exists
+  if (typeof(a[n].label_data) != 'undefined'){ldelim}
+  	var topElement = a[n].marker.iconImage;
+    if (a[n].marker.transparentIcon) {ldelim}topElement = a[n].marker.transparentIcon;{rdelim}
+    if (a[n].marker.imageMap) {ldelim}topElement = a[n].marker.imageMap;{rdelim}
+    topElement.setAttribute( "title" , a[n].label_data );
+  {rdelim}
+{rdelim}
+
+
+
+function defineGxMarker(i, n, s){ldelim}
+	var a;
+	if (i == "I"){ldelim}
+  	a = bIMData;
+	{rdelim}else{ldelim}
+  	a = bSMData;
+	{rdelim};
+
+	var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
+	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
+  a[n].marker = new GxMarker(point, null, mytip);
+  a[n].marker.type = 0;
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
+  map.addOverlay(a[n].marker);
+{rdelim}
+
+
+function definePdMarker(i, n, s){ldelim}
+	var a;
+	if (i == "I"){ldelim}
+  	a = bIMData;
+	{rdelim}else{ldelim}
+  	a = bSMData;
+	{rdelim};
+
+	//PdMarker Style
+  var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
+  a[n].marker = new PdMarker(point);
+  a[n].marker.type = 1;
+  a[n].marker.setTooltipClass( "tip-"+bMStyleData[s].name );
+  a[n].marker.setDetailWinClass( "win-"+bMStyleData[s].name );
+  a[n].marker.setTooltip( "<div>" + a[n].label_data + "</div>");
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
+  a[n].marker.setDetailWinHTML( a[n].marker.my_html );
+  //rollover-icon: a[n].marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
+  map.addOverlay(a[n].marker);
+{rdelim}
+
+
+function defineXMarker(i, n, s){ldelim}
+	var a;
+	if (i == "I"){ldelim}
+  	a = bIMData;
+	{rdelim}else{ldelim}
+  	a = bSMData;
+	{rdelim};
+
+	//XMarker Style
+  var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
+	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
+  a[n].marker = new XMarker(point, null, null, mytip);
+  a[n].marker.type = 2;
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
+  map.addOverlay(a[n].marker);
+{rdelim}
+
+
+
+
+
+
+
 
 
 function attachPolylines(arrayId){ldelim}
@@ -149,7 +251,7 @@ function loadMap() {ldelim}
 	//opens any infoWindow when clicked if it has content	my_html
 	GEvent.addListener(map, "click", function(overlay, point) {ldelim}
 		if (overlay) {ldelim}
-			if (overlay.my_html) {ldelim}
+			if (overlay.my_html && (overlay.style_id == 0 || overlay.type == 0 || overlay.type == 2 ) ) {ldelim}
 				overlay.openInfoWindowHtml(overlay.my_html);
 			{rdelim}
 		{rdelim}

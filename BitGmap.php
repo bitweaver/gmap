@@ -1033,20 +1033,20 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['markerstyle_store']['name'] = $pParamHash['name'];
 		}
 		
-		if( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) {
+		if( ( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) || $pParamHash['type'] == 0 ) {
 			$pParamHash['markerstyle_store']['type'] = $pParamHash['type'];
 		}
 		
-		if( !empty( $pParamHash['hover_opc'] ) && is_numeric( $pParamHash['hover_opc'] ) ) {
-			$pParamHash['markerstyle_store']['label_hover_opacity'] = $pParamHash['hover_opc'];
+		if( !empty( $pParamHash['label_hover_opacity'] ) && is_numeric( $pParamHash['label_hover_opacity'] ) ) {
+			$pParamHash['markerstyle_store']['label_hover_opacity'] = $pParamHash['label_hover_opacity'];
 		}
 		
-		if( !empty( $pParamHash['label_opc'] ) && is_numeric( $pParamHash['label_opc'] ) ) {
-			$pParamHash['markerstyle_store']['label_opacity'] = $pParamHash['label_opc'];
+		if( !empty( $pParamHash['label_opacity'] ) && is_numeric( $pParamHash['label_opacity'] ) ) {
+			$pParamHash['markerstyle_store']['label_opacity'] = $pParamHash['label_opacity'];
 		}
 		
-		if( !empty( $pParamHash['hover_styles'] ) ) {
-			$pParamHash['markerstyle_store']['label_hover_styles'] = $pParamHash['hover_styles'];
+		if( !empty( $pParamHash['label_hover_styles'] ) ) {
+			$pParamHash['markerstyle_store']['label_hover_styles'] = $pParamHash['label_hover_styles'];
 		}
 		
 		if( !empty( $pParamHash['window_styles'] ) ) {

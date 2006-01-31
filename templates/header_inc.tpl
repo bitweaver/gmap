@@ -13,6 +13,11 @@
 {include file="bitpackage:gmap/js_makemarkers.tpl"}
 {include file="bitpackage:gmap/js_makepolylines.tpl"}
 {include file="bitpackage:gmap/js_makegmap.tpl"}
+{include file="bitpackage:gmap/js_gmap_methods.tpl"}
+
+<script src="extensions/pdmarker.js" type="text/javascript"></script>
+<script src="extensions/gxmarker.1.js" type="text/javascript"></script>
+<script src="extensions/xmaps.1c.js" type="text/javascript"></script>
 
 <script src="templates/formsubmit.js" type="text/javascript"></script>
 
@@ -23,4 +28,15 @@
 	.editform	{ldelim}background-color:#fff;{rdelim}
 	.table		{ldelim}clear:both;{rdelim}
 </style>
+
+
+<style>
+{if count($gContent->mMapMarkerStyles) > 0}
+	{section name=markerstyledata loop=$gContent->mMapMarkerStyles}
+		.tip-{$gContent->mMapMarkerStyles[markerstyledata].name} {ldelim}{$gContent->mMapMarkerStyles[markerstyledata].label_hover_styles}{rdelim}
+		.win-{$gContent->mMapMarkerStyles[markerstyledata].name} {ldelim}{$gContent->mMapMarkerStyles[markerstyledata].window_styles}{rdelim}
+	{/section}
+{/if}
+</style>
+
 {/if}
