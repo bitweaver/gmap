@@ -1273,33 +1273,12 @@ function cancelPolylineEdit(){
 			var zindex = parseInt(z[0].firstChild.nodeValue);
 			m.zindex = zindex;
 			
-/*
-			//update position
-			m.marker.point.x = parseFloat(m.lon);
-			m.marker.point.y = parseFloat(m.lat);
-			
-			//update infoWindow html
-			m.marker.my_html = "<div style='white-space: nowrap;'><strong>"+m.title+"</strong><p>"+m.data+"</p></div>";
-			m.marker.openInfoWindowHtml(m.marker.my_html);
-
-			//update label
-			if (m.label_data){
-  				var topElement = m.marker.iconImage;
-  				if (m.marker.transparentIcon) {topElement = m.marker.transparentIcon;}
-  				if (m.marker.imageMap) {topElement = m.marker.imageMap;}
-  				topElement.setAttribute( "title" , m.label_data );
-			}
-						
-			m.marker.redraw(true);
-			//set the overlaying right
-			m.marker.setZIndex(Math.round(m.marker.getLatitude()*-100000));
-*/
-
         //unload the marker
         map.removeOverlay( m.marker );
         //remake the marker
         if (m.style_id == 0){
          		defineGMarker(editArray, editObjectN);
+					m.marker.openInfoWindowHtml(m.marker.my_html);
         }else{
         		var stylen;
         		for (var b=0; b<bMStyleData.length; b++){
@@ -1310,12 +1289,16 @@ function cancelPolylineEdit(){
         		//define new marker with new styles
           	if (bMStyleData[stylen].type == 0){
           		defineGxMarker(editArray, editObjectN, stylen);
+					m.marker.openInfoWindowHtml(m.marker.my_html);
           	}else if (bMStyleData[stylen].type == 1){
           		definePdMarker(editArray, editObjectN, stylen);
+					m.marker.openInfoWindowHtml("<div style='white-space: nowrap;'>Click this marker to see its window details</div>");
           	}else if (bMStyleData[stylen].type == 2){
           		defineXMarker(editArray, editObjectN, stylen);
+					m.marker.openInfoWindowHtml(m.marker.my_html);
           	}
         }
+			removeAssistant();
 	}
 
 
@@ -1348,50 +1331,53 @@ function cancelPolylineEdit(){
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('id');			
 			m.marker_id = id[0].firstChild.nodeValue;
-
 			var tl = xml.documentElement.getElementsByTagName('title');
-			m.title = tl[0].firstChild.nodeValue;			
-			
+			m.title = tl[0].firstChild.nodeValue;
 			var lt = xml.documentElement.getElementsByTagName('lat');
 			m.lat = parseFloat(lt[0].firstChild.nodeValue);
-			
 			var ln = xml.documentElement.getElementsByTagName('lon');
 			m.lon = parseFloat(ln[0].firstChild.nodeValue);
-
 			var dt = xml.documentElement.getElementsByTagName('data');
-			m.data = dt[0].firstChild.nodeValue;			
-
+			m.data = dt[0].firstChild.nodeValue;
 			var l = xml.documentElement.getElementsByTagName('label');
 			m.label_data = l[0].firstChild.nodeValue;
-			
 			m.set_id = parseInt(bMSetData[s].set_id);
 			m.style_id = parseInt(bMSetData[s].style_id);
 			m.icon_id = parseInt(bMSetData[s].icon_id);
-			
 			var z = xml.documentElement.getElementsByTagName('z');
 			m.zindex = parseInt(z[0].firstChild.nodeValue);
 
 			m.array = "I";
-			m.array_n = parseFloat(n);
-			
-			//create marker
-			//@todo this is redundant to the marker making loop toward the end of js_makegmap - consolidate in a function
-    	var point = new GPoint(parseFloat(m.lon), parseFloat(m.lat));
-    	m.marker = new GMarker(point);
-    	m.marker.my_html = "<div style='white-space: nowrap;'><strong>"+m.title+"</strong><p>"+m.data+"</p></div>";
-    	map.addOverlay(m.marker);
-    	//add the marker label if it exists
-    	if (typeof(m.label_data) != 'undefined'){
-    		var topElement = m.marker.iconImage;
-    		if (m.marker.transparentIcon) {topElement = m.marker.transparentIcon;}
-    		if (m.marker.imageMap) {topElement = m.marker.imageMap;}
-    		topElement.setAttribute( "title" , m.label_data );
-    	}
-			
-			m.marker.openInfoWindowHtml(m.marker.my_html);
-			
+			m.array_n = parseFloat(n);			
+
+        //make the marker
+        if (m.style_id == 0){
+         		defineGMarker(m.array, m.array_n);
+					m.marker.openInfoWindowHtml(m.marker.my_html);
+        }else{
+        		var stylen;
+        		for (var b=0; b<bMStyleData.length; b++){
+        			if ( bMStyleData[b].style_id == m.style_id ){
+        				stylen = b;
+        			}
+        		}
+        		//define new marker with new styles
+          	if (bMStyleData[stylen].type == 0){
+          		defineGxMarker(m.array, m.array_n, stylen);
+					m.marker.openInfoWindowHtml(m.marker.my_html);
+          	}else if (bMStyleData[stylen].type == 1){
+          		definePdMarker(m.array, m.array_n, stylen);
+					m.marker.openInfoWindowHtml("<div style='white-space: nowrap;'>Click this marker to see its window details</div>");
+          	}else if (bMStyleData[stylen].type == 2){
+          		defineXMarker(m.array, m.array_n, stylen);
+					m.marker.openInfoWindowHtml(m.marker.my_html);
+          	}
+        }
+
+
 			// clear the form
 			$('markerform_new').reset();
+			removeAssistant();
 			// update the sets menus
 			editMarkers();
 			editSet(editSetId);
