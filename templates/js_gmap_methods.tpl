@@ -69,7 +69,7 @@ function attachMarkers(arrayId){ldelim}
 
 function defineGMarker(i, n){ldelim}
 	var a;
-	if (arrayId == "I"){ldelim}
+	if (i == "I"){ldelim}
   	a = bIMData;
 	{rdelim}else{ldelim}
   	a = bSMData;

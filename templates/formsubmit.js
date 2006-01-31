@@ -1273,6 +1273,7 @@ function cancelPolylineEdit(){
 			var zindex = parseInt(z[0].firstChild.nodeValue);
 			m.zindex = zindex;
 			
+/*
 			//update position
 			m.marker.point.x = parseFloat(m.lon);
 			m.marker.point.y = parseFloat(m.lat);
@@ -1292,6 +1293,29 @@ function cancelPolylineEdit(){
 			m.marker.redraw(true);
 			//set the overlaying right
 			m.marker.setZIndex(Math.round(m.marker.getLatitude()*-100000));
+*/
+
+        //unload the marker
+        map.removeOverlay( m.marker );
+        //remake the marker
+        if (m.style_id == 0){
+         		defineGMarker(editArray, editObjectN);
+        }else{
+        		var stylen;
+        		for (var b=0; b<bMStyleData.length; b++){
+        			if ( bMStyleData[b].style_id == m.style_id ){
+        				stylen = b;
+        			}
+        		}
+        		//define new marker with new styles
+          	if (bMStyleData[stylen].type == 0){
+          		defineGxMarker(editArray, editObjectN, stylen);
+          	}else if (bMStyleData[stylen].type == 1){
+          		definePdMarker(editArray, editObjectN, stylen);
+          	}else if (bMStyleData[stylen].type == 2){
+          		defineXMarker(editArray, editObjectN, stylen);
+          	}
+        }
 	}
 
 

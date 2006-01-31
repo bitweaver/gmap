@@ -79,9 +79,9 @@ $tables = array(
 ",
 
 //type options: 0 => GMarker, 1 => PdMarker, 2 => XMarker
-//lable hover is PdMarker Class only
+//lable hover opacity is for all
 //label opacity is PdMarker Class only
-//label hover styles is CSS for PdMarker Class
+//label hover styles is CSS for all
 //window styles is CSS for PdMarker Class
 'bit_gmaps_marker_styles' => "
   style_id I4 AUTO PRIMARY,
@@ -106,7 +106,6 @@ $tables = array(
 	marker_id I8 NOTNULL
 ",
 
-//type options: 0 => Google Default, 1 => XPolyline
 'bit_gmaps_polylines' => "
   polyline_id I4 AUTO PRIMARY,
   user_id I4 NOTNULL,
@@ -115,17 +114,18 @@ $tables = array(
   last_modified I8 NOTNULL,
   version I4 NOTNULL,
   name C(255),
-  type I4 DEFAULT 0,
   points_data X,
   border_text X,
   zindex I8
 ",
 
+//type options: 0 => Google Default, 1 => XPolyline
 //opacity and text_bgstyle_opacity take a float from 0-1
 //pattern takes an array. Default NULL
 'bit_gmaps_polyline_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
+  type I4 DEFAULT 0,
   color C(6) DEFAULT 'ff3300',
   weight I4 DEFAULT 2,
   opacity F DEFAULT 1,
