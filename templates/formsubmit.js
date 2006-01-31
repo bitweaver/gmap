@@ -733,11 +733,6 @@ function editPolylines(){
         form.set_id.value = bILData[g].set_id;
         form.polyline_id.value = bILData[g].polyline_id;
         form.name.value = bILData[g].name;				
-        for (var r=0; r < 2; r++) {
-           if (form.type.options[r].value == bILData[g].type){
-              form.type.options[r].selected=true;
-           }
-        };
         form.points_data.value = bILData[g].points_data;  //this might need to be a loop
         form.border_text.value = bILData[g].border_text;
         form.zindex.value = bILData[g].zindex;
@@ -852,14 +847,14 @@ function cancelPolylineEdit(){
 	 function removeMarker(u, f){
 			editSetId = f.set_id.value;
 			editMarkerId = f.marker_id.value;
-	 		var str = u + "?" + queryString(f) + "&remove_marker=true";
+	 		var str = u + "?set_id=" + editSetId + "&marker_id=" + editMarkerId + "&remove_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarker ); 
 	 }
 
 	 function expungeMarker(u, f){
 			editSetId = f.set_id.value;
 			editMarkerId = f.marker_id.value;
-	 		var str = u + "?" + queryString(f) + "&expunge_marker=true";
+	 		var str = u + "?marker_id=" + editMarkerId + "&expunge_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarker ); 
 	 }	 
 
@@ -896,7 +891,7 @@ function cancelPolylineEdit(){
 			doSimpleXMLHttpRequest(str).addCallback( updateExpungeMarkerSet ); 
 	 }
 
-	 function storeNewPolyline(u, f){			
+	 function storeNewPolyline(u, f){
 			editSetId = f.set_id.value;
 	 		var str = u + "?" + queryString(f) + "&save_polyline=true";
 			doSimpleXMLHttpRequest(str).addCallback( addPolyline );
@@ -911,14 +906,14 @@ function cancelPolylineEdit(){
 	 function removePolyline(u, f){
 			editSetId = f.set_id.value;
 			editPolylineId = f.polyline_id.value;
-	 		var str = u + "?" + queryString(f) + "&remove_polyline=true";
+	 		var str = u + "?set_id=" + editSetId + "&polyline_id=" + editPolylineId + "&remove_polyline=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolyline );
 	 }
 
 	 function expungePolyline(u, f){
 			editSetId = f.set_id.value;
 			editPolylineId = f.polyline_id.value;
-	 		var str = u + "?" + queryString(f) + "&expunge_polyline=true";
+	 		var str = u + "?polyline_id=" + editPolylineId + "&expunge_polyline=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolyline );
 	 }	 
 	 

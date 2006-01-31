@@ -149,12 +149,6 @@ function defineXMarker(i, n, s){ldelim}
 
 
 
-
-
-
-
-
-
 function attachPolylines(arrayId){ldelim}
 	//get the array we are working on
 	var a;
@@ -191,6 +185,9 @@ function attachPolylines(arrayId){ldelim}
 		{rdelim}
 	{rdelim};
 {rdelim};
+
+
+
 
 
 function loadMap() {ldelim}
@@ -240,10 +237,12 @@ function loadMap() {ldelim}
 
     map.centerAndZoom(new GPoint(bMapLon, bMapLat), bMapZoom);
 		
+	//Attach Markers
 	{if count($gContent->mMapInitMarkers) > 0}
 		attachMarkers("I");
 	{/if}
 
+	//Attach Polylines
 	{if count($gContent->mMapInitLines) > 0}
 		attachPolylines("I");
 	{/if}

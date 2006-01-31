@@ -424,7 +424,6 @@
 		<h2>Add a New Polyline</h2>		
         <div class="tableheader">
     				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Type </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Points Data </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Border Text <br/>only for XPolyline type</div>
     				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
@@ -436,10 +435,6 @@
     			<div class="data">
           	<div style="float:left; padding:0 .4em; width:10px"><input name="new_polyline" type="hidden" value="true"></div>
           	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="new"></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><select name="type" >
-                                                                  <option value="0" >Google (Standard)</option>
-                                                                  <option value="1" >XPolyline</option>
-                                          							   			</select></div>
           	<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
           	<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
           	<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>
@@ -471,7 +466,6 @@
 				<h3>Polylines In This Set</h3>
         <div class="tableheader">
     				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Type </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Points Data </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Border Text <br/>only for XPolyline type</div>
     				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
@@ -484,10 +478,6 @@
           	<div style="float:left; padding:0 .4em; width:30px"><input name="set_id" type="hidden" size="3" value="n"></div>
       			<div style="float:left; padding:0 .4em; width:30px"><input name="polyline_id" type="hidden" size="3" value="n"></div>
           	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><select name="type" >
-                                                                  <option value="0" >Google (Standard)</option>
-                                                                  <option value="1" >XPolyline</option>
-                                          							   			</select></div>
           	<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
           	<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
           	<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>						

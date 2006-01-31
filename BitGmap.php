@@ -857,10 +857,6 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polyline_store']['name'] = $pParamHash['name'];
 		}
 
-		if( !empty( $pParamHash['type'] ) ) {
-			$pParamHash['polyline_store']['type'] = $pParamHash['type'];
-		}
-				
 		if( !empty( $pParamHash['points_data'] ) ) {
 			$pParamHash['polyline_store']['points_data'] = $pParamHash['points_data'];
 		}
@@ -1087,7 +1083,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['iconstyle_store']['name'] = $pParamHash['name'];
 		}
 
-		if( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) {
+		if( ( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) || $pParamHash['type'] == 0 ) {
 			$pParamHash['iconstyle_store']['type'] = $pParamHash['type'];
 		}
 		
@@ -1169,6 +1165,10 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylinestyle_store']['name'] = $pParamHash['name'];
 		}
 
+		if( ( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) || $pParamHash['type'] == 0 ) {
+			$pParamHash['polylinestyle_store']['type'] = $pParamHash['type'];
+		}
+				
 		if( !empty( $pParamHash['color'] ) ) {
 			$pParamHash['polylinestyle_store']['color'] = $pParamHash['color'];
 		}
