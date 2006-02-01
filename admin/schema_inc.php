@@ -4,8 +4,8 @@
 
 $tables = array(
 
-//show_controls in bit_gmaps takes s,l,z,n  small, large, or none
-'bit_gmaps' => "
+//show_controls in gmaps takes s,l,z,n  small, large, or none
+'gmaps' => "
   gmap_id I4 AUTO PRIMARY,
   content_id I4 NOTNULL,
   description C(200),
@@ -16,26 +16,26 @@ $tables = array(
   zoom_level I4 DEFAULT 16,
   map_type C(128) DEFAULT 'G_MAP_TYPE',
   show_controls C(1) DEFAULT 's',
-  show_scale C(5) DEFAULT 'TRUE',
-  show_typecontrols C(5) DEFAULT 'TRUE',
-  allow_comments C(5) DEFAULT 'TRUE'
+  show_scale C(5) DEFAULT 'true',
+  show_typecontrols C(5) DEFAULT 'true',
+  allow_comments C(5) DEFAULT 'true'
 ",
 
 /*
- * set_type in bit_gmaps_sets_keychain can be: 
+ * set_type in gmaps_sets_keychain can be: 
  * init_markers, init_polylines, init_polygons, 
  * set_markers, set_polylines, set_polygons, 
  * map_types
  */
-'bit_gmaps_sets_keychain' => "
+'gmaps_sets_keychain' => "
   gmap_id I4 NOTNULL,
 	set_type c(32),
 	set_id I4 NOTNULL
-	CONSTRAINTS ', CONSTRAINT `bit_gmaps_map_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."bit_gmaps`( `gmap_id` )'
+	CONSTRAINTS ', CONSTRAINT `gmaps_map_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."gmaps`( `gmap_id` )'
 ",
 
 //basetype and alttype values: 0 => Streetmap 1 => Satellite, 2 => Hybrid
-'bit_gmaps_map_types' => "
+'gmaps_map_types' => "
   maptype_id I4 AUTO PRIMARY,
   name C(64),
   description C(255),
@@ -50,18 +50,18 @@ $tables = array(
 	lowreshybridtiles_url X DEFAULT 'google'
 ",
 
-'bit_gmaps_markers' => "
+'gmaps_markers' => "
   marker_id I8 AUTO PRIMARY,
   content_id I4 NOTNULL,
   lat F NOTNULL,
   lon F NOTNULL,
   label_data X,
   zindex I8 DEFAULT 0,
-	allow_comments C(5) DEFAULT 'TRUE'
+	allow_comments C(5) DEFAULT 'true'
 ",
 
 //types has two options: 0 => GIcon, 1 => XIcon
-'bit_gmaps_icon_styles' => "
+'gmaps_icon_styles' => "
   icon_id I4 AUTO PRIMARY,
   name C(64),
   type I2 DEFAULT 0,
@@ -83,7 +83,7 @@ $tables = array(
 //label opacity is PdMarker Class only
 //label hover styles is CSS for all
 //window styles is CSS for PdMarker Class
-'bit_gmaps_marker_styles' => "
+'gmaps_marker_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
   type I2 DEFAULT 0,
@@ -93,7 +93,7 @@ $tables = array(
   window_styles C(255) DEFAULT 'border:none; color:black; background-color:white'
 ",
 
-'bit_gmaps_marker_sets' => "
+'gmaps_marker_sets' => "
   set_id I4 AUTO PRIMARY,
   name C(64),
   description C(255),
@@ -101,12 +101,12 @@ $tables = array(
   icon_id I4 NOTNULL
 ",
 
-'bit_gmaps_marker_keychain' => "
+'gmaps_marker_keychain' => "
   set_id I4 NOTNULL,
 	marker_id I8 NOTNULL
 ",
 
-'bit_gmaps_polylines' => "
+'gmaps_polylines' => "
   polyline_id I4 AUTO PRIMARY,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
@@ -116,44 +116,44 @@ $tables = array(
   name C(255),
   points_data X,
   border_text X,
-  zindex I8
+  zindex I8 DEFAULT 0
 ",
 
 //type options: 0 => Google Default, 1 => XPolyline
 //opacity and text_bgstyle_opacity take a float from 0-1
 //pattern takes an array. Default NULL
-'bit_gmaps_polyline_styles' => "
+'gmaps_polyline_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
   type I4 DEFAULT 0,
   color C(6) DEFAULT 'ff3300',
   weight I4 DEFAULT 2,
   opacity F DEFAULT 1,
-  pattern c(255),
-  segment_count I8 NOTNULL,
-  begin_arrow C(1) DEFAULT '0',
-  end_arrow C(1) DEFAULT '0',
-  arrows_every I8 NOTNULL,
+  pattern c(255) DEFAULT 0,
+  segment_count I8 DEFAULT 0,
+  begin_arrow C(5) DEFAULT 'false',
+  end_arrow C(5) DEFAULT 'false',
+  arrows_every I8 DEFAULT 0,
   font c(255) DEFAULT 'Arial',
-  text_every I8 NOTNULL,
+  text_every I8 DEFAULT 0,
   text_fgstyle_color C(6) DEFAULT 'ffffff',
   text_fgstyle_weight I4 DEFAULT 1,
   text_fgstyle_opacity I4 DEFAULT 1,
-  text_fgstyle_zindex I8,
+  text_fgstyle_zindex I8 DEFAULT 0,
   text_bgstyle_color C(6) DEFAULT 'ff3300',
   text_bgstyle_weight I4 DEFAULT 2,
   text_bgstyle_opacity I4 DEFAULT 1,
-  text_bgstyle_zindex I8
+  text_bgstyle_zindex I8 DEFAULT 0
 ",
 
-'bit_gmaps_polyline_sets' => "
+'gmaps_polyline_sets' => "
   set_id I4 AUTO PRIMARY,
   name C(64),
   description C(255),
   style_id I4 NOTNULL
 ",
 
-'bit_gmaps_polyline_keychain' => "
+'gmaps_polyline_keychain' => "
   set_id I4 NOTNULL,
   polyline_id I4 NOTNULL
 ",
@@ -163,7 +163,7 @@ $tables = array(
 //center_x lat for circle
 //center_y lon for circle
 //@todo wj:check radius after up and running - might require an XDistance (for circle)
-'bit_gmaps_polygons' => "
+'gmaps_polygons' => "
   polygon_id I4 AUTO PRIMARY,
   user_id I4 NOTNULL,
   modifier_user_id I4 NOTNULL,
@@ -177,11 +177,11 @@ $tables = array(
 	center_y F,
   radius F,
   border_text X,
-  zindex I8
+  zindex I8 DEFAULT 0
 ",
 
 //opacity take a float from 0-1
-'bit_gmaps_polygon_styles' => "
+'gmaps_polygon_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
   color C(6),
@@ -189,7 +189,7 @@ $tables = array(
   opacity F DEFAULT 1
 ",
 
-'bit_gmaps_polygon_sets' => "
+'gmaps_polygon_sets' => "
   set_id I4 AUTO PRIMARY,
   name C(64),
   description C(255),
@@ -197,7 +197,7 @@ $tables = array(
 	polylinestyle_id I4 NOTNULL
 ",
 
-'bit_gmaps_polygon_keychain' => "
+'gmaps_polygon_keychain' => "
   set_id I4 NOTNULL,
   polygon_id I4 NOTNULL
 ",
@@ -227,25 +227,25 @@ $gBitInstaller->registerPackageInfo( GMAP_PKG_NAME, array(
 //@todo wj: is the use of UNIQUE here correct?
 // ### Indexes
 $indices = array (
-	'bit_gmaps_gmap_id_idx' => array( 'table' => 'bit_gmaps', 'cols' => 'gmap_id', 'opts' => 'UNIQUE' ),
+	'gmaps_gmap_id_idx' => array( 'table' => 'gmaps', 'cols' => 'gmap_id', 'opts' => 'UNIQUE' ),
 );
 $gBitInstaller->registerSchemaIndexes( GMAP_PKG_NAME, $indices );
 
 
 // ### Sequences
 $sequences = array (
-  'bit_gmaps_gmap_id_seq' => array( 'start' => 1 ),
-  'bit_gmaps_map_types_maptype_id_seq' => array( 'start' => 1 ),	
-  'bit_gmaps_markers_marker_id_seq' => array( 'start' => 1 ),
-  'bit_gmaps_icon_styles_icon_id_seq' => array( 'start' => 1 ),
-  'bit_gmaps_marker_styles_style_id_seq' => array( 'start' => 1 ),
-  'bit_gmaps_marker_sets_set_id_seq' => array( 'start' => 1 ),
-  'bit_gmaps_polylines_polyline_id_seq' => array( 'start' => 1 ),
-  'bit_gmaps_polyline_styles_style_id_seq' => array( 'start' => 1 ),
-  'bit_gmaps_polyline_sets_set_id_seq' => array( 'start' => 1 ),
-  'bit_gmaps_polygons_polygon_id_seq' => array( 'start' => 1 ),
-  'bit_gmaps_polygon_styles_style_id_seq' => array( 'start' => 1 ),
-  'bit_gmaps_polygon_sets_set_id_seq' => array( 'start' => 1 ),
+  'gmaps_gmap_id_seq' => array( 'start' => 1 ),
+  'gmaps_map_types_maptype_id_seq' => array( 'start' => 1 ),	
+  'gmaps_markers_marker_id_seq' => array( 'start' => 1 ),
+  'gmaps_icon_styles_icon_id_seq' => array( 'start' => 1 ),
+  'gmaps_marker_styles_style_id_seq' => array( 'start' => 1 ),
+  'gmaps_marker_sets_set_id_seq' => array( 'start' => 1 ),
+  'gmaps_polylines_polyline_id_seq' => array( 'start' => 1 ),
+  'gmaps_polyline_styles_style_id_seq' => array( 'start' => 1 ),
+  'gmaps_polyline_sets_set_id_seq' => array( 'start' => 1 ),
+  'gmaps_polygons_polygon_id_seq' => array( 'start' => 1 ),
+  'gmaps_polygon_styles_style_id_seq' => array( 'start' => 1 ),
+  'gmaps_polygon_sets_set_id_seq' => array( 'start' => 1 ),
 );
 $gBitInstaller->registerSchemaSequences( GMAP_PKG_NAME, $sequences );
 

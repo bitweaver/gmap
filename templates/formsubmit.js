@@ -491,7 +491,7 @@ function editMarkerStyles(){
   	for (var b=0; b<bMStyleData.length; b++) {
     	if ( bMStyleData[b]!= null ){  						
 
-    		editMarkerStyleId = bMStyleData [b].style_id;
+    		editMarkerStyleId = bMStyleData[b].style_id;
 
     		// clone the form container
   			var newMarkerStyle = $('editmarkerstyletable_n').cloneNode(true);
@@ -765,10 +765,10 @@ function editPolylines(){
 };
 
 
-
 function editPolylineSet(n){
 		show('polylinesetform_'+n);
 }
+
 
 function cancelPolylineEdit(){
 		canceledit('editpolylinemenu'); 
@@ -779,9 +779,134 @@ function cancelPolylineEdit(){
 }; 
 
 
+function editPolylineStyles(){
+		show('editpolylinestylesmenu');
+		show('editpolylinestyleform');
+		show('editpolylinestylescancel');
+
+  	//if polylinestyles data exists
+  	if ( typeof( bLStyData ) ) {
+  
+    	// We assume editPolylineStyles has been called before and remove 
+    	// any previously existing sets from the UI
+    	for (var a=0; a<bLStyData.length; a++) {
+    		if ( bLStyData[a]!= null ){
+      			var getElem = "editpolylinestyletable_" + bLStyData[a].style_id;
+        		if ( $(getElem) ) {
+            		var extraPolylineStyleForm = $(getElem);
+        			$('editpolylinestyleform').removeChild(extraPolylineStyleForm);
+        		}
+  			}
+    	}
+  
+    	var editPolylineStyleId;
+  
+    	// for each markerstyle data set clone the form
+    	for (var b=0; b<bLStyData.length; b++) {
+        	if ( bLStyData[b]!= null ){  						
+    
+        		editPolylineStyleId = bLStyData[b].style_id;
+    
+        		// clone the form container
+      			var newPolylineStyle = $('editpolylinestyletable_n').cloneNode(true);
+        		// give a new id to the new form container
+        		newPolylineStyle.id = "editpolylinestyletable_"+editPolylineStyleId;
+    
+      			// update the new form ids
+        		newPolylineStyleForm = newPolylineStyle.childNodes;
+                for ( var n = 0; n < newPolylineStyleForm.length; n++ ) {
+            		if ( newPolylineStyleForm[n].id == "polylinestyleform_n" ) {					
+                  		newPolylineStyleForm[n].id = "polylinestyleform_" + editPolylineStyleId;
+                  		newPolylineStyleForm[n].name = "polylinestyleform_" + editPolylineStyleId;					 
+          				var nLSFKids = newPolylineStyleForm[n].childNodes;
+          				for (var o=0; o<nLSFKids.length; o++){
+          					if (nLSFKids[o].id == "polylinestyleformdata_n"){
+          						nLSFKids[o].id = "polylinestyleformdata_" + editPolylineStyleId;
+          					}
+          				}
+          			}
+          		}
+    
+            	// add form to style table
+        		$('editpolylinestyleform').appendChild(newPolylineStyle);
+        		show( 'editpolylinestyletable_'+editPolylineStyleId );
+        		show( 'polylinestyleform_'+editPolylineStyleId );
+    
+      			// populate set form values
+      			form = $('polylinestyleform_' + editPolylineStyleId );
+    
+                form.style_array_n.value = b;
+                form.style_id.value = bLStyData[b].style_id;
+                form.name.value = bLStyData[b].name;
+                for (var r=0; r < 2; r++) {
+                   if (form.type.options[r].value == bLStyData[b].type){
+                   		form.type.options[r].selected=true;
+                   }
+                };
+                form.color.value = bLStyData[b].color;
+                form.weight.value = bLStyData[b].weight;
+                form.opacity.value = bLStyData[b].opacity;
+                form.pattern.value = bLStyData[b].pattern;
+                form.segment_count.value = bLStyData[b].segment_count;
+                form.text_every.value = bLStyData[b].text_every;
+                if (bLStyData[b].begin_arrow == false){
+                	form.begin_arrow.options[0].selected=true;
+                }else{
+                	form.begin_arrow.options[1].selected=true;
+					}
+                if (bLStyData[b].end_arrow == false){
+                	form.end_arrow.options[0].selected=true;
+                }else{
+                	form.end_arrow.options[1].selected=true;
+                }
+                form.arrows_every.value = bLStyData[b].arrows_every;
+                form.text_fgstyle_color.value = bLStyData[b].text_fgstyle_color;
+                form.text_fgstyle_weight.value = bLStyData[b].text_fgstyle_weight;
+                form.text_fgstyle_opacity.value = bLStyData[b].text_fgstyle_opacity;
+                form.text_fgstyle_zindex.value = bLStyData[b].text_fgstyle_zindex;
+                form.text_bgstyle_color.value = bLStyData[b].text_bgstyle_color;
+                form.text_bgstyle_weight.value = bLStyData[b].text_bgstyle_weight;
+                form.text_bgstyle_opacity.value = bLStyData[b].text_bgstyle_opacity;
+                form.text_bgstyle_zindex.value = bLStyData[b].text_bgstyle_zindex;
+    
+      			// just for a pretty button - js sucks it!
+      			var linkParent = $('polylinestyleformdata_'+editPolylineStyleId);
+      			var linkPKids = linkParent.childNodes;
+      			for (var p=0; p<linkPKids.length; p++){
+      				if (linkPKids[p].name == "save_polylinestyle_btn"){
+        				linkPKids[p].href = "javascript:storePolylineStyle('edit_polylinestyle.php', document.polylinestyleform_"+editPolylineStyleId+");" ;
+      				}
+    			}
+      		}
+  		}
+  	}
+};
 
 
+function newPolylineStyle(){
+		var check = false;
+  	for (var i=0; i<bLSetData.length; i++){
+  		if ( bLSetData[i] != null ){
+				check = true;
+  		}
+  	}
 
+  	if (check == false){
+  		//set warning message, show it, fade it
+  		$('errortext').innerHTML = "To add a polyline style, there first must be a polyline set associated with this map. Please create a new polyline set, then you can add your new polyline style!";
+			show('editerror');
+  		Fat.fade_all();
+  		//display new marker set form
+      newPolylineSet();
+
+		}else{
+      // Display the New Marker Style Div
+   		show('newpolylinestyleform');
+
+  		// Reset the Form
+  		$('polylinestyleform_new').reset();  		  
+		};
+}
 
 
 
@@ -939,6 +1064,16 @@ function cancelPolylineEdit(){
 			doSimpleXMLHttpRequest(str).addCallback( updateExpungePolylineSet );
 	 }
 
+	 function storeNewPolylineStyle(u, f){
+	 		var str = u + "?" + queryString(f);
+			doSimpleXMLHttpRequest(str).addCallback( addPolylineStyle ); 
+	 }
+
+	 function storePolylineStyle(u, f){
+			editObjectN = f.style_array_n.value;
+	 		var str = u + "?" + queryString(f);
+			doSimpleXMLHttpRequest(str).addCallback( updatePolylineStyle ); 
+	 }
 	 
 
 
@@ -1632,121 +1767,108 @@ function cancelPolylineEdit(){
 
 
 	 function updatePolyline(rslt){
-	 		var s;
-      var xml = rslt.responseXML;
-						
-			var n = editObjectN;
+			var xml = rslt.responseXML;
+			var p;
+
+			if (editArray == "I"){p = bILData[editObjectN];}else{p = bSLData[editObjectN];};
 			
-			//@todo modify this to handle either bILData or bSLData sets
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('polyline_id');			
-			bILData[n].polyline_id = id[0].firstChild.nodeValue;
-
+			p.polyline_id = id[0].firstChild.nodeValue;
 			var nm = xml.documentElement.getElementsByTagName('name');
-			bILData[n].name = nm[0].firstChild.nodeValue;			
-			
-			var tp = xml.documentElement.getElementsByTagName('type');
-			bILData[n].type = parseInt(tp[0].firstChild.nodeValue);
-			
+			p.name = nm[0].firstChild.nodeValue;	
 			var dt = xml.documentElement.getElementsByTagName('points_data');
 			var points_data = dt[0].firstChild.nodeValue;
-	 		bILData[n].points_data = points_data.split(",");
-			
+	 		p.points_data = points_data.split(",");			
 			var bt = xml.documentElement.getElementsByTagName('border_text');
-			bILData[n].border_text = bt[0].firstChild.nodeValue;			
-
+			p.border_text = bt[0].firstChild.nodeValue;
 			var zi = xml.documentElement.getElementsByTagName('zindex');
-			bILData[n].zindex = parseInt(zi[0].firstChild.nodeValue);			
+			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
+			
+			//remove old version
+			map.removeOverlay(p.polyline);
 
-			//for now when updating a polyline, we dump the old version and make new.
-			//@todo this is redundant to the polyline making loop in js_makegmap.tpl - consolidate
-			for (q=0; q<bLStyData.length; q++){
-				if (bLStyData[q].style_id == bILData[n].style_id){
-					var linecolor = "#"+bLStyData[q].color;
-					var lineweight = bLStyData[q].weight;
-					var lineopacity = bLStyData[q].opacity;
+			//create polyline
+			if (p.style_id == 0){
+				defineGPolyline(p.array, p.array_n, null);
+			}else{
+				var stylen;
+				for (var b=0; b<bLStyData.length; b++){
+					if ( bLStyData[b].style_id == p.style_id ){
+						stylen = b;
+					}
+				}
+				if ( bLStyData[stylen].type == 0){
+					defineGPolyline(p.array, p.array_n, stylen);
+				}else{
+					defineXPolyline(p.array, p.array_n, stylen);
 				}
 			}
 
-			var pointlist = new Array();
-			for (p = 0; p < bILData[n].points_data.length; p+=2 ){
-				var point = new GPoint(
-					parseFloat(bILData[n].points_data[p]),
-					parseFloat(bILData[n].points_data[p+1])
-				);
-				pointlist.push(point);
-			};
-			
-			map.removeOverlay(bILData[n].polyline);
-			bILData[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
-			map.addOverlay(bILData[n].polyline);
 			removeAssistant();
 	}
 
 
 	
 	 function addPolyline(rslt){
+      	var xml = rslt.responseXML;
 	 		var s;
-      var xml = rslt.responseXML;
-						
-			//@todo modify this to handle either bILData or bSLData sets
-			var n = bILData.length;
-			bILData[n] = new Array();
+			var n;
+			var p;
+
+			if (editArray == "init_polylines"){
+  			n = bILData.length;
+  			bILData[n] = new Array();
+				p = bILData[n];
+  			p.array = "I";
+  			p.array_n = n;
+			}else{
+  			n = bSLData.length;
+  			bSLData[n] = new Array();
+				p = bSLData[n];
+  			p.array = "S";
+  			p.array_n = n;
+			};
 			
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('polyline_id');			
-			bILData[n].polyline_id = id[0].firstChild.nodeValue;
-
+			p.polyline_id = id[0].firstChild.nodeValue;
 			var nm = xml.documentElement.getElementsByTagName('name');
-			bILData[n].name = nm[0].firstChild.nodeValue;			
-			
-			var tp = xml.documentElement.getElementsByTagName('type');
-			bILData[n].type = parseInt(tp[0].firstChild.nodeValue);
-			
+			p.name = nm[0].firstChild.nodeValue;
 			var dt = xml.documentElement.getElementsByTagName('points_data');
 			var points_data = dt[0].firstChild.nodeValue;
-	 		bILData[n].points_data = points_data.split(",");
-			
+	 		p.points_data = points_data.split(",");			
 			var bt = xml.documentElement.getElementsByTagName('border_text');
-			bILData[n].border_text = bt[0].firstChild.nodeValue;			
-
+			p.border_text = bt[0].firstChild.nodeValue;
 			var zi = xml.documentElement.getElementsByTagName('zindex');
-			bILData[n].zindex = parseInt(zi[0].firstChild.nodeValue);			
+			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 
-			//@todo this is such a crappy way to get this number
+			//this is such a crappy way to get this number
 			for(var a=0; a<bLSetData.length; a++){
 					if (bLSetData[a].set_id == editSetId){
 						 s = a;
-						 break;						 						 
 					}
 			};
 			
-			bILData[n].set_id = parseFloat(bLSetData[s].set_id);
-			bILData[n].style_id = parseFloat(bLSetData[s].style_id);
-			
-			bILData[n].array = "I";
-			bILData[n].array_n = parseFloat(n);
+			p.set_id = parseFloat(bLSetData[s].set_id);
+			p.style_id = parseFloat(bLSetData[s].style_id);
 
 			//create polyline
-			for (q=0; q<bLStyData.length; q++){
-				if (bLStyData[q].style_id == bILData[n].style_id){
-					var linecolor = "#"+bLStyData[q].color;
-					var lineweight = bLStyData[q].weight;
-					var lineopacity = bLStyData[q].opacity;
+			if (p.style_id == 0){
+				defineGPolyline(p.array, p.array_n, null);
+			}else{
+				var stylen;
+				for (var b=0; b<bLStyData.length; b++){
+					if ( bLStyData[b].style_id == p.style_id ){
+						stylen = b;
+					}
+				}
+				if ( bLStyData[stylen].type == 0){
+					defineGPolyline(p.array, p.array_n, stylen);
+				}else{
+					defineXPolyline(p.array, p.array_n, stylen);
 				}
 			}
-
-			var pointlist = new Array();
-			for (p = 0; p < bILData[n].points_data.length; p+=2 ){
-				var point = new GPoint(
-					parseFloat(bILData[n].points_data[p]),
-					parseFloat(bILData[n].points_data[p+1])
-				);
-				pointlist.push(point);
-			};
-
-			bILData[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
-			map.addOverlay(bILData[n].polyline);			
 
 			// clear the form
 			$('polylineform_new').reset();
@@ -1756,6 +1878,141 @@ function cancelPolylineEdit(){
 			removeAssistant();
 	}	
 	
+
+
+
+
+	 function addPolylineStyle(rslt){
+      var xml = rslt.responseXML;
+
+			// create a spot for a new polylinestyle in the data array
+			var n = bLStyData.length;
+			bLStyData[n] = new Array();
+			var s = bLStyData[n];
+
+			// assign polylinestyle values data array			
+			var id = xml.documentElement.getElementsByTagName('style_id');			
+  		s.style_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');			
+  		s.name = nm[0].firstChild.nodeValue;
+			var tp = xml.documentElement.getElementsByTagName('type');			
+  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var cl = xml.documentElement.getElementsByTagName('color');			
+  		s.color = cl[0].firstChild.nodeValue;
+			var wt = xml.documentElement.getElementsByTagName('weight');			
+  		s.weight = parseInt( wt[0].firstChild.nodeValue );
+			var op = xml.documentElement.getElementsByTagName('opacity');			
+  		s.opacity = op[0].firstChild.nodeValue;
+			var pt = xml.documentElement.getElementsByTagName('pattern');			
+  		s.pattern = pt[0].firstChild.nodeValue;
+			var sc = xml.documentElement.getElementsByTagName('segment_count');			
+  		s.segment_count = parseInt( sc[0].firstChild.nodeValue );
+			var ba = xml.documentElement.getElementsByTagName('begin_arrow');			
+  		s.begin_arrow = ba[0].firstChild.nodeValue;
+			var ea = xml.documentElement.getElementsByTagName('end_arrow');			
+  		s.end_arrow = ea[0].firstChild.nodeValue;
+			var ae = xml.documentElement.getElementsByTagName('arrows_every');			
+  		s.arrows_every = parseInt( ae[0].firstChild.nodeValue );
+			var te = xml.documentElement.getElementsByTagName('text_every');			
+  		s.text_every = parseInt( te[0].firstChild.nodeValue );
+			var tfc = xml.documentElement.getElementsByTagName('text_fgstyle_color');			
+  		s.text_fgstyle_color = tfc[0].firstChild.nodeValue;
+			var tfw = xml.documentElement.getElementsByTagName('text_fgstyle_weight');			
+  		s.text_fgstyle_weight = parseInt( tfw[0].firstChild.nodeValue );
+			var tfo = xml.documentElement.getElementsByTagName('text_fgstyle_opacity');			
+  		s.text_fgstyle_opacity = tfo[0].firstChild.nodeValue;
+			var tfi = xml.documentElement.getElementsByTagName('text_fgstyle_zindex');			
+  		s.text_fgstyle_zindex = parseInt( tfi[0].firstChild.nodeValue );
+			var tbc = xml.documentElement.getElementsByTagName('text_fgstyle_color');			
+  		s.text_bgstyle_color = tbc[0].firstChild.nodeValue;
+			var tbw = xml.documentElement.getElementsByTagName('text_fgstyle_weight');			
+  		s.text_bgstyle_weight = parseInt( tbw[0].firstChild.nodeValue );
+			var tbo = xml.documentElement.getElementsByTagName('text_fgstyle_opacity');			
+  		s.text_bgstyle_opacity = tbo[0].firstChild.nodeValue;
+			var tbi = xml.documentElement.getElementsByTagName('text_fgstyle_zindex');			
+  		s.text_bgstyle_zindex = parseInt( tbi[0].firstChild.nodeValue );
+
+			// clear the form
+			$('polylinestyleform_new').reset();
+			// update the styles menus
+			editPolylineStyles();
+	 }
+
+
+
+	 function updatePolylineStyle(rslt){
+      	var xml = rslt.responseXML;
+
+			//get the style we are updating
+			var s = bLStyData[editObjectN];
+
+			// assign markerstyle values data array			
+			var id = xml.documentElement.getElementsByTagName('style_id');			
+  		s.style_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');			
+  		s.name = nm[0].firstChild.nodeValue;
+			var tp = xml.documentElement.getElementsByTagName('type');			
+  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var cl = xml.documentElement.getElementsByTagName('color');			
+  		s.color = cl[0].firstChild.nodeValue;
+			var wt = xml.documentElement.getElementsByTagName('weight');			
+  		s.weight = parseInt( wt[0].firstChild.nodeValue );
+			var op = xml.documentElement.getElementsByTagName('opacity');			
+  		s.opacity = op[0].firstChild.nodeValue;
+			var pt = xml.documentElement.getElementsByTagName('pattern');			
+  		s.pattern = pt[0].firstChild.nodeValue;
+			var sc = xml.documentElement.getElementsByTagName('segment_count');			
+  		s.segment_count = parseInt( sc[0].firstChild.nodeValue );
+			var ba = xml.documentElement.getElementsByTagName('begin_arrow');			
+  		s.begin_arrow = ba[0].firstChild.nodeValue;
+			var ea = xml.documentElement.getElementsByTagName('end_arrow');			
+  		s.end_arrow = ea[0].firstChild.nodeValue;
+			var ae = xml.documentElement.getElementsByTagName('arrows_every');			
+  		s.arrows_every = parseInt( ae[0].firstChild.nodeValue );
+			var te = xml.documentElement.getElementsByTagName('text_every');			
+  		s.text_every = parseInt( te[0].firstChild.nodeValue );
+			var tfc = xml.documentElement.getElementsByTagName('text_fgstyle_color');			
+  		s.text_fgstyle_color = tfc[0].firstChild.nodeValue;
+			var tfw = xml.documentElement.getElementsByTagName('text_fgstyle_weight');			
+  		s.text_fgstyle_weight = parseInt( tfw[0].firstChild.nodeValue );
+			var tfo = xml.documentElement.getElementsByTagName('text_fgstyle_opacity');			
+  		s.text_fgstyle_opacity = tfo[0].firstChild.nodeValue;
+			var tfi = xml.documentElement.getElementsByTagName('text_fgstyle_zindex');			
+  		s.text_fgstyle_zindex = parseInt( tfi[0].firstChild.nodeValue );
+			var tbc = xml.documentElement.getElementsByTagName('text_fgstyle_color');			
+  		s.text_bgstyle_color = tbc[0].firstChild.nodeValue;
+			var tbw = xml.documentElement.getElementsByTagName('text_fgstyle_weight');			
+  		s.text_bgstyle_weight = parseInt( tbw[0].firstChild.nodeValue );
+			var tbo = xml.documentElement.getElementsByTagName('text_fgstyle_opacity');			
+  		s.text_bgstyle_opacity = tbo[0].firstChild.nodeValue;
+			var tbi = xml.documentElement.getElementsByTagName('text_fgstyle_zindex');			
+  		s.text_bgstyle_zindex = parseInt( tbi[0].firstChild.nodeValue );
+
+			//@todo - this needs to be made to support more than just init_polylines
+			//update all polylines
+			//for each marker
+			var arrayId = "I";
+      	var a = bILData;
+    
+    	//if the length of the array is > 0
+    	if (a.length > 0){
+      	//loop through the array
+    		for(n=0; n<a.length; n++){
+      		//if the array item is not Null
+    			if (a[n]!= null){
+						if (a[n].style_id == s.style_id){
+							map.removeOverlay(a[n].polyline);   
+    					if (s.type == 0){
+    						defineGPolyline(arrayId, n, editObjectN);
+    					}else{
+    						defineXPolyline(arrayId, n, editObjectN);
+    					}
+						}
+    			}
+    		}
+    	}
+	 }
+
 
 	
 	function updateRemovePolyline(){

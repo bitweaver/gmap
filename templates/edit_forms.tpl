@@ -216,6 +216,7 @@
 
 
 
+
 <div id="editmarkerstylesmenu" style="display:none;">
 		<a href="javascript:newMarkerStyle();">Add a New Marker Style</a>
 </div>
@@ -386,7 +387,7 @@
 <div id="editpolylinemenu" style="display:none;">
 		<a href="javascript:newPolyline();">New Polyline</a> | 
 		<a href="javascript:newPolylineSet();">New Polyline Set</a> | 
-		<a href="javascript:alert('this feature is coming soon');">Edit Polyline Styles</a>
+		<a href="javascript:editPolylineStyles();">Edit Polyline Styles</a> | 
 </div>
 
 <div id="newpolylinesetform" class="editform" style="display:none;">
@@ -418,6 +419,128 @@
 		<div id="newpolylinesetcancel" style="clear:both;"><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:canceledit('newpolylinesetform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newpolylinesetform -->
+
+
+
+
+<div id="editpolylinestylesmenu" style="display:none;">
+		<a href="javascript:newPolylineStyle();">Add a New Polyline Style</a>
+</div>
+
+
+<div id="newpolylinestyleform" class="editform" style="display:none;">
+		<h2>Add a New Polyline Style</h2>		
+    		<div class="table" id="editpolylinestyletable_new">
+    			<form action="javascript:;" name="polylinestyleform_new" id="polylinestyleform_new">
+    			<div class="data">
+                	<div style="float:left; padding:0 .4em; width:10px">
+							<input name="save_polylinestyle" type="hidden" value="true">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
+							Type <br/><select name="type">
+                                <option value="0">Google Default</option>
+                                <option value="1">XPolyline</option>
+                             </select><br/>
+                     	Color <br/><input name="color" type="text" size="15" value="ff3300"><br/>
+                     	Weight <br/><input name="weight" type="text" size="15" value="2"><br/>
+                     	Opacity <br/><input name="opacity" type="text" size="15" value=".75"><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+							Pattern <br/><input name="pattern" type="text" size="15" value=""><br/>
+                        Segment Count <br/><input name="segment_count" type="text" size="15" value=""><br/>
+                		Text Every <br/><input name="text_every" type="text" size="15" value="">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                		Begin Arrow <br/><select name="begin_arrow">
+                        				<option value="false">No</option>
+                                        <option value="true">Yes</option>
+                                    </select><br/>
+                		End Arrow <br/><select name="end_arrow">
+                                        <option value="false">No</option>
+                                        <option value="true">Yes</option>
+                                    </select><br/>
+                		Arrow Every <br/><input name="arrows_every" type="text" size="15" value=""><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                    	Text FG Color <br/><input name="text_fgstyle_color" type="text" size="15" value="ffffff"><br/>
+                    	Text FG Weight <br/><input name="text_fgstyle_weight" type="text" size="15" value="1"><br/>
+                    	Text FG Opacity <br/><input name="text_fgstyle_opacity" type="text" size="15" value="1"><br/>
+                    	Text FG zIndex <br/><input name="text_fgstyle_zindex" type="text" size="15" value="0">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                    	Text FG Color <br/><input name="text_bgstyle_color" type="text" size="15" value="ff3300"><br/>
+                    	Text FG Weight <br/><input name="text_bgstyle_weight" type="text" size="15" value="2"><br/>
+                    	Text FG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
+                    	Text FG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:70px">ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:storeNewPolylineStyle('edit_polylinestyle.php', document.polylinestyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+    			</div>
+    			</form>
+  		  </div>
+		<div id="newpolylinestylecancel" style="clear:both;"><input type="button" name="closepolylinestyleform" value="Cancel New Polyline Style" onclick="javascript:canceledit('newpolylinestyleform'); canceledit('editerror');"></div>
+</div>
+<!-- end of newpolylinestyleform -->
+
+
+<div id="editpolylinestyleform" class="editform" style="display:none;">
+		<h2>Polyline Styles Associated with Polyline Sets on This Map</h2>		
+      		<div class="table" id="editpolylinestyletable_n">
+      			<form action="javascript:;" name="polylinestyleform_n" id="polylinestyleform_n" style="display:none;">
+      			<div class="data" id="polylinestyleformdata_n">
+                	<div style="float:left; padding:0 .4em; width:10px">
+							<input name="save_polylinestyle" type="hidden" value="true">
+                        <input name="style_array_n" type="hidden" value="n">
+                        <input name="style_id" type="hidden" value="n">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
+							Type <br/><select name="type">
+                                <option value="0">Google Default</option>
+                                <option value="1">XPolyline</option>
+                             </select><br/>
+                     	Color <br/><input name="color" type="text" size="15" value="ff3300"><br/>
+                     	Weight <br/><input name="weight" type="text" size="15" value="2"><br/>
+                     	Opacity <br/><input name="opacity" type="text" size="15" value=".75"><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+							Pattern <br/><input name="pattern" type="text" size="15" value=""><br/>
+                        Segment Count <br/><input name="segment_count" type="text" size="15" value=""><br/>
+                		Text Every <br/><input name="text_every" type="text" size="15" value="">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                		Begin Arrow <br/><select name="begin_arrow">
+                        				<option value="false">No</option>
+                                        <option value="true">Yes</option>
+                                    </select><br/>
+                		End Arrow <br/><select name="end_arrow">
+                                        <option value="false">No</option>
+                                        <option value="true">Yes</option>
+                                    </select><br/>
+                		Arrow Every <br/><input name="arrows_every" type="text" size="15" value=""><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                    	Text FG Color <br/><input name="text_fgstyle_color" type="text" size="15" value="ffffff"><br/>
+                    	Text FG Weight <br/><input name="text_fgstyle_weight" type="text" size="15" value="1"><br/>
+                    	Text FG Opacity <br/><input name="text_fgstyle_opacity" type="text" size="15" value="1"><br/>
+                    	Text FG zIndex <br/><input name="text_fgstyle_zindex" type="text" size="15" value="0">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                    	Text FG Color <br/><input name="text_bgstyle_color" type="text" size="15" value="ff3300"><br/>
+                    	Text FG Weight <br/><input name="text_bgstyle_weight" type="text" size="15" value="2"><br/>
+                    	Text FG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
+                    	Text FG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
+						</div>
+                	ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:storePolylineStyle('edit_polylinestyle.php', document.polylinestyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+      			</div>
+      			</form>
+    		  </div>
+</div> <!-- end of editpolylinestylesform -->
+
+<div id="editpolylinestylescancel" style="display:none; clear:both;"><input type="button" name="closepolylinestylesform" value="Cancel Editing Polyline Styles" onclick="javascript:canceledit('editpolylinestylesmenu'); canceledit('newpolylinestyleform'); canceledit('editpolylinestyleform'); canceledit('editpolylinestylescancel');"></div>
+<!--end polyline style editing forms -->
+
+
 
 
 <div id="newpolylineform" class="editform" style="display:none;">

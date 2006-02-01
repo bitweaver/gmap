@@ -65,7 +65,7 @@ class BitGmapMarker extends LibertyAttachable {
 			$lookupId = !empty( $this->mGmarkerId )? $this->mGmarkerId : $this->mContentId;
 
 			$query = "SELECT *
-					  FROM `".BIT_DB_PREFIX."bit_gmaps_markers` bmm INNER JOIN `".BIT_DB_PREFIX."tiki_content` tc ON( bmm.`content_id`=tc.`content_id` )
+					  FROM `".BIT_DB_PREFIX."gmaps_markers` bmm INNER JOIN `".BIT_DB_PREFIX."tiki_content` tc ON( bmm.`content_id`=tc.`content_id` )
 					  WHERE bmm.`$lookupColumn`=?";
 			$result = $this->mDb->query( $query, array( $lookupId ) );
 
@@ -127,14 +127,14 @@ class BitGmapMarker extends LibertyAttachable {
 			if( parent::store( $pParamHash ) ) {
 				if( $this->mGmarkerId ) {
 					// store the posted changes
-					$this->mDb->associateUpdate( BIT_DB_PREFIX."bit_gmaps_markers", $pParamHash['marker_store'], array( "name" => "marker_id", "value" => $pParamHash['marker_id'] ) );
+					$this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_markers", $pParamHash['marker_store'], array( "name" => "marker_id", "value" => $pParamHash['marker_id'] ) );
 				} else {
 					$pParamHash['marker_store']['content_id'] = $this->mContentId;
-					$pParamHash['marker_store']['marker_id'] = $this->mDb->GenID( 'bit_gmaps_markers_marker_id_seq' );
-					$this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_markers", $pParamHash['marker_store'] );
+					$pParamHash['marker_store']['marker_id'] = $this->mDb->GenID( 'gmaps_markers_marker_id_seq' );
+					$this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_markers", $pParamHash['marker_store'] );
 					// if its a new marker we also get a set_id for the keychain and automaticallly associate it with a marker set.
 					$pParamHash['keychain_store']['marker_id'] = $pParamHash['marker_store']['marker_id'];
-					$this->mDb->associateInsert( BIT_DB_PREFIX."bit_gmaps_marker_keychain", $pParamHash['keychain_store'] );													
+					$this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_marker_keychain", $pParamHash['keychain_store'] );													
 				}
 				$this->mDb->CompleteTrans();
 
@@ -157,7 +157,7 @@ class BitGmapMarker extends LibertyAttachable {
 		if( $this->isValid() ) {
 			
 			$this->mDb->StartTrans();
-			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_markers` WHERE `content_id` = ?";
+			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_markers` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			if( LibertyAttachable::expunge() ) {
 				$ret = TRUE;
@@ -165,7 +165,7 @@ class BitGmapMarker extends LibertyAttachable {
 				
 				// delete all references to the marker from the marker keychain
 				$this->mDb->StartTrans();
-				$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_marker_keychain` WHERE `marker_id` =?";				
+				$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_marker_keychain` WHERE `marker_id` =?";				
 				$result = $this->mDb->query( $query, array( $this->mGmarkerId ) );
 				$this->mDb->CompleteTrans();
 				
@@ -200,7 +200,7 @@ class BitGmapMarker extends LibertyAttachable {
 		$ret = FALSE;
 		if( $this->verifyRemove( $pParamHash ) ) {
 			$this->mDb->StartTrans();
-			$query = "DELETE FROM `".BIT_DB_PREFIX."bit_gmaps_marker_keychain` 
+			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_marker_keychain` 
 			WHERE `set_id` = ?
 			AND `marker_id` =?";
 			$result = $this->mDb->query( $query, $pParamHash['marker_remove'] );

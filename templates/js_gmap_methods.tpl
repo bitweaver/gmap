@@ -1,12 +1,20 @@
 <script type="text/javascript">//<![CDATA[
 
 // Copy Object Function
-function copy_obj(o) {ldelim}var c = new Object(); for (var e in o) {ldelim} c[e] = o[e]; {rdelim} return c;{rdelim}
+function copy_obj(o) {ldelim}
+	var c = new Object(); 
+	for (var e in o) {ldelim}
+		c[e] = o[e]; 
+	{rdelim} 
+	return c;
+{rdelim}
+
+
 
 //@todo insert variables for zoomed out tiles path, and hybrid type tiles path
 // Adds all MapTypes, it is called from loadMap()
 function addMapTypes(pParamHash){ldelim}
-	for (n=0; n < pParamHash.length; n++) {ldelim}
+	for (var n=0; n < pParamHash.length; n++) {ldelim}
 		var baseid = pParamHash[n].basetype;
 		var typename = pParamHash[n].name;
 		var result = copy_obj(map.mapTypes[baseid]);
@@ -164,28 +172,105 @@ function attachPolylines(arrayId){ldelim}
 		for(n=0; n<a.length; n++){ldelim}
   		//if the array item is not Null
 			if (a[n]!= null){ldelim}
-  			for (s=0; s<bLStyData.length; s++){ldelim}
-  				if (bLStyData[s].style_id == a[n].style_id){ldelim}
-  					var linecolor = "#"+bLStyData[s].color;
-  					var lineweight = bLStyData[s].weight;
-  					var lineopacity = bLStyData[s].opacity;
-  				{rdelim}
-  			{rdelim}  
-  			var pointlist = new Array();
-  			for (p = 0; p < a[n].points_data.length; p+=2 ){ldelim}
-  				var point = new GPoint(
-  					parseFloat(a[n].points_data[p]),
-  					parseFloat(a[n].points_data[p+1])
-  				);
-  				pointlist.push(point);
-  			{rdelim};  
-  			a[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
-  			map.addOverlay(a[n].polyline);
-  	  {rdelim}
+
+				if (a[n].style_id == 0){ldelim}
+					defineGPolyline(arrayId, n);
+				{rdelim}else{ldelim}
+					var stylen;
+					for (var b=0; b<bLStyData.length; b++){ldelim}
+						if ( bLStyData[b].style_id == a[n].style_id ){ldelim}
+							stylen = b;
+						{rdelim}
+					{rdelim}
+
+					if ( bLStyData[stylen].type == 0){ldelim}
+						defineGPolyline(arrayId, n, stylen);
+					{rdelim}else{ldelim}
+						defineXPolyline(arrayId, n, stylen);
+					{rdelim}
+				{rdelim}
+
+			{rdelim}
 		{rdelim}
-	{rdelim};
+	{rdelim}
 {rdelim};
 
+
+
+function defineGPolyline(i, n, s){ldelim}
+	var a;
+	if (i == "I"){ldelim}
+  	a = bILData;
+	{rdelim}else{ldelim}
+  	a = bSLData;
+	{rdelim};
+
+	//make the array of points needed
+  var pointlist = new Array();
+  for (p = 0; p < a[n].points_data.length; p+=2 ){ldelim}
+  	var point = new GPoint(
+  		parseFloat(a[n].points_data[p]),
+  		parseFloat(a[n].points_data[p+1])
+  	);
+		pointlist.push(point);
+  {rdelim};
+
+	if (s!=null){ldelim}
+    var linecolor = "#"+bLStyData[s].color;
+    var lineweight = bLStyData[s].weight;
+    var lineopacity = bLStyData[s].opacity;
+  {rdelim};
+
+  a[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
+  map.addOverlay(a[n].polyline);
+{rdelim};
+
+
+
+
+function defineXPolyline(i, n, s){ldelim}
+	var a;
+	if (i == "I"){ldelim}
+  	a = bILData;
+	{rdelim}else{ldelim}
+  	a = bSLData;
+	{rdelim};
+
+	//make the array of points needed
+  var pointlist = new Array();
+  for (p = 0; p < a[n].points_data.length; p+=2 ){ldelim}
+  	var point = new GPoint(
+  		parseFloat(a[n].points_data[p]),
+  		parseFloat(a[n].points_data[p+1])
+  	);
+		pointlist.push(point);
+  {rdelim};
+
+	//if we are given a style_id we look up the styles otherwise defaults kick in
+  var linecolor = "#"+bLStyData[s].color;
+	var txfgcolor = "#"+bLStyData[s].text_fgstyle_color;
+	var txbgcolor = "#"+bLStyData[s].text_bgstyle_color;
+
+  var linestyle = {ldelim}
+		color: linecolor,
+		weight: bLStyData[s].weight,
+		opacity: bLStyData[s].opacity,
+    /* @todo this needs
+     * pattern: [bLStyData[s].pattern];
+		 */
+		segmentCount: bLStyData[s].segment_count,
+		beginArrow: bLStyData[s].being_arrow,
+    endArrow: bLStyData[s].end_arrow,
+		arrowsEvery: bLStyData[s].arrows_every,
+		text: a[n].border_text,
+		textEvery: bLStyData[s].text_every,
+		textFgStyle: {ldelim} color: txfgcolor, weight: bLStyData[s].text_fgstyle_weight, opacity: bLStyData[s].text_fgstyle_opacity, {rdelim},
+		textBgStyle: {ldelim} color: txbgcolor, weight: bLStyData[s].text_bgstyle_weight, opacity: bLStyData[s].text_bgstyle_opacity, {rdelim}
+  {rdelim};
+
+  a[n].polyline = new XPolyline(pointlist, linestyle);
+  map.addOverlay(a[n].polyline);
+{rdelim};
 
 
 

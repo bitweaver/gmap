@@ -99,7 +99,7 @@ if (!empty($_REQUEST["save_map"])) {
     $gBitSmarty->assign( 'textarea_id', 'editsample' );
     
     //set onload function in body
-    $gBodyOnload[] = 'loadMap(); editMap();';
+    $gBodyOnload[] = 'loadMap();';
     
     // Display the template
     $gBitSystem->display( 'bitpackage:gmap/edit_gmap.tpl', tra('Gmap') );    		

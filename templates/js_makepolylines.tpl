@@ -51,7 +51,7 @@ var bSLData = new Array();
 
 
 var bLStyData = new Array();
-{if count($gContent->mMapInitLines) > 0 || count($gContent->mMapInitLines) > 0}
+{if count($gContent->mMapInitLines) > 0 || count($gContent->mMapSetLines) > 0}
 	{section name=linestyles loop=$gContent->mMapLinesStyles}
 		bLStyData[{$smarty.section.linestyles.index}] = new Array();
 		bLStyData[{$smarty.section.linestyles.index}].style_id = {$gContent->mMapLinesStyles[linestyles].style_id};
@@ -64,12 +64,11 @@ var bLStyData = new Array();
 		{if $gContent->mMapLinesStyles[linestyles].pattern != NULL}
 			bLStyData[{$smarty.section.linestyles.index}].pattern = {$gContent->mMapLinesStyles[linestyles].pattern};
 		{/if}
-		bLStyData[{$smarty.section.linestyles.index}].opacity = {$gContent->mMapLinesStyles[linestyles].segment_count};
-		bLStyData[{$smarty.section.linestyles.index}].opacity = {$gContent->mMapLinesStyles[linestyles].begin_arrow};
-		bLStyData[{$smarty.section.linestyles.index}].opacity = {$gContent->mMapLinesStyles[linestyles].end_arrow};
-		bLStyData[{$smarty.section.linestyles.index}].opacity = {$gContent->mMapLinesStyles[linestyles].arrows_every};
-		bLStyData[{$smarty.section.linestyles.index}].opacity = "{$gContent->mMapLinesStyles[linestyles].font}";
-		bLStyData[{$smarty.section.linestyles.index}].opacity = {$gContent->mMapLinesStyles[linestyles].text_every};
+		bLStyData[{$smarty.section.linestyles.index}].segment_count = {$gContent->mMapLinesStyles[linestyles].segment_count};
+		bLStyData[{$smarty.section.linestyles.index}].text_every = {$gContent->mMapLinesStyles[linestyles].text_every};
+		bLStyData[{$smarty.section.linestyles.index}].begin_arrow = {$gContent->mMapLinesStyles[linestyles].begin_arrow};
+		bLStyData[{$smarty.section.linestyles.index}].end_arrow = {$gContent->mMapLinesStyles[linestyles].end_arrow};
+		bLStyData[{$smarty.section.linestyles.index}].arrows_every = {$gContent->mMapLinesStyles[linestyles].arrows_every};
 		bLStyData[{$smarty.section.linestyles.index}].text_fgstyle_color = "{$gContent->mMapLinesStyles[linestyles].text_fgstyle_color}";
 		bLStyData[{$smarty.section.linestyles.index}].text_fgstyle_weight = {$gContent->mMapLinesStyles[linestyles].text_fgstyle_weight};
 		bLStyData[{$smarty.section.linestyles.index}].text_fgstyle_opacity = {$gContent->mMapLinesStyles[linestyles].text_fgstyle_opacity};
