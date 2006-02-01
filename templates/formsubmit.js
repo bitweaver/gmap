@@ -1979,13 +1979,13 @@ function newPolylineStyle(){
   		s.text_fgstyle_opacity = tfo[0].firstChild.nodeValue;
 			var tfi = xml.documentElement.getElementsByTagName('text_fgstyle_zindex');			
   		s.text_fgstyle_zindex = parseInt( tfi[0].firstChild.nodeValue );
-			var tbc = xml.documentElement.getElementsByTagName('text_fgstyle_color');			
+			var tbc = xml.documentElement.getElementsByTagName('text_bgstyle_color');			
   		s.text_bgstyle_color = tbc[0].firstChild.nodeValue;
-			var tbw = xml.documentElement.getElementsByTagName('text_fgstyle_weight');			
+			var tbw = xml.documentElement.getElementsByTagName('text_bgstyle_weight');			
   		s.text_bgstyle_weight = parseInt( tbw[0].firstChild.nodeValue );
-			var tbo = xml.documentElement.getElementsByTagName('text_fgstyle_opacity');			
+			var tbo = xml.documentElement.getElementsByTagName('text_bgstyle_opacity');			
   		s.text_bgstyle_opacity = tbo[0].firstChild.nodeValue;
-			var tbi = xml.documentElement.getElementsByTagName('text_fgstyle_zindex');			
+			var tbi = xml.documentElement.getElementsByTagName('text_bgstyle_zindex');			
   		s.text_bgstyle_zindex = parseInt( tbi[0].firstChild.nodeValue );
 
 			//@todo - this needs to be made to support more than just init_polylines

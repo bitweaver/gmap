@@ -469,10 +469,10 @@
                     	Text FG zIndex <br/><input name="text_fgstyle_zindex" type="text" size="15" value="0">
 						</div>
                 	<div style="float:left; padding:0 .4em; width:120px">
-                    	Text FG Color <br/><input name="text_bgstyle_color" type="text" size="15" value="ff3300"><br/>
-                    	Text FG Weight <br/><input name="text_bgstyle_weight" type="text" size="15" value="2"><br/>
-                    	Text FG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
-                    	Text FG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
+                    	Text BG Color <br/><input name="text_bgstyle_color" type="text" size="15" value="ff3300"><br/>
+                    	Text BG Weight <br/><input name="text_bgstyle_weight" type="text" size="15" value="2"><br/>
+                    	Text BG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
+                    	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
 						</div>
                 	<div style="float:left; padding:0 .4em; width:70px">ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:storeNewPolylineStyle('edit_polylinestyle.php', document.polylinestyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
     			</div>
@@ -526,10 +526,10 @@
                     	Text FG zIndex <br/><input name="text_fgstyle_zindex" type="text" size="15" value="0">
 						</div>
                 	<div style="float:left; padding:0 .4em; width:120px">
-                    	Text FG Color <br/><input name="text_bgstyle_color" type="text" size="15" value="ff3300"><br/>
-                    	Text FG Weight <br/><input name="text_bgstyle_weight" type="text" size="15" value="2"><br/>
-                    	Text FG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
-                    	Text FG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
+                    	Text BG Color <br/><input name="text_bgstyle_color" type="text" size="15" value="ff3300"><br/>
+                    	Text BG Weight <br/><input name="text_bgstyle_weight" type="text" size="15" value="2"><br/>
+                    	Text BG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
+                    	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
 						</div>
                 	ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:storePolylineStyle('edit_polylinestyle.php', document.polylinestyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
       			</div>

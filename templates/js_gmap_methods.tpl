@@ -259,7 +259,7 @@ function defineXPolyline(i, n, s){ldelim}
      * pattern: [bLStyData[s].pattern];
 		 */
 		segmentCount: bLStyData[s].segment_count,
-		beginArrow: bLStyData[s].being_arrow,
+		beginArrow: bLStyData[s].begin_arrow,
     endArrow: bLStyData[s].end_arrow,
 		arrowsEvery: bLStyData[s].arrows_every,
 		text: a[n].border_text,

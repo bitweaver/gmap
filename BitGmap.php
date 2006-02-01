@@ -1189,11 +1189,11 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylinestyle_store']['segment_count'] = $pParamHash['segment_count'];
 		}
 		
-		if( !empty( $pParamHash['begin_arrow'] ) && is_numeric( $pParamHash['begin_arrow'] ) ) {
+		if( !empty( $pParamHash['begin_arrow'] ) ) {
 			$pParamHash['polylinestyle_store']['begin_arrow'] = $pParamHash['begin_arrow'];
 		}
 
-		if( !empty( $pParamHash['end_arrow'] ) && is_numeric( $pParamHash['end_arrow'] ) ) {
+		if( !empty( $pParamHash['end_arrow'] ) ) {
 			$pParamHash['polylinestyle_store']['end_arrow'] = $pParamHash['end_arrow'];
 		}
 		

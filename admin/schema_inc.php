@@ -138,11 +138,11 @@ $tables = array(
   text_every I8 DEFAULT 0,
   text_fgstyle_color C(6) DEFAULT 'ffffff',
   text_fgstyle_weight I4 DEFAULT 1,
-  text_fgstyle_opacity I4 DEFAULT 1,
+  text_fgstyle_opacity F DEFAULT 1,
   text_fgstyle_zindex I8 DEFAULT 0,
   text_bgstyle_color C(6) DEFAULT 'ff3300',
   text_bgstyle_weight I4 DEFAULT 2,
-  text_bgstyle_opacity I4 DEFAULT 1,
+  text_bgstyle_opacity  F DEFAULT 1,
   text_bgstyle_zindex I8 DEFAULT 0
 ",
 
