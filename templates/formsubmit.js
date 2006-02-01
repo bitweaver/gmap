@@ -1816,6 +1816,13 @@ function newPolylineStyle(){
 			var n;
 			var p;
 
+			for(a=0; a<bLSetData.length; a++){
+					if ( ( bLSetData[a] != null ) && ( bLSetData[a].set_id == editSetId ) ){
+						 s = a;
+						 editArray = bLSetData[a].set_type;
+					}
+			};
+
 			if (editArray == "init_polylines"){
   			n = bILData.length;
   			bILData[n] = new Array();
