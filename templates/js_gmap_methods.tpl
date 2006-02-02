@@ -264,8 +264,8 @@ function defineXPolyline(i, n, s){ldelim}
 		arrowsEvery: bLStyData[s].arrows_every,
 		text: a[n].border_text,
 		textEvery: bLStyData[s].text_every,
-		textFgStyle: {ldelim} color: txfgcolor, weight: bLStyData[s].text_fgstyle_weight, opacity: bLStyData[s].text_fgstyle_opacity, {rdelim},
-		textBgStyle: {ldelim} color: txbgcolor, weight: bLStyData[s].text_bgstyle_weight, opacity: bLStyData[s].text_bgstyle_opacity, {rdelim}
+		textFgStyle: {ldelim} color: txfgcolor, weight: bLStyData[s].text_fgstyle_weight, opacity: bLStyData[s].text_fgstyle_opacity {rdelim},
+		textBgStyle: {ldelim} color: txbgcolor, weight: bLStyData[s].text_bgstyle_weight, opacity: bLStyData[s].text_bgstyle_opacity {rdelim}
   {rdelim};
 
   a[n].polyline = new XPolyline(pointlist, linestyle);
