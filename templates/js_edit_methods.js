@@ -439,6 +439,39 @@ function editSet(n){
 }
 
 
+function newIconStyle(){
+		var check = false;
+  	for (var i=0; i<bMSetData.length; i++){
+  		if ( bMSetData[i] != null ){
+				check = true;
+  		}
+  	}
+
+  	if (check == false){
+  		//set warning message, show it, fade it
+  		$('errortext').innerHTML = "To add a icon style, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new icon style!";
+			show('editerror');
+  		Fat.fade_all();
+  		//display new marker set form
+      newMarkerSet();
+
+		}else{
+      // Display the New Icon Style Div
+   		show('newiconstyleform');
+
+  		// Reset the Form
+  		$('iconstyleform_new').reset();  		  
+		};
+}
+
+
+function editIconStyles(){
+		show('editiconstylesmenu');
+		show('editiconstyleform');
+		show('editiconstylescancel');
+}
+
+
 function newMarkerStyle(){
 		var check = false;
   	for (var i=0; i<bMSetData.length; i++){
@@ -896,11 +929,11 @@ function newPolylineStyle(){
   		$('errortext').innerHTML = "To add a polyline style, there first must be a polyline set associated with this map. Please create a new polyline set, then you can add your new polyline style!";
 			show('editerror');
   		Fat.fade_all();
-  		//display new marker set form
+  		//display new polyline set form
       newPolylineSet();
 
 		}else{
-      // Display the New Marker Style Div
+      // Display the New Polyline Style Div
    		show('newpolylinestyleform');
 
   		// Reset the Form

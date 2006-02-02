@@ -141,7 +141,7 @@
 		<a href="javascript:newMarker();">New Marker</a> | 
 		<a href="javascript:newMarkerSet();">New Marker Set</a> | 
 		<a href="javascript:editMarkerStyles();">Edit Marker Styles</a> | 
-		<a href="javascript:alert('this feature is coming soon');">Edit Marker Icons</a>
+		<a href="javascript:editIconStyles();">Edit Marker Icons</a>
 </div>
 
 
@@ -214,6 +214,97 @@
 		<div id="newmarkercancel" style="clear:both;"><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:canceledit('newmarkerform'); removeAssistant(); canceledit('editerror');"></div>
 </div> <!-- end of newmarkerform -->
 
+
+
+
+<div id="editiconstylesmenu" style="display:none;">
+		<a href="javascript:newIconStyle();">Add a New Icon Style</a>
+</div>
+
+
+<div id="newiconstyleform" class="editform" style="display:none;">
+		<h2>Add a New Icon Style</h2>		
+    		<div class="table" id="editiconstyletable_new">
+    			<form action="javascript:;" name="iconstyleform_new" id="iconstyleform_new">
+    			<div class="data">
+                	<div style="float:left; padding:0 .4em; width:10px">
+							<input name="save_iconstyle" type="hidden" value="true">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
+							Type <br/><select name="type">
+                                <option value="0">GIcon</option>
+                                <option value="1">XIcon</option>
+                             </select><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                     	Image <br/><input name="image" type="text" size="15" value="path-to-image"><br/>
+                     	Rollover Image <br/><input name="rollover_image" type="text" size="15" value="path-to-image"><br/>
+                     	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value="10"><br/>
+                     	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value="15"><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                     	Shadow Image <br/><input name="shadow_image" type="text" size="15" value="path-to-image"><br/>
+                     	Shadow Width <br/><input name="shadow_w" type="text" size="15" value="10"><br/>
+                     	Shadow Height <br/><input name="shadow_h" type="text" size="15" value="15"><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                     	Icon Anchor X (px)<br/><input name="icon_anchor_x" type="text" size="15" value="0"><br/>
+                     	Icon Anchor Y (px)<br/><input name="icon_anchor_y" type="text" size="15" value="0"><br/>
+                     	InfoWindow Anchor X (px)<br/><input name="infowindow_anchor_x" type="text" size="15" value="0"><br/>
+                     	IconWindow Anchor Y (px)<br/><input name="infowindow_anchor_y" type="text" size="15" value="0"><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:70px">ACTIONS<br/><a name="new_iconstyle_btn" title="save" href="javascript:storeNewIconStyle('edit_iconstyle.php', document.iconstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+    			</div>
+    			</form>
+  		  </div>
+		<div id="newiconstylecancel" style="clear:both;"><input type="button" name="closeiconstyleform" value="Cancel New Icon Style" onclick="javascript:canceledit('newiconstyleform'); canceledit('editerror');"></div>
+</div>
+<!-- end of newiconstyleform -->
+
+
+<div id="editiconstyleform" class="editform" style="display:none;">
+		<h2>Icon Styles Associated with Marker Sets on This Map</h2>		
+      		<div class="table" id="editiconstyletable_n">
+      			<form action="javascript:;" name="iconstyleform_n" id="iconstyleform_n" style="display:none;">
+      			<div class="data" id="iconstyleformdata_n">
+                	<div style="float:left; padding:0 .4em; width:10px">
+							<input name="save_iconstyle" type="hidden" value="true">
+                        <input name="style_array_n" type="hidden" value="n">
+                        <input name="icon_id" type="hidden" value="n">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
+							Type <br/><select name="type">
+                                <option value="0">GIcon</option>
+                                <option value="1">XIcon</option>
+                             </select><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                     	Image <br/><input name="image" type="text" size="15" value="path-to-image"><br/>
+                     	Rollover Image <br/><input name="rollover_image" type="text" size="15" value="path-to-image"><br/>
+                     	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value="10"><br/>
+                     	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value="15"><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                     	Shadow Image <br/><input name="shadow_image" type="text" size="15" value="path-to-image"><br/>
+                     	Shadow Width <br/><input name="shadow_w" type="text" size="15" value="10"><br/>
+                     	Shadow Height <br/><input name="shadow_h" type="text" size="15" value="15"><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+                     	Icon Anchor X (px)<br/><input name="icon_anchor_x" type="text" size="15" value="0"><br/>
+                     	Icon Anchor Y (px)<br/><input name="icon_anchor_y" type="text" size="15" value="0"><br/>
+                     	InfoWindow Anchor X (px)<br/><input name="infowindow_anchor_x" type="text" size="15" value="0"><br/>
+                     	IconWindow Anchor Y (px)<br/><input name="infowindow_anchor_y" type="text" size="15" value="0"><br/>
+						</div>
+                	ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_iconstyle_btn" title="save" href="javascript:storeIconStyle('edit_iconstyle.php', document.iconstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+      			</div>
+      			</form>
+    		  </div>
+</div> <!-- end of editiconstylesform -->
+
+<div id="editiconstylescancel" style="display:none; clear:both;"><input type="button" name="closeiconstylesform" value="Cancel Editing Icon Styles" onclick="javascript:canceledit('editiconstylesmenu'); canceledit('newiconstyleform'); canceledit('editiconstyleform'); canceledit('editiconstylescancel');"></div>
+<!--end icon style editing forms -->
 
 
 
