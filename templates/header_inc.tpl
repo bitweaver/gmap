@@ -19,7 +19,7 @@
 <script src="libraries/gxmarker.1.js" type="text/javascript"></script>
 <script src="libraries/xmaps.1c.js" type="text/javascript"></script>
 
-<script src="templates/formsubmit.js" type="text/javascript"></script>
+<script src="templates/js_edit_methods.js" type="text/javascript"></script>
 
 <style type="text/css">
 	textarea	{ldelim}font-size:.9em;{rdelim}
