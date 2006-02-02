@@ -46,7 +46,6 @@ function attachMarkers(arrayId){ldelim}
 		for(n=0; n<a.length; n++){ldelim}
   		//if the array item is not Null
 			if (a[n]!= null){ldelim}
-
 				if (a[n].style_id == 0){ldelim}
 					defineGMarker(arrayId, n);
 				{rdelim}else{ldelim}
@@ -56,7 +55,6 @@ function attachMarkers(arrayId){ldelim}
 							stylen = b;
 						{rdelim}
 					{rdelim}
-
 					if ( bMStyleData[stylen].type == 0){ldelim}
 						defineGxMarker(arrayId, n, stylen);
 					{rdelim}else if ( bMStyleData[stylen].type == 1){ldelim}
@@ -64,9 +62,7 @@ function attachMarkers(arrayId){ldelim}
 					{rdelim}else if ( bMStyleData[stylen].type == 2){ldelim}
 						defineXMarker(arrayId, n, stylen);
 					{rdelim}
-
 				{rdelim}
-
 			{rdelim}
 		{rdelim}
 	{rdelim};
@@ -255,7 +251,7 @@ function defineXPolyline(i, n, s){ldelim}
 		color: linecolor,
 		weight: bLStyData[s].weight,
 		opacity: bLStyData[s].opacity,
-    /* @todo this needs
+    /* @todo this prolly needs to be parsed as it should be comma delim
      * pattern: [bLStyData[s].pattern];
 		 */
 		segmentCount: bLStyData[s].segment_count,

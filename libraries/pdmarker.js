@@ -11,31 +11,11 @@
  Contact www.pixeldevelopment.com for your custom Google Map needs
 */
 
-function getPdMarkerRevisionInfo() {
-var cr = "<br/>";
-var s =
-"0.99a 10/12/05 - now handles maps in containers with undefined widths" + cr +
-"define a div with id 'pdmarkerwork' to reduce flicker" + cr +
-"0.99  10/03/05 - added setImageEnabled, allowLeftTooltips (global)" + cr +
-"0.98  09/30/05 - fixed zoomToMarkers" + cr +
-"0.97  09/24/05 - added setHoverImage, setShowDetailOnClick, setDetailWinHTML, showDetailWin, closeDetailWin" + cr +
-"0.96  09/22/05 - added setTooltipHiding, getTooltipHiding" + cr +
-"0.95  09/20/05 - handle zoom for lingering tooltips mouseOutEnabled(false) " +
-		   "disables setImage and restoreImage" + cr +
-"0.94  09/20/05 - added setTooltipClass and resetTooltipClass" + cr +
-"0.93  09/19/05 - added slopPercentage [optional] parameter to zoomToMarkers" + cr +
-"0.92  09/18/05 - added getMouseOutEnabled, setMouseOutEnabled" + cr +
-"0.91  09/17/05 - fixed setOpacity";
-return s;
-}
+/*
+ Notes: This is a limited version of the PdMarker code
+        some methods have been trimmed for the Bitweaver Gmap Package
+*/
 
-function getPdMarkerVersion() {
-	return getPdMarkerRevisionInfo().substring(0,15);
-}
-
-function getPdMarkerShortVersion() {
-	return getPdMarkerRevisionInfo().substring(0,5);
-}
 
 var pdMarkerOpenList = [];
 
@@ -57,119 +37,8 @@ function latLongToPixel(map,coord,zoom) {
 	return map.getDivCoordinate(bmCoord.x,bmCoord.y);
 }
 
-// GMap extension for walking through PdMarker list
-// Note: some overlays are not markers, some may not be PdMarkers
-
-GMap.prototype.getMarkerById = function(id) {
-	var count = this.overlays.length;
-	for (var i = 0; i < count; i++)
-		if (this.overlays[i].isMarker)
-			if (this.overlays[i].internalId == id)
-			{
-				this.cursor = i;
-				return this.overlays[i];
-			}
-	return null;
-}
-
-GMap.prototype.getFirstMarker = function() {
-	var count = this.overlays.length;
-	for (var i = 0; i < count; i++)
-		if (this.overlays[i].isMarker)
-		{
-
-			this.cursor = i;
-			return this.overlays[i];
-		}
-	return null;
-}
-
-GMap.prototype.getNextMarker = function() {
-	var count = this.overlays.length;
-	if (this.cursor >= 0)
-		for (var i = this.cursor+1; i < count; i++)
-			if (this.overlays[i].isMarker)
-			{
-				this.cursor = i;
-				return this.overlays[i];
-			}
-	return null;
-}
-
-GMap.prototype.getNthMarker = function(nTh) {
-	var count = this.overlays.length;
-	for (var i = 0; i < count; i++)
-		if (this.overlays[i].isMarker)
-		{
-			nTh--;
-			if (nTh == 0)
-			{
-				this.cursor = i;
-				return this.overlays[i];
-			}
-		}
-	return null;
-}
-
-GMap.prototype.getMarkerCount = function() {
-	var markerCount = 0;
-	var count = this.overlays.length;
-	for (var i = 0; i < count; i++)
-		if (this.overlays[i].isMarker)
-			markerCount++;
-	return markerCount;
-}
-
-GMap.prototype.boxMap = function(center, span) {
-	var spec = this.spec;
-	var zoom = spec.getLowestZoomLevel(center, span, this.viewSize);
-	this.centerAndZoom(new GPoint(center.x, center.y), zoom);
-}
-
-GMap.prototype.zoomToMarkers = function(slopPercentage) {
-	var count = 0;
-	var thePoint, x, y, minX, maxX, minY, maxY, span;
-	var marker = this.getFirstMarker();
-	while (marker != null)
-	{
-		thePoint = marker.getPoint();
-		x = thePoint.x; y = thePoint.y;
-		if (count == 0)
-		{
-			minX = x; maxX = x; minY = y; maxY = y;
-		}
-		else
-		{
-			if (x < minX) minX = x;
-			if (x > maxX) maxX = x;
-			if (y < minY) minY = y;
-			if (y > maxY) maxY = y;
-		}
-		marker = this.getNextMarker();
-		count++;
-	}
-	if (count == 1)
-	{
-		this.centerAndZoom(new GPoint(x,y),this.getZoomLevel());
-	}
-	else if (count > 1)
-	{
-		thePoint = new GPoint((minX + maxX) / 2, (minY + maxY) / 2);
-		span = new GSize(Math.abs(maxX - minX), Math.abs(maxY - minY));
-		if (typeof slopPercentage != "undefined")
-		{
-			span.width  *= 1 + slopPercentage / 100;
-			span.height *= 1 + slopPercentage / 100;
-		}
-		this.boxMap(thePoint, span);
-	}
-}
 
 // PdMarker code
-
-if (_mSiteName)
-	_mSiteName += " & PdMarker " + getPdMarkerShortVersion();
-
 function PdMarkerNamespace() {
 
 var userAgent = navigator.userAgent.toLowerCase();
