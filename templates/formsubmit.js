@@ -1970,10 +1970,18 @@ function newPolylineStyle(){
   		s.pattern = pt[0].firstChild.nodeValue;
 			var sc = xml.documentElement.getElementsByTagName('segment_count');			
   		s.segment_count = parseInt( sc[0].firstChild.nodeValue );
-			var ba = xml.documentElement.getElementsByTagName('begin_arrow');			
-  		s.begin_arrow = ba[0].firstChild.nodeValue;
+			var ba = xml.documentElement.getElementsByTagName('begin_arrow');
+			if (ba[0].firstChild.nodeValue == 'true'){
+	  		s.begin_arrow = true;
+			}else{
+	  		s.begin_arrow = false;
+			}
 			var ea = xml.documentElement.getElementsByTagName('end_arrow');			
-  		s.end_arrow = ea[0].firstChild.nodeValue;
+			if (ea[0].firstChild.nodeValue == 'true'){
+	  		s.end_arrow = true;
+			}else{
+	  		s.end_arrow = false;
+			}
 			var ae = xml.documentElement.getElementsByTagName('arrows_every');			
   		s.arrows_every = parseInt( ae[0].firstChild.nodeValue );
 			var te = xml.documentElement.getElementsByTagName('text_every');			

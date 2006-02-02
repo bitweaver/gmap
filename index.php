@@ -55,7 +55,7 @@ if (!isset($_REQUEST['gmap_id'] ) ) {
     //include( BITMAP_PKG_URL.'display_gmap_inc.php' );
     
     //set onload function in body
-    $gBodyOnload[] = 'loadMap()';
+    $gBodyOnload[] = 'loadMap();';
     
     // Display the template
     $gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Gmap') );
