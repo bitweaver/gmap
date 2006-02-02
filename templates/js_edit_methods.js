@@ -1455,7 +1455,10 @@ function newPolylineStyle(){
 					m.marker.openInfoWindowHtml(m.marker.my_html);
           	}else if (bMStyleData[stylen].type == 1){
           		definePdMarker(editArray, editObjectN, stylen);
-					m.marker.openInfoWindowHtml("<div style='white-space: nowrap;'>Click this marker to see its window details</div>");
+                m.marker.showTooltip();
+                m.marker.hideTooltip();
+					m.marker.showDetailWin();
+//					m.marker.openInfoWindowHtml("<div style='white-space: nowrap;'>Click this marker to see its window details</div>");
           	}else if (bMStyleData[stylen].type == 2){
           		defineXMarker(editArray, editObjectN, stylen);
 					m.marker.openInfoWindowHtml(m.marker.my_html);
@@ -1530,7 +1533,10 @@ function newPolylineStyle(){
 					m.marker.openInfoWindowHtml(m.marker.my_html);
           	}else if (bMStyleData[stylen].type == 1){
           		definePdMarker(m.array, m.array_n, stylen);
-					m.marker.openInfoWindowHtml("<div style='white-space: nowrap;'>Click this marker to see its window details</div>");
+                m.marker.showTooltip();
+                m.marker.hideTooltip();
+					m.marker.showDetailWin();
+//					m.marker.openInfoWindowHtml("<div style='white-space: nowrap;'>Click this marker to see its window details</div>");
           	}else if (bMStyleData[stylen].type == 2){
           		defineXMarker(m.array, m.array_n, stylen);
 					m.marker.openInfoWindowHtml(m.marker.my_html);
