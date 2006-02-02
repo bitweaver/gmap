@@ -30,6 +30,20 @@ function addMapTypes(pParamHash){ldelim}
 
 
 
+//@todo - these image paths may not be universal enough, may need to get the root from kernel
+function defineGIcon(n){ldelim}
+		bMIconData[n].icon = new GIcon();
+		bMIconData[n].icon.image = bMIconData[n].image;
+		bMIconData[n].icon.iconSize = new GSize(bMIconData[n].icon_w, bMIconData[n].icon_h);
+		bMIconData[n].icon.iconAnchor = new GPoint(bMIconData[n].icon_anchor_x, bMIconData[n].icon_anchor_y);
+		bMIconData[n].icon.shadow = bMIconData[n].shadow_image;
+		bMIconData[n].icon.shadowSize = new GSize(bMIconData[n].shadow_w, bMIconData[n].shadow_h);
+		bMIconData[n].icon.infoShadowAnchor = new GPoint(bMIconData[n].shadow_anchor_x, bMIconData[n].shadow_anchor_y);
+		bMIconData[n].icon.infoWindowAnchor = new GPoint(bMIconData[n].infowindow_anchor_x, bMIconData[n].infowindow_anchor_y);
+{rdelim};
+
+
+
 
 function attachMarkers(arrayId){ldelim}
 	//get the array we are working on
@@ -112,6 +126,7 @@ function defineGxMarker(i, n, s){ldelim}
 {rdelim}
 
 
+
 function definePdMarker(i, n, s){ldelim}
 	var a;
 	if (i == "I"){ldelim}
@@ -132,6 +147,7 @@ function definePdMarker(i, n, s){ldelim}
   //rollover-icon: a[n].marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
   map.addOverlay(a[n].marker);
 {rdelim}
+
 
 
 function defineXMarker(i, n, s){ldelim}

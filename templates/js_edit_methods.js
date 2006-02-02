@@ -550,6 +550,8 @@ function editIconStyles(){
                 form.shadow_h.value = bMIconData[b].shadow_h;
                 form.icon_anchor_x.value = bMIconData[b].icon_anchor_x;
                 form.icon_anchor_y.value = bMIconData[b].icon_anchor_y;
+                form.shadow_anchor_x.value = bMIconData[b].shadow_anchor_x;
+                form.shadow_anchor_y.value = bMIconData[b].shadow_anchor_y;
                 form.infowindow_anchor_x.value = bMIconData[b].infowindow_anchor_x;
                 form.infowindow_anchor_y.value = bMIconData[b].infowindow_anchor_y;
     
@@ -1910,6 +1912,10 @@ function newPolylineStyle(){
   		m.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
 			var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
   		m.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
+			var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
+  		m.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
+			var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
+  		m.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
 			var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
   		m.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
 			var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
@@ -1954,6 +1960,10 @@ function newPolylineStyle(){
   		m.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
 			var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
   		m.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
+			var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
+  		m.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
+			var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
+  		m.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
 			var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
   		m.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
 			var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			

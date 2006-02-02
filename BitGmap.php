@@ -1124,6 +1124,14 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['iconstyle_store']['icon_anchor_y'] = $pParamHash['icon_anchor_y'];
 		}
 
+		if( !empty( $pParamHash['shadow_anchor_x'] ) && is_numeric( $pParamHash['shadow_anchor_x'] ) ) {
+			$pParamHash['iconstyle_store']['shadow_anchor_x'] = $pParamHash['shadow_anchor_x'];
+		}
+		
+		if( !empty( $pParamHash['shadow_anchor_y'] ) && is_numeric( $pParamHash['shadow_anchor_y'] ) ) {
+			$pParamHash['iconstyle_store']['shadow_anchor_y'] = $pParamHash['shadow_anchor_y'];
+		}
+
 		if( !empty( $pParamHash['infowindow_anchor_x'] ) && is_numeric( $pParamHash['infowindow_anchor_x'] ) ) {
 			$pParamHash['iconstyle_store']['infowindow_anchor_x'] = $pParamHash['infowindow_anchor_x'];
 		}

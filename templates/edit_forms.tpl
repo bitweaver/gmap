@@ -238,21 +238,23 @@
                              </select><br/>
 						</div>
                 	<div style="float:left; padding:0 .4em; width:120px">
-                     	Image <br/><input name="image" type="text" size="15" value="path-to-image"><br/>
-                     	Rollover Image <br/><input name="rollover_image" type="text" size="15" value="path-to-image"><br/>
-                     	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value="10"><br/>
-                     	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value="15"><br/>
+                     	Image <br/><input name="image" type="text" size="15" value="icons/FlatColorPins/205.png"><br/>
+                     	Rollover Image <br/><input name="rollover_image" type="text" size="15" value="icons/FlatColorPins/090.png"><br/>
+                     	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value="20"><br/>
+                     	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value="34"><br/>
 						</div>
                 	<div style="float:left; padding:0 .4em; width:120px">
-                     	Shadow Image <br/><input name="shadow_image" type="text" size="15" value="path-to-image"><br/>
-                     	Shadow Width <br/><input name="shadow_w" type="text" size="15" value="10"><br/>
-                     	Shadow Height <br/><input name="shadow_h" type="text" size="15" value="15"><br/>
+                     	Shadow Image <br/><input name="shadow_image" type="text" size="15" value="http://www.google.com/mapfiles/shadow50.png"><br/>
+                     	Shadow Width <br/><input name="shadow_w" type="text" size="15" value="37"><br/>
+                     	Shadow Height <br/><input name="shadow_h" type="text" size="15" value="34"><br/>
 						</div>
                 	<div style="float:left; padding:0 .4em; width:120px">
-                     	Icon Anchor X (px)<br/><input name="icon_anchor_x" type="text" size="15" value="0"><br/>
-                     	Icon Anchor Y (px)<br/><input name="icon_anchor_y" type="text" size="15" value="0"><br/>
-                     	InfoWindow Anchor X (px)<br/><input name="infowindow_anchor_x" type="text" size="15" value="0"><br/>
-                     	IconWindow Anchor Y (px)<br/><input name="infowindow_anchor_y" type="text" size="15" value="0"><br/>
+                     	Icon Anchor X (px)<br/><input name="icon_anchor_x" type="text" size="15" value="9"><br/>
+                     	Icon Anchor Y (px)<br/><input name="icon_anchor_y" type="text" size="15" value="34"><br/>
+                     	Shadow Anchor X (px)<br/><input name="shadow_anchor_x" type="text" size="15" value="18"><br/>
+                     	Shadow Anchor Y (px)<br/><input name="shadow_anchor_y" type="text" size="15" value="25"><br/>
+                     	InfoWindow Anchor X (px)<br/><input name="infowindow_anchor_x" type="text" size="15" value="9"><br/>
+                     	IconWindow Anchor Y (px)<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"><br/>
 						</div>
                 	<div style="float:left; padding:0 .4em; width:70px">ACTIONS<br/><a name="new_iconstyle_btn" title="save" href="javascript:storeNewIconStyle('edit_iconstyle.php', document.iconstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
     			</div>
@@ -274,28 +276,30 @@
                         <input name="icon_id" type="hidden" value="n">
 						</div>
                 	<div style="float:left; padding:0 .4em; width:120px">
-							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
+							Name <br/><input name="name" type="text" size="15" value=""><br/>
 							Type <br/><select name="type">
                                 <option value="0">GIcon</option>
                                 <option value="1">XIcon</option>
                              </select><br/>
 						</div>
                 	<div style="float:left; padding:0 .4em; width:120px">
-                     	Image <br/><input name="image" type="text" size="15" value="path-to-image"><br/>
-                     	Rollover Image <br/><input name="rollover_image" type="text" size="15" value="path-to-image"><br/>
-                     	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value="10"><br/>
-                     	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value="15"><br/>
+                     	Image <br/><input name="image" type="text" size="15" value=""><br/>
+                     	Rollover Image <br/><input name="rollover_image" type="text" size="15" value=""><br/>
+                     	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value=""><br/>
+                     	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value=""><br/>
 						</div>
                 	<div style="float:left; padding:0 .4em; width:120px">
-                     	Shadow Image <br/><input name="shadow_image" type="text" size="15" value="path-to-image"><br/>
-                     	Shadow Width <br/><input name="shadow_w" type="text" size="15" value="10"><br/>
-                     	Shadow Height <br/><input name="shadow_h" type="text" size="15" value="15"><br/>
+                     	Shadow Image <br/><input name="shadow_image" type="text" size="15" value=""><br/>
+                     	Shadow Width <br/><input name="shadow_w" type="text" size="15" value=""><br/>
+                     	Shadow Height <br/><input name="shadow_h" type="text" size="15" value=""><br/>
 						</div>
                 	<div style="float:left; padding:0 .4em; width:120px">
-                     	Icon Anchor X (px)<br/><input name="icon_anchor_x" type="text" size="15" value="0"><br/>
-                     	Icon Anchor Y (px)<br/><input name="icon_anchor_y" type="text" size="15" value="0"><br/>
-                     	InfoWindow Anchor X (px)<br/><input name="infowindow_anchor_x" type="text" size="15" value="0"><br/>
-                     	IconWindow Anchor Y (px)<br/><input name="infowindow_anchor_y" type="text" size="15" value="0"><br/>
+                     	Icon Anchor X (px)<br/><input name="icon_anchor_x" type="text" size="15" value=""><br/>
+                     	Icon Anchor Y (px)<br/><input name="icon_anchor_y" type="text" size="15" value=""><br/>
+                     	Shadow Anchor X (px)<br/><input name="shadow_anchor_x" type="text" size="15" value=""><br/>
+                     	Shadow Anchor Y (px)<br/><input name="shadow_anchor_y" type="text" size="15" value=""><br/>
+                     	InfoWindow Anchor X (px)<br/><input name="infowindow_anchor_x" type="text" size="15" value=""><br/>
+                     	IconWindow Anchor Y (px)<br/><input name="infowindow_anchor_y" type="text" size="15" value=""><br/>
 						</div>
                 	ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_iconstyle_btn" title="save" href="javascript:storeIconStyle('edit_iconstyle.php', document.iconstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
       			</div>

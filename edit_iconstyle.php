@@ -39,6 +39,8 @@ if (!empty($_REQUEST["save_iconstyle"])) {
       		  ."<shadow_h>".$result->fields['shadow_h']."</shadow_h>"
       		  ."<icon_anchor_x>".$result->fields['icon_anchor_x']."</icon_anchor_x>"
       		  ."<icon_anchor_y>".$result->fields['icon_anchor_y']."</icon_anchor_y>"
+      		  ."<shadow_anchor_x>".$result->fields['shadow_anchor_x']."</shadow_anchor_x>"
+      		  ."<shadow_anchor_y>".$result->fields['shadow_anchor_y']."</shadow_anchor_y>"
       		  ."<infowindow_anchor_x>".$result->fields['infowindow_anchor_x']."</infowindow_anchor_x>"
       		  ."<infowindow_anchor_y>".$result->fields['infowindow_anchor_y']."</infowindow_anchor_y>"
 						."</iconstyle>";
