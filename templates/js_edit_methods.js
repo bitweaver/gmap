@@ -469,6 +469,101 @@ function editIconStyles(){
 		show('editiconstylesmenu');
 		show('editiconstyleform');
 		show('editiconstylescancel');
+
+  	//if iconstyles data exists
+  	if ( typeof( bMIconData ) ) {
+  
+    	// We assume editIconStyles has been called before and remove 
+    	// any previously existing sets from the UI
+    	for (var a=0; a<bMIconData.length; a++) {
+    		if ( bMIconData[a]!= null ){
+      			var getElem = "editiconstyletable_" + bMIconData[a].style_id;
+        		if ( $(getElem) ) {
+            		var extraIconStyleForm = $(getElem);
+        			$('editiconstyleform').removeChild(extraIconStyleForm);
+        		}
+  			}
+    	}
+  
+    	var editIconStyleId;
+  
+    	// for each iconstyle data set clone the form
+    	for (var b=0; b<bMIconData.length; b++) {
+        	if ( bMIconData[b]!= null ){  						
+    
+        		editIconStyleId = bMIconData[b].style_id;
+    
+        		// clone the form container
+      			var newIconStyle = $('editiconstyletable_n').cloneNode(true);
+        		// give a new id to the new form container
+        		newIconStyle.id = "editiconstyletable_"+editIconStyleId;
+    
+      			// update the new form ids
+        		newIconStyleForm = newIconStyle.childNodes;
+                for ( var n = 0; n < newIconStyleForm.length; n++ ) {
+            		if ( newIconStyleForm[n].id == "iconstyleform_n" ) {					
+                  		newIconStyleForm[n].id = "iconstyleform_" + editIconStyleId;
+                  		newIconStyleForm[n].name = "iconstyleform_" + editIconStyleId;					 
+          				var nLSFKids = newIconStyleForm[n].childNodes;
+          				for (var o=0; o<nLSFKids.length; o++){
+          					if (nLSFKids[o].id == "iconstyleformdata_n"){
+          						nLSFKids[o].id = "iconstyleformdata_" + editIconStyleId;
+          					}
+          				}
+          			}
+          		}
+    
+            	// add form to style table
+        		$('editiconstyleform').appendChild(newIconStyle);
+        		show( 'editiconstyletable_'+editIconStyleId );
+        		show( 'iconstyleform_'+editIconStyleId );
+    
+      			// populate set form values
+      			form = $('iconstyleform_' + editIconStyleId );
+    
+                form.style_array_n.value = b;
+                form.icon_id.value = bMIconData[b].icon_id;
+                form.name.value = bMIconData[b].name;
+                for (var r=0; r < 2; r++) {
+                   if (form.type.options[r].value == bMIconData[b].type){
+                   		form.type.options[r].selected=true;
+                   }
+                };
+                form.image.value = bMIconData[b].image;
+                form.rollover_image.value = bMIconData[b].rollover_image;
+                form.icon_w.value = bMIconData[b].icon_w;
+                form.icon_h.value = bMIconData[b].icon_h;
+
+				 /* not sure want to both supporting these, 
+			 	  * probably more complex than people want to be bothered with
+				  * they are NOT in the edit_form.tpl
+					----------------------------------------------------------	
+					form.print_image.value = bMIconData[b].print_image;
+                form.moz_print_image.value = bMIconData[b].moz_print_image;
+                form.transparent.value = bMIconData[b].transparent;
+                form.print_shadow.value = bMIconData[b].print_shadow;
+                form.image_map.value = bMIconData[b].image_map;
+				  */
+
+                form.shadow_image.value = bMIconData[b].shadow_image;
+                form.shadow_w.value = bMIconData[b].shadow_w;
+                form.shadow_h.value = bMIconData[b].shadow_h;
+                form.icon_anchor_x.value = bMIconData[b].icon_anchor_x;
+                form.icon_anchor_y.value = bMIconData[b].icon_anchor_y;
+                form.infowindow_anchor_x.value = bMIconData[b].infowindow_anchor_x;
+                form.infowindow_anchor_y.value = bMIconData[b].infowindow_anchor_y;
+    
+      			// just for a pretty button - js sucks it!
+      			var linkParent = $('iconstyleformdata_'+editIconStyleId);
+      			var linkPKids = linkParent.childNodes;
+      			for (var p=0; p<linkPKids.length; p++){
+      				if (linkPKids[p].name == "save_iconstyle_btn"){
+        				linkPKids[p].href = "javascript:storeIconStyle('edit_iconstyle.php', document.iconstyleform_"+editIconStyleId+");" ;
+      				}
+    			}
+      		}
+  		}
+  	}
 }
 
 
@@ -1043,6 +1138,17 @@ function newPolylineStyle(){
 			doSimpleXMLHttpRequest(str).addCallback( updateMarkerStyle ); 
 	 }
 
+	 function storeNewIconStyle(u, f){
+	 		var str = u + "?" + queryString(f);
+			doSimpleXMLHttpRequest(str).addCallback( addIconStyle ); 
+	 }
+
+	 function storeIconStyle(u, f){
+			editObjectN = f.style_array_n.value;
+	 		var str = u + "?" + queryString(f);
+			doSimpleXMLHttpRequest(str).addCallback( updateIconStyle ); 
+	 }
+
 	 function expungeMarkerSet(u, s){
 			editSetId = s;
 			var str = u + "?" + "set_id=" + s + "&expunge_markerset=true";
@@ -1108,6 +1214,7 @@ function newPolylineStyle(){
 			doSimpleXMLHttpRequest(str).addCallback( updatePolylineStyle ); 
 	 }
 	 
+
 
 
 
@@ -1767,7 +1874,144 @@ function newPolylineStyle(){
 	 }
 
 	
+
+
+
+	 function addIconStyle(rslt){
+      var xml = rslt.responseXML;
+
+			// create a spot for a new iconstyle in the data array
+			var n = bMIconData.length;
+			bMIconData[n] = new Array();
+			var m = bMIconData[n];
+
+			// assign iconstyle values to data array			
+			var id = xml.documentElement.getElementsByTagName('icon_id');
+  		m.icon_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');
+  		m.name = nm[0].firstChild.nodeValue;
+			var tp = xml.documentElement.getElementsByTagName('type');
+  		m.type = parseInt( tp[0].firstChild.nodeValue );
+			var ig = xml.documentElement.getElementsByTagName('image');
+  		m.image = ig[0].firstChild.nodeValue;
+			var rig = xml.documentElement.getElementsByTagName('rollover_image');
+  		m.rollover_image = rig[0].firstChild.nodeValue;
+			var icw = xml.documentElement.getElementsByTagName('icon_w');
+  		m.icon_w = parseInt( icw[0].firstChild.nodeValue );
+			var ich = xml.documentElement.getElementsByTagName('icon_h');
+  		m.icon_h = parseInt( ich[0].firstChild.nodeValue );
+			var is = xml.documentElement.getElementsByTagName('shadow_image');			
+  		m.shadow_image = is[0].firstChild.nodeValue;
+			var isw = xml.documentElement.getElementsByTagName('shadow_w');
+  		m.shadow_w = parseInt( isw[0].firstChild.nodeValue );
+			var ish = xml.documentElement.getElementsByTagName('shadow_h');
+  		m.shadow_h = parseInt( ish[0].firstChild.nodeValue );
+			var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
+  		m.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
+			var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
+  		m.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
+			var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
+  		m.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
+			var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
+  		m.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
+
+			// clear the form
+			$('iconstyleform_new').reset();
+			// update the styles menus
+			editIconStyles();
+	 }
+
+
 	
+	 function updateIconStyle(rslt){
+      	var xml = rslt.responseXML;
+
+			//get the style we are updating
+			var m = bMIconData[editObjectN];
+
+			// assign iconsstyle values to data array
+			var id = xml.documentElement.getElementsByTagName('icon_id');
+  		m.icon_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');
+  		m.name = nm[0].firstChild.nodeValue;
+			var tp = xml.documentElement.getElementsByTagName('type');
+  		m.type = parseInt( tp[0].firstChild.nodeValue );
+			var ig = xml.documentElement.getElementsByTagName('image');
+  		m.image = ig[0].firstChild.nodeValue;
+			var rig = xml.documentElement.getElementsByTagName('rollover_image');
+  		m.rollover_image = rig[0].firstChild.nodeValue;
+			var icw = xml.documentElement.getElementsByTagName('icon_w');
+  		m.icon_w = parseInt( icw[0].firstChild.nodeValue );
+			var ich = xml.documentElement.getElementsByTagName('icon_h');
+  		m.icon_h = parseInt( ich[0].firstChild.nodeValue );
+			var is = xml.documentElement.getElementsByTagName('shadow_image');			
+  		m.shadow_image = is[0].firstChild.nodeValue;
+			var isw = xml.documentElement.getElementsByTagName('shadow_w');
+  		m.shadow_w = parseInt( isw[0].firstChild.nodeValue );
+			var ish = xml.documentElement.getElementsByTagName('shadow_h');
+  		m.shadow_h = parseInt( ish[0].firstChild.nodeValue );
+			var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
+  		m.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
+			var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
+  		m.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
+			var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
+  		m.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
+			var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
+  		m.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
+
+
+			//@todo - this needs to be made to support more than just init_markers
+			//update all markers
+			//for each marker
+			var arrayId = "I";
+      	var a = bIMData;
+    
+    	//if the length of the array is > 0
+    	if (a.length > 0){
+      	//loop through the array
+    		for(n=0; n<a.length; n++){
+      		//if the array item is not Null
+    			if (a[n]!= null){
+						if (a[n].icon_id == m.icon_id){
+	      				//unload the marker
+  						map.removeOverlay( a[n].marker );
+							/* this stuff gets the correct style reference, 
+							 * might be better to attach the styleArray 
+							 * index to the marker data somewhere higher up 
+							 * to minimize these loops - but several 
+							 * update methods will have to be changed
+							 */
+        				if (a[n].style_id == 0){
+        					defineGMarker(arrayId, n);
+        				}else{
+        					var stylen;
+        					for (var b=0; b<bMStyleData.length; b++){
+        						if ( bMStyleData[b].style_id == a[n].style_id ){
+        							stylen = b;
+        						}
+        					}
+        					if ( bMStyleData[stylen].type == 0){
+        						defineGxMarker(arrayId, n, stylen);
+        					}else if ( bMStyleData[stylen].type == 1){
+        						definePdMarker(arrayId, n, stylen);
+        					}else if ( bMStyleData[stylen].type == 2){
+        						defineXMarker(arrayId, n, stylen);
+        					}
+        				}
+						}
+					}
+    		}
+    	}
+	 }
+
+
+
+
+
+
+
+
+
 	
 /*******************
  *
@@ -2066,6 +2310,10 @@ function newPolylineStyle(){
     		}
     	}
 	 }
+
+
+
+
 
 
 	

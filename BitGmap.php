@@ -264,12 +264,12 @@ class BitGmap extends LibertyAttachable {
 		$ret = NULL;
 		if ($gmap_id && is_numeric($gmap_id)) {
 			$query = "SELECT DISTINCT bis.*
-						 	 	FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."gmaps_marker_sets` bms, `".BIT_DB_PREFIX."gmaps_icon_styles` bis
-								WHERE bmk.`gmap_id` = ?
-								AND bmk.`set_type` = 'init_markers'
-								AND bms.`set_id` = bmk.`set_id` AND bis.`icon_id` = bms.`style_id`
-								OR bmk.`set_type` = 'set_markers'
-								AND bms.`set_id` = bmk.`set_id` AND bis.`icon_id` = bms.`style_id`";
+					FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."gmaps_marker_sets` bms, `".BIT_DB_PREFIX."gmaps_icon_styles` bis
+					WHERE bmk.`gmap_id` = ?
+					AND bmk.`set_type` = 'init_markers'
+					AND bms.`set_id` = bmk.`set_id` AND bis.`icon_id` = bms.`icon_id`
+					OR bmk.`set_type` = 'set_markers'
+					AND bms.`set_id` = bmk.`set_id` AND bis.`icon_id` = bms.`icon_id`";
 
 			$result = $this->mDb->query( $query, array((int)$gmap_id) );
 
@@ -281,6 +281,7 @@ class BitGmap extends LibertyAttachable {
 		};
 		return $ret;
 	}
+
 
 
 

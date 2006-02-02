@@ -75,7 +75,8 @@ $tables = array(
   icon_anchor_x I4 DEFAULT 0,
   icon_anchor_y I4 DEFAULT 0,
   infowindow_anchor_x I4 DEFAULT 0,
-  infowindow_anchor_y I4 DEFAULT 0
+  infowindow_anchor_y I4 DEFAULT 0,
+  image_map X DEFAULT 0
 ",
 
 //type options: 0 => GMarker, 1 => PdMarker, 2 => XMarker
