@@ -1520,36 +1520,39 @@ function newPolylineStyle(){
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('id');			
 			var marker_id = id[0].firstChild.nodeValue;
-
 			var tl = xml.documentElement.getElementsByTagName('title');
 			var title = tl[0].firstChild.nodeValue;			
 	 		m.title = title;
-			
 			var lt = xml.documentElement.getElementsByTagName('lat');
 			var lat = parseFloat(lt[0].firstChild.nodeValue);
 	 		m.lat = lat;
-			
 			var ln = xml.documentElement.getElementsByTagName('lon');
 			var lon = parseFloat(ln[0].firstChild.nodeValue);
 	 		m.lon = lon;
-
 			var dt = xml.documentElement.getElementsByTagName('data');
 			var data = dt[0].firstChild.nodeValue;			
 	 		m.data = data;
-
 			var l = xml.documentElement.getElementsByTagName('label');
 			var label = l[0].firstChild.nodeValue;			
-	 		m.label_data = label;
-			
+	 		m.label_data = label;			
 			var z = xml.documentElement.getElementsByTagName('z');
 			var zindex = parseInt(z[0].firstChild.nodeValue);
 			m.zindex = zindex;
+
+			var iconn = null;
+			if (m.icon_id != 0){
+				for (var c=0; c<bMIconData.length; c++){
+					if ( bMIconData[c].icon_id == m.icon_id ){
+						iconn = c;
+					}
+				}
+			}
 			
         //unload the marker
         map.removeOverlay( m.marker );
         //remake the marker
         if (m.style_id == 0){
-         		defineGMarker(editArray, editObjectN);
+         		defineGMarker(editArray, editObjectN, iconn);
 					m.marker.openInfoWindowHtml(m.marker.my_html);
         }else{
         		var stylen;
@@ -1560,16 +1563,16 @@ function newPolylineStyle(){
         		}
         		//define new marker with new styles
           	if (bMStyleData[stylen].type == 0){
-          		defineGxMarker(editArray, editObjectN, stylen);
+          		defineGxMarker(editArray, editObjectN, iconn, stylen);
 					m.marker.openInfoWindowHtml(m.marker.my_html);
           	}else if (bMStyleData[stylen].type == 1){
-          		definePdMarker(editArray, editObjectN, stylen);
+          		definePdMarker(editArray, editObjectN, iconn, stylen);
                 m.marker.showTooltip();
                 m.marker.hideTooltip();
 					m.marker.showDetailWin();
 //					m.marker.openInfoWindowHtml("<div style='white-space: nowrap;'>Click this marker to see its window details</div>");
           	}else if (bMStyleData[stylen].type == 2){
-          		defineXMarker(editArray, editObjectN, stylen);
+          		defineXMarker(editArray, editObjectN, iconn, stylen);
 					m.marker.openInfoWindowHtml(m.marker.my_html);
           	}
         }
@@ -1625,9 +1628,18 @@ function newPolylineStyle(){
 			m.array = "I";
 			m.array_n = parseFloat(n);			
 
+			var iconn = null;
+			if (m.icon_id != 0){
+				for (var c=0; c<bMIconData.length; c++){
+					if ( bMIconData[c].icon_id == m.icon_id ){
+						iconn = c;
+					}
+				}
+			}
+
         //make the marker
         if (m.style_id == 0){
-         		defineGMarker(m.array, m.array_n);
+         		defineGMarker(m.array, m.array_n, iconn);
 					m.marker.openInfoWindowHtml(m.marker.my_html);
         }else{
         		var stylen;
@@ -1638,16 +1650,16 @@ function newPolylineStyle(){
         		}
         		//define new marker with new styles
           	if (bMStyleData[stylen].type == 0){
-          		defineGxMarker(m.array, m.array_n, stylen);
+          		defineGxMarker(m.array, m.array_n, iconn, stylen);
 					m.marker.openInfoWindowHtml(m.marker.my_html);
           	}else if (bMStyleData[stylen].type == 1){
-          		definePdMarker(m.array, m.array_n, stylen);
+          		definePdMarker(m.array, m.array_n, iconn, stylen);
                 m.marker.showTooltip();
                 m.marker.hideTooltip();
 					m.marker.showDetailWin();
 //					m.marker.openInfoWindowHtml("<div style='white-space: nowrap;'>Click this marker to see its window details</div>");
           	}else if (bMStyleData[stylen].type == 2){
-          		defineXMarker(m.array, m.array_n, stylen);
+          		defineXMarker(m.array, m.array_n, iconn, stylen);
 					m.marker.openInfoWindowHtml(m.marker.my_html);
           	}
         }
@@ -1844,15 +1856,24 @@ function newPolylineStyle(){
 						if (a[n].style_id == s.style_id){
 							if (s.type != oldtp){
   						//if style type is different
+								var iconn = null;
+            				if (a[n].icon_id != 0){
+            					for (var c=0; c<bMIconData.length; c++){
+            						if ( bMIconData[c].icon_id == a[n].icon_id ){
+            							iconn = c;
+            						}
+            					}
+            				}
+
 	      					//unload the marker
   							map.removeOverlay( a[n].marker );
 	      					//define new marker with new styles
   							if (s.type == 0){
-  								defineGxMarker(arrayId, n, editObjectN);
+  								defineGxMarker(arrayId, n, iconn, editObjectN);
   							}else if (s.type == 1){
-  								definePdMarker(arrayId, n, editObjectN);
+  								definePdMarker(arrayId, n, iconn, editObjectN);
   							}else if (s.type == 2){
-  								defineXMarker(arrayId, n, editObjectN);
+  								defineXMarker(arrayId, n, iconn, editObjectN);
   							}
 							}
 						}
@@ -1921,6 +1942,13 @@ function newPolylineStyle(){
 			var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
   		m.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
 
+			//make the icon available
+  		if (m.type == 0) {
+  			defineGIcon(editObjectN);
+  		}else if(m.type == 1){
+  			defineXIcon(editObjectN);			
+  		}
+
 			// clear the form
 			$('iconstyleform_new').reset();
 			// update the styles menus
@@ -1969,6 +1997,12 @@ function newPolylineStyle(){
 			var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
   		m.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
 
+			//update the icon
+  		if (m.type == 0) {
+  			defineGIcon(editObjectN);
+  		}else if(m.type == 1){
+  			defineXIcon(editObjectN);			
+  		}
 
 			//@todo - this needs to be made to support more than just init_markers
 			//update all markers
@@ -1992,7 +2026,7 @@ function newPolylineStyle(){
 							 * update methods will have to be changed
 							 */
         				if (a[n].style_id == 0){
-        					defineGMarker(arrayId, n);
+        					defineGMarker(arrayId, n, editObjectN);
         				}else{
         					var stylen;
         					for (var b=0; b<bMStyleData.length; b++){
@@ -2001,11 +2035,11 @@ function newPolylineStyle(){
         						}
         					}
         					if ( bMStyleData[stylen].type == 0){
-        						defineGxMarker(arrayId, n, stylen);
+        						defineGxMarker(arrayId, n, editObjectN, stylen);
         					}else if ( bMStyleData[stylen].type == 1){
-        						definePdMarker(arrayId, n, stylen);
+        						definePdMarker(arrayId, n, editObjectN, stylen);
         					}else if ( bMStyleData[stylen].type == 2){
-        						defineXMarker(arrayId, n, stylen);
+        						defineXMarker(arrayId, n, editObjectN, stylen);
         					}
         				}
 						}

@@ -59,7 +59,30 @@ function defineGIcon(n){ldelim}
 
 //@todo this is just a copy of GIcon right now and needs to be fully implemented
 function defineXIcon(n){ldelim}
-		bMIconData[n].icon = new GIcon();
+    //make the shape
+    var triShape = {ldelim}
+        iconAnchor: new GPoint(15, 26),
+        infoWindowAnchor: new GPoint(15, 0),
+        shadow: true,
+        contentAnchor: new GPoint(0, 0),
+        contentSize: new GSize(31, 20),
+        points: [0,0,15,26,30,0]
+    {rdelim};
+    
+    //put shape in the shape hash
+    XIcon.shapes['triangle'] = triShape;
+    
+    //create the styles
+    var triStyle = {ldelim}
+        scale: 1.5,
+        outlineColor: '#ffffff',
+        outlineWeight: 2,
+        fillColor: '#7f00ff',
+        fillOpacity: 0.5
+    {rdelim};    
+
+		bMIconData[n].icon = new XIcon('triangle', triStyle);
+/*
 		bMIconData[n].icon.image = bMIconData[n].image;
 		bMIconData[n].icon.iconSize = new GSize(bMIconData[n].icon_w, bMIconData[n].icon_h);
 		bMIconData[n].icon.iconAnchor = new GPoint(bMIconData[n].icon_anchor_x, bMIconData[n].icon_anchor_y);
@@ -67,6 +90,7 @@ function defineXIcon(n){ldelim}
 		bMIconData[n].icon.shadowSize = new GSize(bMIconData[n].shadow_w, bMIconData[n].shadow_h);
 		bMIconData[n].icon.infoShadowAnchor = new GPoint(bMIconData[n].shadow_anchor_x, bMIconData[n].shadow_anchor_y);
 		bMIconData[n].icon.infoWindowAnchor = new GPoint(bMIconData[n].infowindow_anchor_x, bMIconData[n].infowindow_anchor_y);
+*/
 {rdelim};
 
 
@@ -130,7 +154,7 @@ function defineGMarker(i, n, c){ldelim}
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var icon = null;
 	if (c != null){ldelim}
-		icon = bMIconData[n].icon;
+		icon = bMIconData[c].icon;
 	{rdelim}
   a[n].marker = new GMarker(point, icon);
   a[n].marker.style_id = 0;
@@ -156,8 +180,12 @@ function defineGxMarker(i, n, c, s){ldelim}
 	{rdelim};
 
 	var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
+	var icon = null;
+	if (c != null){ldelim}
+		icon = bMIconData[c].icon;
+	{rdelim}
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
-  a[n].marker = new GxMarker(point, null, mytip);
+  a[n].marker = new GxMarker(point, icon, mytip);
   a[n].marker.type = 0;
   a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
   map.addOverlay(a[n].marker);
@@ -175,7 +203,11 @@ function definePdMarker(i, n, c, s){ldelim}
 
 	//PdMarker Style
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
-  a[n].marker = new PdMarker(point);
+	var icon = null;
+	if (c != null){ldelim}
+		icon = bMIconData[c].icon;
+	{rdelim}
+  a[n].marker = new PdMarker(point, icon);
   a[n].marker.type = 1;
   a[n].marker.setTooltipClass( "tip-"+bMStyleData[s].name );
   a[n].marker.setDetailWinClass( "win-"+bMStyleData[s].name );
@@ -196,10 +228,15 @@ function defineXMarker(i, n, c, s){ldelim}
   	a = bSMData;
 	{rdelim};
 
+	var icon = null;
+	if (c != null){ldelim}
+		icon = bMIconData[c].icon;
+	{rdelim}
+
 	//XMarker Style
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
-  a[n].marker = new XMarker(point, null, null, mytip);
+  a[n].marker = new XMarker(point, icon, null, mytip);
   a[n].marker.type = 2;
   a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
   map.addOverlay(a[n].marker);
