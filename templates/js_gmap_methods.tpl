@@ -30,6 +30,20 @@ function addMapTypes(pParamHash){ldelim}
 
 
 
+function attachIcons(){ldelim}
+	var i = bMIconData;
+	if (i.length > 0){ldelim}
+  	for (n=0; n<i.length; n++){ldelim}
+  		if (i[n].type != null && i[n].type == 0) {ldelim}
+  			defineGIcon(n);
+  		{rdelim}else if(i[n].type != null && i[n].type == 1){ldelim}
+  			defineXIcon(n);			
+  		{rdelim}
+  	{rdelim}
+	{rdelim}
+{rdelim}
+
+
 //@todo - these image paths may not be universal enough, may need to get the root from kernel
 function defineGIcon(n){ldelim}
 		bMIconData[n].icon = new GIcon();
@@ -42,6 +56,18 @@ function defineGIcon(n){ldelim}
 		bMIconData[n].icon.infoWindowAnchor = new GPoint(bMIconData[n].infowindow_anchor_x, bMIconData[n].infowindow_anchor_y);
 {rdelim};
 
+
+//@todo this is just a copy of GIcon right now and needs to be fully implemented
+function defineXIcon(n){ldelim}
+		bMIconData[n].icon = new GIcon();
+		bMIconData[n].icon.image = bMIconData[n].image;
+		bMIconData[n].icon.iconSize = new GSize(bMIconData[n].icon_w, bMIconData[n].icon_h);
+		bMIconData[n].icon.iconAnchor = new GPoint(bMIconData[n].icon_anchor_x, bMIconData[n].icon_anchor_y);
+		bMIconData[n].icon.shadow = bMIconData[n].shadow_image;
+		bMIconData[n].icon.shadowSize = new GSize(bMIconData[n].shadow_w, bMIconData[n].shadow_h);
+		bMIconData[n].icon.infoShadowAnchor = new GPoint(bMIconData[n].shadow_anchor_x, bMIconData[n].shadow_anchor_y);
+		bMIconData[n].icon.infoWindowAnchor = new GPoint(bMIconData[n].infowindow_anchor_x, bMIconData[n].infowindow_anchor_y);
+{rdelim};
 
 
 
@@ -60,8 +86,16 @@ function attachMarkers(arrayId){ldelim}
 		for(n=0; n<a.length; n++){ldelim}
   		//if the array item is not Null
 			if (a[n]!= null){ldelim}
+				var iconn = null;
+				if (a[n].icon_id != 0){ldelim}
+					for (var c=0; c<bMIconData.length; c++){ldelim}
+						if ( bMIconData[c].icon_id == a[n].icon_id ){ldelim}
+							iconn = c;
+						{rdelim}
+					{rdelim}
+				{rdelim}
 				if (a[n].style_id == 0){ldelim}
-					defineGMarker(arrayId, n);
+					defineGMarker(arrayId, n, iconn);
 				{rdelim}else{ldelim}
 					var stylen;
 					for (var b=0; b<bMStyleData.length; b++){ldelim}
@@ -70,11 +104,11 @@ function attachMarkers(arrayId){ldelim}
 						{rdelim}
 					{rdelim}
 					if ( bMStyleData[stylen].type == 0){ldelim}
-						defineGxMarker(arrayId, n, stylen);
+						defineGxMarker(arrayId, n, iconn, stylen);
 					{rdelim}else if ( bMStyleData[stylen].type == 1){ldelim}
-						definePdMarker(arrayId, n, stylen);
+						definePdMarker(arrayId, n, iconn, stylen);
 					{rdelim}else if ( bMStyleData[stylen].type == 2){ldelim}
-						defineXMarker(arrayId, n, stylen);
+						defineXMarker(arrayId, n, iconn, stylen);
 					{rdelim}
 				{rdelim}
 			{rdelim}
@@ -85,7 +119,7 @@ function attachMarkers(arrayId){ldelim}
 
 
 
-function defineGMarker(i, n){ldelim}
+function defineGMarker(i, n, c){ldelim}
 	var a;
 	if (i == "I"){ldelim}
   	a = bIMData;
@@ -94,7 +128,11 @@ function defineGMarker(i, n){ldelim}
 	{rdelim};
 
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
-  a[n].marker = new GMarker(point);
+	var icon = null;
+	if (c != null){ldelim}
+		icon = bMIconData[n].icon;
+	{rdelim}
+  a[n].marker = new GMarker(point, icon);
   a[n].marker.style_id = 0;
   a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
   map.addOverlay(a[n].marker);
@@ -109,7 +147,7 @@ function defineGMarker(i, n){ldelim}
 
 
 
-function defineGxMarker(i, n, s){ldelim}
+function defineGxMarker(i, n, c, s){ldelim}
 	var a;
 	if (i == "I"){ldelim}
   	a = bIMData;
@@ -127,7 +165,7 @@ function defineGxMarker(i, n, s){ldelim}
 
 
 
-function definePdMarker(i, n, s){ldelim}
+function definePdMarker(i, n, c, s){ldelim}
 	var a;
 	if (i == "I"){ldelim}
   	a = bIMData;
@@ -150,7 +188,7 @@ function definePdMarker(i, n, s){ldelim}
 
 
 
-function defineXMarker(i, n, s){ldelim}
+function defineXMarker(i, n, c, s){ldelim}
 	var a;
 	if (i == "I"){ldelim}
   	a = bIMData;
@@ -333,6 +371,12 @@ function loadMap() {ldelim}
 	{/if}
 
     map.centerAndZoom(new GPoint(bMapLon, bMapLat), bMapZoom);
+
+	//create custom Icons
+	{if count($gContent->mMapIconStyles) > 0}
+		attachIcons();
+	{/if}
+
 		
 	//Attach Markers
 	{if count($gContent->mMapInitMarkers) > 0}
