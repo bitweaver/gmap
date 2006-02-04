@@ -242,8 +242,6 @@
                      	Rollover Image <br/><input name="rollover_image" type="text" size="15" value="icons/FlatColorPins/090.png"><br/>
                      	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value="20"><br/>
                      	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value="34"><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
                      	Shadow Image <br/><input name="shadow_image" type="text" size="15" value="http://www.google.com/mapfiles/shadow50.png"><br/>
                      	Shadow Width <br/><input name="shadow_w" type="text" size="15" value="37"><br/>
                      	Shadow Height <br/><input name="shadow_h" type="text" size="15" value="34"><br/>
@@ -255,6 +253,15 @@
                      	Shadow Anchor Y (px)<br/><input name="shadow_anchor_y" type="text" size="15" value="25"><br/>
                      	InfoWindow Anchor X (px)<br/><input name="infowindow_anchor_x" type="text" size="15" value="9"><br/>
                      	IconWindow Anchor Y (px)<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+							XIcon Styles
+                     	Points<br/><input name="points" type="text" size="15" value="0"><br/>
+                     	Scale<br/><input name="scale" type="text" size="15" value="1"><br/>
+                     	Outline Color (HEX)<br/><input name="outline_color" type="text" size="15" value="ffffff"><br/>
+                     	Outline Weight<br/><input name="outline_weight" type="text" size="15" value="2"><br/>
+                     	Fill Color<br/><input name="fill_color" type="text" size="15" value="ff3300"><br/>
+                     	Fill Opacity<br/><input name="fill_opacity" type="text" size="15" value=".5"><br/>
 						</div>
                 	<div style="float:left; padding:0 .4em; width:70px">ACTIONS<br/><a name="new_iconstyle_btn" title="save" href="javascript:storeNewIconStyle('edit_iconstyle.php', document.iconstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
     			</div>
@@ -287,8 +294,6 @@
                      	Rollover Image <br/><input name="rollover_image" type="text" size="15" value=""><br/>
                      	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value=""><br/>
                      	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value=""><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
                      	Shadow Image <br/><input name="shadow_image" type="text" size="15" value=""><br/>
                      	Shadow Width <br/><input name="shadow_w" type="text" size="15" value=""><br/>
                      	Shadow Height <br/><input name="shadow_h" type="text" size="15" value=""><br/>
@@ -300,6 +305,15 @@
                      	Shadow Anchor Y (px)<br/><input name="shadow_anchor_y" type="text" size="15" value=""><br/>
                      	InfoWindow Anchor X (px)<br/><input name="infowindow_anchor_x" type="text" size="15" value=""><br/>
                      	IconWindow Anchor Y (px)<br/><input name="infowindow_anchor_y" type="text" size="15" value=""><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+							XIcon Styles
+                     	Points<br/><input name="points" type="text" size="15" value=""><br/>
+                     	Scale<br/><input name="scale" type="text" size="15" value=""><br/>
+                     	Outline Color (HEX)<br/><input name="outline_color" type="text" size="15" value=""><br/>
+                     	Outline Weight<br/><input name="outline_weight" type="text" size="15" value=""><br/>
+                     	Fill Color<br/><input name="fill_color" type="text" size="15" value=""><br/>
+                     	Fill Opacity<br/><input name="fill_opacity" type="text" size="15" value=""><br/>
 						</div>
                 	ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_iconstyle_btn" title="save" href="javascript:storeIconStyle('edit_iconstyle.php', document.iconstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
       			</div>
@@ -393,51 +407,58 @@
 <div id="editmarkerform" class="editform" style="display:none;">
 		<h2>Marker Sets Associated With This Map</h2>		
 		<div id="markerset_n" style="display:none; clear:both;">
-			<div id="editsetmenu_n">
-				 <b id="setid">Set Name</b> | 
-				 <span id="setstyle">Style</span> | 
-				 <span id="seticon">Icon</span> | 
-				 <a id="seteditmarkers" href="javascript:editSet('n');">Edit These Markers</a> | 
-				 <a id="setaddmarkers" href="javascript:editSet('n'); show('allavailmarkers_n');">Add Markers to This Set</a> | 
-				 <a id="seteditstyle" href="javascript:alert('this feature is coming soon');">Edit Set Style</a> | 
-				 <a id="setediticon" href="javascript:alert('this feature is coming soon');">Edit Icon Style</a> | 				 
-				 <a id="setremove" href="javascript:removeMarkerSet('edit_markerset.php', set_id, set_type);">Remove Set From Map</a> | 
-				 <a id="setdelete" href="javascript:expungeMarkerSet('edit_markerset.php', set_id);">Delete Set</a>
-		  	 <br/><span id="setdesc">Description Here</span>
-			</div>
-			<div id="setform_n" style="display:none;">
-				<h3>Markers In This Set</h3>
-        <div class="tableheader">
-    				<div style="float:left; padding:0 .4em; width:90px"> Title </div>
-    				<div style="float:left; padding:0 .4em; width:90px"> Latitude </div>
-    				<div style="float:left; padding:0 .4em; width:90px"> Longitude </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Window Text </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Label Text </div>
-    				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
-    				<div style="float:left; padding:0 .4em; width:70px"> ACTIONS </div>
-    		</div>
-    		<div class="table" id="editmarkertable_n">
-    			<form action="javascript:;" name="markerform_n" id="markerform_n" style="display:none;">
-    			<div class="data" id="formdata_n">
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="save_marker" type="hidden" value="true"></div>
-          	<div style="float:left; padding:0 .4em; width:30px"><input name="set_id" type="hidden" size="3" value="n"></div>
-      			<div style="float:left; padding:0 .4em; width:30px"><input name="marker_id" type="hidden" size="3" value="n"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="title" type="text" size="15" value="a title"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lat" type="text" size="15" value=""></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lon" type="text" size="15" value=""></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="edit" cols="15" rows="3"></textarea></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
-          	<div style="float:left; padding:0 .4em; width:50px"><input name="marker_zi" type="text" size="3" value="0"></div>
-          	<div style="float:left; padding:0;"><input name="marker_array" type="hidden" value=""></div>
-          	<div style="float:left; padding:0;"><input name="marker_array_n" type="hidden" value=""></div>
-          	<a style="float:left; padding:0 .4em;" name="save_marker_btn" title="save" href="javascript:storeMarker('edit_marker.php', document.markerform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-          	<a style="float:left; padding:0 .4em;" name="locate_marker_btn" title="locate on the map" href="javascript:bIMData[marker_array_n].marker.openInfoWindowHtml(bIMData[marker_array_n].marker.my_html);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-          	<a style="float:left; padding:0 .4em;" name="remove_marker_btn" title="remove from this set" href="javascript:removeMarker('edit_marker.php', document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-          	<a style="float:left; padding:0 .4em;" name="expunge_marker_btn" title="delete the marker!" href="javascript:expungeMarker('edit_marker.php', document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
-          	<a style="float:left; padding:0 .4em;" name="marker_assist_btn" title="click a location!" href="javascript:addAssistant('marker', 'n');">Use Locating Assistant</a>
-    			</div>
-    			</form>
-  		  </div>
+    		<form action="javascript:;" name="markersetform_n" id="markersetform_n" style="display:none;">
+					<input name="set_id" type="hidden" size="3" value="n">
+					<input name="set_type" type="hidden" size="3" value="n">
+                <input name="set_array_n" type="hidden" value="n">
+  				<div class="data" id="markersetformdata_n">
+    				<b id="setname">Set Name:</b> <span id="setdesc">Description Here</span><br/>
+    				<a id="seteditmarkers" href="javascript:editSet('n');">Edit These Markers</a> | 
+    				<a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a> | 
+						Style: <select name="style_id">
+                  					<option value="0">Google (standard)</option>
+                      				</select> | 
+            		Icon: <select name="icon_id">
+                                      <option value="0">Google (standard)</option>
+                                   	</select> | 
+    				<a id="setstore" href="javascript:storeMarkerSet('edit_markerset.php', set_id);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+    				<a id="setremove" href="javascript:removeMarkerSet('edit_markerset.php', set_id, set_type);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+    				<a id="setdelete" href="javascript:expungeMarkerSet('edit_markerset.php', set_id);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
+  				</div>
+        	</form>
+				<div id="setform_n" style="display:none;">
+					<h3>Markers In This Set</h3>
+            	<div class="tableheader">
+        				<div style="float:left; padding:0 .4em; width:90px"> Title </div>
+        				<div style="float:left; padding:0 .4em; width:90px"> Latitude </div>
+        				<div style="float:left; padding:0 .4em; width:90px"> Longitude </div>
+        				<div style="float:left; padding:0 .4em; width:140px"> Window Text </div>
+        				<div style="float:left; padding:0 .4em; width:140px"> Label Text </div>
+        				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
+        				<div style="float:left; padding:0 .4em; width:70px"> ACTIONS </div>
+        		</div>
+    			<div class="table" id="editmarkertable_n">
+        			<form action="javascript:;" name="markerform_n" id="markerform_n" style="display:none;">
+        			<div class="data" id="formdata_n">
+                		<div style="float:left; padding:0 .4em; width:90px"><input name="save_marker" type="hidden" value="true"></div>
+                		<div style="float:left; padding:0 .4em; width:30px"><input name="set_id" type="hidden" size="3" value="n"></div>
+            			<div style="float:left; padding:0 .4em; width:30px"><input name="marker_id" type="hidden" size="3" value="n"></div>
+                		<div style="float:left; padding:0 .4em; width:90px"><input name="title" type="text" size="15" value="a title"></div>
+                		<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lat" type="text" size="15" value=""></div>
+                		<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lon" type="text" size="15" value=""></div>
+                		<div style="float:left; padding:0 .4em; width:140px"><textarea name="edit" cols="15" rows="3"></textarea></div>
+                		<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
+                		<div style="float:left; padding:0 .4em; width:50px"><input name="marker_zi" type="text" size="3" value="0"></div>
+                		<div style="float:left; padding:0;"><input name="marker_array" type="hidden" value=""></div>
+                		<div style="float:left; padding:0;"><input name="marker_array_n" type="hidden" value=""></div>
+                		<a style="float:left; padding:0 .4em;" name="save_marker_btn" title="save" href="javascript:storeMarker('edit_marker.php', document.markerform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+                		<a style="float:left; padding:0 .4em;" name="locate_marker_btn" title="locate on the map" href="javascript:bIMData[marker_array_n].marker.openInfoWindowHtml(bIMData[marker_array_n].marker.my_html);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="remove_marker_btn" title="remove from this set" href="javascript:removeMarker('edit_marker.php', document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="expunge_marker_btn" title="delete the marker!" href="javascript:expungeMarker('edit_marker.php', document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="marker_assist_btn" title="click a location!" href="javascript:addAssistant('marker', 'n');">Use Locating Assistant</a>
+        			</div>
+        			</form>
+  		  		</div>
       	<div id="allavailmarkers_n" style="display:none; clear:both;">
     			<h3>All Markers Available</h3>
         	<div class="table" id="addmarkertable_n">

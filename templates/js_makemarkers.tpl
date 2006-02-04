@@ -83,15 +83,23 @@ var bMIconData = new Array();
 		bMIconData[{$smarty.section.markericondata.index}].transparent = "{$gContent->mMapIconStyles[markericondata].transparent}";
 		bMIconData[{$smarty.section.markericondata.index}].shadow_image = "{$gContent->mMapIconStyles[markericondata].shadow_image}";
 		bMIconData[{$smarty.section.markericondata.index}].print_shadow = "{$gContent->mMapIconStyles[markericondata].print_shadow}";
-		{* bMIconData[{$smarty.section.markericondata.index}].image_map = {$gContent->mMapIconStyles[markericondata].image_map}; *}
 		bMIconData[{$smarty.section.markericondata.index}].icon_w = {$gContent->mMapIconStyles[markericondata].icon_w};
 		bMIconData[{$smarty.section.markericondata.index}].icon_h = {$gContent->mMapIconStyles[markericondata].icon_h};
 		bMIconData[{$smarty.section.markericondata.index}].shadow_w = {$gContent->mMapIconStyles[markericondata].shadow_w};
 		bMIconData[{$smarty.section.markericondata.index}].shadow_h = {$gContent->mMapIconStyles[markericondata].shadow_h};
 		bMIconData[{$smarty.section.markericondata.index}].icon_anchor_x = {$gContent->mMapIconStyles[markericondata].icon_anchor_x};
 		bMIconData[{$smarty.section.markericondata.index}].icon_anchor_y = {$gContent->mMapIconStyles[markericondata].icon_anchor_y};
+		bMIconData[{$smarty.section.markericondata.index}].shadow_anchor_x = {$gContent->mMapIconStyles[markericondata].shadow_anchor_x};
+		bMIconData[{$smarty.section.markericondata.index}].shadow_anchor_y = {$gContent->mMapIconStyles[markericondata].shadow_anchor_y};
 		bMIconData[{$smarty.section.markericondata.index}].infowindow_anchor_x = {$gContent->mMapIconStyles[markericondata].infowindow_anchor_x};
 		bMIconData[{$smarty.section.markericondata.index}].infowindow_anchor_y = {$gContent->mMapIconStyles[markericondata].infowindow_anchor_y};
+		{* bMIconData[{$smarty.section.markericondata.index}].image_map = {$gContent->mMapIconStyles[markericondata].image_map}; *}
+		bMIconData[{$smarty.section.markericondata.index}].points = "{$gContent->mMapIconStyles[markericondata].points}";
+		bMIconData[{$smarty.section.markericondata.index}].scale = {$gContent->mMapIconStyles[markericondata].scale};
+		bMIconData[{$smarty.section.markericondata.index}].outline_color = "{$gContent->mMapIconStyles[markericondata].outline_color}";
+		bMIconData[{$smarty.section.markericondata.index}].outline_weight = {$gContent->mMapIconStyles[markericondata].outline_weight};
+		bMIconData[{$smarty.section.markericondata.index}].fill_color = "{$gContent->mMapIconStyles[markericondata].fill_color}";
+		bMIconData[{$smarty.section.markericondata.index}].fill_opacity = {$gContent->mMapIconStyles[markericondata].fill_opacity};
 	{/section}
 {/if}
 

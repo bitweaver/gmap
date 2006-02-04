@@ -43,6 +43,12 @@ if (!empty($_REQUEST["save_iconstyle"])) {
       		  ."<shadow_anchor_y>".$result->fields['shadow_anchor_y']."</shadow_anchor_y>"
       		  ."<infowindow_anchor_x>".$result->fields['infowindow_anchor_x']."</infowindow_anchor_x>"
       		  ."<infowindow_anchor_y>".$result->fields['infowindow_anchor_y']."</infowindow_anchor_y>"
+      		  ."<points>".$result->fields['points']."</points>"
+      		  ."<scale>".$result->fields['scale']."</scale>"
+      		  ."<outline_color>".$result->fields['outline_color']."</outline_color>"
+      		  ."<outline_weight>".$result->fields['outline_weight']."</outline_weight>"
+      		  ."<fill_color>".$result->fields['fill_color']."</fill_color>"
+      		  ."<fill_opacity>".$result->fields['fill_opacity']."</fill_opacity>"
 						."</iconstyle>";
 
     }else{

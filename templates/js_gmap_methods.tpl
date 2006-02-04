@@ -57,42 +57,31 @@ function defineGIcon(n){ldelim}
 {rdelim};
 
 
-//@todo this is just a copy of GIcon right now and needs to be fully implemented
 function defineXIcon(n){ldelim}
     //make the shape
-    var triShape = {ldelim}
-        iconAnchor: new GPoint(15, 26),
-        infoWindowAnchor: new GPoint(15, 0),
-        shadow: true,
+    var xishape = new Object;
+    xishape.iconAnchor = new GPoint(bMIconData[n].icon_anchor_x, bMIconData[n].icon_anchor_y);
+    xishape.infoWindowAnchor = new GPoint(bMIconData[n].infowindow_anchor_x, bMIconData[n].infowindow_anchor_y);
+    xishape.shadow = true;
+    xishape.points = bMIconData[n].points.split(",");
+			/* @todo maybe in the future we'll add these
         contentAnchor: new GPoint(0, 0),
         contentSize: new GSize(31, 20),
-        points: [0,0,15,26,30,0]
-    {rdelim};
+			*/
     
     //put shape in the shape hash
-    XIcon.shapes['triangle'] = triShape;
+    XIcon.shapes[bMIconData[n].name] = xishape;
     
     //create the styles
-    var triStyle = {ldelim}
-        scale: 1.5,
-        outlineColor: '#ffffff',
-        outlineWeight: 2,
-        fillColor: '#7f00ff',
-        fillOpacity: 0.5
-    {rdelim};    
+    var xistyle = new Object;
+    xistyle.scale = bMIconData[n].scale;
+    xistyle.outlineColor = "#" + bMIconData[n].outline_color;
+    xistyle.outlineWeight = bMIconData[n].outline_weight;
+    xistyle.fillColor = "#" + bMIconData[n].fill_color;
+    xistyle.fillOpacity = bMIconData[n].fill_opacity;
 
-		bMIconData[n].icon = new XIcon('triangle', triStyle);
-/*
-		bMIconData[n].icon.image = bMIconData[n].image;
-		bMIconData[n].icon.iconSize = new GSize(bMIconData[n].icon_w, bMIconData[n].icon_h);
-		bMIconData[n].icon.iconAnchor = new GPoint(bMIconData[n].icon_anchor_x, bMIconData[n].icon_anchor_y);
-		bMIconData[n].icon.shadow = bMIconData[n].shadow_image;
-		bMIconData[n].icon.shadowSize = new GSize(bMIconData[n].shadow_w, bMIconData[n].shadow_h);
-		bMIconData[n].icon.infoShadowAnchor = new GPoint(bMIconData[n].shadow_anchor_x, bMIconData[n].shadow_anchor_y);
-		bMIconData[n].icon.infoWindowAnchor = new GPoint(bMIconData[n].infowindow_anchor_x, bMIconData[n].infowindow_anchor_y);
-*/
+		bMIconData[n].icon = new XIcon(bMIconData[n].name, xistyle);
 {rdelim};
-
 
 
 function attachMarkers(arrayId){ldelim}

@@ -78,7 +78,13 @@ $tables = array(
   shadow_anchor_y I4 DEFAULT 25,
   infowindow_anchor_x I4 DEFAULT 9,
   infowindow_anchor_y I4 DEFAULT 2,
-  image_map X DEFAULT 0
+  image_map X DEFAULT 0,	
+	points X DEFAULT 0,
+	scale I2 DEFAULT 1,
+	outline_color C(6) DEFAULT 'ffffff',
+	outline_weight I4 DEFAULT 2,
+	fill_color C(6) DEFAULT 'ff3300',
+	fill_opacity F DEFAULT .5
 ",
 
 //type options: 0 => GMarker, 1 => PdMarker, 2 => XMarker

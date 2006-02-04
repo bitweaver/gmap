@@ -916,11 +916,11 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['markerset_store']['description'] = $pParamHash['description'];
 		}
 		
-		if( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
+		if( ( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) || $pParamHash['style_id'] == 0 ) {
 			$pParamHash['markerset_store']['style_id'] = $pParamHash['style_id'];
 		}
 		
-		if( !empty( $pParamHash['icon_id'] ) && is_numeric( $pParamHash['icon_id'] ) ) {
+		if( ( !empty( $pParamHash['icon_id'] ) && is_numeric( $pParamHash['icon_id'] ) ) || $pParamHash['icon_id'] == 0 ) {
 			$pParamHash['markerset_store']['icon_id'] = $pParamHash['icon_id'];
 		}
 
@@ -1138,6 +1138,30 @@ class BitGmap extends LibertyAttachable {
 		
 		if( !empty( $pParamHash['infowindow_anchor_y'] ) && is_numeric( $pParamHash['infowindow_anchor_y'] ) ) {
 			$pParamHash['iconstyle_store']['infowindow_anchor_y'] = $pParamHash['infowindow_anchor_y'];
+		}
+
+		if( !empty( $pParamHash['points'] ) ) {
+			$pParamHash['iconstyle_store']['points'] = $pParamHash['points'];
+		}
+
+		if( !empty( $pParamHash['scale'] ) && is_numeric( $pParamHash['scale'] ) ) {
+			$pParamHash['iconstyle_store']['scale'] = $pParamHash['scale'];
+		}
+
+		if( !empty( $pParamHash['outline_color'] ) ) {
+			$pParamHash['iconstyle_store']['outline_color'] = $pParamHash['outline_color'];
+		}
+
+		if( !empty( $pParamHash['outline_weight'] ) && is_numeric( $pParamHash['outline_weight'] ) ) {
+			$pParamHash['iconstyle_store']['outline_weight'] = $pParamHash['outline_weight'];
+		}
+
+		if( !empty( $pParamHash['fill_color'] ) ) {
+			$pParamHash['iconstyle_store']['fill_color'] = $pParamHash['fill_color'];
+		}
+
+		if( !empty( $pParamHash['fill_opacity'] ) && is_numeric( $pParamHash['fill_opacity'] ) ) {
+			$pParamHash['iconstyle_store']['fill_opacity'] = $pParamHash['fill_opacity'];
 		}
 		
 		return( count( $this->mErrors ) == 0 );
