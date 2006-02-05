@@ -192,6 +192,8 @@ class BitGmap extends LibertyAttachable {
 
 			while ($res = $result->fetchrow()) {
 				$res['parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
+				$res['parsed_data'] = addslashes($res['parsed_data']);
+				$res['data'] = addslashes($res['data']);
 				$res['data'] = str_replace("\n", "\\n", $res['data']);
 				$ret[] = $res;
 			};
