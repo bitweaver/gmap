@@ -147,7 +147,7 @@ function defineGMarker(i, n, c){ldelim}
 	{rdelim}
   a[n].marker = new GMarker(point, icon);
   a[n].marker.style_id = 0;
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
   //add the marker label if it exists
   if (typeof(a[n].label_data) != 'undefined'){ldelim}
@@ -176,7 +176,7 @@ function defineGxMarker(i, n, c, s){ldelim}
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new GxMarker(point, icon, mytip);
   a[n].marker.type = 0;
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
 {rdelim}
 
@@ -201,7 +201,7 @@ function definePdMarker(i, n, c, s){ldelim}
   a[n].marker.setTooltipClass( "tip-"+bMStyleData[s].name );
   a[n].marker.setDetailWinClass( "win-"+bMStyleData[s].name );
   a[n].marker.setTooltip( "<div>" + a[n].label_data + "</div>");
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].parsed_data+"</p></div>";
   a[n].marker.setDetailWinHTML( a[n].marker.my_html );
   //rollover-icon: a[n].marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
   map.addOverlay(a[n].marker);
@@ -227,7 +227,7 @@ function defineXMarker(i, n, c, s){ldelim}
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new XMarker(point, icon, null, mytip);
   a[n].marker.type = 2;
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].data+"</p></div>";
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
 {rdelim}
 

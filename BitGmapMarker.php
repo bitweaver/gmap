@@ -73,6 +73,8 @@ class BitGmapMarker extends LibertyAttachable {
 				$this->mInfo = $result->fields;
 				$this->mGmarkerId = $result->fields['marker_id'];
 				$this->mContentId = $result->fields['content_id'];
+				$this->mInfo['parsed_data'] = $this->parseData( $this->mInfo['data'], $this->mInfo['format_guid'] );
+				$this->mInfo['data'] = str_replace("\n", "\\n", $this->mInfo['data']);
 				parent::load();				
 			}
 		}

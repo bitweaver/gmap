@@ -1300,38 +1300,27 @@ function newPolylineStyle(){
 			
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('gmap_id');
-			bMapID = id[0].firstChild.nodeValue;
-			
+			bMapID = id[0].firstChild.nodeValue;			
  			var t = xml.documentElement.getElementsByTagName('title');
 			bMapTitle = t[0].firstChild.nodeValue;
-			
 			var d = xml.documentElement.getElementsByTagName('desc');
-			bMapDesc = d[0].firstChild.nodeValue;
-			
+			bMapDesc = d[0].firstChild.nodeValue;			
 			var w = xml.documentElement.getElementsByTagName('w');
 			bMapWidth = w[0].firstChild.nodeValue;
-			
 			var h = xml.documentElement.getElementsByTagName('h');
-			bMapHeight = h[0].firstChild.nodeValue;
-			
+			bMapHeight = h[0].firstChild.nodeValue;			
 			var lt = xml.documentElement.getElementsByTagName('lat');
 			bMapLat = parseFloat(lt[0].firstChild.nodeValue);
-			
 			var ln = xml.documentElement.getElementsByTagName('lon');
 			bMapLon = parseFloat(ln[0].firstChild.nodeValue);
-			
 			var z = xml.documentElement.getElementsByTagName('z');
 			bMapZoom = parseInt(z[0].firstChild.nodeValue);
-			
 			var ss = xml.documentElement.getElementsByTagName('scale');
 			bMapScale = ss[0].firstChild.nodeValue;
-			
 			var sc = xml.documentElement.getElementsByTagName('cont');
 			bMapControl = sc[0].firstChild.nodeValue;
-			
 			var sm = xml.documentElement.getElementsByTagName('typecon');
 			bMapTypeCont = sm[0].firstChild.nodeValue;
-			
 			var mt = xml.documentElement.getElementsByTagName('maptype');
 			bMapType = bMapTypes[mt[0].firstChild.nodeValue];			
 
@@ -1581,6 +1570,9 @@ function newPolylineStyle(){
 			var dt = xml.documentElement.getElementsByTagName('data');
 			var data = dt[0].firstChild.nodeValue;			
 	 		m.data = data;
+			var pdt = xml.documentElement.getElementsByTagName('parsed_data');
+			var parsed_data = pdt[0].firstChild.nodeValue;
+	 		m.parsed_data = parsed_data;
 			var l = xml.documentElement.getElementsByTagName('label');
 			var label = l[0].firstChild.nodeValue;			
 	 		m.label_data = label;			
@@ -1666,6 +1658,8 @@ function newPolylineStyle(){
 			m.lon = parseFloat(ln[0].firstChild.nodeValue);
 			var dt = xml.documentElement.getElementsByTagName('data');
 			m.data = dt[0].firstChild.nodeValue;
+			var pdt = xml.documentElement.getElementsByTagName('parsed_data');
+	 		m.parsed_data = pdt[0].firstChild.nodeValue;
 			var l = xml.documentElement.getElementsByTagName('label');
 			m.label_data = l[0].firstChild.nodeValue;
 			m.set_id = parseInt(bMSetData[s].set_id);
