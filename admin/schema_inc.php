@@ -80,7 +80,7 @@ $tables = array(
   infowindow_anchor_y I4 DEFAULT 2,
   image_map X DEFAULT 0,	
 	points X DEFAULT 0,
-	scale I2 DEFAULT 1,
+	scale F DEFAULT 1,
 	outline_color C(6) DEFAULT 'ffffff',
 	outline_weight I4 DEFAULT 2,
 	fill_color C(6) DEFAULT 'ff3300',

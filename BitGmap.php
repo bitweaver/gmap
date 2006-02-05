@@ -1144,7 +1144,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['iconstyle_store']['infowindow_anchor_y'] = $pParamHash['infowindow_anchor_y'];
 		}
 
-		if( !empty( $pParamHash['points'] ) ) {
+		if( !empty( $pParamHash['points'] ) || $pParamHash['points'] == 0 ) {
 			$pParamHash['iconstyle_store']['points'] = $pParamHash['points'];
 		}
 

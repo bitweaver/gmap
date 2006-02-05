@@ -512,7 +512,7 @@ function editIconStyles(){
     	// any previously existing sets from the UI
     	for (var a=0; a<bMIconData.length; a++) {
     		if ( bMIconData[a]!= null ){
-      			var getElem = "editiconstyletable_" + bMIconData[a].style_id;
+      			var getElem = "editiconstyletable_" + bMIconData[a].icon_id;
         		if ( $(getElem) ) {
             		var extraIconStyleForm = $(getElem);
         			$('editiconstyleform').removeChild(extraIconStyleForm);
@@ -526,7 +526,7 @@ function editIconStyles(){
     	for (var b=0; b<bMIconData.length; b++) {
         	if ( bMIconData[b]!= null ){  						
     
-        		editIconStyleId = bMIconData[b].style_id;
+        		editIconStyleId = bMIconData[b].icon_id;
     
         		// clone the form container
       			var newIconStyle = $('editiconstyletable_n').cloneNode(true);
