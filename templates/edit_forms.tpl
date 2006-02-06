@@ -238,8 +238,8 @@
                              </select><br/>
 						</div>
                 	<div style="float:left; padding:0 .4em; width:120px">
-                     	Image <br/><input name="image" type="text" size="15" value="icons/FlatColorPins/205.png"><br/>
-                     	Rollover Image <br/><input name="rollover_image" type="text" size="15" value="icons/FlatColorPins/090.png"><br/>
+                     	Image <br/><input name="image" type="text" size="15" value="icons/flat_color_pins/205.png"><br/>
+                     	Rollover Image <br/><input name="rollover_image" type="text" size="15" value="icons/flat_color_pins/090.png"><br/>
                      	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value="20"><br/>
                      	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value="34"><br/>
                      	Shadow Image <br/><input name="shadow_image" type="text" size="15" value="http://www.google.com/mapfiles/shadow50.png"><br/>
