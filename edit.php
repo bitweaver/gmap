@@ -97,7 +97,9 @@ if (!empty($_REQUEST["save_map"])) {
     
     // WYSIWYG and Quicktag variable
     $gBitSmarty->assign( 'textarea_id', 'editsample' );
-    
+		$gBitSmarty->assign( 'loadMochiKit', TRUE );
+		$gBitSmarty->assign( 'loadEditMethods', TRUE );
+
     //set onload function in body
     $gBodyOnload[] = 'loadMap();';
     
