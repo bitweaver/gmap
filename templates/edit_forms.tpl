@@ -688,22 +688,32 @@
 		<div id="newpolylinecancel" style="clear:both;"><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:canceledit('newpolylineform'); removeAssistant(); canceledit('editerror');"></div>
 </div> <!-- end of newpolylineform -->
 
+
+
+
+
 <div id="editpolylineform" class="editform" style="display:none;">
-		<h2>Polyline Sets Associated With This Map</h2>		
+		<h2>Polyline Sets Associated With This Map</h2>
 		<div id="polylineset_n" style="display:none; clear:both;">
-			<div id="editpolylinesetmenu_n">
-				 <b id="polylinesetid">Set Name</b> | 
-				 <span id="polylinesetstyle">Style</span> | 
-				 <a id="seteditpolylines" href="javascript:editPolylineSet('n');">Edit These Polylines</a> | 
-				 <a id="setaddpolylines" href="javascript:editSet('n'); show('allavailmarkers_n');">Add Polylines to This Set</a> | 
-				 <a id="seteditstyle" href="javascript:alert('this feature is coming soon');">Edit Set Style</a> | 
-				 <a id="setremove" href="javascript:removePolylineSet('edit_polylineset.php', set_id, set_type);">Remove Set From Map</a> | 
-				 <a id="setdelete" href="javascript:expungePolylineSet('edit_polylineset.php', set_id);">Delete Set</a>
-		  	 <br/><span id="setdesc">Description Here</span>
-			</div>
-			<div id="polylinesetform_n" style="display:none;">
+    	<form action="javascript:;" name="polylinesetform_n" id="polylinesetform_n" style="display:none;">
+				<input name="set_id" type="hidden" size="3" value="n">
+				<input name="set_type" type="hidden" size="3" value="n">
+            <input name="set_array_n" type="hidden" value="n">
+  			<div class="data" id="polylinesetformdata_n">
+    			<b id="plsetname">Set Name:</b> <span id="plsetdesc">Description Here</span><br/>
+  				<a id="plsetedit" href="javascript:editPolylineSet('n');">Edit These Polylines</a> | 
+    			<a id="plsetadd" href="javascript:alert('feature coming soon');">Add Polylines from Archives</a> | 
+					Style: <select name="style_id">
+                  				<option value="0">Google (standard)</option>
+                      			</select> | 
+    			<a id="plsetstore" href="javascript:storePolylineSet('edit_polylineset.php', set_id);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+  				<a id="plsetremove" href="javascript:removePolylineSet('edit_polylineset.php', set_id, set_type);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+  				<a id="plsetdelete" href="javascript:expungePolylineSet('edit_polylineset.php', set_id);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
+  			</div>
+        </form>
+			<div id="plsetform_n" style="display:none;">
 				<h3>Polylines In This Set</h3>
-        <div class="tableheader">
+        	<div class="tableheader">
     				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Points Data </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Border Text <br/>only for XPolyline type</div>
@@ -712,45 +722,32 @@
     		</div>
     		<div class="table" id="editpolylinetable_n">
     			<form action="javascript:;" name="polylineform_n" id="polylineform_n" style="display:none;">
-    			<div class="data" id="polylineformdata_n">
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="save_polyline" type="hidden" value="true"></div>
-          	<div style="float:left; padding:0 .4em; width:30px"><input name="set_id" type="hidden" size="3" value="n"></div>
-      			<div style="float:left; padding:0 .4em; width:30px"><input name="polyline_id" type="hidden" size="3" value="n"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
-          	<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>						
-          	<div style="float:left; padding:0;"><input name="polyline_array" type="hidden" value=""></div>
-          	<div style="float:left; padding:0;"><input name="polyline_array_n" type="hidden" value=""></div>
-          	<a style="float:left; padding:0 .4em;" name="save_polyline_btn" title="save" href="javascript:storePolyline('edit_polyline.php', document.polylineform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-          	<a style="float:left; padding:0 .4em;" name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-          	<a style="float:left; padding:0 .4em;" name="remove_polyline_btn" title="remove from this set" href="javascript:removePolyline('edit_polyline.php', document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-          	<a style="float:left; padding:0 .4em;" name="expunge_polyline_btn" title="delete the polyline!" href="javascript:expungePolyline('edit_polyline.php', document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
-          	<a style="float:left; padding:0 .4em;" name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', n);">Use Drawing Assistant</a>
-    			</div>
+        			<div class="data" id="polylineformdata_n">
+      					<div style="float:left; padding:0 .4em; width:90px"><input name="save_polyline" type="hidden" value="true"></div>
+                		<div style="float:left; padding:0 .4em; width:30px"><input name="set_id" type="hidden" size="3" value="n"></div>
+            			<div style="float:left; padding:0 .4em; width:30px"><input name="polyline_id" type="hidden" size="3" value="n"></div>
+                		<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
+                		<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
+                		<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
+                		<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>						
+                		<div style="float:left; padding:0;"><input name="polyline_array" type="hidden" value=""></div>
+                		<div style="float:left; padding:0;"><input name="polyline_array_n" type="hidden" value=""></div>
+                		<a style="float:left; padding:0 .4em;" name="save_polyline_btn" title="save" href="javascript:storePolyline('edit_polyline.php', document.polylineform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+                		<a style="float:left; padding:0 .4em;" name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="remove_polyline_btn" title="remove from this set" href="javascript:removePolyline('edit_polyline.php', document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="expunge_polyline_btn" title="delete the polyline!" href="javascript:expungePolyline('edit_polyline.php', document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', n);">Use Drawing Assistant</a>
+        			</div>
     			</form>
   		  </div>
       	<div id="allavailpolylines_n" style="display:none; clear:both;">
-    			<h3>All Markers Available</h3>
-        	<div class="table" id="addpolylinetable_n">
-        		<form action="javascript:;" name="addpolylineform_n" id="addpolylineform_n">
-        		<div class="data">
-						<!-- @todo this is just placeholder stuff from the marker version as a starting point -->
-						<!--
-          		<div style="float:left; padding:0 .4em; width:30px"><input name="polyline_id" type="text" size="3" value="a number"></div>
-              <div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
-              <div style="float:left; padding:0 .4em; width:90px"><input name="marker_lat" type="text" size="15" value=""></div>
-              <div style="float:left; padding:0 .4em; width:90px"><input name="marker_lon" type="text" size="15" value=""></div>
-              <div style="float:left; padding:0 .4em; width:140px"><textarea name="edit" cols="15" rows="3"></textarea></div>
-              <div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
-              <div style="float:left; padding:0 .4em; width:50px"><input name="marker_zi" type="text" size="3" value="undefined"></div>
-              <div style="float:left; padding:0;"><input name="marker_array" type="hidden" size="3" value=""></div>
-              <div style="float:left; padding:0;"><input name="marker_array_n" type="hidden" size="3" value=""></div>
-              <div style="float:left; padding:0 .4em; width:70px"><input type="button" name="save_marker" value="Submit" onclick="javascript:get('edit_marker.php', this.form, this.form.marker_array.value, this.form.marker_array_n.value);"></div>
-              <div style="float:left; padding:0 .4em; width:70px"><input type="button" name="locate" value="Locate" onclick="javascript:bIMData[this.form.marker_array_n.value].marker.openInfoWindowHtml(bIMData[this.form.marker_array_n.value].marker.my_html);"></div>
-							-->
-        		</div>
-        		</form>	
+    			<h3>All Polylines Available</h3>
+        		<div class="table" id="addpolylinetable_n">
+            		<form action="javascript:;" name="addpolylineform_n" id="addpolylineform_n">
+                		<div class="data">
+        						<!-- @todo this is just placeholder for table of polyline data -->
+                		</div>
+            		</form>	
     			</div>						
 				</div>
 			</div> <!--end of polylinesetform_n -->			

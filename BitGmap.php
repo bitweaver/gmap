@@ -980,7 +980,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylineset_store']['description'] = $pParamHash['description'];
 		}
 		
-		if( !empty( $pParamHash['style_id'] ) ) {
+		if( ( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) || $pParamHash['style_id'] == 0 ) {
 			$pParamHash['polylineset_store']['style_id'] = $pParamHash['style_id'];
 		}
 				

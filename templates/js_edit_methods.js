@@ -271,7 +271,7 @@ function newMarker(){
   						}
     			}
   		}
-		};
+		}
 };
 
 
@@ -281,10 +281,6 @@ function newMarkerSet(){
 		// Reset the Form
 		$('markersetform_new').reset();
 };
-
-
-
-
 
 
 
@@ -464,14 +460,14 @@ function editMarkers(){
 			}
 		}		
 	}
-}
+};
 
 
 
 //@todo change this to editMarkerSet(n)
 function editSet(n){
 				show('setform_'+n);
-}
+};
 
 
 function newIconStyle(){
@@ -496,8 +492,8 @@ function newIconStyle(){
 
   		// Reset the Form
   		$('iconstyleform_new').reset();  		  
-		};
-}
+		}
+};
 
 
 function editIconStyles(){
@@ -775,8 +771,181 @@ function newPolylineSet(){
 
 
 
+
+
 /* @todo needs to support markers in bSLData as well as bILData */
 function editPolylines(){
+	show('editpolylinemenu');
+  show('editpolylineform');
+	show('editpolylinecancel');
+	
+	//if polyline data exists
+	if ( typeof(bILData) ) {
+	
+  	// We assume editPolylines has been called before and remove 
+  	// any previously existing sets from the UI
+  	for (var a=0; a<bLSetData.length; a++) {
+  		if (bLSetData[a]!= null){
+    		var getElem = "polylineset_"+bLSetData[a].set_id;
+    		if ( $(getElem) ) {
+        	var extraPolylineForm = $(getElem);
+    			$('editpolylineform').removeChild(extraPolylineForm);
+    		}
+			}
+  	}
+  
+  	var newSetId;
+  	  	
+  	// add a new set UI for each marker set
+  	for (var b=0; b<bLSetData.length; b++) {
+  	if (bLSetData[b]!= null){
+		  	
+  		newSetId = bLSetData[b].set_id;
+  	
+  		// clone model set UI
+			var newPolylineSet = $('polylineset_n').cloneNode(true);
+  		// give a new id to the new set UI
+  		newPolylineSet.id = "polylineset_"+newSetId;
+
+  		// customize all the values of our new set UI this gets ugly...										
+  		newPolylineSetKids = newPolylineSet.childNodes;
+			for ( var n = 0; n < newPolylineSetKids.length; n++ ) {
+          		if ( newPolylineSetKids[n].id == "polylinesetform_n" ) {					
+              		newPolylineSetKids[n].id = "polylinesetform_" + newSetId;
+                	newPolylineSetKids[n].name = "polylinesetform_" + newSetId;					 
+            		var nMSFKids = newPolylineSetKids[n].childNodes;
+            		for (var o=0; o<nMSFKids.length; o++){
+              			if (nMSFKids[o].id == "polylinesetformdata_n"){
+              				nMSFKids[o].id = "polylinesetformdata_" + newSetId;
+              			}
+            		}
+					}
+
+          		if ( newPolylineSetKids[n].id == "plsetform_n" ) {					
+              		newPolylineSetKids[n].id = "plsetform_" + newSetId;
+						formKids = newPolylineSetKids[n].childNodes;
+   					for (var p=0; p<formKids.length; p++) {
+   						if (formKids[p].id == "editpolylinetable_n"){
+              				formKids[p].id = "editpolylinetable_"+newSetId;
+                			if (formKids[p].id == "allavailpolylines_n"){
+                				formKids[p].id = "allavailpolylines_"+newSetId;
+     							allPolyKids = formKids[p].childNodes;
+     							for (var e=0; e<allPolyKids.length; e++) {
+        							if (allPolyKids[e].id == "addpolylinetable_n"){
+        								allPolyKids[e].id = "addpolylinetable_"+newSetId;
+        							}
+     							}
+                			}
+              			}
+   					}
+					}
+				}
+
+        	// add form container to set table
+  			$('editpolylineform').appendChild(newPolylineSet);
+    		show('polylineset_'+newSetId);
+				show('polylinesetform_'+newSetId);
+  
+				//get form data div children and update
+				var dataKids = $('polylinesetformdata_' + newSetId).childNodes;
+				for (var c=0; c<dataKids.length; c++) { 
+    			if (dataKids[c].id == "plsetname"){dataKids[c].innerHTML = bLSetData[b].name+":";}
+     			if (dataKids[c].id == "plsetdesc"){dataKids[c].innerHTML = bLSetData[b].description;}
+    			if (dataKids[c].id == "plsetedit"){dataKids[c].href = "javascript:editPolylineSet("+newSetId+");";}
+    			if (dataKids[c].id == "plsetadd"){dataKids[c].href = "javascript:alert('feature coming soon');";}
+    			if (dataKids[c].id == "plsetstore"){dataKids[c].href = "javascript:storePolylineSet('edit_polylineset.php', document.polylinesetform_"+newSetId+");";}
+    			if (dataKids[c].id == "plsetremove"){dataKids[c].href = "javascript:removePolylineSet('edit_polylineset.php', document.polylinesetform_"+newSetId+");";}
+    			if (dataKids[c].id == "plsetdelete"){dataKids[c].href = "javascript:expungePolylinerSet('edit_polylineset.php', document.polylinesetform_"+newSetId+");";}
+				}
+				//get form and update values
+				form = $('polylinesetform_'+newSetId);
+				form.set_id.value = newSetId;
+				form.set_type.value = bLSetData[b].set_type;
+				form.set_array_n.value = b;
+				if ( (typeof(bLStyData) != 'undefined') && (bLStyData.length > 0) ){
+					var OptionN = form.style_id.options.length;
+  				for (var d=0; d<bLStyData.length; d++){
+						if ( bLStyData[d] != null ){
+							form.style_id.options[OptionN + d] = new Option( bLStyData[d].name, bLStyData[d].style_id );
+							if ( bLStyData[d].style_id == bLSetData[b].style_id){
+							form.style_id.options[OptionN + d].selected=true;
+							}
+  					}
+  				}
+				}
+			}
+		}			
+
+  	//for length of polylines add form to setelement on matching set_id
+  	for (g=0; g<bILData.length; g++) {
+			if (bILData[g]!= null){
+				//add polyline form...again a little ugly here
+				var formCont = $("editpolylinetable_"+bILData[g].set_id);
+  			formContKids = formCont.childNodes;
+            for (var n = 0; n < formContKids.length; n++) {
+      			if (formContKids[n].id == "polylineform_n"){
+            		var newPolylineForm = formContKids[n].cloneNode(true);
+        			newPolylineForm.id = "polylineform_"+g;
+    				newPolylineForm.name = "polylineform_"+g;
+    				var nLFKids = newPolylineForm.childNodes;
+    				for (var o=0; o<nLFKids.length; o++){
+    					if (nLFKids[o].id == "polylineformdata_n"){
+    						nLFKids[o].id = "polylineformdata_"+g;
+    					}
+    				}
+    							
+        			$('editpolylinetable_'+bILData[g].set_id).appendChild(newPolylineForm);
+    				show('polylineform_'+g);
+    				break;
+    			}
+    		}
+				
+				// populate set form values
+				form = $('polylineform_'+g);
+
+            form.set_id.value = bILData[g].set_id;
+            form.polyline_id.value = bILData[g].polyline_id;
+            form.name.value = bILData[g].name;				
+            form.points_data.value = bILData[g].points_data;  //this might need to be a loop
+            form.border_text.value = bILData[g].border_text;
+            form.zindex.value = bILData[g].zindex;
+            form.polyline_array.value = bILData[g].array;
+            form.polyline_array_n.value = bILData[g].array_n;
+				
+				// just for a pretty button - js sucks it!
+				var linkParent = $('polylineformdata_'+g);
+				var linkPKids = linkParent.childNodes;
+				for (var p=0; p<linkPKids.length; p++){
+						if (linkPKids[p].name == "save_polyline_btn"){
+							 linkPKids[p].href = "javascript:storePolyline('edit_polyline.php', document.polylineform_"+g+");" ;
+						}
+						if (linkPKids[p].name == "locate_polyline_btn"){
+							 linkPKids[p].href = "javascript:alert('feature coming soon');" ;
+						}
+						if (linkPKids[p].name == "remove_polyline_btn"){
+							 linkPKids[p].href = "javascript:removePolyline('edit_polyline.php', document.polylineform_"+g+");" ;
+						}
+						if (linkPKids[p].name == "expunge_polyline_btn"){
+							 linkPKids[p].href = "javascript:expungePolyline('edit_polyline.php', document.polylineform_"+g+");" ;
+						}
+						if (linkPKids[p].name == "polyline_assist_btn"){
+							 linkPKids[p].href = "javascript:addAssistant('polyline', " + g + ");" ;
+						}
+				}
+			}
+		}		
+	}
+};
+
+
+
+
+
+
+
+
+/* @todo needs to support markers in bSLData as well as bILData */
+function editPolylinesOld(){
 	show('editpolylinemenu');
   show('editpolylineform');
 	show('editpolylinecancel');
@@ -937,7 +1106,7 @@ function editPolylines(){
 
 
 function editPolylineSet(n){
-		show('polylinesetform_'+n);
+		show('plsetform_'+n);
 }
 
 
@@ -1239,9 +1408,18 @@ function newPolylineStyle(){
 			doSimpleXMLHttpRequest(str).addCallback( addPolylineSet );
 	 }
 
+
+	 function storePolylineSet(u, f){
+			editSetId = f.set_id.value;
+			editObjectN = f.set_array_n.value;
+			editSetType = f.set_type.value;
+	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID + "&save_polylineset=true";
+			doSimpleXMLHttpRequest(str).addCallback( updatePolylineSet );
+	 }
+
 	 function removePolylineSet(u, s, t){
 			var st;
-      editArray = t;
+      	editArray = t;
 			editSetId = s;
 			if (t == 'I') {st = 'init_polylines';}else{st = 'set_polylines';};
 	 		var str = u + "?" + "set_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_polylineset=true";
@@ -2204,15 +2382,12 @@ function newPolylineStyle(){
 			bLSetData[n] = new Array();
 						
 	 		//shorten var names
-			var id = xml.documentElement.getElementsByTagName('set_id');			
+			var id = xml.documentElement.getElementsByTagName('set_id');
 			bLSetData[n].set_id = parseInt(id[0].firstChild.nodeValue);
-
 			var nm = xml.documentElement.getElementsByTagName('name');
-			bLSetData[n].name = nm[0].firstChild.nodeValue;			
-			
+			bLSetData[n].name = nm[0].firstChild.nodeValue;
 			var dc = xml.documentElement.getElementsByTagName('description');
-			bLSetData[n].description = dc[0].firstChild.nodeValue;			
-
+			bLSetData[n].description = dc[0].firstChild.nodeValue;
 			var sy = xml.documentElement.getElementsByTagName('style_id');
 			bLSetData[n].style_id = parseInt(sy[0].firstChild.nodeValue);
 			
@@ -2224,6 +2399,67 @@ function newPolylineStyle(){
 			if ( $('newpolylineform').style.display == "block" ){ newPolyline(); };
 			editPolylines();
 	 }
+
+
+
+
+	function updatePolylineSet(rslt){
+      	var xml = rslt.responseXML;
+
+			var s = bLSetData[editObjectN];
+			var oldStyle = s.style_id;
+
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('set_id');			
+			s.set_id = parseInt(id[0].firstChild.nodeValue);
+			var nm = xml.documentElement.getElementsByTagName('name');
+			s.name = nm[0].firstChild.nodeValue;
+			var dc = xml.documentElement.getElementsByTagName('description');
+			s.description = dc[0].firstChild.nodeValue;
+			var sy = xml.documentElement.getElementsByTagName('style_id');
+			s.style_id = parseInt(sy[0].firstChild.nodeValue);			
+
+			if ( oldStyle != s.style_id ) {
+				var arrayId = "I";
+				a = bILData;
+           	//if the length of the array is > 0
+           	if (a.length > 0){
+             	//loop through the array
+           		for(n=0; n<a.length; n++){
+             		//if the array item is not Null
+           			if (a[n]!= null){
+       					if (a[n].set_id == s.set_id){
+								a[n].style_id = s.style_id;
+								//unload the polyline
+         					map.removeOverlay( a[n].polyline );
+                 			//create polyline
+            				if (a[n].style_id == 0){
+                 				defineGPolyline(arrayId, n, null);
+                 			}else{
+                 				var stylen;
+                 				for (var b=0; b<bLStyData.length; b++){
+                 					if ( bLStyData[b].style_id == s.style_id ){
+                 						stylen = b;
+                 					}
+                 				}
+                 				if ( bLStyData[stylen].type == 0){
+                 					defineGPolyline(arrayId, n, stylen);
+                 				}else{
+                 					defineXPolyline(arrayId, n, stylen);
+                 				}
+                 			}
+       					}
+       				}
+       			}
+       		}
+			};
+
+			// update the sets menus
+			editPolylines();
+	}
+
+
+
 
 
 	 function updatePolyline(rslt){
