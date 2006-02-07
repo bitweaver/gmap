@@ -103,9 +103,10 @@ class BitGmap extends LibertyAttachable {
 					$this->mMapPolylineSetDetails = $this->getPolylineSetsDetails($lookupId);
 					$this->mMapLinesStyles = $this->getPolylineStyles($lookupId);
 
-					$this->mMapInitPolys = $this->getPolygons($lookupId, "init_polygons");
-					$this->mMapSetPolys = $this->getPolygons($lookupId, "set_polygons");
-					$this->mMapPolysStyles = $this->getPolygonStyles($lookupId);
+					$this->mMapInitPolygons = $this->getPolygons($lookupId, "init_polygons");
+					$this->mMapSetPolygons = $this->getPolygons($lookupId, "set_polygons");
+					$this->mMapPolygonsSetDetails = $this->getPolygonSetsDetails($lookupId);
+					$this->mMapPolygonsStyles = $this->getPolygonStyles($lookupId);
 				}
 			}
 		}
@@ -454,6 +455,21 @@ class BitGmap extends LibertyAttachable {
 
 
 
+	//* Gets data for a given polyline.
+	// @ todo this should probably take an array so that we can get data for a bunch of markers if we want
+	function getPolygonData($polygon_id) {
+		global $gBitSystem;
+		if ($polygon_id && is_numeric($polygon_id)) {
+			$query = "SELECT bm.*
+			FROM `".BIT_DB_PREFIX."gmaps_polygons` bm
+			WHERE bm.polygon_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$polygon_id));
+		}
+		return $result;
+	}
+
+
+
 
 	//get all polylines for given gmap_id and set_types
 	function getPolygonStyles($gmap_id) {
@@ -477,6 +493,36 @@ class BitGmap extends LibertyAttachable {
 			};
 		};
 		return $ret;
+	}
+
+
+
+	//* Gets data for a given polygon style.
+	// @ todo this should probably take an array so that we can get data for a bunch of styles if we want
+	function getPolygonStyleData($style_id) {
+		global $gBitSystem;
+		if ($style_id && is_numeric($style_id)) {
+			$query = "SELECT bs.*
+			FROM `".BIT_DB_PREFIX."gmaps_polygon_styles` bs
+			WHERE bs.style_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$style_id));
+		}
+		return $result;
+	}
+
+
+	
+	//* Gets data for a given polygon set.
+	// @ todo this should probably take an array so that we can get data for a bunch of sets if we want
+	function getPolygonSetData($set_id) {
+		global $gBitSystem;
+		if ($set_id && is_numeric($set_id)) {
+			$query = "SELECT bs.*
+			FROM `".BIT_DB_PREFIX."gmaps_polygon_sets` bs
+			WHERE bs.set_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$set_id));
+		}
+		return $result;
 	}
 
 
@@ -526,6 +572,31 @@ class BitGmap extends LibertyAttachable {
 		};
 		return $ret;
 	}
+
+
+
+	function getPolygonSetsDetails($gmap_id) {
+  		global $gBitSystem;
+  		$ret = NULL;
+  		if ($gmap_id && is_numeric($gmap_id)) {
+      $query = "SELECT DISTINCT bms.*, bmk.`set_type`
+                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."gmaps_polygon_sets` bms
+                WHERE bmk.`gmap_id` = ?
+                AND bmk.`set_id` = bms.`set_id` 
+                AND ( bmk.`set_type` = 'set_polygons' OR bmk.`set_type` = 'init_polygons')
+                ORDER BY bms.`set_id` ASC";
+							
+			$result = $this->mDb->query( $query, array((int)$gmap_id) );
+
+			$ret = array();
+
+			while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		};
+		return $ret;
+	}
+
 	
 	
 	
@@ -632,6 +703,47 @@ class BitGmap extends LibertyAttachable {
 		return $ret;
 	}
 
+
+
+	//returns array of polygon sets
+	function getAllPolygonSets() {
+		global $gBitSystem;
+		$ret = NULL;
+		$query = "SELECT bms.*, bsk.`set_type`, bsk.`gmap_id`, bmm.*
+    			 	 	FROM `".BIT_DB_PREFIX."gmaps_polygon_keychain` bmk
+							INNER JOIN `".BIT_DB_PREFIX."gmaps_polygon_sets` bms ON ( bmk.`set_id` = bms.`set_id` )
+              INNER JOIN `".BIT_DB_PREFIX."gmaps_polygons` bmm ON ( bmm.`polygon_id` = bmk.`polygon_id` )
+              LEFT OUTER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk
+							ON ( bsk.`set_id` = bms.`set_id`
+							AND ( bsk.`set_type` = 'set_polygons' OR bsk.`set_type` = 'init_polygons'))
+              ORDER BY bms.`set_id` ASC, bmm.`polygon_id` ASC";
+
+		$result = $this->mDb->query( $query );
+		$ret = array();
+		while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		return $ret;
+	}
+
+
+	//@todo this probably should return results for polygons also
+	//returns array of polygons
+	function getAllPolygons() {
+		global $gBitSystem;
+		$ret = NULL;
+		$query = "SELECT bmk.`set_id`, bmm.*
+					 	  FROM `".BIT_DB_PREFIX."gmaps_polygon_keychain` bmk, `".BIT_DB_PREFIX."gmaps_polygons` bmm
+          		WHERE bmm.`polygon_id` = bmk.`polygon_id`
+          		ORDER BY bmm.`polygon_id` ASC, bmk.`set_id` ASC";
+
+		$result = $this->mDb->query( $query );
+		$ret = array();
+		while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		return $ret;
+	}
 
 
 
@@ -908,6 +1020,73 @@ class BitGmap extends LibertyAttachable {
 
 
 
+
+	function verifyPolygon( &$pParamHash ) {
+
+		$pParamHash['polygon_store'] = array();
+
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['polygon_store']['name'] = $pParamHash['name'];
+		}
+
+		if( !empty( $pParamHash['circle'] ) ) {
+			$pParamHash['polygon_store']['circle'] = $pParamHash['circle'];
+		}
+
+		if( !empty( $pParamHash['points_data'] ) || $pParamHash['points_data'] == 0 ) {
+			$pParamHash['polygon_store']['points_data'] = $pParamHash['points_data'];
+		}
+
+		if( !empty( $pParamHash['circle_center'] ) || $pParamHash['circle_center'] == 0 ) {
+			$pParamHash['polygon_store']['circle_center'] = $pParamHash['circle_center'];
+		}
+
+		if( !empty( $pParamHash['radius'] ) || $pParamHash['radius'] == 0 ) {
+			$pParamHash['polygon_store']['radius'] = $pParamHash['radius'];
+		}
+
+		if( !empty( $pParamHash['border_text'] ) ) {
+			$pParamHash['polygon_store']['border_text'] = $pParamHash['border_text'];
+		}
+
+		if( ( !empty( $pParamHash['zindex'] ) && is_numeric( $pParamHash['line_z'] ) ) || $pParamHash['zindex'] == 0 ) {
+			$pParamHash['polygon_store']['zindex'] = $pParamHash['zindex'];
+		}
+
+		// set values for updating the polygon keychain
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['keychain_store']['set_id'] = $pParamHash['set_id'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+	}
+	
+	function  storePolygon( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyPolygon( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['polygon_id'] ) ) {
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygons", $pParamHash['polygon_store'], array( "name" => "polygon_id", "value" => $pParamHash['polygon_id'] ) );
+			}else{
+				 $pParamHash['polygon_id'] = $this->mDb->GenID( 'gmaps_polygons_polygon_id_seq' );
+				 $pParamHash['polygon_store']['polygon_id'] = $pParamHash['polygon_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polygons", $pParamHash['polygon_store'] );
+				 // if its a new polygon we also get a set_id for the keychain and automaticallly associate it with a polygon set.
+				 $pParamHash['keychain_store']['polygon_id'] = $pParamHash['polygon_store']['polygon_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polygon_keychain", $pParamHash['keychain_store'] );
+			}
+			$this->mDb->CompleteTrans();
+
+			// re-query to confirm results
+			$result = $this->getPolygonData($pParamHash['polygon_id']);
+		}
+		return $result;
+	}
+
+
+
+
 	function verifyMarkerSet( &$pParamHash ) {
 
 		$pParamHash['markerset_store'] = array();
@@ -971,7 +1150,7 @@ class BitGmap extends LibertyAttachable {
 	function verifyPolylineSet( &$pParamHash ) {
 
 		$pParamHash['polylineset_store'] = array();
-		
+
 		if( !empty( $pParamHash['name'] ) ) {
 			$pParamHash['polylineset_store']['name'] = $pParamHash['name'];
 		}
@@ -979,11 +1158,11 @@ class BitGmap extends LibertyAttachable {
 		if( !empty( $pParamHash['description'] ) ) {
 			$pParamHash['polylineset_store']['description'] = $pParamHash['description'];
 		}
-		
+
 		if( ( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) || $pParamHash['style_id'] == 0 ) {
 			$pParamHash['polylineset_store']['style_id'] = $pParamHash['style_id'];
 		}
-				
+
 		// set values for updating the map set keychain	if its a new set
 		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
 			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
@@ -1019,6 +1198,64 @@ class BitGmap extends LibertyAttachable {
 
 			// re-query to confirm results
 			$result = $this->getPolylineSetData($pParamHash['set_id']);
+		}
+		return $result;
+	}
+
+
+
+	//@todo -  vertually same as verifyMarkerSet - consolidate
+	function verifyPolygonSet( &$pParamHash ) {
+
+		$pParamHash['polygonset_store'] = array();
+
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['polygonset_store']['name'] = $pParamHash['name'];
+		}
+
+		if( !empty( $pParamHash['description'] ) ) {
+			$pParamHash['polygonset_store']['description'] = $pParamHash['description'];
+		}
+
+		if( ( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) || $pParamHash['style_id'] == 0 ) {
+			$pParamHash['polygonset_store']['style_id'] = $pParamHash['style_id'];
+		}
+
+		// set values for updating the map set keychain	if its a new set
+		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
+			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
+		}
+
+		if( !empty( $pParamHash['set_type'] ) ) {
+			$pParamHash['keychain_store']['set_type'] = $pParamHash['set_type'];
+		}
+
+		return( count( $this->mErrors ) == 0 );		
+		
+	}
+	
+	/**
+	* This function stores a polygon set
+	**/
+	function storePolygonSet( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyPolygonSet( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['set_id'] ) ) {
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygon_sets", $pParamHash['polygonset_store'], array( "name" => "set_id", "value" => $pParamHash['set_id'] ) );
+			}else{
+				 $pParamHash['set_id'] = $this->mDb->GenID( 'gmaps_polygon_sets_set_id_seq' );
+				 $pParamHash['polygonset_store']['set_id'] = $pParamHash['set_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polygon_sets", $pParamHash['polygonset_store'] );
+				 // if its a new polylineset we also get a set_id for the keychain and automaticallly associate it with a map.
+				 $pParamHash['keychain_store']['set_id'] = $pParamHash['polygonset_store']['set_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_store'] );
+			}
+			$this->mDb->CompleteTrans();
+
+			// re-query to confirm results
+			$result = $this->getPolygonSetData($pParamHash['set_id']);
 		}
 		return $result;
 	}
@@ -1303,6 +1540,63 @@ class BitGmap extends LibertyAttachable {
 		
 
 
+
+
+	function verifyPolygonStyle( &$pParamHash ) {
+
+		$pParamHash['polygonstyle_store'] = array();
+
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['polygonstyle_store']['name'] = $pParamHash['name'];
+		}
+
+		if( ( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) || $pParamHash['type'] == 0 ) {
+			$pParamHash['polygonstyle_store']['type'] = $pParamHash['type'];
+		}
+				
+		if( !empty( $pParamHash['color'] ) ) {
+			$pParamHash['polygonstyle_store']['color'] = $pParamHash['color'];
+		}
+		
+		if( !empty( $pParamHash['weight'] ) && is_numeric( $pParamHash['weight'] ) ) {
+			$pParamHash['polygonstyle_store']['weight'] = $pParamHash['weight'];
+		}
+		
+		if( !empty( $pParamHash['opacity'] ) && is_numeric( $pParamHash['opacity'] ) ) {
+			$pParamHash['polygonstyle_store']['opacity'] = $pParamHash['opacity'];
+		}
+				
+		return( count( $this->mErrors ) == 0 );
+	}
+	
+	function storePolygonStyle( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyPolygonStyle( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['style_id'] ) ) {
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygon_styles", $pParamHash['polygonstyle_store'], array( "name" => "style_id", "value" => $pParamHash['style_id'] ) );
+			}else{
+				 $pParamHash['style_id'] = $this->mDb->GenID( 'gmaps_polygon_styles_style_id_seq' );
+				 $pParamHash['polygonstyle_store']['style_id'] = $pParamHash['style_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polygon_styles", $pParamHash['polygonstyle_store'] );
+			}
+			$this->mDb->CompleteTrans();
+
+			// re-query to confirm results
+			$result = $this->getPolygonStyleData($pParamHash['style_id']);
+		}
+		return $result;
+	}
+
+
+
+
+
+
+
+
+
 // ALL EXPUNGE FUNCTIONS	
 
 	
@@ -1378,6 +1672,32 @@ class BitGmap extends LibertyAttachable {
 	}
 	
 
+
+	/**
+	* This function deletes a polygon and all references to it in the polygon keychain
+	**/
+	function expungePolygon(&$pParamHash) {
+		$ret = FALSE;
+
+		if( !empty( $pParamHash['polygon_id'] ) && is_numeric( $pParamHash['polygon_id'] ) ) {
+  		$this->mDb->StartTrans();
+  		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polygons` 
+  		WHERE `polygon_id` =?";
+  		$result = $this->mDb->query( $query, array( $pParamHash['polygon_id'] ) );
+  		$this->mDb->CompleteTrans();
+			
+			// delete all references to the polygon from the polygon keychain
+			$this->mDb->StartTrans();
+			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polygon_keychain` WHERE `polygon_id` =?";				
+			$result = $this->mDb->query( $query, array( $pParamHash['polygon_id'] ) );
+			$this->mDb->CompleteTrans();
+  		$ret = TRUE;
+		}
+
+		return $ret;
+	}
+
+
 	
 	/**
 	* This function deletes a marker set
@@ -1449,6 +1769,41 @@ class BitGmap extends LibertyAttachable {
 
 
 
+	/**
+	* This function deletes a polygon set
+	**/
+	function expungePolygonSet(&$pParamHash) {
+		$ret = FALSE;
+
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+    		$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polygon_sets` 
+    		WHERE `set_id` =?";
+    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
+    		$this->mDb->CompleteTrans();
+  			
+  			// delete all references to the polygon set from the polygon keychain
+  			$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polygon_keychain` 
+    		WHERE `set_id` =?";
+    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
+    		$this->mDb->CompleteTrans();
+
+  			// delete all references to the polygon set from the map sets keychain
+  			$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
+    			WHERE `set_id` =?
+          AND ( `set_type` = 'set_polygons' OR `set_type` = 'init_polygons' )";					
+  			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
+  			$this->mDb->CompleteTrans();
+    		$ret = TRUE;
+		}
+
+		return $ret;
+	}	
+
+
+
 	//@todo all these - question - what to do if it is being used by sets? step through and delete? don't delete?:
 	/**
 	* This function deletes a marker style
@@ -1458,6 +1813,9 @@ class BitGmap extends LibertyAttachable {
 	**/	
 	/**
 	* This function deletes a polyline style
+	**/
+	/**
+	* This function deletes a polygon style
 	**/
 
 
@@ -1530,6 +1888,43 @@ class BitGmap extends LibertyAttachable {
   			WHERE `set_id` = ?
   			AND `polyline_id` =?";
   			$result = $this->mDb->query( $query, $pParamHash['polyline_remove'] );
+  			$ret = TRUE;
+  			$this->mDb->CompleteTrans();
+  		}
+			
+		return $ret;
+	}
+
+
+
+
+	function verifyPolygonRemove( &$pParamHash ) {
+	
+		$pParamHash['polygon_remove'] = array();
+
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['polygon_remove']['set_id'] = $pParamHash['set_id'];
+		}
+		
+		if( !empty( $pParamHash['polygon_id'] ) && is_numeric( $pParamHash['polygon_id'] ) ) {
+			$pParamHash['polygon_remove']['polygon_id'] = $pParamHash['polygon_id'];
+		}
+
+		return( count( $this->mErrors ) == 0 );
+				
+	}	
+	/**
+	* This function removes a polygon from a set
+	**/
+	function removePolygonFromSet(&$pParamHash) {
+		$ret = FALSE;
+		
+  		if( $this->verifyPolygonRemove( $pParamHash ) ) {
+  			$this->mDb->StartTrans();
+  			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polygon_keychain` 
+  			WHERE `set_id` = ?
+  			AND `polygon_id` =?";
+  			$result = $this->mDb->query( $query, $pParamHash['polygon_remove'] );
   			$ret = TRUE;
   			$this->mDb->CompleteTrans();
   		}
@@ -1621,19 +2016,48 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
-	
-	//@todo all these:	
-	/**
-	* This function removes a marker style from a marker set
-	**/
 
-	/**
-	* This function removes a icon style from a marker set
-	**/
+	//@todo - this and the remove function look identical to the removeMarkerSetFromMap function - consolidate - perhaps with removeMapTypeFromMap too
+	function verifyPolygonSetRemove( &$pParamHash ) {
 	
+		$pParamHash['polygonset_remove'] = array();
+
+		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
+			$pParamHash['polygonset_remove']['gmap_id'] = $pParamHash['gmap_id'];
+		}
+		
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['polygonset_remove']['set_id'] = $pParamHash['set_id'];
+		}
+
+		if( !empty( $pParamHash['set_type'] ) ) {
+			$pParamHash['polygonset_remove']['set_type'] = $pParamHash['set_type'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+				
+	}	
 	/**
-	* This function removes a polyline style from a polyline set
+	* This function removes a polygon set from a map
 	**/
+	function removePolygonSetFromMap(&$pParamHash) {
+		$ret = FALSE;
+
+  		if( $this->verifyPolygonSetRemove( $pParamHash ) ) {
+  			$this->mDb->StartTrans();
+  			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
+  			WHERE `gmap_id` = ?
+  			AND `set_id` =?
+        AND `set_type` = ?";
+  			$result = $this->mDb->query( $query, $pParamHash['polygonset_remove'] );
+  			$ret = TRUE;
+  			$this->mDb->CompleteTrans();
+  		}
+
+		return $ret;
+	}
+
+	
 
 	
 	/**

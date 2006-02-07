@@ -169,8 +169,8 @@ $tables = array(
 
 //type options: 0 => Polygon, 1 => Circle
 //points_data takes an array for polygon
-//center_x lat for circle
-//center_y lon for circle
+//circle_center for circle
+//radius for circle
 //@todo wj:check radius after up and running - might require an XDistance (for circle)
 'gmaps_polygons' => "
   polygon_id I4 AUTO PRIMARY,
@@ -180,11 +180,10 @@ $tables = array(
   last_modified I8 NOTNULL,
   version I4 NOTNULL,
   name C(64),
-  type I4 DEFAULT 0,
-  points_data X,
-  center_x F,
-	center_y F,
-  radius F,
+  circle C(5) DEFAULT 'true',
+  points_data X DEFAULT 0,
+  circle_center X DEFAULT 0,
+  radius F DEFAULT 0,
   border_text X,
   zindex I8 DEFAULT 0
 ",
@@ -193,6 +192,7 @@ $tables = array(
 'gmaps_polygon_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
+  type I4 DEFAULT 0,
   color C(6),
   weight I4 DEFAULT 2,
   opacity F DEFAULT 1

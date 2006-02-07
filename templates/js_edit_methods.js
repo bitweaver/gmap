@@ -1,20 +1,14 @@
 //for debugging
 function dumpProps(obj, parent) {
-   // Go through all the properties of the passed-in object
    for (var i in obj) {
-      // if a parent (2nd parameter) was passed in, then use that to
-      // build the message. Message includes i (the object's property name)
-      // then the object's property value on a new line
       if (parent) { var msg = parent + "." + i + "\n" + obj[i]; } else { var msg = i + "\n" + obj[i]; }
-      // Display the message. If the user clicks "OK", then continue. If they
-      // click "CANCEL" then quit this level of recursion
       if (!confirm(msg)) { return; }
-      // If this property (i) is an object, then recursively process the object
       if (typeof obj[i] == "object") {
          if (parent) { dumpProps(obj[i], parent + "." + i); } else { dumpProps(obj[i], i); }
       }
    }
 }
+
 
 
 // We use Mochikit library for AJAX and substituting getElementById with '$()'
@@ -939,172 +933,6 @@ function editPolylines(){
 
 
 
-
-
-
-
-
-/* @todo needs to support markers in bSLData as well as bILData */
-function editPolylinesOld(){
-	show('editpolylinemenu');
-  show('editpolylineform');
-	show('editpolylinecancel');
-	
-	//if polyline data exists
-	if ( typeof(bILData) ) {
-	
-  	// We assume editPolylines has been called before and remove 
-  	// any previously existing sets from the UI
-  	for (var a=0; a<bLSetData.length; a++) {
-  		if (bLSetData[a]!= null){
-    		var getElem = "polylineset_"+bLSetData[a].set_id;
-    		if ( $(getElem) ) {
-        	var extraPolylineForm = $(getElem);
-    			$('editpolylineform').removeChild(extraPolylineForm);
-    		}
-			}
-  	}
-  
-  	var newSetId;
-  	  	
-  	// add a new set UI for each marker set
-  	for (var b=0; b<bLSetData.length; b++) {
-  	if (bLSetData[b]!= null){
-		  	
-  		newSetId = bLSetData[b].set_id;
-  	
-  		// clone model set UI
-			var newPolylineSet = $('polylineset_n').cloneNode(true);
-  		// give a new id to the new set UI
-  		newPolylineSet.id = "polylineset_"+newSetId;
-  									
-  		// customize all the values of our new set UI this gets ugly...										
-  		setKids = newPolylineSet.childNodes;
-      for (var c=0; c<setKids.length; c++) { 
-  			if (setKids[c].id == "editpolylinesetmenu_n"){
-  				setKids[c].id = "editpolylinesetmenu_"+newSetId;
-  				menuKids = setKids[c].childNodes;
-  			}
-  			if (setKids[c].id == "polylinesetform_n"){
-  				setKids[c].id = "polylinesetform_"+newSetId;    					
-  				setForm = setKids[c];
-  			}
-      }
-  					
-  		formKids = setForm.childNodes;
-      for (var d=0; d<formKids.length; d++) {
-  			if (formKids[d].id == "editpolylinetable_n"){
-  				formKids[d].id = "editpolylinetable_"+newSetId;
-  			}
-  			if (formKids[d].id == "allavailpolylines_n"){
-  				formKids[d].id = "allavailpolylines_"+newSetId;
-  				allPolylinesForm = formKids[d];
-  			}
-  		}
-  
-  		allPolyKids = allPolylinesForm.childNodes;
-      for (var e=0; e<allPolyKids.length; e++) {
-  			if (allPolyKids[e].id == "addpolylinetable_n"){
-  				allPolyKids[e].id = "addpolylinetable_"+newSetId;
-  			}
-  		}
-  
-  		// Update the set's menu
-      for (var f=0; f<menuKids.length; f++) {
-  			if (menuKids[f].id == "polylinesetid"){
-      		menuKids[f].innerHTML = bLSetData[b].name;
-  			}
-  			if (menuKids[f].id == "polylinesetstyle"){
-      		menuKids[f].innerHTML = bLSetData[b].style_id;
-  			}
-  			if (menuKids[f].id == "seteditpolylines"){
-      		menuKids[f].href = "javascript:editPolylineSet("+newSetId+");";
-  			}
-  			if (menuKids[f].id == "setaddpolylines"){
-      		menuKids[f].href = "javascript:alert('feature coming soon');";
-  			}
-  			if (menuKids[f].id == "seteditstyle"){
-      		menuKids[f].href = "javascript:alert('feature coming soon');";
-  			}
-  			if (menuKids[f].id == "setremove"){
-      		menuKids[f].href = "javascript:removePolylineSet('edit_polylineset.php', "+bLSetData[b].set_id+", 'I');";  //this needs to be modified to account for I or S set type
-  			}
-  			if (menuKids[f].id == "setdelete"){
-      		menuKids[f].href = "javascript:expungePolylineSet('edit_polylineset.php', "+bLSetData[b].set_id+");";
-  			}
-  			if (menuKids[f].id == "setdesc"){
-      		menuKids[f].innerHTML = bLSetData[b].description;
-  			}
-      }							
-  					
-      // add form to set table
-  		$('editpolylineform').appendChild(newPolylineSet);
-  		show('polylineset_'+newSetId);
-  	}
-		}
-		
-  	//for length of polylines add form to setelement on matching set_id
-  	for (g=0; g<bILData.length; g++) {
-			if (bILData[g]!= null){
-				//add marker form...again a little ugly here
-				var formCont = $("editpolylinetable_"+bILData[g].set_id);
-  			formContKids = formCont.childNodes;
-        for (var n = 0; n < formContKids.length; n++) {
-  				if (formContKids[n].id == "polylineform_n"){
-        			var newPolylineForm = formContKids[n].cloneNode(true);
-    					newPolylineForm.id = "polylineform_"+g;
-							newPolylineForm.name = "polylineform_"+g;
-							var nLFKids = newPolylineForm.childNodes;
-							for (var o=0; o<nLFKids.length; o++){
-							  if (nLFKids[o].id == "polylineformdata_n"){
-									nLFKids[o].id = "polylineformdata_"+g;
-									}
-							}
-							
-    					$('editpolylinetable_'+bILData[g].set_id).appendChild(newPolylineForm);
-							show('polylineform_'+g);
-							break;
-					}
-			  }
-				
-				// populate set form values
-				form = $('polylineform_'+g);
-
-        form.set_id.value = bILData[g].set_id;
-        form.polyline_id.value = bILData[g].polyline_id;
-        form.name.value = bILData[g].name;				
-        form.points_data.value = bILData[g].points_data;  //this might need to be a loop
-        form.border_text.value = bILData[g].border_text;
-        form.zindex.value = bILData[g].zindex;
-        form.polyline_array.value = bILData[g].array;
-        form.polyline_array_n.value = bILData[g].array_n;
-				
-				// just for a pretty button - js sucks it!
-				var linkParent = $('polylineformdata_'+g);
-				var linkPKids = linkParent.childNodes;
-				for (var p=0; p<linkPKids.length; p++){
-						if (linkPKids[p].name == "save_polyline_btn"){
-							 linkPKids[p].href = "javascript:storePolyline('edit_polyline.php', document.polylineform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "locate_polyline_btn"){
-							 linkPKids[p].href = "javascript:alert('feature coming soon');" ;
-						}
-						if (linkPKids[p].name == "remove_polyline_btn"){
-							 linkPKids[p].href = "javascript:removePolyline('edit_polyline.php', document.polylineform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "expunge_polyline_btn"){
-							 linkPKids[p].href = "javascript:expungePolyline('edit_polyline.php', document.polylineform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "polyline_assist_btn"){
-							 linkPKids[p].href = "javascript:addAssistant('polyline', " + g + ");" ;
-						}
-				}
-			}
-		}		
-	}
-};
-
-
 function editPolylineSet(n){
 		show('plsetform_'+n);
 }
@@ -1252,6 +1080,366 @@ function newPolylineStyle(){
 
 
 
+///////////////////////////////////////
+/*******************
+ *
+ * Polygon FORM FUNCTIONS
+ *
+ *******************/
+
+function newPolygon(){
+		var check = false;
+  	for (var i=0; i<bPSetData.length; i++){
+  		if ( bPSetData[i] != null ){
+				check = true;
+  		}
+  	}
+
+  	if (check == false){
+  		//set warning message, show it, fade it
+  		$('errortext').innerHTML = "To add a polygon, there first must be a polygon set associated with this map. Please create a new polygon set, then you can add your new polygon!";
+			show('editerror');
+  		Fat.fade_all();
+  		//display new polygon set form
+      newPolygonSet();
+
+		}else{
+      // Display the New Form Div and Cancel Button
+     	show('newpolygonform');
+  		// Reset the Form
+  		$('polygonform_new').reset();
+  		
+  		// shortcut to the Select Option we are adding to
+  		var selectRoot = $('polygonset_id');
+  		
+  		selectRoot.options.length = 0;
+  
+  		// add option for each set available
+  		if ( typeof(bPSetData) != 'undefined' ){
+    			for ( i=0; i<bPSetData.length; i++ ){
+  						if ( bPSetData[i] != null ){
+                 	selectRoot.options[selectRoot.options.length] = new Option( bPSetData[i].name, bPSetData[i].set_id );
+  						}
+    			}
+  		}
+		}
+};
+
+
+
+function newPolygonSet(){
+    // Display the New Form Div
+   	show('newpolygonsetform');
+		// Reset the Form
+		$('polygonsetform_new').reset();
+};
+
+
+
+
+
+/* @todo needs to support markers in bSLData as well as bILData */
+function editPolygons(){
+	show('editpolygonmenu');
+  show('editpolygonform');
+	show('editpolygoncancel');
+	
+	//if polygon data exists
+	if ( typeof(bIPData) ) {
+	
+  	// We assume editPolygons has been called before and remove 
+  	// any previously existing sets from the UI
+  	for (var a=0; a<bPSetData.length; a++) {
+  		if (bPSetData[a]!= null){
+    		var getElem = "polygonset_"+bPSetData[a].set_id;
+    		if ( $(getElem) ) {
+        	var extraPolygonForm = $(getElem);
+    			$('editpolygonform').removeChild(extraPolygonForm);
+    		}
+			}
+  	}
+  
+  	var newSetId;
+  	  	
+  	// add a new set UI for each marker set
+  	for (var b=0; b<bPSetData.length; b++) {
+  	if (bPSetData[b]!= null){
+		  	
+  		newSetId = bPSetData[b].set_id;
+  	
+  		// clone model set UI
+			var newPolygonSet = $('polygonset_n').cloneNode(true);
+  		// give a new id to the new set UI
+  		newPolygonSet.id = "polygonset_"+newSetId;
+
+  		// customize all the values of our new set UI this gets ugly...										
+  		newPolygonSetKids = newPolygonSet.childNodes;
+			for ( var n = 0; n < newPolygonSetKids.length; n++ ) {
+          		if ( newPolygonSetKids[n].id == "polygonsetform_n" ) {					
+              		newPolygonSetKids[n].id = "polygonsetform_" + newSetId;
+                	newPolygonSetKids[n].name = "polygonsetform_" + newSetId;					 
+            		var nMSFKids = newPolygonSetKids[n].childNodes;
+            		for (var o=0; o<nMSFKids.length; o++){
+              			if (nMSFKids[o].id == "polygonsetformdata_n"){
+              				nMSFKids[o].id = "polygonsetformdata_" + newSetId;
+              			}
+            		}
+					}
+
+          		if ( newPolygonSetKids[n].id == "plsetform_n" ) {					
+              		newPolygonSetKids[n].id = "plsetform_" + newSetId;
+						formKids = newPolygonSetKids[n].childNodes;
+   					for (var p=0; p<formKids.length; p++) {
+   						if (formKids[p].id == "editpolygontable_n"){
+              				formKids[p].id = "editpolygontable_"+newSetId;
+                			if (formKids[p].id == "allavailpolygons_n"){
+                				formKids[p].id = "allavailpolygons_"+newSetId;
+     							allPolyKids = formKids[p].childNodes;
+     							for (var e=0; e<allPolyKids.length; e++) {
+        							if (allPolyKids[e].id == "addpolygontable_n"){
+        								allPolyKids[e].id = "addpolygontable_"+newSetId;
+        							}
+     							}
+                			}
+              			}
+   					}
+					}
+				}
+
+        	// add form container to set table
+  			$('editpolygonform').appendChild(newPolygonSet);
+    		show('polygonset_'+newSetId);
+				show('polygonsetform_'+newSetId);
+  
+				//get form data div children and update
+				var dataKids = $('polygonsetformdata_' + newSetId).childNodes;
+				for (var c=0; c<dataKids.length; c++) { 
+    			if (dataKids[c].id == "pgsetname"){dataKids[c].innerHTML = bPSetData[b].name+":";}
+     			if (dataKids[c].id == "pgsetdesc"){dataKids[c].innerHTML = bPSetData[b].description;}
+    			if (dataKids[c].id == "pgsetedit"){dataKids[c].href = "javascript:editPolygonSet("+newSetId+");";}
+    			if (dataKids[c].id == "pgsetadd"){dataKids[c].href = "javascript:alert('feature coming soon');";}
+    			if (dataKids[c].id == "pgsetstore"){dataKids[c].href = "javascript:storePolygonSet('edit_polygonset.php', document.polygonsetform_"+newSetId+");";}
+    			if (dataKids[c].id == "pgsetremove"){dataKids[c].href = "javascript:removePolygonSet('edit_polygonset.php', document.polygonsetform_"+newSetId+");";}
+    			if (dataKids[c].id == "pgsetdelete"){dataKids[c].href = "javascript:expungePolygonrSet('edit_polygonset.php', document.polygonsetform_"+newSetId+");";}
+				}
+				//get form and update values
+				form = $('polygonsetform_'+newSetId);
+				form.set_id.value = newSetId;
+				form.set_type.value = bPSetData[b].set_type;
+				form.set_array_n.value = b;
+				if ( (typeof(bPStyData) != 'undefined') && (bPStyData.length > 0) ){
+					var OptionN = form.style_id.options.length;
+  				for (var d=0; d<bPStyData.length; d++){
+						if ( bPStyData[d] != null ){
+							form.style_id.options[OptionN + d] = new Option( bPStyData[d].name, bPStyData[d].style_id );
+							if ( bPStyData[d].style_id == bPSetData[b].style_id){
+							form.style_id.options[OptionN + d].selected=true;
+							}
+  					}
+  				}
+					var OptionO = form.polylinestyle_id.options.length;
+  				for (var e=0; e<bPStyData.length; e++){
+						if ( bPStyData[e] != null ){
+							form.polylinestyle_id.options[OptionO + e] = new Option( bPStyData[e].name, bPStyData[e].polylinestyle_id );
+							if ( bPStyData[e].polylinestyle_id == bPSetData[b].polylinestyle_id){
+							form.polylinestyle_id.options[OptionO + e].selected=true;
+							}
+  					}
+  				}
+				}
+			}
+		}			
+
+  	//for length of polygons add form to setelement on matching set_id
+  	for (g=0; g<bIPData.length; g++) {
+			if (bIPData[g]!= null){
+				//add polygon form...again a little ugly here
+				var formCont = $("editpolygontable_"+bIPData[g].set_id);
+  			formContKids = formCont.childNodes;
+            for (var n = 0; n < formContKids.length; n++) {
+      			if (formContKids[n].id == "polygonform_n"){
+            		var newPolygonForm = formContKids[n].cloneNode(true);
+        			newPolygonForm.id = "polygonform_"+g;
+    				newPolygonForm.name = "polygonform_"+g;
+    				var nPFKids = newPolygonForm.childNodes;
+    				for (var o=0; o<nPFKids.length; o++){
+    					if (nPFKids[o].id == "polygonformdata_n"){
+    						nPFKids[o].id = "polygonformdata_"+g;
+    					}
+    				}
+    							
+        			$('editpolygontable_'+bIPData[g].set_id).appendChild(newPolygonForm);
+    				show('polygonform_'+g);
+    				break;
+    			}
+    		}
+				
+				// populate set form values
+				form = $('polygonform_'+g);
+
+            form.set_id.value = bILData[g].set_id;
+            form.polygon_id.value = bILData[g].polygon_id;
+            form.name.value = bILData[g].name;
+				if (bILData[g].circle == true){
+					form.circle.options[0].selected=true;
+				}else{
+					form.circle.options[1].selected=true;
+				}
+            form.points_data.value = bILData[g].points_data;
+            form.circle_center.value = bILData[g].circle_center;
+            form.radius.value = bILData[g].radius;
+            form.border_text.value = bILData[g].border_text;
+            form.zindex.value = bILData[g].zindex;
+            form.polygon_array.value = bILData[g].array;
+            form.polygon_array_n.value = bILData[g].array_n;
+				
+				// just for a pretty button - js sucks it!
+				var linkParent = $('polygonformdata_'+g);
+				var linkPKids = linkParent.childNodes;
+				for (var p=0; p<linkPKids.length; p++){
+						if (linkPKids[p].name == "save_polygon_btn"){
+							 linkPKids[p].href = "javascript:storePolygon('edit_polygon.php', document.polygonform_"+g+");" ;
+						}
+						if (linkPKids[p].name == "locate_polygon_btn"){
+							 linkPKids[p].href = "javascript:alert('feature coming soon');" ;
+						}
+						if (linkPKids[p].name == "remove_polygon_btn"){
+							 linkPKids[p].href = "javascript:removePolygon('edit_polygon.php', document.polygonform_"+g+");" ;
+						}
+						if (linkPKids[p].name == "expunge_polygon_btn"){
+							 linkPKids[p].href = "javascript:expungePolygon('edit_polygon.php', document.polygonform_"+g+");" ;
+						}
+						if (linkPKids[p].name == "polygon_assist_btn"){
+							 linkPKids[p].href = "javascript:addAssistant('polygon', " + g + ");" ;
+						}
+				}
+			}
+		}		
+	}
+};
+
+
+
+function editPolygonSet(n){
+		show('plsetform_'+n);
+}
+
+
+function cancelPolygonEdit(){
+		canceledit('editpolygonmenu'); 
+		canceledit('newpolygonform'); 
+		canceledit('editpolygonform'); 
+		canceledit('editpolygoncancel');
+		removeAssistant();
+}; 
+
+
+function editPolygonStyles(){
+		show('editpolygonstylesmenu');
+		show('editpolygonstyleform');
+		show('editpolygonstylescancel');
+
+  	//if polygonstyles data exists
+  	if ( typeof( bPStyData ) ) {
+  
+    	// We assume editPolygonStyles has been called before and remove 
+    	// any previously existing sets from the UI
+    	for (var a=0; a<bPStyData.length; a++) {
+    		if ( bPStyData[a]!= null ){
+      			var getElem = "editpolygonstyletable_" + bPStyData[a].style_id;
+        		if ( $(getElem) ) {
+            		var extraPolygonStyleForm = $(getElem);
+        			$('editpolygonstyleform').removeChild(extraPolygonStyleForm);
+        		}
+  			}
+    	}
+  
+    	var editPolygonStyleId;
+  
+    	// for each markerstyle data set clone the form
+    	for (var b=0; b<bPStyData.length; b++) {
+        	if ( bPStyData[b]!= null ){  						
+    
+        		editPolygonStyleId = bPStyData[b].style_id;
+    
+        		// clone the form container
+      			var newPolygonStyle = $('editpolygonstyletable_n').cloneNode(true);
+        		// give a new id to the new form container
+        		newPolygonStyle.id = "editpolygonstyletable_"+editPolygonStyleId;
+    
+      			// update the new form ids
+        		newPolygonStyleForm = newPolygonStyle.childNodes;
+                for ( var n = 0; n < newPolygonStyleForm.length; n++ ) {
+            		if ( newPolygonStyleForm[n].id == "polygonstyleform_n" ) {					
+                  		newPolygonStyleForm[n].id = "polygonstyleform_" + editPolygonStyleId;
+                  		newPolygonStyleForm[n].name = "polygonstyleform_" + editPolygonStyleId;					 
+          				var nPSFKids = newPolygonStyleForm[n].childNodes;
+          				for (var o=0; o<nPSFKids.length; o++){
+          					if (nPSFKids[o].id == "polygonstyleformdata_n"){
+          						nPSFKids[o].id = "polygonstyleformdata_" + editPolygonStyleId;
+          					}
+          				}
+          			}
+          		}
+    
+            	// add form to style table
+        		$('editpolygonstyleform').appendChild(newPolygonStyle);
+        		show( 'editpolygonstyletable_'+editPolygonStyleId );
+        		show( 'polygonstyleform_'+editPolygonStyleId );
+    
+      			// populate set form values
+      			form = $('polygonstyleform_' + editPolygonStyleId );
+    
+                form.style_array_n.value = b;
+                form.style_id.value = bPStyData[b].style_id;
+                form.name.value = bPStyData[b].name;
+                for (var r=0; r < 2; r++) {
+                   if (form.type.options[r].value == bPStyData[b].type){
+                   		form.type.options[r].selected=true;
+                   }
+                };
+                form.color.value = bPStyData[b].color;
+                form.weight.value = bPStyData[b].weight;
+                form.opacity.value = bPStyData[b].opacity;
+    
+      			// just for a pretty button - js sucks it!
+      			var linkParent = $('polygonstyleformdata_'+editPolygonStyleId);
+      			var linkPKids = linkParent.childNodes;
+      			for (var p=0; p<linkPKids.length; p++){
+      				if (linkPKids[p].name == "save_polygonstyle_btn"){
+        				linkPKids[p].href = "javascript:storePolygonStyle('edit_polygonstyle.php', document.polygonstyleform_"+editPolygonStyleId+");" ;
+      				}
+    			}
+      		}
+  		}
+  	}
+};
+
+
+function newPolygonStyle(){
+		var check = false;
+  	for (var i=0; i<bPSetData.length; i++){
+  		if ( bPSetData[i] != null ){
+				check = true;
+  		}
+  	}
+
+  	if (check == false){
+  		//set warning message, show it, fade it
+  		$('errortext').innerHTML = "To add a polygon style, there first must be a polygon set associated with this map. Please create a new polygon set, then you can add your new polygon style!";
+			show('editerror');
+  		Fat.fade_all();
+  		//display new polygon set form
+      newPolygonSet();
+
+		}else{
+      // Display the New Polygon Style Div
+   		show('newpolygonstyleform');
+
+  		// Reset the Form
+  		$('polygonstyleform_new').reset();  		  
+		};
+}
 
 
 
@@ -1443,7 +1631,73 @@ function newPolylineStyle(){
 			doSimpleXMLHttpRequest(str).addCallback( updatePolylineStyle ); 
 	 }
 	 
+	 function storeNewPolygon(u, f){
+			editSetId = f.set_id.value;
+	 		var str = u + "?" + queryString(f) + "&save_polygon=true";
+			doSimpleXMLHttpRequest(str).addCallback( addPolygon );
+	 }
+	 
+	 function storePolygon(u, f){
+			editArray = f.polygon_array.value;
+			editObjectN = f.polygon_array_n.value;
+			doSimpleXMLHttpRequest(u, f).addCallback( updatePolygon );
+	 }
+	 
+	 function removePolygon(u, f){
+			editSetId = f.set_id.value;
+			editPolygonId = f.polygon_id.value;
+	 		var str = u + "?set_id=" + editSetId + "&polygon_id=" + editPolygonId + "&remove_polygon=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygon );
+	 }
 
+	 function expungePolygon(u, f){
+			editSetId = f.set_id.value;
+			editPolygonId = f.polygon_id.value;
+	 		var str = u + "?polygon_id=" + editPolygonId + "&expunge_polygon=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygon );
+	 }	 
+	 
+	 function storeNewPolygonSet(u, f){
+			canceledit('editerror');
+			editSetType = f.set_type.value;
+	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID;
+			doSimpleXMLHttpRequest(str).addCallback( addPolygonSet );
+	 }
+
+
+	 function storePolygonSet(u, f){
+			editSetId = f.set_id.value;
+			editObjectN = f.set_array_n.value;
+			editSetType = f.set_type.value;
+	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID + "&save_polygonset=true";
+			doSimpleXMLHttpRequest(str).addCallback( updatePolygonSet );
+	 }
+
+	 function removePolygonSet(u, s, t){
+			var st;
+      	editArray = t;
+			editSetId = s;
+			if (t == 'I') {st = 'init_polygons';}else{st = 'set_polygons';};
+	 		var str = u + "?" + "set_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_polygonset=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygonSet );
+	 }
+	 
+	 function expungePolygonSet(u, s){
+			editSetId = s;
+	 		var str = u + "?" + "set_id=" + s + "&expunge_polygonset=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateExpungePolygonSet );
+	 }
+
+	 function storeNewPolygonStyle(u, f){
+	 		var str = u + "?" + queryString(f);
+			doSimpleXMLHttpRequest(str).addCallback( addPolygonStyle ); 
+	 }
+
+	 function storePolygonStyle(u, f){
+			editObjectN = f.style_array_n.value;
+	 		var str = u + "?" + queryString(f);
+			doSimpleXMLHttpRequest(str).addCallback( updatePolygonStyle ); 
+	 }
 
 
 
@@ -2373,6 +2627,128 @@ function newPolylineStyle(){
  * POST XML Polyline Functions
  *
  *******************/	 
+
+	 function addPolyline(rslt){
+      	var xml = rslt.responseXML;
+	 		var s;
+			var n;
+			var p;
+
+			for(a=0; a<bLSetData.length; a++){
+					if ( ( bLSetData[a] != null ) && ( bLSetData[a].set_id == editSetId ) ){
+						 s = a;
+						 editArray = bLSetData[a].set_type;
+					}
+			};
+
+			if (editArray == "init_polylines"){
+  			n = bILData.length;
+  			bILData[n] = new Array();
+				p = bILData[n];
+  			p.array = "I";
+  			p.array_n = n;
+			}else{
+  			n = bSLData.length;
+  			bSLData[n] = new Array();
+				p = bSLData[n];
+  			p.array = "S";
+  			p.array_n = n;
+			};
+			
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('polyline_id');			
+			p.polyline_id = id[0].firstChild.nodeValue;
+			var nm = xml.documentElement.getElementsByTagName('name');
+			p.name = nm[0].firstChild.nodeValue;
+			var dt = xml.documentElement.getElementsByTagName('points_data');
+			var points_data = dt[0].firstChild.nodeValue;
+	 		p.points_data = points_data.split(",");			
+			var bt = xml.documentElement.getElementsByTagName('border_text');
+			p.border_text = bt[0].firstChild.nodeValue;
+			var zi = xml.documentElement.getElementsByTagName('zindex');
+			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
+
+			//this is such a crappy way to get this number
+			for(var a=0; a<bLSetData.length; a++){
+					if (bLSetData[a].set_id == editSetId){
+						 s = a;
+					}
+			};
+			
+			p.set_id = parseFloat(bLSetData[s].set_id);
+			p.style_id = parseFloat(bLSetData[s].style_id);
+
+			//create polyline
+			if (p.style_id == 0){
+				defineGPolyline(p.array, p.array_n, null);
+			}else{
+				var stylen;
+				for (var b=0; b<bLStyData.length; b++){
+					if ( bLStyData[b].style_id == p.style_id ){
+						stylen = b;
+					}
+				}
+				if ( bLStyData[stylen].type == 0){
+					defineGPolyline(p.array, p.array_n, stylen);
+				}else{
+					defineXPolyline(p.array, p.array_n, stylen);
+				}
+			}
+
+			// clear the form
+			$('polylineform_new').reset();
+			// update the sets menus
+			editPolylines();
+			editPolylineSet(editSetId);
+			removeAssistant();
+	}	
+
+
+
+
+	 function updatePolyline(rslt){
+			var xml = rslt.responseXML;
+			var p;
+
+			if (editArray == "I"){p = bILData[editObjectN];}else{p = bSLData[editObjectN];};
+			
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('polyline_id');			
+			p.polyline_id = id[0].firstChild.nodeValue;
+			var nm = xml.documentElement.getElementsByTagName('name');
+			p.name = nm[0].firstChild.nodeValue;	
+			var dt = xml.documentElement.getElementsByTagName('points_data');
+			var points_data = dt[0].firstChild.nodeValue;
+	 		p.points_data = points_data.split(",");			
+			var bt = xml.documentElement.getElementsByTagName('border_text');
+			p.border_text = bt[0].firstChild.nodeValue;
+			var zi = xml.documentElement.getElementsByTagName('zindex');
+			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
+			
+			//remove old version
+			map.removeOverlay(p.polyline);
+
+			//create polyline
+			if (p.style_id == 0){
+				defineGPolyline(p.array, p.array_n, null);
+			}else{
+				var stylen;
+				for (var b=0; b<bLStyData.length; b++){
+					if ( bLStyData[b].style_id == p.style_id ){
+						stylen = b;
+					}
+				}
+				if ( bLStyData[stylen].type == 0){
+					defineGPolyline(p.array, p.array_n, stylen);
+				}else{
+					defineXPolyline(p.array, p.array_n, stylen);
+				}
+			}
+
+			removeAssistant();
+	}
+
+
 	
 	 function addPolylineSet(rslt){
       var xml = rslt.responseXML;
@@ -2457,131 +2833,7 @@ function newPolylineStyle(){
 			// update the sets menus
 			editPolylines();
 	}
-
-
-
-
-
-	 function updatePolyline(rslt){
-			var xml = rslt.responseXML;
-			var p;
-
-			if (editArray == "I"){p = bILData[editObjectN];}else{p = bSLData[editObjectN];};
-			
-	 		//shorten var names
-			var id = xml.documentElement.getElementsByTagName('polyline_id');			
-			p.polyline_id = id[0].firstChild.nodeValue;
-			var nm = xml.documentElement.getElementsByTagName('name');
-			p.name = nm[0].firstChild.nodeValue;	
-			var dt = xml.documentElement.getElementsByTagName('points_data');
-			var points_data = dt[0].firstChild.nodeValue;
-	 		p.points_data = points_data.split(",");			
-			var bt = xml.documentElement.getElementsByTagName('border_text');
-			p.border_text = bt[0].firstChild.nodeValue;
-			var zi = xml.documentElement.getElementsByTagName('zindex');
-			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
-			
-			//remove old version
-			map.removeOverlay(p.polyline);
-
-			//create polyline
-			if (p.style_id == 0){
-				defineGPolyline(p.array, p.array_n, null);
-			}else{
-				var stylen;
-				for (var b=0; b<bLStyData.length; b++){
-					if ( bLStyData[b].style_id == p.style_id ){
-						stylen = b;
-					}
-				}
-				if ( bLStyData[stylen].type == 0){
-					defineGPolyline(p.array, p.array_n, stylen);
-				}else{
-					defineXPolyline(p.array, p.array_n, stylen);
-				}
-			}
-
-			removeAssistant();
-	}
-
-
 	
-	 function addPolyline(rslt){
-      	var xml = rslt.responseXML;
-	 		var s;
-			var n;
-			var p;
-
-			for(a=0; a<bLSetData.length; a++){
-					if ( ( bLSetData[a] != null ) && ( bLSetData[a].set_id == editSetId ) ){
-						 s = a;
-						 editArray = bLSetData[a].set_type;
-					}
-			};
-
-			if (editArray == "init_polylines"){
-  			n = bILData.length;
-  			bILData[n] = new Array();
-				p = bILData[n];
-  			p.array = "I";
-  			p.array_n = n;
-			}else{
-  			n = bSLData.length;
-  			bSLData[n] = new Array();
-				p = bSLData[n];
-  			p.array = "S";
-  			p.array_n = n;
-			};
-			
-	 		//shorten var names
-			var id = xml.documentElement.getElementsByTagName('polyline_id');			
-			p.polyline_id = id[0].firstChild.nodeValue;
-			var nm = xml.documentElement.getElementsByTagName('name');
-			p.name = nm[0].firstChild.nodeValue;
-			var dt = xml.documentElement.getElementsByTagName('points_data');
-			var points_data = dt[0].firstChild.nodeValue;
-	 		p.points_data = points_data.split(",");			
-			var bt = xml.documentElement.getElementsByTagName('border_text');
-			p.border_text = bt[0].firstChild.nodeValue;
-			var zi = xml.documentElement.getElementsByTagName('zindex');
-			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
-
-			//this is such a crappy way to get this number
-			for(var a=0; a<bLSetData.length; a++){
-					if (bLSetData[a].set_id == editSetId){
-						 s = a;
-					}
-			};
-			
-			p.set_id = parseFloat(bLSetData[s].set_id);
-			p.style_id = parseFloat(bLSetData[s].style_id);
-
-			//create polyline
-			if (p.style_id == 0){
-				defineGPolyline(p.array, p.array_n, null);
-			}else{
-				var stylen;
-				for (var b=0; b<bLStyData.length; b++){
-					if ( bLStyData[b].style_id == p.style_id ){
-						stylen = b;
-					}
-				}
-				if ( bLStyData[stylen].type == 0){
-					defineGPolyline(p.array, p.array_n, stylen);
-				}else{
-					defineXPolyline(p.array, p.array_n, stylen);
-				}
-			}
-
-			// clear the form
-			$('polylineform_new').reset();
-			// update the sets menus
-			editPolylines();
-			editPolylineSet(editSetId);
-			removeAssistant();
-	}	
-	
-
 
 
 
@@ -2726,9 +2978,6 @@ function newPolylineStyle(){
 
 
 
-
-
-
 	
 	function updateRemovePolyline(){
 			for (var i=0; i<bILData.length; i++){
@@ -2808,8 +3057,396 @@ function newPolylineStyle(){
 
 
 
-	
-	
+
+
+/*******************
+ *
+ * POST XML Polygon Functions
+ *
+ *******************/	 
+
+	 function addPolygon(rslt){
+      	var xml = rslt.responseXML;
+	 		var s;
+			var n;
+			var p;
+
+			for(var a=0; a<bPSetData.length; a++){
+					if ( ( bPSetData[a] != null ) && ( bPSetData[a].set_id == editSetId ) ){
+						 s = a;
+						 editArray = bPSetData[a].set_type;
+					}
+			};
+
+			if (editArray == "init_polygons"){
+  			n = bIPData.length;
+  			bIPData[n] = new Array();
+				p = bIPData[n];
+  			p.array = "I";
+  			p.array_n = n;
+			}else{
+  			n = bSPData.length;
+  			bSPData[n] = new Array();
+				p = bSPData[n];
+  			p.array = "S";
+  			p.array_n = n;
+			};
+			
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('polygon_id');			
+			p.polygon_id = parseInt(id[0].firstChild.nodeValue);
+			var nm = xml.documentElement.getElementsByTagName('name');
+			p.name = nm[0].firstChild.nodeValue;
+			var cr = xml.documentElement.getElementsByTagName('circle');
+			p.circle = cr[0].firstChild.nodeValue;
+			var dt = xml.documentElement.getElementsByTagName('points_data');
+			var points_data = dt[0].firstChild.nodeValue;
+	 		p.points_data = points_data.split(",");
+			var cc = xml.documentElement.getElementsByTagName('circle_center');
+			var circle_center = cc[0].firstChild.nodeValue;
+	 		p.circle_center = circle_center.split(",");
+			var rd = xml.documentElement.getElementsByTagName('radius');
+			p.radius = rd[0].firstChild.nodeValue;
+			var bt = xml.documentElement.getElementsByTagName('border_text');
+			p.border_text = bt[0].firstChild.nodeValue;
+			var zi = xml.documentElement.getElementsByTagName('zindex');
+			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
+			
+			p.set_id = parseFloat(bPSetData[s].set_id);
+			p.polylinestyle_id = parseFloat(bPSetData[s].polylinestyle_id);
+			p.style_id = parseFloat(bPSetData[s].style_id);
+
+			//create polygon
+			var lstylen;
+			var pstylen;
+			for (var b=0; b<bLStyData.length; b++){
+				if ( bLStyData[b].style_id == a[n].polylinestyle_id ){
+					lstylen = b;
+				}
+			}
+			for (var c=0; c<bPStyData.length; c++){
+				if ( bPStyData[c].style_id == a[n].style_id ){
+					pstylen = c;
+				}
+			}
+			defineXPolygon(arrayId, n, lstylen, pstylen);
+
+			// clear the form
+			$('polygonform_new').reset();
+			// update the sets menus
+			editPolygons();
+			editPolygonSet(editSetId);
+			removeAssistant();
+	}	
+
+
+
+	 function updatePolygon(rslt){
+			var xml = rslt.responseXML;
+			var p;
+
+			if (editArray == "I"){p = bIPData[editObjectN];}else{p = bSPData[editObjectN];};
+			
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('polygon_id');			
+			p.polygon_id = parseInt(id[0].firstChild.nodeValue);
+			var nm = xml.documentElement.getElementsByTagName('name');
+			p.name = nm[0].firstChild.nodeValue;
+			var cr = xml.documentElement.getElementsByTagName('circle');
+			p.circle = cr[0].firstChild.nodeValue;
+			var dt = xml.documentElement.getElementsByTagName('points_data');
+			var points_data = dt[0].firstChild.nodeValue;
+	 		p.points_data = points_data.split(",");
+			var cc = xml.documentElement.getElementsByTagName('circle_center');
+			var circle_center = cc[0].firstChild.nodeValue;
+	 		p.circle_center = circle_center.split(",");
+			var rd = xml.documentElement.getElementsByTagName('radius');
+			p.radius = rd[0].firstChild.nodeValue;
+			var bt = xml.documentElement.getElementsByTagName('border_text');
+			p.border_text = bt[0].firstChild.nodeValue;
+			var zi = xml.documentElement.getElementsByTagName('zindex');
+			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
+			
+			//remove old version
+			map.removeOverlay(p.polygon);
+
+			//create polygon
+			var lstylen;
+			var pstylen;
+			for (var b=0; b<bLStyData.length; b++){
+				if ( bLStyData[b].style_id == a[n].polylinestyle_id ){
+					lstylen = b;
+				}
+			}
+			for (var c=0; c<bPStyData.length; c++){
+				if ( bPStyData[c].style_id == a[n].style_id ){
+					pstylen = c;
+				}
+			}
+			defineXPolygon(arrayId, n, lstylen, pstylen);
+
+			removeAssistant();
+	}
+
+
+
+
+	 function addPolygonSet(rslt){
+      var xml = rslt.responseXML;
+
+			//@todo modify this to handle either bILData or bSLData sets
+			var n = bPSetData.length;
+			bPSetData[n] = new Array();
+			var s = bPSetData[n];			
+			
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('set_id');
+			s.set_id = parseInt(id[0].firstChild.nodeValue);
+			var nm = xml.documentElement.getElementsByTagName('name');
+			s.name = nm[0].firstChild.nodeValue;
+			var dc = xml.documentElement.getElementsByTagName('description');
+			s.description = dc[0].firstChild.nodeValue;
+			var sy = xml.documentElement.getElementsByTagName('style_id');
+			s.style_id = parseInt(sy[0].firstChild.nodeValue);
+			var psy = xml.documentElement.getElementsByTagName('polylinestyle_id');
+			s.polylinestyle_id = parseInt(psy[0].firstChild.nodeValue);
+			
+  		s.set_type = editSetType;
+			
+			// clear the form
+			$('polygonsetform_new').reset();
+			// update the sets menus
+			if ( $('newpolygonform').style.display == "block" ){ newPolygon(); };
+			editPolygons();
+	 }
+
+
+
+
+	function updatePolygonSet(rslt){
+      	var xml = rslt.responseXML;
+
+			var s = bPSetData[editObjectN];
+			var oldStyle = s.style_id;
+			var oldLineStyle = s.polylinestyle_id;
+
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('set_id');			
+			s.set_id = parseInt(id[0].firstChild.nodeValue);
+			var nm = xml.documentElement.getElementsByTagName('name');
+			s.name = nm[0].firstChild.nodeValue;
+			var dc = xml.documentElement.getElementsByTagName('description');
+			s.description = dc[0].firstChild.nodeValue;
+			var sy = xml.documentElement.getElementsByTagName('style_id');
+			s.style_id = parseInt(sy[0].firstChild.nodeValue);			
+			var psy = xml.documentElement.getElementsByTagName('polylinestyle_id');
+			s.polylinestyle_id = parseInt(psy[0].firstChild.nodeValue);
+
+			if ( oldStyle != s.style_id || oldLineStyle != s.polylinestyle_id) {
+				var arrayId = "I";
+				a = bIPData;
+           	//if the length of the array is > 0
+           	if (a.length > 0){
+             	//loop through the array
+           		for(n=0; n<a.length; n++){
+             		//if the array item is not Null
+           			if (a[n]!= null){
+       					if (a[n].set_id == s.set_id){
+								//update the style ids
+								a[n].style_id = s.style_id;
+								a[n].polylinestyle_id = s.polylinestyle_id
+								//unload the polygon
+         					map.removeOverlay( a[n].polygon );
+                 			//create polygon
+        					var lstylen;
+        					var pstylen;
+        					for (var b=0; b<bLStyData.length; b++){
+        						if ( bLStyData[b].style_id == a[n].polylinestyle_id ){
+        							lstylen = b;
+        						}
+        					}
+        					for (var c=0; c<bPStyData.length; c++){
+        						if ( bPStyData[c].style_id == a[n].style_id ){
+        							pstylen = c;
+        						}
+        					}
+        					defineXPolygon(arrayId, n, lstylen, pstylen);
+       					}
+       				}
+       			}
+       		}
+			};
+			// update the sets menus
+			editPolygons();
+	}
+
+
+
+	 function addPolygonStyle(rslt){
+      var xml = rslt.responseXML;
+
+			// create a spot for a new polygonstyle in the data array
+			var n = bPStyData.length;
+			bPStyData[n] = new Array();
+			var s = bPStyData[n];
+
+			// assign polygonstyle values data array			
+			var id = xml.documentElement.getElementsByTagName('style_id');			
+  		s.style_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');			
+  		s.name = nm[0].firstChild.nodeValue;
+			var tp = xml.documentElement.getElementsByTagName('type');			
+  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var cl = xml.documentElement.getElementsByTagName('color');			
+  		s.color = cl[0].firstChild.nodeValue;
+			var wt = xml.documentElement.getElementsByTagName('weight');			
+  		s.weight = parseInt( wt[0].firstChild.nodeValue );
+			var op = xml.documentElement.getElementsByTagName('opacity');			
+  		s.opacity = op[0].firstChild.nodeValue;
+
+			// clear the form
+			$('polygonstyleform_new').reset();
+			// update the styles menus
+			editPolygonStyles();
+	 }
+
+
+
+	 function updatePolygonStyle(rslt){
+      	var xml = rslt.responseXML;
+
+			//get the style we are updating
+			var s = bPStyData[editObjectN];
+
+			// assign markerstyle values data array			
+			var id = xml.documentElement.getElementsByTagName('style_id');			
+  		s.style_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');			
+  		s.name = nm[0].firstChild.nodeValue;
+			var tp = xml.documentElement.getElementsByTagName('type');			
+  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var cl = xml.documentElement.getElementsByTagName('color');			
+  		s.color = cl[0].firstChild.nodeValue;
+			var wt = xml.documentElement.getElementsByTagName('weight');			
+  		s.weight = parseInt( wt[0].firstChild.nodeValue );
+			var op = xml.documentElement.getElementsByTagName('opacity');			
+  		s.opacity = op[0].firstChild.nodeValue;
+
+			//@todo - this needs to be made to support more than just init_polygons
+			//update all polygons
+			//for each marker
+			var arrayId = "I";
+      	var a = bIPData;
+    
+    	//if the length of the array is > 0
+    	if (a.length > 0){
+      	//loop through the array
+    		for(n=0; n<a.length; n++){
+      		//if the array item is not Null
+    			if (a[n]!= null){
+						if (a[n].style_id == s.style_id){
+							map.removeOverlay(a[n].polygon);
+        				var lstylen;
+        				var pstylen;
+        				for (var b=0; b<bLStyData.length; b++){
+        					if ( bLStyData[b].style_id == a[n].polylinestyle_id ){
+        						lstylen = b;
+        					}
+        				}
+        				for (var c=0; c<bPStyData.length; c++){
+        					if ( bPStyData[c].style_id == a[n].style_id ){
+        						pstylen = c;
+        					}
+        				}
+        				defineXPolygon(arrayId, n, lstylen, pstylen);
+						}
+    			}
+    		}
+    	}
+	 }
+
+
+
+	function updateRemovePolygon(){
+			for (var i=0; i<bIPData.length; i++){
+					if ( ( bIPData[i] != null ) && ( bIPData[i].polygon_id == editPolygonId ) ){
+						map.removeOverlay(bIPData[i].polygon);
+						bIPData[i] = null;
+						break;
+					}
+			}
+			editPolygons();
+			editPolygonSet(editSetId);
+	}
+
+
+
+	function updateRemovePolygonSet(){
+  	if (editArray == 'I') {
+  			for (var i=0; i<bIPData.length; i++){
+  					if ( ( bIPData[i] != null ) && ( bIPData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bIPData[i].polygon);
+  						bIPData[i] = null;
+  					}
+  			}
+  	}else{
+  			for (var i=0; i<bSPData.length; i++){
+  					if ( ( bSPData[i] != null ) && ( bSPData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bSPData[i].polygon);
+  						bSPData[i] = null;
+  					}
+  			}
+		}		
+		for (var j=0; j<bPSetData.length; j++){
+  			if ( ( bPSetData[j] != null ) && ( bPSetData[j].set_id == editSetId ) ){
+      		var getElem = "polygonset_"+bPSetData[j].set_id;
+      		if ( $(getElem) ) {
+          	var extraPolygonForm = $(getElem);
+      			$('editpolygonform').removeChild(extraPolygonForm);
+      		}
+  				bPSetData[j] = null;
+  			}
+		}
+	}
+
+
+
+	function updateExpungePolygonSet(){
+  			for (var i=0; i<bIPData.length; i++){
+  					if ( ( bIPData[i] != null ) && ( bIPData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bIPData[i].polygon);
+  						bIPData[i] = null;
+  					}
+  			}
+				/**  
+				 * This is turned off, cause when it doesn't exist it breaks. 
+				 * The thing to do is to always create the array, but not fill it out
+				 * if there are no markers, then all detection to see if the array exists
+				 * can be striped from the code
+				 **/
+				/*
+  			for (var i=0; i<bSPData.length; i++){
+  					if ( ( bSPData[i] != null ) && ( bSPData[i].set_id == editSetId ) ){
+  						map.removeOverlay(bSPData[i].polygon);
+  						bSPData[i] = null;
+  					}
+  			}
+				*/
+    		for (var j=0; j<bPSetData.length; j++){
+      			if ( ( bPSetData[j] != null ) && ( bPSetData[j].set_id == editSetId ) ){
+          		var getElem = "polygonset_"+bPSetData[j].set_id;
+          		if ( $(getElem) ) {
+              	var extraPolygonForm = $(getElem);
+          			$('editpolygonform').removeChild(extraPolygonForm);
+          		}
+      				bPSetData[j] = null;
+      			}
+    		}
+	}
+
+
+
+
 	
 /******************
  *
@@ -2887,4 +3524,7 @@ function newPolylineStyle(){
   		bAssistant = null;
 	 }
  } 
+
+
+
 

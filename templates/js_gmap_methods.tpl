@@ -147,7 +147,7 @@ function defineGMarker(i, n, c){ldelim}
 	{rdelim}
   a[n].marker = new GMarker(point, icon);
   a[n].marker.style_id = 0;
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].parsed_data+"</p></div>";
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
   //add the marker label if it exists
   if (typeof(a[n].label_data) != 'undefined'){ldelim}
@@ -176,7 +176,7 @@ function defineGxMarker(i, n, c, s){ldelim}
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new GxMarker(point, icon, mytip);
   a[n].marker.type = 0;
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].parsed_data+"</p></div>";
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
 {rdelim}
 
@@ -201,7 +201,7 @@ function definePdMarker(i, n, c, s){ldelim}
   a[n].marker.setTooltipClass( "tip-"+bMStyleData[s].name );
   a[n].marker.setDetailWinClass( "win-"+bMStyleData[s].name );
   a[n].marker.setTooltip( "<div>" + a[n].label_data + "</div>");
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].parsed_data+"</p></div>";
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
   a[n].marker.setDetailWinHTML( a[n].marker.my_html );
   //rollover-icon: a[n].marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
   map.addOverlay(a[n].marker);
@@ -227,7 +227,7 @@ function defineXMarker(i, n, c, s){ldelim}
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new XMarker(point, icon, null, mytip);
   a[n].marker.type = 2;
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><strong>"+a[n].title+"</strong><p>"+a[n].parsed_data+"</p></div>";
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
 {rdelim}
 
@@ -348,6 +348,65 @@ function defineXPolyline(i, n, s){ldelim}
   map.addOverlay(a[n].polyline);
 {rdelim};
 
+
+
+function attachPolygons(arrayId){ldelim}
+	//get the array we are working on
+	var a;
+	if (arrayId == "I"){ldelim}
+  	a = bIPData;
+	{rdelim}else{ldelim}
+  	a = bSPData;
+	{rdelim};
+
+	//if the length of the array is > 0
+	if (a.length > 0){ldelim}
+  	//loop through the array
+		for(n=0; n<a.length; n++){ldelim}
+  		//if the array item is not Null
+			if (a[n]!= null){ldelim}
+					var lstylen;
+					var pstylen;
+					for (var b=0; b<bLStyData.length; b++){ldelim}
+						if ( bLStyData[b].style_id == a[n].polylinestyle_id ){ldelim}
+							lstylen = b;
+						{rdelim}
+					{rdelim}
+					for (var c=0; c<bPStyData.length; c++){ldelim}
+						if ( bPStyData[c].style_id == a[n].style_id ){ldelim}
+							pstylen = c;
+						{rdelim}
+					{rdelim}
+					defineXPolygon(arrayId, n, lstylen, pstylen);
+			{rdelim}
+		{rdelim}
+	{rdelim}
+{rdelim};
+
+
+
+function defineXPolygon(i, n, s, p){ldelim}
+	var a;
+	if (i == "I"){ldelim}
+  	a = bIPData;
+	{rdelim}else{ldelim}
+  	a = bSPData;
+	{rdelim};
+
+	//@todo create XPolygon styles
+	var pointlist;
+	var linestyle;
+	var fillsytle;
+	//if its a circle
+	//if its not
+	//if its linestyle == 0
+	//else
+	//if its fillstyle == 0
+	//else
+
+  a[n].polygon = new XPolygon(pointlist, linestyle, fillstyle);
+  map.addOverlay(a[n].polygon);
+{rdelim};
 
 
 

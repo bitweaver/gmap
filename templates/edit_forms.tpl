@@ -3,8 +3,8 @@
   <a id="emap" href="javascript:editMap();">Edit Map</a> | 
 	<a id="emaptype" href="javascript:editMapTypes();">Edit Map Types</a> |
   <a id="emarker" href="javascript:editMarkers();">Edit Markers</a> | 
-  <a id="epolyline" href="javascript:editPolylines();">Edit Polylines</a> 
-  <!-- <a href="javascript:show('editpolygonsrform');">Edit Polygons</a> //-->
+  <a id="epolyline" href="javascript:editPolylines();">Edit Polylines</a> | 
+  <a id="epolygon" href="javascript:editPolygons();">Edit Polygons</a>
 </div>
 
 
@@ -756,4 +756,238 @@
 
 <div id="editpolylinecancel" style="display:none; clear:both;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:cancelPolylineEdit(); canceledit('newpolylinesetform'); canceledit('editerror');"></div>
 <!--end polyline editing forms -->
+
+
+
+
+
+
+
+<!-------------------------
+	-  Polygon Editing Forms
+	------------------------->
+
+<!--polygon editing forms -->
+<div id="editpolygonmenu" style="display:none;">
+		<a href="javascript:newPolygon();">New Polygon</a> | 
+		<a href="javascript:newPolygonSet();">New Polygon Set</a> | 
+		<a href="javascript:editPolygonStyles();">Edit Polygon Styles</a> | 
+</div>
+
+<div id="newpolygonsetform" class="editform" style="display:none;">
+		<h2>Add a New Polygon Set</h2>		
+        <div class="tableheader">
+    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Description </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Style </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Load Option </div>
+    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
+    		</div>
+    		<div class="table" id="editpolygonsettable_new">
+    			<form action="javascript:;" name="polygonsetform_new" id="polygonsetform_new">
+    			<div class="data">
+          	<div style="float:left; padding:0 .4em; width:10px"><input name="save_polygonset" type="hidden" value="true"></div>
+          	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="description" cols="15" rows="3"></textarea></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><select name="style_id" id="style_id">
+                                                                  <option value="0" >XPolygon (default)</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><select name="polylinestyle_id" id="polylinestyle_id">
+                                                                  <option value="0" >Google (default)</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:140px"><select name="set_type" id="set_type">
+                                                                  <option value="init_polygons" >On Page Load</option>
+                                                                  <option value="set_polygons" >Side Panel Only</option>
+                                          							   			</select></div>
+          	<div style="float:left; padding:0 .4em; width:70px"><a name="new_polygonset_btn" title="save" href="javascript:storeNewPolygonSet('edit_polygonset.php', document.polygonsetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+    			</div>
+    			</form>
+  		  </div>
+		<div id="newpolygonsetcancel" style="clear:both;"><input type="button" name="closepolygonsetform" value="Cancel New Polygon Set" onclick="javascript:canceledit('newpolygonsetform'); canceledit('editerror');"></div>
+</div>
+<!-- end of newpolygonsetform -->
+
+
+
+
+<div id="editpolygonstylesmenu" style="display:none;">
+		<a href="javascript:newPolygonStyle();">Add a New Polygon Style</a>
+</div>
+
+
+<div id="newpolygonstyleform" class="editform" style="display:none;">
+		<h2>Add a New Polygon Style</h2>		
+    		<div class="table" id="editpolygonstyletable_new">
+    			<form action="javascript:;" name="polygonstyleform_new" id="polygonstyleform_new">
+    			<div class="data">
+                	<div style="float:left; padding:0 .4em; width:10px">
+							<input name="save_polygonstyle" type="hidden" value="true">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
+							Type <br/><select name="type">
+                                <option value="0">XPolygon</option>
+                             </select><br/>
+                     	Color <br/><input name="color" type="text" size="15" value="ff3300"><br/>
+                     	Weight <br/><input name="weight" type="text" size="15" value="2"><br/>
+                     	Opacity <br/><input name="opacity" type="text" size="15" value=".75"><br/>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:70px">ACTIONS<br/><a name="new_polygonstyle_btn" title="save" href="javascript:storeNewPolygonStyle('edit_polygonstyle.php', document.polygonstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+    			</div>
+    			</form>
+  		  </div>
+		<div id="newpolygonstylecancel" style="clear:both;"><input type="button" name="closepolygonstyleform" value="Cancel New Polygon Style" onclick="javascript:canceledit('newpolygonstyleform'); canceledit('editerror');"></div>
+</div>
+<!-- end of newpolygonstyleform -->
+
+
+<div id="editpolygonstyleform" class="editform" style="display:none;">
+		<h2>Polygon Styles Associated with Polygon Sets on This Map</h2>		
+      		<div class="table" id="editpolygonstyletable_n">
+      			<form action="javascript:;" name="polygonstyleform_n" id="polygonstyleform_n" style="display:none;">
+      			<div class="data" id="polygonstyleformdata_n">
+                	<div style="float:left; padding:0 .4em; width:10px">
+							<input name="save_polygonstyle" type="hidden" value="true">
+                        <input name="style_array_n" type="hidden" value="n">
+                        <input name="style_id" type="hidden" value="n">
+						</div>
+                	<div style="float:left; padding:0 .4em; width:120px">
+							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
+							Type <br/><select name="type">
+                                <option value="0">XPolygon</option>
+                             </select><br/>
+                     	Color <br/><input name="color" type="text" size="15" value="ff3300"><br/>
+                     	Weight <br/><input name="weight" type="text" size="15" value="2"><br/>
+                     	Opacity <br/><input name="opacity" type="text" size="15" value=".75"><br/>
+						</div>
+                	ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polygonstyle_btn" title="save" href="javascript:storePolygonStyle('edit_polygonstyle.php', document.polygonstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+      			</div>
+      			</form>
+    		  </div>
+</div> <!-- end of editpolygonstylesform -->
+
+<div id="editpolygonstylescancel" style="display:none; clear:both;"><input type="button" name="closepolygonstylesform" value="Cancel Editing Polygon Styles" onclick="javascript:canceledit('editpolygonstylesmenu'); canceledit('newpolygonstyleform'); canceledit('editpolygonstyleform'); canceledit('editpolygonstylescancel');"></div>
+<!--end polygon style editing forms -->
+
+
+
+
+<div id="newpolygonform" class="editform" style="display:none;">
+		<h2>Add a New Polygon</h2>		
+        <div class="tableheader">
+    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Shape </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Points Data </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Circle Center </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Radius </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Border Text <br/>only for XPolygon type</div>
+    				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
+    				<div style="float:left; padding:0 .4em; width:50px"> Set </div>
+    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>						
+    		</div>
+    		<div class="table" id="editpolygontable_new">
+    			<form action="javascript:;" name="polygonform_new" id="polygonform_new">
+    			<div class="data">
+                	<div style="float:left; padding:0 .4em; width:10px"><input name="new_polygon" type="hidden" value="true"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="new"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><select name="circle" >
+                                                                        <option value="false" >Polygon </option>
+                                                                        <option value="true" >Circle</option>
+                                                							   			</select></div>
+                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="circle_center" type="text" size="15" value="new"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="radius" type="text" size="15" value="new"></div>
+                	<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
+                	<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><select name="set_id" id="polygonset_id">
+                                                                        <option value="n" >someset</option>
+                                                							   			</select></div>
+                	<div style="float:left; padding:0 .4em; width:70px"><a name="new_polygon_btn" title="save" href="javascript:storeNewPolygon('edit_polygon.php', document.polygonform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+                	<a style="float:left; padding:0 .4em;" name="polygon_assist_btn" title="draw the line!" href="javascript:addAssistant('polygon', 'new');">Use Drawing Assistant</a>
+    			</div>
+    			</form>
+  		  </div>
+		<div id="newpolygoncancel" style="clear:both;"><input type="button" name="closepolygonform" value="Cancel New Polygon" onclick="javascript:canceledit('newpolygonform'); removeAssistant(); canceledit('editerror');"></div>
+</div> <!-- end of newpolygonform -->
+
+
+
+
+
+<div id="editpolygonform" class="editform" style="display:none;">
+		<h2>Polygon Sets Associated With This Map</h2>
+		<div id="polygonset_n" style="display:none; clear:both;">
+    	<form action="javascript:;" name="polygonsetform_n" id="polygonsetform_n" style="display:none;">
+				<input name="set_id" type="hidden" size="3" value="n">
+				<input name="set_type" type="hidden" size="3" value="n">
+            <input name="set_array_n" type="hidden" value="n">
+  			<div class="data" id="polygonsetformdata_n">
+    			<b id="pgsetname">Set Name:</b> <span id="pgsetdesc">Description Here</span><br/>
+  				<a id="pgsetedit" href="javascript:editPolygonSet('n');">Edit These Polygons</a> | 
+    			<a id="pgsetadd" href="javascript:alert('feature coming soon');">Add Polygons from Archives</a> | 
+					FillStyle: <select name="style_id">
+                  				<option value="0">XPolygon (default)</option>
+                      			</select> | 
+					LineStyle: <select name="polylinestyle_id">
+                  				<option value="0">Google (default)</option>
+                      			</select> | 
+    			<a id="pgsetstore" href="javascript:storePolygonSet('edit_polygonset.php', set_id);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+  				<a id="pgsetremove" href="javascript:removePolygonSet('edit_polygonset.php', set_id, set_type);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+  				<a id="pgsetdelete" href="javascript:expungePolygonSet('edit_polygonset.php', set_id);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
+  			</div>
+        </form>
+			<div id="pgsetform_n" style="display:none;">
+				<h3>Polygons In This Set</h3>
+        	<div class="tableheader">
+    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Shape </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Points Data </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Circle Center </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Radius </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Border Text <br/>only for XPolygon type</div>
+    				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
+    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>						
+    		</div>
+    		<div class="table" id="editpolygontable_n">
+    			<form action="javascript:;" name="polygonform_n" id="polygonform_n" style="display:none;">
+        			<div class="data" id="polygonformdata_n">
+      					<div style="float:left; padding:0 .4em; width:90px"><input name="save_polygon" type="hidden" value="true"></div>
+                		<div style="float:left; padding:0 .4em; width:30px"><input name="set_id" type="hidden" size="3" value="n"></div>
+            			<div style="float:left; padding:0 .4em; width:30px"><input name="polygon_id" type="hidden" size="3" value="n"></div>
+                    	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="new"></div>
+                    	<div style="float:left; padding:0 .4em; width:90px"><select name="circle" >
+                                                                            <option value="false" >Polygon </option>
+                                                                            <option value="true" >Circle</option>
+                                                    							   			</select></div>
+                    	<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
+                    	<div style="float:left; padding:0 .4em; width:90px"><input name="circle_center" type="text" size="15" value="new"></div>
+                    	<div style="float:left; padding:0 .4em; width:90px"><input name="radius" type="text" size="15" value="new"></div>
+                		<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
+                		<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>
+                		<div style="float:left; padding:0;"><input name="polygon_array" type="hidden" value=""></div>
+                		<div style="float:left; padding:0;"><input name="polygon_array_n" type="hidden" value=""></div>
+                		<a style="float:left; padding:0 .4em;" name="save_polygon_btn" title="save" href="javascript:storePolygon('edit_polygon.php', document.polygonform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+                		<a style="float:left; padding:0 .4em;" name="locate_polygon_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="remove_polygon_btn" title="remove from this set" href="javascript:removePolygon('edit_polygon.php', document.polygonform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="expunge_polygon_btn" title="delete the polygon!" href="javascript:expungePolygon('edit_polygon.php', document.polygonform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="polygon_assist_btn" title="draw the line!" href="javascript:addAssistant('polygon', n);">Use Drawing Assistant</a>
+        			</div>
+    			</form>
+  		  </div>
+      	<div id="allavailpolygons_n" style="display:none; clear:both;">
+    			<h3>All Polygons Available</h3>
+        		<div class="table" id="addpolygontable_n">
+            		<form action="javascript:;" name="addpolygonform_n" id="addpolygonform_n">
+                		<div class="data">
+        						<!-- @todo this is just placeholder for table of polygon data -->
+                		</div>
+            		</form>	
+    			</div>						
+				</div>
+			</div> <!--end of polygonsetform_n -->			
+		</div> <!-- end of polygonset_n -->
+</div> <!-- end of editpolygonform -->
+
+<div id="editpolygoncancel" style="display:none; clear:both;"><input type="button" name="closepolygonform" value="Cancel Editing Polygons" onclick="javascript:cancelPolygonEdit(); canceledit('newpolygonsetform'); canceledit('editerror');"></div>
+<!--end polygon editing forms -->
 
