@@ -1,7 +1,7 @@
 <script type="text/javascript">//<![CDATA[
 
+var bIPData = new Array();
 {if count($gContent->mMapInitPolygons) > 0}
-	var bIPData = new Array();
 	{section name=initpolylines loop=$gContent->mMapInitPolygons}
 		bIPData[{$smarty.section.initpolylines.index}] = new Array();
 		bIPData[{$smarty.section.initpolylines.index}].polyline_id = {$gContent->mMapInitPolygons[initpolylines].polyline_id};
@@ -24,8 +24,8 @@
 	{/section}
 {/if}
 
+var bSPData = new Array();
 {if count($gContent->mMapSetPolygons) > 0}
-	var bSPData = new Array();
 	{section name=setpolygons loop=$gContent->mMapSetPolylines}
 		bSPData[{$smarty.section.setpolygons.index}] = new Array();
 		bSPData[{$smarty.section.setpolygons.index}].polyline_id = {$gContent->mMapSetPolylines[setpolygons].polyline_id};

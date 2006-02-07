@@ -1080,7 +1080,6 @@ function newPolylineStyle(){
 
 
 
-///////////////////////////////////////
 /*******************
  *
  * Polygon FORM FUNCTIONS
