@@ -1,51 +1,55 @@
 <script type="text/javascript">//<![CDATA[
 
+{* escape smarty *}
+{literal}
+
+
 // Copy Object Function
-function copy_obj(o) {ldelim}
+function copy_obj(o) {
 	var c = new Object(); 
-	for (var e in o) {ldelim}
+	for (var e in o) {
 		c[e] = o[e]; 
-	{rdelim} 
+	} 
 	return c;
-{rdelim}
+};
 
 
 
 //@todo insert variables for zoomed out tiles path, and hybrid type tiles path
 // Adds all MapTypes, it is called from loadMap()
-function addMapTypes(pParamHash){ldelim}
-	for (var n=0; n < pParamHash.length; n++) {ldelim}
+function addMapTypes(pParamHash){
+	for (var n=0; n < pParamHash.length; n++) {
 		var baseid = pParamHash[n].basetype;
 		var typename = pParamHash[n].name;
 		var result = copy_obj(map.mapTypes[baseid]);
 		result.baseUrls = new Array();
 		result.baseUrls[0] = pParamHash[n].maptiles_url;
 		result.typename = typename;
-		result.getLinkText = function() {ldelim} return this.typename; {rdelim};
+		result.getLinkText = function() { return this.typename; };
 		bMapTypesData[n].maptype_node = map.mapTypes.length;  //@todo this needs to change to make a universal function - its too specific to the hash
 		map.mapTypes[map.mapTypes.length] = result;
 		bMapTypes[typename] = result;
-	{rdelim}
-{rdelim};
+	}
+};
 
 
 
-function attachIcons(){ldelim}
+function attachIcons(){
 	var i = bMIconData;
-	if (i.length > 0){ldelim}
-  	for (n=0; n<i.length; n++){ldelim}
-  		if (i[n].type != null && i[n].type == 0) {ldelim}
+	if (i.length > 0){
+  	for (n=0; n<i.length; n++){
+  		if (i[n].type != null && i[n].type == 0){
   			defineGIcon(n);
-  		{rdelim}else if(i[n].type != null && i[n].type == 1){ldelim}
+  		}else if(i[n].type != null && i[n].type == 1){
   			defineXIcon(n);			
-  		{rdelim}
-  	{rdelim}
-	{rdelim}
-{rdelim}
+  		}
+  	}
+	}
+};
 
 
 //@todo - these image paths may not be universal enough, may need to get the root from kernel
-function defineGIcon(n){ldelim}
+function defineGIcon(n){
 		bMIconData[n].icon = new GIcon();
 		bMIconData[n].icon.image = bMIconData[n].image;
 		bMIconData[n].icon.iconSize = new GSize(bMIconData[n].icon_w, bMIconData[n].icon_h);
@@ -54,10 +58,10 @@ function defineGIcon(n){ldelim}
 		bMIconData[n].icon.shadowSize = new GSize(bMIconData[n].shadow_w, bMIconData[n].shadow_h);
 		bMIconData[n].icon.infoShadowAnchor = new GPoint(bMIconData[n].shadow_anchor_x, bMIconData[n].shadow_anchor_y);
 		bMIconData[n].icon.infoWindowAnchor = new GPoint(bMIconData[n].infowindow_anchor_x, bMIconData[n].infowindow_anchor_y);
-{rdelim};
+};
 
 
-function defineXIcon(n){ldelim}
+function defineXIcon(n){
     //make the shape
     var xishape = new Object;
     xishape.iconAnchor = new GPoint(bMIconData[n].icon_anchor_x, bMIconData[n].icon_anchor_y);
@@ -81,121 +85,116 @@ function defineXIcon(n){ldelim}
     xistyle.fillOpacity = bMIconData[n].fill_opacity;
 
 		bMIconData[n].icon = new XIcon(bMIconData[n].name, xistyle);
-{rdelim};
+};
 
 
-function attachMarkers(arrayId){ldelim}
-	//get the array we are working on
-	var a;
-	if (arrayId == "I"){ldelim}
-  	a = bIMData;
-	{rdelim}else{ldelim}
-  	a = bSMData;
-	{rdelim};
-
+function attachMarkers(){
+	var a = bMData;
 	//if the length of the array is > 0
-	if (a.length > 0){ldelim}
+	if (a.length > 0){
   	//loop through the array
-		for(n=0; n<a.length; n++){ldelim}
+		for(n=0; n<a.length; n++){
   		//if the array item is not Null
-			if (a[n]!= null){ldelim}
-				var iconn = null;
-				if (a[n].icon_id != 0){ldelim}
-					for (var c=0; c<bMIconData.length; c++){ldelim}
-						if ( bMIconData[c].icon_id == a[n].icon_id ){ldelim}
-							iconn = c;
-						{rdelim}
-					{rdelim}
-				{rdelim}
-				if (a[n].style_id == 0){ldelim}
-					defineGMarker(arrayId, n, iconn);
-				{rdelim}else{ldelim}
-					var stylen;
-					for (var b=0; b<bMStyleData.length; b++){ldelim}
-						if ( bMStyleData[b].style_id == a[n].style_id ){ldelim}
-							stylen = b;
-						{rdelim}
-					{rdelim}
-					if ( bMStyleData[stylen].type == 0){ldelim}
-						defineGxMarker(arrayId, n, iconn, stylen);
-					{rdelim}else if ( bMStyleData[stylen].type == 1){ldelim}
-						definePdMarker(arrayId, n, iconn, stylen);
-					{rdelim}else if ( bMStyleData[stylen].type == 2){ldelim}
-						defineXMarker(arrayId, n, iconn, stylen);
-					{rdelim}
-				{rdelim}
-			{rdelim}
-		{rdelim}
-	{rdelim};
-{rdelim};
+			if (a[n]!= null && a[n].plot_on_load == true){
+				attachMarker(n);
+			}
+		}
+	}
+};
+
+
+function attachMarker(n, o){
+	var m = bMData[n];
+	var i = null;
+	if (m.icon_id != 0){
+		for (var b=0; b<bMIconData.length; b++){
+			if ( bMIconData[b].icon_id == m.icon_id ){
+				i = b;
+			}
+		}
+	}	
+	if (m.style_id == 0){
+		defineGMarker(n, i);
+		if (o == true) {m.marker.openInfoWindowHtml(m.marker.my_html);};
+  }else{
+  	var s;
+    for (var c=0; c<bMStyleData.length; c++){
+    	if ( bMStyleData[c].style_id == m.style_id ){
+    		s = c;
+    	}
+  	}
+  	if ( bMStyleData[s].type == 0){
+  		defineGxMarker(n, i, s);
+			if (o == true) {m.marker.openInfoWindowHtml(m.marker.my_html);};
+  	}else if ( bMStyleData[s].type == 1){
+  		definePdMarker(n, i, s);
+			if (o == true) {
+        	m.marker.showTooltip();
+        	m.marker.hideTooltip();
+				m.marker.showDetailWin();
+			};
+  	}else if ( bMStyleData[s].type == 2){
+  		defineXMarker(n, i, s);
+			if (o == true) {m.marker.openInfoWindowHtml(m.marker.my_html);};
+  	}
+	}
+}
 
 
 
 
-function defineGMarker(i, n, c){ldelim}
-	var a;
-	if (i == "I"){ldelim}
-  	a = bIMData;
-	{rdelim}else{ldelim}
-  	a = bSMData;
-	{rdelim};
+
+
+
+function defineGMarker(n, i){
+	var a = bMData;
 
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var icon = null;
-	if (c != null){ldelim}
-		icon = bMIconData[c].icon;
-	{rdelim}
+	if (i != null){
+		icon = bMIconData[i].icon;
+	}
   a[n].marker = new GMarker(point, icon);
   a[n].marker.style_id = 0;
   a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
   //add the marker label if it exists
-  if (typeof(a[n].label_data) != 'undefined'){ldelim}
+  if (typeof(a[n].label_data) != 'undefined'){
   	var topElement = a[n].marker.iconImage;
-    if (a[n].marker.transparentIcon) {ldelim}topElement = a[n].marker.transparentIcon;{rdelim}
-    if (a[n].marker.imageMap) {ldelim}topElement = a[n].marker.imageMap;{rdelim}
+    if (a[n].marker.transparentIcon) {topElement = a[n].marker.transparentIcon;}
+    if (a[n].marker.imageMap) {topElement = a[n].marker.imageMap;}
     topElement.setAttribute( "title" , a[n].label_data );
-  {rdelim}
-{rdelim}
+  }
+}
 
 
 
-function defineGxMarker(i, n, c, s){ldelim}
-	var a;
-	if (i == "I"){ldelim}
-  	a = bIMData;
-	{rdelim}else{ldelim}
-  	a = bSMData;
-	{rdelim};
+function defineGxMarker(n, c, s){
+	var a = bMData;
 
 	var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var icon = null;
-	if (c != null){ldelim}
+	if (c != null){
 		icon = bMIconData[c].icon;
-	{rdelim}
+	}
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new GxMarker(point, icon, mytip);
   a[n].marker.type = 0;
   a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
-{rdelim}
+}
 
 
 
-function definePdMarker(i, n, c, s){ldelim}
-	var a;
-	if (i == "I"){ldelim}
-  	a = bIMData;
-	{rdelim}else{ldelim}
-  	a = bSMData;
-	{rdelim};
+function definePdMarker(n, c, s){
+	var a = bMData;
 
 	//PdMarker Style
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var icon = null;
-	if (c != null){ldelim}
+	if (c != null){
 		icon = bMIconData[c].icon;
-	{rdelim}
+	}
   a[n].marker = new PdMarker(point, icon);
   a[n].marker.type = 1;
   a[n].marker.setTooltipClass( "tip-"+bMStyleData[s].name );
@@ -205,22 +204,17 @@ function definePdMarker(i, n, c, s){ldelim}
   a[n].marker.setDetailWinHTML( a[n].marker.my_html );
   //rollover-icon: a[n].marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
   map.addOverlay(a[n].marker);
-{rdelim}
+}
 
 
 
-function defineXMarker(i, n, c, s){ldelim}
-	var a;
-	if (i == "I"){ldelim}
-  	a = bIMData;
-	{rdelim}else{ldelim}
-  	a = bSMData;
-	{rdelim};
+function defineXMarker(n, c, s){
+	var a = bMData;
 
 	var icon = null;
-	if (c != null){ldelim}
+	if (c != null){
 		icon = bMIconData[c].icon;
-	{rdelim}
+	}
 
 	//XMarker Style
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
@@ -229,105 +223,105 @@ function defineXMarker(i, n, c, s){ldelim}
   a[n].marker.type = 2;
   a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
-{rdelim}
+}
 
 
 
-function attachPolylines(arrayId){ldelim}
+function attachPolylines(arrayId){
 	//get the array we are working on
 	var a;
-	if (arrayId == "I"){ldelim}
+	if (arrayId == "I"){
   	a = bILData;
-	{rdelim}else{ldelim}
+	}else{
   	a = bSLData;
-	{rdelim};
+	};
 
 	//if the length of the array is > 0
-	if (a.length > 0){ldelim}
+	if (a.length > 0){
   	//loop through the array
-		for(n=0; n<a.length; n++){ldelim}
+		for(n=0; n<a.length; n++){
   		//if the array item is not Null
-			if (a[n]!= null){ldelim}
+			if (a[n]!= null){
 
-				if (a[n].style_id == 0){ldelim}
+				if (a[n].style_id == 0){
 					defineGPolyline(arrayId, n);
-				{rdelim}else{ldelim}
+				}else{
 					var stylen;
-					for (var b=0; b<bLStyData.length; b++){ldelim}
-						if ( bLStyData[b].style_id == a[n].style_id ){ldelim}
+					for (var b=0; b<bLStyData.length; b++){
+						if ( bLStyData[b].style_id == a[n].style_id ){
 							stylen = b;
-						{rdelim}
-					{rdelim}
+						}
+					}
 
-					if ( bLStyData[stylen].type == 0){ldelim}
+					if ( bLStyData[stylen].type == 0){
 						defineGPolyline(arrayId, n, stylen);
-					{rdelim}else{ldelim}
+					}else{
 						defineXPolyline(arrayId, n, stylen);
-					{rdelim}
-				{rdelim}
+					}
+				}
 
-			{rdelim}
-		{rdelim}
-	{rdelim}
-{rdelim};
+			}
+		}
+	}
+};
 
 
 
-function defineGPolyline(i, n, s){ldelim}
+function defineGPolyline(i, n, s){
 	var a;
-	if (i == "I"){ldelim}
+	if (i == "I"){
   	a = bILData;
-	{rdelim}else{ldelim}
+	}else{
   	a = bSLData;
-	{rdelim};
+	};
 
 	//make the array of points needed
   var pointlist = new Array();
-  for (p = 0; p < a[n].points_data.length; p+=2 ){ldelim}
+  for (p = 0; p < a[n].points_data.length; p+=2 ){
   	var point = new GPoint(
   		parseFloat(a[n].points_data[p]),
   		parseFloat(a[n].points_data[p+1])
   	);
 		pointlist.push(point);
-  {rdelim};
+  };
 
-	if (s!=null){ldelim}
+	if (s!=null){
     var linecolor = "#"+bLStyData[s].color;
     var lineweight = bLStyData[s].weight;
     var lineopacity = bLStyData[s].opacity;
-  {rdelim};
+  };
 
   a[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
   map.addOverlay(a[n].polyline);
-{rdelim};
+};
 
 
 
 
-function defineXPolyline(i, n, s){ldelim}
+function defineXPolyline(i, n, s){
 	var a;
-	if (i == "I"){ldelim}
+	if (i == "I"){
   	a = bILData;
-	{rdelim}else{ldelim}
+	}else{
   	a = bSLData;
-	{rdelim};
+	};
 
 	//make the array of points needed
   var pointlist = new Array();
-  for (p = 0; p < a[n].points_data.length; p+=2 ){ldelim}
+  for (p = 0; p < a[n].points_data.length; p+=2 ){
   	var point = new GPoint(
   		parseFloat(a[n].points_data[p]),
   		parseFloat(a[n].points_data[p+1])
   	);
 		pointlist.push(point);
-  {rdelim};
+  };
 
 	//if we are given a style_id we look up the styles otherwise defaults kick in
   var linecolor = "#"+bLStyData[s].color;
-	var txfgcolor = "#"+bLStyData[s].text_fgstyle_color;
-	var txbgcolor = "#"+bLStyData[s].text_bgstyle_color;
+  var txfgcolor = "#"+bLStyData[s].text_fgstyle_color;
+  var txbgcolor = "#"+bLStyData[s].text_bgstyle_color;
 
-  var linestyle = {ldelim}
+  var linestyle = {
 		color: linecolor,
 		weight: bLStyData[s].weight,
 		opacity: bLStyData[s].opacity,
@@ -340,73 +334,121 @@ function defineXPolyline(i, n, s){ldelim}
 		arrowsEvery: bLStyData[s].arrows_every,
 		text: a[n].border_text,
 		textEvery: bLStyData[s].text_every,
-		textFgStyle: {ldelim} color: txfgcolor, weight: bLStyData[s].text_fgstyle_weight, opacity: bLStyData[s].text_fgstyle_opacity {rdelim},
-		textBgStyle: {ldelim} color: txbgcolor, weight: bLStyData[s].text_bgstyle_weight, opacity: bLStyData[s].text_bgstyle_opacity {rdelim}
-  {rdelim};
+		textFgStyle: { color: txfgcolor, weight: bLStyData[s].text_fgstyle_weight, opacity: bLStyData[s].text_fgstyle_opacity },
+		textBgStyle: { color: txbgcolor, weight: bLStyData[s].text_bgstyle_weight, opacity: bLStyData[s].text_bgstyle_opacity }
+  };
 
   a[n].polyline = new XPolyline(pointlist, linestyle);
   map.addOverlay(a[n].polyline);
-{rdelim};
+};
 
 
 
-function attachPolygons(arrayId){ldelim}
+function attachPolygons(arrayId){
 	//get the array we are working on
 	var a;
-	if (arrayId == "I"){ldelim}
+	if (arrayId == "I"){
   	a = bIPData;
-	{rdelim}else{ldelim}
+	}else{
   	a = bSPData;
-	{rdelim};
+	};
 
 	//if the length of the array is > 0
-	if (a.length > 0){ldelim}
+	if (a.length > 0){
   	//loop through the array
-		for(n=0; n<a.length; n++){ldelim}
+		for(n=0; n<a.length; n++){
   		//if the array item is not Null
-			if (a[n]!= null){ldelim}
+			if (a[n]!= null){
 					var lstylen;
 					var pstylen;
-					for (var b=0; b<bLStyData.length; b++){ldelim}
-						if ( bLStyData[b].style_id == a[n].polylinestyle_id ){ldelim}
+					for (var b=0; b<bLStyData.length; b++){
+						if ( bLStyData[b].style_id == a[n].polylinestyle_id ){
 							lstylen = b;
-						{rdelim}
-					{rdelim}
-					for (var c=0; c<bPStyData.length; c++){ldelim}
-						if ( bPStyData[c].style_id == a[n].style_id ){ldelim}
+						}
+					}
+					for (var c=0; c<bPStyData.length; c++){
+						if ( bPStyData[c].style_id == a[n].style_id ){
 							pstylen = c;
-						{rdelim}
-					{rdelim}
+						}
+					}
 					defineXPolygon(arrayId, n, lstylen, pstylen);
-			{rdelim}
-		{rdelim}
-	{rdelim}
-{rdelim};
+			}
+		}
+	}
+};
 
 
 
-function defineXPolygon(i, n, s, p){ldelim}
+function defineXPolygon(i, n, s, p){
+	var fillstyle = {};
+	var linestyle = {};
+
 	var a;
-	if (i == "I"){ldelim}
+	if (i == "I"){
   	a = bIPData;
-	{rdelim}else{ldelim}
+	}else{
   	a = bSPData;
-	{rdelim};
+	};
 
-	//@todo create XPolygon styles
-	var pointlist;
-	var linestyle;
-	var fillsytle;
+	//Create XPolygon styles
+ 	if (p != null){
+		var fillcolor = "#"+bPStyData[p].color;
+		fillstyle = {
+  		color: fillcolor,
+  		weight: bPStyData[p].weight,
+  		opacity: bPStyData[p].opacity
+		}
+	}
+
+ 	if (s != null){
+    var linecolor = "#"+bLStyData[s].color;
+    var txfgcolor = "#"+bLStyData[s].text_fgstyle_color;
+    var txbgcolor = "#"+bLStyData[s].text_bgstyle_color;
+    linestyle = {
+  		color: linecolor,
+  		weight: bLStyData[s].weight,
+  		opacity: bLStyData[s].opacity,
+        /* @todo this prolly needs to be parsed as it should be comma delim
+         * pattern: [bLStyData[s].pattern];
+    		 */
+  		segmentCount: bLStyData[s].segment_count,
+  		beginArrow: bLStyData[s].begin_arrow,
+      	endArrow: bLStyData[s].end_arrow,
+  		arrowsEvery: bLStyData[s].arrows_every,
+  		text: a[n].border_text,
+  		textEvery: bLStyData[s].text_every,
+  		textFgStyle: { color: txfgcolor, weight: bLStyData[s].text_fgstyle_weight, opacity: bLStyData[s].text_fgstyle_opacity },
+  		textBgStyle: { color: txbgcolor, weight: bLStyData[s].text_bgstyle_weight, opacity: bLStyData[s].text_bgstyle_opacity }
+    };
+	};
+
+	if (a[n].circle == true){
 	//if its a circle
+  	var center = new GPoint(parseFloat(a[n].circle_center[0]), parseFloat(a[n].circle_center[1]));
+  	var radius = new XDistance(a[n].radius, XDistance.KM);
+  	a[n].polygon = new XPolygon.createRegularPolygonFromRadius(center, radius, 42, 0, linestyle, fillstyle);
+  }else{
 	//if its not
-	//if its linestyle == 0
-	//else
-	//if its fillstyle == 0
-	//else
-
-  a[n].polygon = new XPolygon(pointlist, linestyle, fillstyle);
+  	var pointlist = new Array();
+    for (q = 0; q < a[n].points_data.length; q+=2 ){
+    	var point = new GPoint(
+    		parseFloat(a[n].points_data[q]),
+    		parseFloat(a[n].points_data[q+1])
+    	);
+  		pointlist.push(point);
+    };
+    a[n].polygon = new XPolygon(pointlist, linestyle, fillstyle);
+  };
   map.addOverlay(a[n].polygon);
-{rdelim};
+};
+
+
+{/literal}
+{* end smarty escaping *}
+
+
+
+
 
 
 
@@ -461,16 +503,20 @@ function loadMap() {ldelim}
 	{if count($gContent->mMapIconStyles) > 0}
 		attachIcons();
 	{/if}
-
 		
 	//Attach Markers
-	{if count($gContent->mMapInitMarkers) > 0}
-		attachMarkers("I");
+	{if count($gContent->mMapMarkers) > 0}
+		attachMarkers();
 	{/if}
 
 	//Attach Polylines
 	{if count($gContent->mMapInitLines) > 0}
 		attachPolylines("I");
+	{/if}
+
+	//Attach Polygons
+	{if count($gContent->mMapInitPolygons) > 0}
+		attachPolygons("I");
 	{/if}
 
 	//opens any infoWindow when clicked if it has content	my_html

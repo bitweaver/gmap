@@ -51,7 +51,7 @@ var bSLData = new Array();
 
 
 var bLStyData = new Array();
-{if count($gContent->mMapInitLines) > 0 || count($gContent->mMapSetLines) > 0}
+{if count($gContent->mMapInitLines) > 0 || count($gContent->mMapInitPolygons) > 0 || count($gContent->mMapSetLines) > 0  || count($gContent->mMapSetPolygons) > 0}
 	{section name=linestyles loop=$gContent->mMapLinesStyles}
 		bLStyData[{$smarty.section.linestyles.index}] = new Array();
 		bLStyData[{$smarty.section.linestyles.index}].style_id = {$gContent->mMapLinesStyles[linestyles].style_id};

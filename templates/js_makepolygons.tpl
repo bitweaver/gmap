@@ -2,55 +2,69 @@
 
 var bIPData = new Array();
 {if count($gContent->mMapInitPolygons) > 0}
-	{section name=initpolylines loop=$gContent->mMapInitPolygons}
-		bIPData[{$smarty.section.initpolylines.index}] = new Array();
-		bIPData[{$smarty.section.initpolylines.index}].polyline_id = {$gContent->mMapInitPolygons[initpolylines].polyline_id};
-		bIPData[{$smarty.section.initpolylines.index}].user_id = {$gContent->mMapInitPolygons[initpolylines].user_id};
-		bIPData[{$smarty.section.initpolylines.index}].modifier_user_id = {$gContent->mMapInitPolygons[initpolylines].modifier_user_id};
-		bIPData[{$smarty.section.initpolylines.index}].created = {$gContent->mMapInitPolygons[initpolylines].created};
-		bIPData[{$smarty.section.initpolylines.index}].last_modified = {$gContent->mMapInitPolygons[initpolylines].last_modified};
-		bIPData[{$smarty.section.initpolylines.index}].version = {$gContent->mMapInitPolygons[initpolylines].version};
-		bIPData[{$smarty.section.initpolylines.index}].name = "{$gContent->mMapInitPolygons[initpolylines].name}";
-		bIPData[{$smarty.section.initpolylines.index}].circle = {$gContent->mMapInitPolygons[initpolylines].circle};
-		bIPData[{$smarty.section.initpolylines.index}].points_data = new Array();
-		bIPData[{$smarty.section.initpolylines.index}].points_data = [{$gContent->mMapInitPolygons[initpolylines].points_data}];
-		bIPData[{$smarty.section.initpolylines.index}].circle_center = new Array();
-		bIPData[{$smarty.section.initpolylines.index}].circle_center = [{$gContent->mMapInitPolygons[initpolylines].circle_center}];
-		bIPData[{$smarty.section.initpolylines.index}].radius = {$gContent->mMapInitPolygons[initpolylines].radius};
-		bIPData[{$smarty.section.initpolylines.index}].border_text = "{$gContent->mMapInitPolygons[initpolylines].border_text}";
-		{if $gContent->mMapInitPolygons[initpolylines].zindex != NULL}
-			bIPData[{$smarty.section.initpolylines.index}].zindex = {$gContent->mMapInitPolygons[initpolylines].zindex};
+	{section name=initpolygons loop=$gContent->mMapInitPolygons}
+		bIPData[{$smarty.section.initpolygons.index}] = new Array();
+		bIPData[{$smarty.section.initpolygons.index}].polygon_id = {$gContent->mMapInitPolygons[initpolygons].polygon_id};
+		bIPData[{$smarty.section.initpolygons.index}].user_id = {$gContent->mMapInitPolygons[initpolygons].user_id};
+		bIPData[{$smarty.section.initpolygons.index}].modifier_user_id = {$gContent->mMapInitPolygons[initpolygons].modifier_user_id};
+		bIPData[{$smarty.section.initpolygons.index}].created = {$gContent->mMapInitPolygons[initpolygons].created};
+		bIPData[{$smarty.section.initpolygons.index}].last_modified = {$gContent->mMapInitPolygons[initpolygons].last_modified};
+		bIPData[{$smarty.section.initpolygons.index}].version = {$gContent->mMapInitPolygons[initpolygons].version};
+		bIPData[{$smarty.section.initpolygons.index}].name = "{$gContent->mMapInitPolygons[initpolygons].name}";
+		bIPData[{$smarty.section.initpolygons.index}].circle = {$gContent->mMapInitPolygons[initpolygons].circle};
+		bIPData[{$smarty.section.initpolygons.index}].points_data = new Array();
+		bIPData[{$smarty.section.initpolygons.index}].points_data = [{$gContent->mMapInitPolygons[initpolygons].points_data}];
+		bIPData[{$smarty.section.initpolygons.index}].circle_center = new Array();
+		bIPData[{$smarty.section.initpolygons.index}].circle_center = [{$gContent->mMapInitPolygons[initpolygons].circle_center}];
+		{if $gContent->mMapInitPolygons[initpolygons].radius != NULL}
+			bIPData[{$smarty.section.initpolygons.index}].radius = {$gContent->mMapInitPolygons[initpolygons].radius};
 		{/if}
+		bIPData[{$smarty.section.initpolygons.index}].border_text = "{$gContent->mMapInitPolygons[initpolygons].border_text}";
+		{if $gContent->mMapInitPolygons[initpolygons].zindex != NULL}
+			bIPData[{$smarty.section.initpolygons.index}].zindex = {$gContent->mMapInitPolygons[initpolygons].zindex};
+		{/if}
+		bIPData[{$smarty.section.initpolygons.index}].set_id = {$gContent->mMapInitPolygons[initpolygons].set_id};
+		bIPData[{$smarty.section.initpolygons.index}].style_id = {$gContent->mMapInitPolygons[initpolygons].style_id};
+		bIPData[{$smarty.section.initpolygons.index}].polylinestyle_id = {$gContent->mMapInitPolygons[initpolygons].polylinestyle_id};
+		bIPData[{$smarty.section.initpolygons.index}].array = "I";
+		bIPData[{$smarty.section.initpolygons.index}].array_n = {$smarty.section.initpolygons.index};
 	{/section}
 {/if}
 
 var bSPData = new Array();
 {if count($gContent->mMapSetPolygons) > 0}
-	{section name=setpolygons loop=$gContent->mMapSetPolylines}
+	{section name=setpolygons loop=$gContent->mMapSetPolygons}
 		bSPData[{$smarty.section.setpolygons.index}] = new Array();
-		bSPData[{$smarty.section.setpolygons.index}].polyline_id = {$gContent->mMapSetPolylines[setpolygons].polyline_id};
-		bSPData[{$smarty.section.setpolygons.index}].user_id = {$gContent->mMapSetPolylines[setpolygons].user_id};
-		bSPData[{$smarty.section.setpolygons.index}].modifier_user_id = {$gContent->mMapSetPolylines[setpolygons].modifier_user_id};
-		bSPData[{$smarty.section.setpolygons.index}].created = {$gContent->mMapSetPolylines[setpolygons].created};
-		bSPData[{$smarty.section.setpolygons.index}].last_modified = {$gContent->mMapSetPolylines[setpolygons].last_modified};
-		bSPData[{$smarty.section.setpolygons.index}].version = {$gContent->mMapSetPolylines[setpolygons].version};
-		bSPData[{$smarty.section.setpolygons.index}].name = "{$gContent->mMapSetPolylines[setpolygons].name}";
-		bSPData[{$smarty.section.setpolygons.index}].circle = {$gContent->mMapSetPolylines[setpolygons].circle};
+		bSPData[{$smarty.section.setpolygons.index}].polygon_id = {$gContent->mMapSetPolygons[setpolygons].polygon_id};
+		bSPData[{$smarty.section.setpolygons.index}].user_id = {$gContent->mMapSetPolygons[setpolygons].user_id};
+		bSPData[{$smarty.section.setpolygons.index}].modifier_user_id = {$gContent->mMapSetPolygons[setpolygons].modifier_user_id};
+		bSPData[{$smarty.section.setpolygons.index}].created = {$gContent->mMapSetPolygons[setpolygons].created};
+		bSPData[{$smarty.section.setpolygons.index}].last_modified = {$gContent->mMapSetPolygons[setpolygons].last_modified};
+		bSPData[{$smarty.section.setpolygons.index}].version = {$gContent->mMapSetPolygons[setpolygons].version};
+		bSPData[{$smarty.section.setpolygons.index}].name = "{$gContent->mMapSetPolygons[setpolygons].name}";
+		bSPData[{$smarty.section.setpolygons.index}].circle = {$gContent->mMapSetPolygons[setpolygons].circle};
 		bSPData[{$smarty.section.setpolygons.index}].points_data = new Array();
-		bSPData[{$smarty.section.setpolygons.index}].points_data = [{$gContent->mMapSetPolylines[setpolygons].points_data}];
+		bSPData[{$smarty.section.setpolygons.index}].points_data = [{$gContent->mMapSetPolygons[setpolygons].points_data}];
 		bSPData[{$smarty.section.setpolygons.index}].circle_center = new Array();
-		bSPData[{$smarty.section.setpolygons.index}].circle_center = [{$gContent->mMapSetPolylines[setpolygons].circle_center}];
-		bSPData[{$smarty.section.setpolygons.index}].radius = {$gContent->mMapSetPolylines[setpolygons].radius};
-		bSPData[{$smarty.section.setpolygons.index}].border_text = "{$gContent->mMapSetPolylines[setpolygons].border_text}";
-		{if $gContent->mMapSetPolylines[setpolygons].zindex != NULL}
-			bSPData[{$smarty.section.setpolygons.index}].zindex = {$gContent->mMapSetPolylines[setpolygons].zindex};
+		bSPData[{$smarty.section.setpolygons.index}].circle_center = [{$gContent->mMapSetPolygons[setpolygons].circle_center}];
+		{if $gContent->mMapInitPolygons[setpolygons].radius != NULL}
+			bSPData[{$smarty.section.setpolygons.index}].radius = {$gContent->mMapSetPolygons[setpolygons].radius};
 		{/if}
+		bSPData[{$smarty.section.setpolygons.index}].border_text = "{$gContent->mMapSetPolygons[setpolygons].border_text}";
+		{if $gContent->mMapSetPolygons[setpolygons].zindex != NULL}
+			bSPData[{$smarty.section.setpolygons.index}].zindex = {$gContent->mMapSetPolygons[setpolygons].zindex};
+		{/if}
+		bSPData[{$smarty.section.setpolygons.index}].set_id = {$gContent->mMapSetPolygons[setpolygons].set_id};
+		bSPData[{$smarty.section.setpolygons.index}].style_id = {$gContent->mMapSetPolygons[setpolygons].style_id};
+		bSPData[{$smarty.section.setpolygons.index}].polylinestyle_id = {$gContent->mMapSetPolygons[setpolygons].polylinestyle_id};
+		bSPData[{$smarty.section.setpolygons.index}].array = "S";
+		bSPData[{$smarty.section.setpolygons.index}].array_n = {$smarty.section.setpolygons.index};
 	{/section}
 {/if}
 
 
 var bPStyData = new Array();
-{if count($gContent->mMapInitLines) > 0 || count($gContent->mMapSetLines) > 0}
+{if count($gContent->mMapInitPolygons) > 0 || count($gContent->mMapSetPolygons) > 0}
 	{section name=polygonstyles loop=$gContent->mMapPolygonsStyles}
 		bPStyData[{$smarty.section.polygonstyles.index}] = new Array();
 		bPStyData[{$smarty.section.polygonstyles.index}].style_id = {$gContent->mMapPolygonsStyles[polygonstyles].style_id};

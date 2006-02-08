@@ -144,7 +144,7 @@ function editMapTypes(){
 			
 			// update the new form ids
   		newMapTypeForm = newMapType.childNodes;
-      for ( var n = 0; n < newMapTypeForm.length; n++ ) {
+      	for ( var n = 0; n < newMapTypeForm.length; n++ ) {
   				if ( newMapTypeForm[n].id == "maptypeform_n" ) {					
         			 newMapTypeForm[n].id = "maptypeform_" + editMapTypeId;
         			 newMapTypeForm[n].name = "maptypeform_" + editMapTypeId;					 
@@ -168,25 +168,25 @@ function editMapTypes(){
 			form = $('maptypeform_' + editMapTypeId);
 
 			form.array_n.value = b;
-      form.maptype_id.value = bMapTypesData[b].maptype_id;
-      form.name.value = bMapTypesData[b].name;
-      form.description.value = bMapTypesData[b].description;
-      form.copyright.value = bMapTypesData[b].copyright;
-      form.maxzoom.value = bMapTypesData[b].maxzoom;
-      for (var r=0; r < 3; r++) {
-         if (form.basetype.options[r].value == bMapTypesData[b].basetype){
-         		form.basetype.options[r].selected=true;
-         }
-      };			
-      for (var r=0; r < 3; r++) {
-         if (form.alttype.options[r].value == bMapTypesData[b].alttype){
-         		form.alttype.options[r].selected=true;
-         }
-      };
-      form.maptiles_url.value = bMapTypesData[b].maptiles_url;
-      form.lowtiles_url.value = bMapTypesData[b].lowresmaptiles_url;
-      form.hybridtiles_url.value = bMapTypesData[b].hybridtiles_url;
-      form.lowhybridtiles_url.value = bMapTypesData[b].lowreshybridtiles_url;
+        form.maptype_id.value = bMapTypesData[b].maptype_id;
+        form.name.value = bMapTypesData[b].name;
+        form.description.value = bMapTypesData[b].description;
+        form.copyright.value = bMapTypesData[b].copyright;
+        form.maxzoom.value = bMapTypesData[b].maxzoom;
+        for (var r=0; r < 3; r++) {
+           if (form.basetype.options[r].value == bMapTypesData[b].basetype){
+           		form.basetype.options[r].selected=true;
+           }
+        };			
+        for (var r=0; r < 3; r++) {
+           if (form.alttype.options[r].value == bMapTypesData[b].alttype){
+           		form.alttype.options[r].selected=true;
+           }
+        };
+        form.maptiles_url.value = bMapTypesData[b].maptiles_url;
+        form.lowtiles_url.value = bMapTypesData[b].lowresmaptiles_url;
+        form.hybridtiles_url.value = bMapTypesData[b].hybridtiles_url;
+        form.lowhybridtiles_url.value = bMapTypesData[b].lowreshybridtiles_url;
 							
 			// just for a pretty button - js sucks it!
 			var linkParent = $('maptypeformdata_'+editMapTypeId);
@@ -285,7 +285,7 @@ function editMarkers(){
 	show('editmarkercancel');
 
 	//if marker data exists
-	if ( typeof(bIMData) ) {
+	if ( typeof(bMData) ) {
 	
   	// We assume editMarkers has been called before and remove 
   	// any previously existing sets from the UI
@@ -366,8 +366,11 @@ function editMarkers(){
 				//get form and update values
 				form = $('markersetform_'+newSetId);
 				form.set_id.value = newSetId;
-				form.set_type.value = bMSetData[b].set_type;
 				form.set_array_n.value = b;
+				if (bMSetData[b].plot_on_load == false){ form.plot_on_load.options[1].selected=true; };
+				if (bMSetData[b].side_panel == false){ form.side_panel.options[1].selected=true; };
+				if (bMSetData[b].explode == false){ form.explode.options[1].selected=true };
+				if (bMSetData[b].cluster == false){ form.cluster.options[1].selected=true };
 				if ( (typeof(bMStyleData) != 'undefined') && (bMStyleData.length > 0) ){
 					var OptionN = form.style_id.options.length;
   				for (var d=0; d<bMStyleData.length; d++){
@@ -394,10 +397,10 @@ function editMarkers(){
 		}			
 		
   	//for length of markers add form to setelement on matching set_id
-  	for (g=0; g<bIMData.length; g++) {
-			if (bIMData[g]!= null){
+  	for (g=0; g<bMData.length; g++) {
+			if (bMData[g]!= null){
 				//add marker form...again a little ugly here
-				var formCont = $("editmarkertable_"+bIMData[g].set_id);
+				var formCont = $("editmarkertable_"+bMData[g].set_id);
   			formContKids = formCont.childNodes;
             for (var n = 0; n < formContKids.length; n++) {
       				if (formContKids[n].id == "markerform_n"){
@@ -411,7 +414,7 @@ function editMarkers(){
     									}
     							}
     							
-        					$('editmarkertable_'+bIMData[g].set_id).appendChild(newMarkerForm);
+        					$('editmarkertable_'+bMData[g].set_id).appendChild(newMarkerForm);
     							show('markerform_'+g);
     							break;
     					}
@@ -420,16 +423,16 @@ function editMarkers(){
 				// populate set form values
 				form = $('markerform_'+g);
 
-            form.set_id.value = bIMData[g].set_id;
-            form.marker_id.value = bIMData[g].marker_id;
-            form.title.value = bIMData[g].title;
-            form.marker_lat.value = bIMData[g].lat;
-            form.marker_lon.value = bIMData[g].lon;
-            form.edit.value = bIMData[g].data;
-            form.marker_labeltext.value = bIMData[g].label_data;
-            form.marker_zi.value = bIMData[g].zindex;
-            form.marker_array.value = bIMData[g].array;
-            form.marker_array_n.value = bIMData[g].array_n;
+            form.set_id.value = bMData[g].set_id;
+            form.marker_id.value = bMData[g].marker_id;
+            form.title.value = bMData[g].title;
+            form.marker_lat.value = bMData[g].lat;
+            form.marker_lon.value = bMData[g].lon;
+            form.edit.value = bMData[g].data;
+            form.marker_labeltext.value = bMData[g].label_data;
+            form.marker_zi.value = bMData[g].zindex;
+            form.marker_array.value = bMData[g].array;
+            form.marker_array_n.value = bMData[g].array_n;
 				
 				// just for a pretty button - js sucks it!
 				var linkParent = $('formdata_'+g);
@@ -439,7 +442,7 @@ function editMarkers(){
 							 linkPKids[p].href = "javascript:storeMarker('edit_marker.php', document.markerform_"+g+");" ;
 						}
 						if (linkPKids[p].name == "locate_marker_btn"){
-							 linkPKids[p].href = "javascript:bIMData["+bIMData[g].array_n+"].marker.openInfoWindowHtml(bIMData["+bIMData[g].array_n+"].marker.my_html);" ;
+							 linkPKids[p].href = "javascript:bMData["+bMData[g].array_n+"].marker.openInfoWindowHtml(bMData["+bMData[g].array_n+"].marker.my_html);" ;
 						}
 						if (linkPKids[p].name == "remove_marker_btn"){
 							 linkPKids[p].href = "javascript:removeMarker('edit_marker.php', document.markerform_"+g+");" ;
@@ -1058,10 +1061,15 @@ function newPolylineStyle(){
 				check = true;
   		}
   	}
+  	for (var i=0; i<bPSetData.length; i++){
+  		if ( bPSetData[i] != null ){
+				check = true;
+  		}
+  	}
 
   	if (check == false){
   		//set warning message, show it, fade it
-  		$('errortext').innerHTML = "To add a polyline style, there first must be a polyline set associated with this map. Please create a new polyline set, then you can add your new polyline style!";
+  		$('errortext').innerHTML = "To add a polyline style, there must be a polyline or polygon set associated with this map. Please create a new polyline or polygon set, then you can add your new polyline style!";
 			show('editerror');
   		Fat.fade_all();
   		//display new polyline set form
@@ -1145,7 +1153,7 @@ function editPolygons(){
 	
 	//if polygon data exists
 	if ( typeof(bIPData) ) {
-	
+
   	// We assume editPolygons has been called before and remove 
   	// any previously existing sets from the UI
   	for (var a=0; a<bPSetData.length; a++) {
@@ -1157,7 +1165,7 @@ function editPolygons(){
     		}
 			}
   	}
-  
+
   	var newSetId;
   	  	
   	// add a new set UI for each marker set
@@ -1165,7 +1173,7 @@ function editPolygons(){
   	if (bPSetData[b]!= null){
 		  	
   		newSetId = bPSetData[b].set_id;
-  	
+
   		// clone model set UI
 			var newPolygonSet = $('polygonset_n').cloneNode(true);
   		// give a new id to the new set UI
@@ -1185,8 +1193,8 @@ function editPolygons(){
             		}
 					}
 
-          		if ( newPolygonSetKids[n].id == "plsetform_n" ) {					
-              		newPolygonSetKids[n].id = "plsetform_" + newSetId;
+          		if ( newPolygonSetKids[n].id == "pgsetform_n" ) {					
+              		newPolygonSetKids[n].id = "pgsetform_" + newSetId;
 						formKids = newPolygonSetKids[n].childNodes;
    					for (var p=0; p<formKids.length; p++) {
    						if (formKids[p].id == "editpolygontable_n"){
@@ -1203,13 +1211,13 @@ function editPolygons(){
               			}
    					}
 					}
-				}
+			}
 
         	// add form container to set table
   			$('editpolygonform').appendChild(newPolygonSet);
     		show('polygonset_'+newSetId);
 				show('polygonsetform_'+newSetId);
-  
+
 				//get form data div children and update
 				var dataKids = $('polygonsetformdata_' + newSetId).childNodes;
 				for (var c=0; c<dataKids.length; c++) { 
@@ -1219,8 +1227,9 @@ function editPolygons(){
     			if (dataKids[c].id == "pgsetadd"){dataKids[c].href = "javascript:alert('feature coming soon');";}
     			if (dataKids[c].id == "pgsetstore"){dataKids[c].href = "javascript:storePolygonSet('edit_polygonset.php', document.polygonsetform_"+newSetId+");";}
     			if (dataKids[c].id == "pgsetremove"){dataKids[c].href = "javascript:removePolygonSet('edit_polygonset.php', document.polygonsetform_"+newSetId+");";}
-    			if (dataKids[c].id == "pgsetdelete"){dataKids[c].href = "javascript:expungePolygonrSet('edit_polygonset.php', document.polygonsetform_"+newSetId+");";}
+    			if (dataKids[c].id == "pgsetdelete"){dataKids[c].href = "javascript:expungePolygonSet('edit_polygonset.php', document.polygonsetform_"+newSetId+");";}
 				}
+
 				//get form and update values
 				form = $('polygonsetform_'+newSetId);
 				form.set_id.value = newSetId;
@@ -1232,16 +1241,16 @@ function editPolygons(){
 						if ( bPStyData[d] != null ){
 							form.style_id.options[OptionN + d] = new Option( bPStyData[d].name, bPStyData[d].style_id );
 							if ( bPStyData[d].style_id == bPSetData[b].style_id){
-							form.style_id.options[OptionN + d].selected=true;
+								form.style_id.options[OptionN + d].selected=true;
 							}
   					}
   				}
 					var OptionO = form.polylinestyle_id.options.length;
-  				for (var e=0; e<bPStyData.length; e++){
-						if ( bPStyData[e] != null ){
-							form.polylinestyle_id.options[OptionO + e] = new Option( bPStyData[e].name, bPStyData[e].polylinestyle_id );
-							if ( bPStyData[e].polylinestyle_id == bPSetData[b].polylinestyle_id){
-							form.polylinestyle_id.options[OptionO + e].selected=true;
+  				for (var e=0; e<bLStyData.length; e++){
+						if ( bLStyData[e] != null ){
+							form.polylinestyle_id.options[OptionO + e] = new Option( bLStyData[e].name, bLStyData[e].style_id );
+							if ( bLStyData[e].style_id == bPSetData[b].polylinestyle_id){
+								form.polylinestyle_id.options[OptionO + e].selected=true;
 							}
   					}
   				}
@@ -1252,16 +1261,20 @@ function editPolygons(){
   	//for length of polygons add form to setelement on matching set_id
   	for (g=0; g<bIPData.length; g++) {
 			if (bIPData[g]!= null){
+
 				//add polygon form...again a little ugly here
 				var formCont = $("editpolygontable_"+bIPData[g].set_id);
+
   			formContKids = formCont.childNodes;
+
             for (var n = 0; n < formContKids.length; n++) {
       			if (formContKids[n].id == "polygonform_n"){
             		var newPolygonForm = formContKids[n].cloneNode(true);
         			newPolygonForm.id = "polygonform_"+g;
     				newPolygonForm.name = "polygonform_"+g;
     				var nPFKids = newPolygonForm.childNodes;
-    				for (var o=0; o<nPFKids.length; o++){
+
+     				for (var o=0; o<nPFKids.length; o++){
     					if (nPFKids[o].id == "polygonformdata_n"){
     						nPFKids[o].id = "polygonformdata_"+g;
     					}
@@ -1269,28 +1282,27 @@ function editPolygons(){
     							
         			$('editpolygontable_'+bIPData[g].set_id).appendChild(newPolygonForm);
     				show('polygonform_'+g);
-    				break;
     			}
     		}
 				
 				// populate set form values
 				form = $('polygonform_'+g);
 
-            form.set_id.value = bILData[g].set_id;
-            form.polygon_id.value = bILData[g].polygon_id;
-            form.name.value = bILData[g].name;
-				if (bILData[g].circle == true){
+            form.set_id.value = bIPData[g].set_id;
+            form.polygon_id.value = bIPData[g].polygon_id;
+            form.name.value = bIPData[g].name;
+				if (bIPData[g].circle == false){
 					form.circle.options[0].selected=true;
 				}else{
 					form.circle.options[1].selected=true;
 				}
-            form.points_data.value = bILData[g].points_data;
-            form.circle_center.value = bILData[g].circle_center;
-            form.radius.value = bILData[g].radius;
-            form.border_text.value = bILData[g].border_text;
-            form.zindex.value = bILData[g].zindex;
-            form.polygon_array.value = bILData[g].array;
-            form.polygon_array_n.value = bILData[g].array_n;
+            form.points_data.value = bIPData[g].points_data;
+            form.circle_center.value = bIPData[g].circle_center;
+            form.radius.value = bIPData[g].radius;
+            form.border_text.value = bIPData[g].border_text;
+            form.zindex.value = bIPData[g].zindex;
+            form.polygon_array.value = bIPData[g].array;
+            form.polygon_array_n.value = bIPData[g].array_n;
 				
 				// just for a pretty button - js sucks it!
 				var linkParent = $('polygonformdata_'+g);
@@ -1320,7 +1332,7 @@ function editPolygons(){
 
 
 function editPolygonSet(n){
-		show('plsetform_'+n);
+		show('pgsetform_'+n);
 }
 
 
@@ -1360,7 +1372,7 @@ function editPolygonStyles(){
         	if ( bPStyData[b]!= null ){  						
     
         		editPolygonStyleId = bPStyData[b].style_id;
-    
+
         		// clone the form container
       			var newPolygonStyle = $('editpolygonstyletable_n').cloneNode(true);
         		// give a new id to the new form container
@@ -1369,9 +1381,9 @@ function editPolygonStyles(){
       			// update the new form ids
         		newPolygonStyleForm = newPolygonStyle.childNodes;
                 for ( var n = 0; n < newPolygonStyleForm.length; n++ ) {
-            		if ( newPolygonStyleForm[n].id == "polygonstyleform_n" ) {					
+            		if ( newPolygonStyleForm[n].id == "polygonstyleform_n" ) {
                   		newPolygonStyleForm[n].id = "polygonstyleform_" + editPolygonStyleId;
-                  		newPolygonStyleForm[n].name = "polygonstyleform_" + editPolygonStyleId;					 
+                  		newPolygonStyleForm[n].name = "polygonstyleform_" + editPolygonStyleId;
           				var nPSFKids = newPolygonStyleForm[n].childNodes;
           				for (var o=0; o<nPSFKids.length; o++){
           					if (nPSFKids[o].id == "polygonstyleformdata_n"){
@@ -1392,17 +1404,13 @@ function editPolygonStyles(){
                 form.style_array_n.value = b;
                 form.style_id.value = bPStyData[b].style_id;
                 form.name.value = bPStyData[b].name;
-                for (var r=0; r < 2; r++) {
-                   if (form.type.options[r].value == bPStyData[b].type){
-                   		form.type.options[r].selected=true;
-                   }
-                };
                 form.color.value = bPStyData[b].color;
                 form.weight.value = bPStyData[b].weight;
                 form.opacity.value = bPStyData[b].opacity;
-    
+ 
       			// just for a pretty button - js sucks it!
       			var linkParent = $('polygonstyleformdata_'+editPolygonStyleId);
+
       			var linkPKids = linkParent.childNodes;
       			for (var p=0; p<linkPKids.length; p++){
       				if (linkPKids[p].name == "save_polygonstyle_btn"){
@@ -1512,32 +1520,27 @@ function newPolygonStyle(){
 
 	 function storeNewMarkerSet(u, f){
 			canceledit('editerror');
-			editSetType = f.set_type.value;
-	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID;
+	 		var str = u + "?" + queryString(f) + "&set_type=markers"  + "&gmap_id=" + bMapID;
 			doSimpleXMLHttpRequest(str).addCallback( addMarkerSet ); 
 	 }
 
 	 function storeMarkerSet(u, f){
 			editSetId = f.set_id.value;
 			editObjectN = f.set_array_n.value;
-			editSetType = f.set_type.value;
 	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID + "&save_markerset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateMarkerSet ); 
 	 }
 
-	 function removeMarkerSet(u, s, t){
-			var st;
-			editArray = t;
-			editSetId = s;
-			if (t == 'I') {st = 'init_markers';}else{st = 'set_markers';};
-			var str = u + "?" + "markerset_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_markerset=true";
+	 function removeMarkerSet(u, f){
+			editSetId = f.set_id.value;
+			var str = u + "?" + "set_id=" + f.set_id.value + "&gmap_id=" + bMapID + "&remove_markerset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarkerSet ); 
 	 }
 
-	 function expungeMarkerSet(u, s){
-			editSetId = s;
-			var str = u + "?" + "set_id=" + s + "&expunge_markerset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateExpungeMarkerSet ); 
+	 function expungeMarkerSet(u, f){
+			editSetId = f.set_id.value;
+			var str = u + "?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarkerSet ); 
 	 }
 	 
 	 function storeNewMarkerStyle(u, f){
@@ -1672,18 +1675,17 @@ function newPolygonStyle(){
 			doSimpleXMLHttpRequest(str).addCallback( updatePolygonSet );
 	 }
 
-	 function removePolygonSet(u, s, t){
-			var st;
-      	editArray = t;
-			editSetId = s;
-			if (t == 'I') {st = 'init_polygons';}else{st = 'set_polygons';};
-	 		var str = u + "?" + "set_id=" + s + "&set_type=" + st + "&gmap_id=" + bMapID + "&remove_polygonset=true";
+	 function removePolygonSet(u, f){
+			editSetId = f.set_id.value;
+			editObjectN = f.set_array_n.value;
+			editSetType = f.set_type.value;
+	 		var str = u + "?" + queryString(f) + "&gmap_id=" + bMapID + "&remove_polygonset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygonSet );
 	 }
 	 
-	 function expungePolygonSet(u, s){
-			editSetId = s;
-	 		var str = u + "?" + "set_id=" + s + "&expunge_polygonset=true";
+	 function expungePolygonSet(u, f){
+			editSetId = f.set_id.value;
+	 		var str = u + "?" + "set_id=" + editSetId + "&expunge_polygonset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateExpungePolygonSet );
 	 }
 
@@ -1979,12 +1981,62 @@ function newPolygonStyle(){
  * POST XML Marker Functions
  *
  *******************/	 
+
+function addMarker(rslt){
+      	var xml = rslt.responseXML;
+
+	 		//the marker data we are changing
+			var n = bMData.length;
+			bMData[n] = new Array();
+			var m = bMData[n];
+
+	 		//shorten var names
+			var id = xml.documentElement.getElementsByTagName('id');			
+			m.marker_id = id[0].firstChild.nodeValue;
+			var tl = xml.documentElement.getElementsByTagName('title');
+			m.title = tl[0].firstChild.nodeValue;
+			var lt = xml.documentElement.getElementsByTagName('lat');
+			m.lat = parseFloat(lt[0].firstChild.nodeValue);
+			var ln = xml.documentElement.getElementsByTagName('lon');
+			m.lon = parseFloat(ln[0].firstChild.nodeValue);
+			var dt = xml.documentElement.getElementsByTagName('data');
+			m.data = dt[0].firstChild.nodeValue;
+			var pdt = xml.documentElement.getElementsByTagName('parsed_data');
+	 		m.parsed_data = pdt[0].firstChild.nodeValue;
+			var l = xml.documentElement.getElementsByTagName('label');
+			m.label_data = l[0].firstChild.nodeValue;
+			var z = xml.documentElement.getElementsByTagName('z');
+			m.zindex = parseInt(z[0].firstChild.nodeValue);
+
+	 		var s;
+			for(a=0; a<bMSetData.length; a++){
+				if ( ( bMSetData[a] != null ) && ( bMSetData[a].set_id == editSetId ) ){
+					s = a;
+				}
+			};
+
+			m.set_id = parseInt(bMSetData[s].set_id);
+			m.style_id = parseInt(bMSetData[s].style_id);
+			m.icon_id = parseInt(bMSetData[s].icon_id);
+			m.array_n = parseInt(n);			
+
+        //make the marker
+			attachMarker(n, true);
+			// clear the form
+			$('markerform_new').reset();
+			removeAssistant();
+			// update the sets menus
+			editMarkers();
+			editSet(editSetId);
+}
+
 	 	 
-	 function updateMarker(rslt){
+function updateMarker(rslt){
       var xml = rslt.responseXML;
 						
-	 		var m; //the marker data we are changing
-			if (editArray == "I"){m = bIMData[editObjectN]}else{m = bSMData[editObjectN]};
+	 		//the marker data we are changing
+			var n = editObjectN;
+			var m = bMData[n];
 
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('id');			
@@ -2010,175 +2062,57 @@ function newPolygonStyle(){
 			var z = xml.documentElement.getElementsByTagName('z');
 			var zindex = parseInt(z[0].firstChild.nodeValue);
 			m.zindex = zindex;
-
-			var iconn = null;
-			if (m.icon_id != 0){
-				for (var c=0; c<bMIconData.length; c++){
-					if ( bMIconData[c].icon_id == m.icon_id ){
-						iconn = c;
-					}
-				}
-			}
 			
         //unload the marker
         map.removeOverlay( m.marker );
         //remake the marker
-        if (m.style_id == 0){
-         		defineGMarker(editArray, editObjectN, iconn);
-					m.marker.openInfoWindowHtml(m.marker.my_html);
-        }else{
-        		var stylen;
-        		for (var b=0; b<bMStyleData.length; b++){
-        			if ( bMStyleData[b].style_id == m.style_id ){
-        				stylen = b;
-        			}
-        		}
-        		//define new marker with new styles
-          	if (bMStyleData[stylen].type == 0){
-          		defineGxMarker(editArray, editObjectN, iconn, stylen);
-					m.marker.openInfoWindowHtml(m.marker.my_html);
-          	}else if (bMStyleData[stylen].type == 1){
-          		definePdMarker(editArray, editObjectN, iconn, stylen);
-                m.marker.showTooltip();
-                m.marker.hideTooltip();
-					m.marker.showDetailWin();
-//					m.marker.openInfoWindowHtml("<div style='white-space: nowrap;'>Click this marker to see its window details</div>");
-          	}else if (bMStyleData[stylen].type == 2){
-          		defineXMarker(editArray, editObjectN, iconn, stylen);
-					m.marker.openInfoWindowHtml(m.marker.my_html);
-          	}
-        }
+			attachMarker(n, true);
+			//remove the assistant
 			removeAssistant();
-	}
+}
 
-
-
-
-	 function addMarker(rslt){
-	 		var s;
-			for(a=0; a<bMSetData.length; a++){
-					if ( ( bMSetData[a] != null ) && ( bMSetData[a].set_id == editSetId ) ){
-						 s = a;
-						 editArray = bMSetData[a].set_type;
-					}
-			};
-
-      var xml = rslt.responseXML;						
-	 		var m; //the marker data we are changing
-			var n;
-
-			/*  This is the new handler for the set types */
-			if (editArray == "init_markers"){
-  			n = bIMData.length;
-  			bIMData[n] = new Array();
-				m = bIMData[n];
-			}else{
-  			n = bSMData.length;
-  			bSMData[n] = new Array();
-				m = bSMData[n];
-			};
-			
-	 		//shorten var names
-			var id = xml.documentElement.getElementsByTagName('id');			
-			m.marker_id = id[0].firstChild.nodeValue;
-			var tl = xml.documentElement.getElementsByTagName('title');
-			m.title = tl[0].firstChild.nodeValue;
-			var lt = xml.documentElement.getElementsByTagName('lat');
-			m.lat = parseFloat(lt[0].firstChild.nodeValue);
-			var ln = xml.documentElement.getElementsByTagName('lon');
-			m.lon = parseFloat(ln[0].firstChild.nodeValue);
-			var dt = xml.documentElement.getElementsByTagName('data');
-			m.data = dt[0].firstChild.nodeValue;
-			var pdt = xml.documentElement.getElementsByTagName('parsed_data');
-	 		m.parsed_data = pdt[0].firstChild.nodeValue;
-			var l = xml.documentElement.getElementsByTagName('label');
-			m.label_data = l[0].firstChild.nodeValue;
-			m.set_id = parseInt(bMSetData[s].set_id);
-			m.style_id = parseInt(bMSetData[s].style_id);
-			m.icon_id = parseInt(bMSetData[s].icon_id);
-			var z = xml.documentElement.getElementsByTagName('z');
-			m.zindex = parseInt(z[0].firstChild.nodeValue);
-
-			m.array = "I";
-			m.array_n = parseFloat(n);			
-
-			var iconn = null;
-			if (m.icon_id != 0){
-				for (var c=0; c<bMIconData.length; c++){
-					if ( bMIconData[c].icon_id == m.icon_id ){
-						iconn = c;
-					}
-				}
-			}
-
-        //make the marker
-        if (m.style_id == 0){
-         		defineGMarker(m.array, m.array_n, iconn);
-					m.marker.openInfoWindowHtml(m.marker.my_html);
-        }else{
-        		var stylen;
-        		for (var b=0; b<bMStyleData.length; b++){
-        			if ( bMStyleData[b].style_id == m.style_id ){
-        				stylen = b;
-        			}
-        		}
-        		//define new marker with new styles
-          	if (bMStyleData[stylen].type == 0){
-          		defineGxMarker(m.array, m.array_n, iconn, stylen);
-					m.marker.openInfoWindowHtml(m.marker.my_html);
-          	}else if (bMStyleData[stylen].type == 1){
-          		definePdMarker(m.array, m.array_n, iconn, stylen);
-                m.marker.showTooltip();
-                m.marker.hideTooltip();
-					m.marker.showDetailWin();
-//					m.marker.openInfoWindowHtml("<div style='white-space: nowrap;'>Click this marker to see its window details</div>");
-          	}else if (bMStyleData[stylen].type == 2){
-          		defineXMarker(m.array, m.array_n, iconn, stylen);
-					m.marker.openInfoWindowHtml(m.marker.my_html);
-          	}
-        }
-
-
-			// clear the form
-			$('markerform_new').reset();
-			removeAssistant();
-			// update the sets menus
-			editMarkers();
-			editSet(editSetId);
-	}
 
 	 
 
-	 function addMarkerSet(rslt){
+function addMarkerSet(rslt){
       var xml = rslt.responseXML;
 
-			//@todo modify this to handle either bIMData or bSMData sets
+			//@todo modify this to handle either bMData or bSMData sets
 			var n = bMSetData.length;
 			bMSetData[n] = new Array();
+			var s= bMSetData[n];
 						
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('set_id');			
-			bMSetData[n].set_id = parseInt(id[0].firstChild.nodeValue);
+			s.set_id = parseInt(id[0].firstChild.nodeValue);
 			var nm = xml.documentElement.getElementsByTagName('name');
-			bMSetData[n].name = nm[0].firstChild.nodeValue;
+			s.name = nm[0].firstChild.nodeValue;
 			var dc = xml.documentElement.getElementsByTagName('description');
-			bMSetData[n].description = dc[0].firstChild.nodeValue;
+			s.description = dc[0].firstChild.nodeValue;
 			var sy = xml.documentElement.getElementsByTagName('style_id');
-			bMSetData[n].style_id = parseInt(sy[0].firstChild.nodeValue);			
+			s.style_id = parseInt(sy[0].firstChild.nodeValue);			
 			var ic = xml.documentElement.getElementsByTagName('icon_id');
-			bMSetData[n].icon_id = parseInt(ic[0].firstChild.nodeValue);
-  		bMSetData[n].set_type = editSetType;
+			s.icon_id = parseInt(ic[0].firstChild.nodeValue);
+			var pol = xml.documentElement.getElementsByTagName('plot_on_load');
+			if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
+			var sp = xml.documentElement.getElementsByTagName('side_panel');
+			if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
+			var ex = xml.documentElement.getElementsByTagName('explode');
+			if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
+			var cl = xml.documentElement.getElementsByTagName('cluster');
+			if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
+  		s.set_type = 'markers';
 
 			// clear the form
 			$('markersetform_new').reset();
 			// update the sets menus
 			if ( $('newmarkerform').style.display == "block" ){ newMarker(); };
 			editMarkers();
-	 }
+}
 	
 
 
-	function updateMarkerSet(rslt){
+function updateMarkerSet(rslt){
       var xml = rslt.responseXML;
 
 			var s = bMSetData[editObjectN];
@@ -2196,47 +2130,30 @@ function newPolygonStyle(){
 			s.style_id = parseInt(sy[0].firstChild.nodeValue);			
 			var ic = xml.documentElement.getElementsByTagName('icon_id');
 			s.icon_id = parseInt(ic[0].firstChild.nodeValue);
+			var pol = xml.documentElement.getElementsByTagName('plot_on_load');
+			s.plot_on_load = pol[0].firstChild.nodeValue;
+			var sp = xml.documentElement.getElementsByTagName('side_panel');
+			s.side_panel = sp[0].firstChild.nodeValue;
+			var ex = xml.documentElement.getElementsByTagName('explode');
+			s.explode = ex[0].firstChild.nodeValue;
+			var cl = xml.documentElement.getElementsByTagName('cluster');
+			s.cluster = cl[0].firstChild.nodeValue;
 
 			if ( ( oldStyle != s.style_id ) || ( oldIcon != s.icon_id ) ) {
-				var arrayId = "I";
-				a = bIMData;
+				a = bMData;
            	//if the length of the array is > 0
            	if (a.length > 0){
              	//loop through the array
            		for(n=0; n<a.length; n++){
              		//if the array item is not Null
-           			if (a[n]!= null){
+           			if (a[n]!= null && a[n].plot_on_load == true){
        					if (a[n].set_id == s.set_id){
 								a[n].style_id = s.style_id;
 								a[n].icon_id = s.icon_id;
-       						var iconn = null;
-                     		if (a[n].icon_id != 0){
-                     			for (var c=0; c<bMIconData.length; c++){
-                     				if ( bMIconData[c].icon_id == a[n].icon_id ){
-                     					iconn = c;
-                     				}
-                     			}
-                     		}
 								//unload the marker
          					map.removeOverlay( a[n].marker );
     						//define marker
-            				if (a[n].style_id == 0){
-            					defineGMarker(arrayId, n, iconn);
-            				}else{
-  								var stylen;
-  								for (q=0; q<bMStyleData.length; q++){
-  									if (bMStyleData[q].style_id == s.style_id) {
-  										stylen = q;
-  									}
-  								}
-             					if (bMStyleData[stylen].type == 0){
-             						defineGxMarker(arrayId, n, iconn, stylen);
-             					}else if (bMStyleData[stylen].type == 1){
-             						definePdMarker(arrayId, n, iconn, stylen);
-             					}else if (bMStyleData[stylen].type == 2){
-             						defineXMarker(arrayId, n, iconn, stylen);
-             					}
-    						}
+								attachMarker(n);
        					}
        				}
        			}
@@ -2245,89 +2162,49 @@ function newPolygonStyle(){
 
 			// update the sets menus
 			editMarkers();
-	}
+}
 
 
-
-	function updateRemoveMarker(){
-			for (var i=0; i<bIMData.length; i++){
-					if ( ( bIMData[i] != null ) && ( bIMData[i].marker_id == editMarkerId ) ){
-						map.removeOverlay(bIMData[i].marker);
-						bIMData[i] = null;
-						break;
-					}
+//this needs special attention
+function updateRemoveMarker(){
+		for (var n=0; n<bMData.length; n++){
+			if ( ( bMData[n] != null ) && ( bMData[n].marker_id == editMarkerId ) ){
+				map.removeOverlay(bMData[n].marker);
+				bMData[n].marker = null;
+				bMData[n] = null;
 			}
-			editMarkers();
-			editSet(editSetId);
-	}
+		}
+		editMarkers();
+		editSet(editSetId);
+}
 
-	
-	function updateRemoveMarkerSet(){
-  	if (editArray == 'I') {
-  			for (var i=0; i<bIMData.length; i++){
-  					if ( ( bIMData[i] != null ) && ( bIMData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bIMData[i].marker);
-  						bIMData[i] = null;
-  					}
-  			}
-  	}else{
-  			for (var i=0; i<bSMData.length; i++){
-  					if ( ( bSMData[i] != null ) && ( bSMData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bSMData[i].marker);
-  						bSMData[i] = null;
-  					}
-  			}
-		}		
-		for (var j=0; j<bMSetData.length; j++){
-  			if ( ( bMSetData[j] != null ) && ( bMSetData[j].set_id == editSetId ) ){
-      		var getElem = "markerset_"+bMSetData[j].set_id;
+
+
+function updateRemoveMarkerSet(){
+  	for (var n=0; n<bMData.length; n++){
+  		if ( ( bMData[n] != null ) && ( bMData[n].set_id == editSetId ) && ( bMData[n].marker != null ) ){
+				map.removeOverlay(bMData[n].marker); 			
+				bMData[n].marker = null;
+				bMData[n] = null;
+  		}
+  	}
+		for (var s=0; s<bMSetData.length; s++){
+  		if ( ( bMSetData[s] != null ) && ( bMSetData[s].set_id == editSetId ) ){
+      		var getElem = "markerset_"+bMSetData[s].set_id;
       		if ( $(getElem) ) {
-          	var extraMarkerForm = $(getElem);
+         		var extraMarkerForm = $(getElem);
       			$('editmarkerform').removeChild(extraMarkerForm);
       		}
-  				bMSetData[j] = null;
-  			}
+				bMSetData[s].set_id = null;
+  			bMSetData[s] = null;
+  		}
 		}
-	}
-	
-
-	function updateExpungeMarkerSet(){
-  			for (var i=0; i<bIMData.length; i++){
-  					if ( ( bIMData[i] != null ) && ( bIMData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bIMData[i].marker);
-  						bIMData[i] = null;
-  					}
-  			}
-				/**  
-				 * This is turned off, cause when it doesn't exist it breaks. 
-				 * The thing to do is to always create the array, but not fill it out
-				 * if there are no markers, then all detection to see if the array exists
-				 * can be striped from the code
-				 **/
-				/*
-  			for (var i=0; i<bSMData.length; i++){
-  					if ( ( bSMData[i] != null ) && ( bSMData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bSMData[i].marker);
-  						bSMData[i] = null;
-  					}
-  			}
-				*/
-    		for (var j=0; j<bMSetData.length; j++){
-      			if ( ( bMSetData[j] != null ) && ( bMSetData[j].set_id == editSetId ) ){
-          		var getElem = "markerset_"+bMSetData[j].set_id;
-          		if ( $(getElem) ) {
-              	var extraMarkerForm = $(getElem);
-          			$('editmarkerform').removeChild(extraMarkerForm);
-          		}
-							bMSetData[j].set_id = null;
-      				bMSetData[j] = null;
-      			}
-    		}
-	}
+		editMarkers();
+}
 	
 
 
-	 function addMarkerStyle(rslt){
+function addMarkerStyle(rslt){
       var xml = rslt.responseXML;
 
 			// create a spot for a new markerstyle in the data array
@@ -2340,38 +2217,7 @@ function newPolygonStyle(){
   		s.style_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
   		s.name = nm[0].firstChild.nodeValue;
-			var tp = xml.documentElement.getElementsByTagName('type');			
-  		s.type = parseInt( tp[0].firstChild.nodeValue );
-			var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
-  		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
-			var lo = xml.documentElement.getElementsByTagName('label_opacity');			
-  		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
-			var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
-  		s.label_hover_styles = parseInt( lhs[0].firstChild.nodeValue );
-			var ws = xml.documentElement.getElementsByTagName('window_styles');			
-  		s.window_styles = parseInt( ws[0].firstChild.nodeValue );
-						
-			// clear the form
-			$('markerstyleform_new').reset();
-			// update the styles menus
-			editMarkerStyles();
-	 }
-
-
-
-	 function updateMarkerStyle(rslt){
-      var xml = rslt.responseXML;
-
-			//get the style we are updating
-			var s = bMStyleData[editObjectN];
-
-			// assign markerstyle values data array			
-			var id = xml.documentElement.getElementsByTagName('style_id');			
-  		s.style_id = parseInt( id[0].firstChild.nodeValue );
-			var nm = xml.documentElement.getElementsByTagName('name');			
-  		s.name = nm[0].firstChild.nodeValue;
 			var tp = xml.documentElement.getElementsByTagName('type');
-			var oldtp = s.type;
   		s.type = parseInt( tp[0].firstChild.nodeValue );
 			var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
   		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
@@ -2382,44 +2228,49 @@ function newPolygonStyle(){
 			var ws = xml.documentElement.getElementsByTagName('window_styles');			
   		s.window_styles = ws[0].firstChild.nodeValue;
 
-			//@todo - this needs to be made to support more than just init_markers
-			//update all markers
-			//for each marker
-			var arrayId = "I";
-      	var a = bIMData;
-    	//if the length of the array is > 0
-    	if (a.length > 0){
-      	//loop through the array
-    		for(n=0; n<a.length; n++){
-      		//if the array item is not Null
-    			if (a[n]!= null){
-						if (a[n].style_id == s.style_id){
-							if (s.type != oldtp){
-  						//if style type is different
-								var iconn = null;
-            				if (a[n].icon_id != 0){
-            					for (var c=0; c<bMIconData.length; c++){
-            						if ( bMIconData[c].icon_id == a[n].icon_id ){
-            							iconn = c;
-            						}
-            					}
-            				}
+        var ttStyle = document.createElement('style');
+			var ttStyleProperties = document.createTextNode(".tip-" + s.name + " {" + s.label_hover_styles + "}");
+        ttStyle.setAttribute ("type", "text/css");
+        ttStyle.appendChild(ttStyleProperties);
+			document.body.appendChild(ttStyle);
 
-	      					//unload the marker
-  							map.removeOverlay( a[n].marker );
-	      					//define new marker with new styles
-  							if (s.type == 0){
-  								defineGxMarker(arrayId, n, iconn, editObjectN);
-  							}else if (s.type == 1){
-  								definePdMarker(arrayId, n, iconn, editObjectN);
-  							}else if (s.type == 2){
-  								defineXMarker(arrayId, n, iconn, editObjectN);
-  							}
-							}
-						}
-					}
-				}
-			}
+        var winStyle = document.createElement('style');
+			var winStyleProperties = document.createTextNode(".win-" + s.name + " {" + s.window_styles + "}");
+        winStyle.setAttribute ("type", "text/css");
+        winStyle.appendChild(winStyleProperties);
+			document.body.appendChild(winStyle);
+						
+			// clear the form
+			$('markerstyleform_new').reset();
+			// update the styles menus
+			editMarkerStyles();
+			editMarkers();
+}
+
+
+
+function updateMarkerStyle(rslt){
+      var xml = rslt.responseXML;
+
+			//get the style we are updating
+			var s = bMStyleData[editObjectN];
+			var oldtp = s.type;
+
+			// assign markerstyle values data array			
+			var id = xml.documentElement.getElementsByTagName('style_id');			
+  		s.style_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');			
+  		s.name = nm[0].firstChild.nodeValue;
+			var tp = xml.documentElement.getElementsByTagName('type');
+  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
+  		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
+			var lo = xml.documentElement.getElementsByTagName('label_opacity');			
+  		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
+			var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
+  		s.label_hover_styles = lhs[0].firstChild.nodeValue;
+			var ws = xml.documentElement.getElementsByTagName('window_styles');			
+  		s.window_styles = ws[0].firstChild.nodeValue;
 
 			//add the replacement styles
         var ttStyle = document.createElement('style');
@@ -2433,71 +2284,88 @@ function newPolygonStyle(){
         winStyle.setAttribute ("type", "text/css");
         winStyle.appendChild(winStyleProperties);
 			document.body.appendChild(winStyle);
-	 }
+
+			//update all markers
+      	var a = bMData;
+    	//if the length of the array is > 0
+    	if (a.length > 0){
+      	//loop through the array
+    		for(n=0; n<a.length; n++){
+      		//if the array item is not Null
+    			if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.type != oldtp){
+	      			//unload the marker
+  					map.removeOverlay( a[n].marker );
+	      			//define new marker with new styles
+						attachMarker(n);
+					}
+				}
+			}
+			editMarkerStyles();
+			editMarkers();
+}
 
 	
 
 
 
-	 function addIconStyle(rslt){
+function addIconStyle(rslt){
       var xml = rslt.responseXML;
 
 			// create a spot for a new iconstyle in the data array
 			var n = bMIconData.length;
 			bMIconData[n] = new Array();
-			var m = bMIconData[n];
+			var i = bMIconData[n];
 
 			// assign iconstyle values to data array			
 			var id = xml.documentElement.getElementsByTagName('icon_id');
-  		m.icon_id = parseInt( id[0].firstChild.nodeValue );
+  		i.icon_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');
-  		m.name = nm[0].firstChild.nodeValue;
+  		i.name = nm[0].firstChild.nodeValue;
 			var tp = xml.documentElement.getElementsByTagName('type');
-  		m.type = parseInt( tp[0].firstChild.nodeValue );
+  		i.type = parseInt( tp[0].firstChild.nodeValue );
 			var ig = xml.documentElement.getElementsByTagName('image');
-  		m.image = ig[0].firstChild.nodeValue;
+  		i.image = ig[0].firstChild.nodeValue;
 			var rig = xml.documentElement.getElementsByTagName('rollover_image');
-  		m.rollover_image = rig[0].firstChild.nodeValue;
+  		i.rollover_image = rig[0].firstChild.nodeValue;
 			var icw = xml.documentElement.getElementsByTagName('icon_w');
-  		m.icon_w = parseInt( icw[0].firstChild.nodeValue );
+  		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
 			var ich = xml.documentElement.getElementsByTagName('icon_h');
-  		m.icon_h = parseInt( ich[0].firstChild.nodeValue );
+  		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
 			var is = xml.documentElement.getElementsByTagName('shadow_image');			
-  		m.shadow_image = is[0].firstChild.nodeValue;
+  		i.shadow_image = is[0].firstChild.nodeValue;
 			var isw = xml.documentElement.getElementsByTagName('shadow_w');
-  		m.shadow_w = parseInt( isw[0].firstChild.nodeValue );
+  		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
 			var ish = xml.documentElement.getElementsByTagName('shadow_h');
-  		m.shadow_h = parseInt( ish[0].firstChild.nodeValue );
+  		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
 			var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
-  		m.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
+  		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
 			var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
-  		m.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
+  		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
 			var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
-  		m.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
+  		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
 			var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
-  		m.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
+  		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
 			var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
-  		m.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
+  		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
 			var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
-  		m.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
+  		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
 			var pt = xml.documentElement.getElementsByTagName('points');
-  		m.points = pt[0].firstChild.nodeValue;
+  		i.points = pt[0].firstChild.nodeValue;
 			var sc = xml.documentElement.getElementsByTagName('scale');
-  		m.scale = sc[0].firstChild.nodeValue;
+  		i.scale = sc[0].firstChild.nodeValue;
 			var olc = xml.documentElement.getElementsByTagName('outline_color');
-  		m.outline_color = olc[0].firstChild.nodeValue;
+  		i.outline_color = olc[0].firstChild.nodeValue;
 			var olw = xml.documentElement.getElementsByTagName('outline_weight');
-  		m.outline_weight = olw[0].firstChild.nodeValue;
+  		i.outline_weight = olw[0].firstChild.nodeValue;
 			var fc = xml.documentElement.getElementsByTagName('fill_color');
-  		m.fill_color = fc[0].firstChild.nodeValue;
+  		i.fill_color = fc[0].firstChild.nodeValue;
 			var fo = xml.documentElement.getElementsByTagName('fill_opacity');
-  		m.fill_opacity = fo[0].firstChild.nodeValue;
-
+  		i.fill_opacity = fo[0].firstChild.nodeValue;
 
 			//make the icon available
-  		if (m.type == 0) {
+  		if (i.type == 0) {
   			defineGIcon(editObjectN);
-  		}else if(m.type == 1){
+  		}else if(i.type == 1){
   			defineXIcon(editObjectN);			
   		}
 
@@ -2505,112 +2373,86 @@ function newPolygonStyle(){
 			$('iconstyleform_new').reset();
 			// update the styles menus
 			editIconStyles();
-	 }
+}
 
 
 	
-	 function updateIconStyle(rslt){
+function updateIconStyle(rslt){
       	var xml = rslt.responseXML;
 
 			//get the style we are updating
-			var m = bMIconData[editObjectN];
+			var i = bMIconData[editObjectN];
 
 			// assign iconsstyle values to data array
 			var id = xml.documentElement.getElementsByTagName('icon_id');
-  		m.icon_id = parseInt( id[0].firstChild.nodeValue );
+  		i.icon_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');
-  		m.name = nm[0].firstChild.nodeValue;
+  		i.name = nm[0].firstChild.nodeValue;
 			var tp = xml.documentElement.getElementsByTagName('type');
-  		m.type = parseInt( tp[0].firstChild.nodeValue );
+  		i.type = parseInt( tp[0].firstChild.nodeValue );
 			var ig = xml.documentElement.getElementsByTagName('image');
-  		m.image = ig[0].firstChild.nodeValue;
+  		i.image = ig[0].firstChild.nodeValue;
 			var rig = xml.documentElement.getElementsByTagName('rollover_image');
-  		m.rollover_image = rig[0].firstChild.nodeValue;
+  		i.rollover_image = rig[0].firstChild.nodeValue;
 			var icw = xml.documentElement.getElementsByTagName('icon_w');
-  		m.icon_w = parseInt( icw[0].firstChild.nodeValue );
+  		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
 			var ich = xml.documentElement.getElementsByTagName('icon_h');
-  		m.icon_h = parseInt( ich[0].firstChild.nodeValue );
+  		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
 			var is = xml.documentElement.getElementsByTagName('shadow_image');			
-  		m.shadow_image = is[0].firstChild.nodeValue;
+  		i.shadow_image = is[0].firstChild.nodeValue;
 			var isw = xml.documentElement.getElementsByTagName('shadow_w');
-  		m.shadow_w = parseInt( isw[0].firstChild.nodeValue );
+  		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
 			var ish = xml.documentElement.getElementsByTagName('shadow_h');
-  		m.shadow_h = parseInt( ish[0].firstChild.nodeValue );
+  		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
 			var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
-  		m.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
+  		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
 			var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
-  		m.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
+  		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
 			var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
-  		m.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
+  		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
 			var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
-  		m.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
+  		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
 			var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
-  		m.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
+  		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
 			var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
-  		m.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
+  		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
 			var pt = xml.documentElement.getElementsByTagName('points');
-  		m.points = pt[0].firstChild.nodeValue;
+  		i.points = pt[0].firstChild.nodeValue;
 			var sc = xml.documentElement.getElementsByTagName('scale');
-  		m.scale = sc[0].firstChild.nodeValue;
+  		i.scale = sc[0].firstChild.nodeValue;
 			var olc = xml.documentElement.getElementsByTagName('outline_color');
-  		m.outline_color = olc[0].firstChild.nodeValue;
+  		i.outline_color = olc[0].firstChild.nodeValue;
 			var olw = xml.documentElement.getElementsByTagName('outline_weight');
-  		m.outline_weight = olw[0].firstChild.nodeValue;
+  		i.outline_weight = olw[0].firstChild.nodeValue;
 			var fc = xml.documentElement.getElementsByTagName('fill_color');
-  		m.fill_color = fc[0].firstChild.nodeValue;
+  		i.fill_color = fc[0].firstChild.nodeValue;
 			var fo = xml.documentElement.getElementsByTagName('fill_opacity');
-  		m.fill_opacity = fo[0].firstChild.nodeValue;
+  		i.fill_opacity = fo[0].firstChild.nodeValue;
 
 			//update the icon
-  		if (m.type == 0) {
+  		if (i.type == 0) {
   			defineGIcon(editObjectN);
-  		}else if(m.type == 1){
+  		}else if(i.type == 1){
   			defineXIcon(editObjectN);			
   		}
 
-			//@todo - this needs to be made to support more than just init_markers
 			//update all markers
-			//for each marker
-			var arrayId = "I";
-      	var a = bIMData;
+      	var a = bMData;
     
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
     		for(n=0; n<a.length; n++){
       		//if the array item is not Null
-    			if (a[n]!= null){
-						if (a[n].icon_id == m.icon_id){
-	      				//unload the marker
-  						map.removeOverlay( a[n].marker );
-							/* this stuff gets the correct style reference, 
-							 * might be better to attach the styleArray 
-							 * index to the marker data somewhere higher up 
-							 * to minimize these loops - but several 
-							 * update methods will have to be changed
-							 */
-        				if (a[n].style_id == 0){
-        					defineGMarker(arrayId, n, editObjectN);
-        				}else{
-        					var stylen;
-        					for (var b=0; b<bMStyleData.length; b++){
-        						if ( bMStyleData[b].style_id == a[n].style_id ){
-        							stylen = b;
-        						}
-        					}
-        					if ( bMStyleData[stylen].type == 0){
-        						defineGxMarker(arrayId, n, editObjectN, stylen);
-        					}else if ( bMStyleData[stylen].type == 1){
-        						definePdMarker(arrayId, n, editObjectN, stylen);
-        					}else if ( bMStyleData[stylen].type == 2){
-        						defineXMarker(arrayId, n, editObjectN, stylen);
-        					}
-        				}
-						}
+    			if (a[n]!= null && a[n].marker != null && a[n].icon_id == i.icon_id){
+	      			//unload the marker
+  					map.removeOverlay( a[n].marker );
+						//define the marker
+						attachMarker(n);
 					}
     		}
     	}
-	 }
+}
 
 
 
@@ -3110,7 +2952,7 @@ function newPolygonStyle(){
 			p.border_text = bt[0].firstChild.nodeValue;
 			var zi = xml.documentElement.getElementsByTagName('zindex');
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
-			
+
 			p.set_id = parseFloat(bPSetData[s].set_id);
 			p.polylinestyle_id = parseFloat(bPSetData[s].polylinestyle_id);
 			p.style_id = parseFloat(bPSetData[s].style_id);
@@ -3119,16 +2961,16 @@ function newPolygonStyle(){
 			var lstylen;
 			var pstylen;
 			for (var b=0; b<bLStyData.length; b++){
-				if ( bLStyData[b].style_id == a[n].polylinestyle_id ){
+				if ( bLStyData[b].style_id == p.polylinestyle_id ){
 					lstylen = b;
 				}
 			}
 			for (var c=0; c<bPStyData.length; c++){
-				if ( bPStyData[c].style_id == a[n].style_id ){
+				if ( bPStyData[c].style_id == p.style_id ){
 					pstylen = c;
 				}
 			}
-			defineXPolygon(arrayId, n, lstylen, pstylen);
+			defineXPolygon(p.array, p.array_n, lstylen, pstylen);
 
 			// clear the form
 			$('polygonform_new').reset();
@@ -3173,16 +3015,16 @@ function newPolygonStyle(){
 			var lstylen;
 			var pstylen;
 			for (var b=0; b<bLStyData.length; b++){
-				if ( bLStyData[b].style_id == a[n].polylinestyle_id ){
+				if ( bLStyData[b].style_id == p.polylinestyle_id ){
 					lstylen = b;
 				}
 			}
 			for (var c=0; c<bPStyData.length; c++){
-				if ( bPStyData[c].style_id == a[n].style_id ){
+				if ( bPStyData[c].style_id == p.style_id ){
 					pstylen = c;
 				}
 			}
-			defineXPolygon(arrayId, n, lstylen, pstylen);
+			defineXPolygon(p.array, p.array_n, lstylen, pstylen);
 
 			removeAssistant();
 	}
@@ -3381,7 +3223,7 @@ function newPolygonStyle(){
 
 
 	function updateRemovePolygonSet(){
-  	if (editArray == 'I') {
+  	if (editSetType == 'init_polygons') {
   			for (var i=0; i<bIPData.length; i++){
   					if ( ( bIPData[i] != null ) && ( bIPData[i].set_id == editSetId ) ){
   						map.removeOverlay(bIPData[i].polygon);
@@ -3493,6 +3335,52 @@ function newPolygonStyle(){
                 		bModPData.value = msg;
               	});
 	}
+
+
+
+ 	if (a == 'polygon'){
+		bModForm = $('polygonform_'+b);
+
+  	if (bModForm.circle.options[bModForm.circle.selectedIndex].value == 'true'){
+      	bModPData = bModForm.circle_center;
+     	alert ('Circle-Center drawing assistant activated for '+ bModForm.name.value + ' polygon. \n Click to marker the center of your circle!');
+     
+       	bAssistant = GEvent.addListener(map, "click", function(overlay, point){
+                         if (point) {
+                     		map.recenterOrPanToLatLng(point);
+                     		bModPData.value = point.x + ", " + point.y;
+                         }
+                       });
+  	}else{
+   		bModPData = bModForm.points_data; 
+  		alert ('Polygon drawing assistant activated for '+ bModForm.name.value + ' polygon. \n Click to draw the outline. \n\nThe final connection will automatically be \ncompleted for you, so don\'t worry about that.');
+   		bLastpoint = null;
+   	 	bTempPoints = [];
+     	bTP = new GPolyline(bTempPoints);
+     	map.addOverlay(bTP);		//create polyline object from points and add to map
+     
+     	bAssistant = GEvent.addListener(map, "click", function(overlay,point) {
+                		if(bLastpoint && bLastpoint.x==point.x && bLastpoint.y==point.y) return;
+                		bLastpoint = point;
+                		
+                		bTempPoints.push(point);
+                		map.removeOverlay(bTP);
+                		bTP = new GPolyline(bTempPoints);
+                		map.addOverlay(bTP);
+
+                		for(var i=0; i<bTempPoints.length; i++){
+								if (i == 0){
+									msg = bTempPoints[i].x + ', ' + bTempPoints[i].y;
+								}else{
+                				msg += ', ' + bTempPoints[i].x + ', ' + bTempPoints[i].y;
+								}
+                		}
+										
+                		bModPData.value = msg;
+              	});
+		}
+	}
+
 	
 	if (a == 'marker'){
 		bModForm = $('markerform_'+b);
@@ -3501,19 +3389,35 @@ function newPolygonStyle(){
 		alert ('Marker ploting assistant activated for '+ bModForm.title.value + ' marker. \n Click to Position!');
 	
   	bAssistant = GEvent.addListener(map, "click", function(overlay, point){
-                    if (point) {
-											if (bTP != null) {
-                    	  map.removeOverlay(bTP);
-											}
-											bTP = new GMarker(point);
-                      map.addOverlay(bTP);
-                      map.recenterOrPanToLatLng(point);
-											bModMLat.value = point.y;
-											bModMLon.value = point.x;											
-                    }
-      					});
-  }
- }	
+      if (point) {
+  		if (bTP != null) {
+        	map.removeOverlay(bTP);
+  		}
+  		bTP = new GMarker(point);
+  		map.addOverlay(bTP);
+  		map.recenterOrPanToLatLng(point);
+  		bModMLat.value = point.y;
+  		bModMLon.value = point.x;											
+      }
+    });
+	}
+
+
+	if (a == 'map'){
+		f = $('mapform');
+		alert ('Map centering assistant activated. \n Click to get center lat and lon values!');
+	
+  	bAssistant = GEvent.addListener(map, "click", function(overlay, point){
+      if (point) {
+  		map.recenterOrPanToLatLng(point);
+  		f.map_lon.value = point.x;
+  		f.map_lat.value = point.y;
+      }
+    });
+	}
+
+
+}	
 
 	
  function removeAssistant(){

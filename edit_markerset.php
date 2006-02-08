@@ -24,7 +24,10 @@ $gContent = new BitGmap();
 if (!empty($_REQUEST["save_markerset"])) {
     if( $result = $gContent->storeMarkerSet( $_REQUEST ) ) {
 
-				//@todo - returned results need to include all the associated style and icon properties as well
+				/* @todo if markersets ever are editable outside 
+				 * the context of a map side_panel, explode, cluster 
+				 * will need to be conditional
+				 */
 				//if store is successful we return XML
 				$mRet = "<markerset>"
       		  ."<set_id>".$result->fields['set_id']."</set_id>"
@@ -32,8 +35,12 @@ if (!empty($_REQUEST["save_markerset"])) {
       		  ."<description>".$result->fields['description']."</description>"
       		  ."<style_id>".$result->fields['style_id']."</style_id>"
       		  ."<icon_id>".$result->fields['icon_id']."</icon_id>"
+      		  ."<plot_on_load>".$result->fields['plot_on_load']."</plot_on_load>"
+      		  ."<side_panel>".$result->fields['side_panel']."</side_panel>"
+      		  ."<explode>".$result->fields['explode']."</explode>"
+      		  ."<cluster>".$result->fields['cluster']."</cluster>"
 						."</markerset>";
-																			
+
     }else{
 		//@todo - return some sort of store failure message in the xml
       $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );

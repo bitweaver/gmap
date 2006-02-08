@@ -1,59 +1,45 @@
 <script type="text/javascript">//<![CDATA[
 
-var bIMData = new Array();
-{if count($gContent->mMapInitMarkers) > 0}
-	{section name=initmarkers loop=$gContent->mMapInitMarkers}
-		bIMData[{$smarty.section.initmarkers.index}] = new Array();
-		bIMData[{$smarty.section.initmarkers.index}].marker_id = {$gContent->mMapInitMarkers[initmarkers].marker_id};
-		bIMData[{$smarty.section.initmarkers.index}].title = "{$gContent->mMapInitMarkers[initmarkers].title}";
-		bIMData[{$smarty.section.initmarkers.index}].lat = {$gContent->mMapInitMarkers[initmarkers].lat};
-		bIMData[{$smarty.section.initmarkers.index}].lon = {$gContent->mMapInitMarkers[initmarkers].lon};
-		bIMData[{$smarty.section.initmarkers.index}].data = '{$gContent->mMapInitMarkers[initmarkers].data}';
-		bIMData[{$smarty.section.initmarkers.index}].parsed_data = '{$gContent->mMapInitMarkers[initmarkers].parsed_data}';
-		bIMData[{$smarty.section.initmarkers.index}].label_data = '{$gContent->mMapInitMarkers[initmarkers].label_data}';
-		bIMData[{$smarty.section.initmarkers.index}].set_id = {$gContent->mMapInitMarkers[initmarkers].set_id};
-		bIMData[{$smarty.section.initmarkers.index}].style_id = {$gContent->mMapInitMarkers[initmarkers].style_id};
-		bIMData[{$smarty.section.initmarkers.index}].icon_id = {$gContent->mMapInitMarkers[initmarkers].icon_id};
-		{if $gContent->mMapInitMarkers[initmarkers].zindex != NULL}
-			bIMData[{$smarty.section.initmarkers.index}].zindex = {$gContent->mMapInitMarkers[initmarkers].zindex};
+var bMData = new Array();
+{if count($gContent->mMapMarkers) > 0}
+	{section name=marker_n loop=$gContent->mMapMarkers}
+		bMData[{$smarty.section.marker_n.index}] = new Array();
+		bMData[{$smarty.section.marker_n.index}].marker_id = {$gContent->mMapMarkers[marker_n].marker_id};
+		bMData[{$smarty.section.marker_n.index}].title = "{$gContent->mMapMarkers[marker_n].title}";
+		bMData[{$smarty.section.marker_n.index}].lat = {$gContent->mMapMarkers[marker_n].lat};
+		bMData[{$smarty.section.marker_n.index}].lon = {$gContent->mMapMarkers[marker_n].lon};
+		bMData[{$smarty.section.marker_n.index}].data = '{$gContent->mMapMarkers[marker_n].data}';
+		bMData[{$smarty.section.marker_n.index}].parsed_data = '{$gContent->mMapMarkers[marker_n].parsed_data}';
+		bMData[{$smarty.section.marker_n.index}].label_data = '{$gContent->mMapMarkers[marker_n].label_data}';
+		{if $gContent->mMapMarkers[marker_n].zindex != NULL}
+			bMData[{$smarty.section.marker_n.index}].zindex = {$gContent->mMapMarkers[marker_n].zindex};
 		{/if}
-		bIMData[{$smarty.section.initmarkers.index}].array = "I";
-		bIMData[{$smarty.section.initmarkers.index}].array_n = {$smarty.section.initmarkers.index};
+		bMData[{$smarty.section.marker_n.index}].set_id = {$gContent->mMapMarkers[marker_n].set_id};
+		bMData[{$smarty.section.marker_n.index}].style_id = {$gContent->mMapMarkers[marker_n].style_id};
+		bMData[{$smarty.section.marker_n.index}].icon_id = {$gContent->mMapMarkers[marker_n].icon_id};
+		bMData[{$smarty.section.marker_n.index}].array_n = {$smarty.section.marker_n.index};
+		bMData[{$smarty.section.marker_n.index}].plot_on_load = {$gContent->mMapMarkers[marker_n].plot_on_load};
+		bMData[{$smarty.section.marker_n.index}].side_panel = {$gContent->mMapMarkers[marker_n].side_panel};
+		bMData[{$smarty.section.marker_n.index}].explode = {$gContent->mMapMarkers[marker_n].explode};
+		bMData[{$smarty.section.marker_n.index}].cluster = {$gContent->mMapMarkers[marker_n].cluster};
 	{/section}
 {/if}
 
-var bSMData = new Array();
-{if count($gContent->mMapSetMarkers) > 0}
-	{section name=setmarkers loop=$gContent->mMapSetMarkers}
-		bSMData[{$smarty.section.setmarkers.index}] = new Array();
-		bSMData[{$smarty.section.setmarkers.index}].marker_id = {$gContent->mMapSetMarkers[setmarkers].marker_id};
-		bSMData[{$smarty.section.setmarkers.index}].title = "{$gContent->mMapSetMarkers[setmarkers].title}";
-		bSMData[{$smarty.section.setmarkers.index}].lat = {$gContent->mMapSetMarkers[setmarkers].lat};
-		bSMData[{$smarty.section.setmarkers.index}].lon = {$gContent->mMapSetMarkers[setmarkers].lon};
-		bSMData[{$smarty.section.setmarkers.index}].data = "{$gContent->mMapSetMarkers[setmarkers].data}";
-		bSMData[{$smarty.section.setmarkers.index}].parsed_data = "{$gContent->mMapSetMarkers[setmarkers].parsed_data}";
-		bSMData[{$smarty.section.setmarkers.index}].label_data = "{$gContent->mMapSetMarkers[setmarkers].label_data}";
-		bSMData[{$smarty.section.setmarkers.index}].set_id = {$gContent->mMapSetMarkers[setmarkers].set_id};
-		bSMData[{$smarty.section.setmarkers.index}].style_id = {$gContent->mMapSetMarkers[setmarkers].style_id};
-		bSMData[{$smarty.section.setmarkers.index}].icon_id = {$gContent->mMapSetMarkers[setmarkers].icon_id};
-		{if $gContent->mMapSetMarkers[setmarkers].zindex != NULL}
-			bSMData[{$smarty.section.setmarkers.index}].zindex = {$gContent->mMapSetMarkers[setmarkers].zindex};
-		{/if}
-		bSMData[{$smarty.section.setmarkers.index}].array = "S";
-		bSMData[{$smarty.section.setmarkers.index}].array_n = {$smarty.section.setmarkers.index};
-	{/section}
-{/if}
 
 var bMSetData = new Array();
-{if count($gContent->mMapMarkerSetDetails) > 0}
-	{section name=markersetdata loop=$gContent->mMapMarkerSetDetails}
+{if count($gContent->mMapMarkerSets) > 0}
+	{section name=markersetdata loop=$gContent->mMapMarkerSets}
 		bMSetData[{$smarty.section.markersetdata.index}] = new Array();
-		bMSetData[{$smarty.section.markersetdata.index}].set_id = {$gContent->mMapMarkerSetDetails[markersetdata].set_id};
-		bMSetData[{$smarty.section.markersetdata.index}].name = "{$gContent->mMapMarkerSetDetails[markersetdata].name}";
-		bMSetData[{$smarty.section.markersetdata.index}].description = "{$gContent->mMapMarkerSetDetails[markersetdata].description}";
-		bMSetData[{$smarty.section.markersetdata.index}].style_id = {$gContent->mMapMarkerSetDetails[markersetdata].style_id};
-		bMSetData[{$smarty.section.markersetdata.index}].icon_id = {$gContent->mMapMarkerSetDetails[markersetdata].icon_id};
-		bMSetData[{$smarty.section.markersetdata.index}].set_type = "{$gContent->mMapMarkerSetDetails[markersetdata].set_type}";
+		bMSetData[{$smarty.section.markersetdata.index}].set_id = {$gContent->mMapMarkerSets[markersetdata].set_id};
+		bMSetData[{$smarty.section.markersetdata.index}].name = "{$gContent->mMapMarkerSets[markersetdata].name}";
+		bMSetData[{$smarty.section.markersetdata.index}].description = "{$gContent->mMapMarkerSets[markersetdata].description}";
+		bMSetData[{$smarty.section.markersetdata.index}].style_id = {$gContent->mMapMarkerSets[markersetdata].style_id};
+		bMSetData[{$smarty.section.markersetdata.index}].icon_id = {$gContent->mMapMarkerSets[markersetdata].icon_id};
+		bMSetData[{$smarty.section.markersetdata.index}].set_type = "{$gContent->mMapMarkerSets[markersetdata].set_type}";
+		bMSetData[{$smarty.section.markersetdata.index}].plot_on_load = {$gContent->mMapMarkerSets[markersetdata].plot_on_load};
+		bMSetData[{$smarty.section.markersetdata.index}].side_panel = {$gContent->mMapMarkerSets[markersetdata].side_panel};
+		bMSetData[{$smarty.section.markersetdata.index}].explode = {$gContent->mMapMarkerSets[markersetdata].explode};
+		bMSetData[{$smarty.section.markersetdata.index}].cluster = {$gContent->mMapMarkerSets[markersetdata].cluster};
 	{/section}
 {/if}
 

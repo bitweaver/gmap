@@ -46,6 +46,7 @@
           <option value="G_HYBRID_TYPE" >Hybrid</option>
    			</select><br/>
     <!-- Allow Comments <input name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
+    <a name="map_assist_btn" title="click a center!" href="javascript:addAssistant('map');">Use Locating Assistant</a><br/>
     <input type="button" name="save_map_btn" value="Submit" onclick="javascript:storeMap('edit.php', this.parentNode);"><br/>
    	<input type="button" name="closemapform" value="Cancel" onclick="javascript:canceledit('editmapform');">
     </form>
@@ -146,33 +147,46 @@
 
 
 <div id="newmarkersetform" class="editform" style="display:none;">
-		<h2>Add a New Marker Set</h2>		
-        <div class="tableheader">
-    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Description </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Style </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Icon </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Load Option </div>
-    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
-    		</div>
+		<h2>Add a New Marker Set</h2>
     		<div class="table" id="editmarkersettable_new">
     			<form action="javascript:;" name="markersetform_new" id="markersetform_new">
-    			<div class="data">
-          	<div style="float:left; padding:0 .4em; width:10px"><input name="save_markerset" type="hidden" value="true"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="description" cols="15" rows="3"></textarea></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><select name="style_id" id="style_id">
-                                                                  <option value="0" >Google (standard)</option>
-                                          							   			</select></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><select name="icon_id" id="icon_id">
-                                                                  <option value="0" >Google (standard)</option>
-                                          							   			</select></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><select name="set_type" id="set_type">
-                                                                  <option value="init_markers" >On Page Load</option>
-                                                                  <option value="set_markers" >Side Panel Only</option>
-                                          							   			</select></div>
-          	<div style="float:left; padding:0 .4em; width:70px"><a name="new_markerset_btn" title="save" href="javascript:storeNewMarkerSet('edit_markerset.php', document.markersetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
-    			</div>
+    				<div class="data">
+                		<input name="save_markerset" type="hidden" value="true">
+                		<div style="float:left; padding:0 .4em; width:140px">
+								Name<br/><input name="name" type="text" size="20" value="a name">
+							</div>
+                		<div style="float:left; padding:0 .4em; width:140px">
+                			Description<br/><textarea name="description" cols="15" rows="3"></textarea>
+							</div>
+                		<div style="float:left; padding:0 .4em; width:140px">
+								Style<br/><select name="style_id" id="style_id">
+                        				<option value="0" >Google (standard)</option>
+                            		</select><br/>
+								Icon<br/><select name="icon_id" id="icon_id">
+                        				<option value="0" >Google (standard)</option>
+                        			</select></div>
+                		<div style="float:left; padding:0 .4em; width:200px">
+    						Plot-On-Load: <select name="plot_on_load">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select><br/>
+    						Side: <select name="side_panel">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select><br/>
+    						List: <select name="explode">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select><br/>
+    						Cluster: <select name="cluster">
+                      					<option value="true">Yes</option>
+                      					<option value="false" selected>No</option>
+                          				</select> 
+							</div>
+                		<div style="float:left; padding:0 .4em; width:70px">
+								ACTIONS<br/><a name="new_markerset_btn" title="save" href="javascript:storeNewMarkerSet('edit_markerset.php', document.markersetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+							</div>
+    				</div>
     			</form>
   		  </div>
 		<div id="newmarkersetcancel" style="clear:both;"><input type="button" name="closemarkersetform" value="Cancel New Marker Set" onclick="javascript:canceledit('newmarkersetform'); canceledit('editerror');"></div>
@@ -196,18 +210,18 @@
     		<div class="table" id="editmarkertable_new">
     			<form action="javascript:;" name="markerform_new" id="markerform_new">
     			<div class="data">
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="new_marker" type="hidden" value="true"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="title" type="text" size="15" value="a title"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lat" type="text" size="15" value=""></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lon" type="text" size="15" value=""></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="edit" cols="15" rows="3"></textarea></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
-          	<div style="float:left; padding:0 .4em; width:50px"><input name="marker_zi" type="text" size="3" value="0"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><select name="set_id" id="set_id">
-                                                                  <option value="n" >someset</option>
-                                          							   			</select></div>
-          	<div style="float:left; padding:0 .4em; width:70px"><a name="new_marker_btn" title="save" href="javascript:storeNewMarker('edit_marker.php', document.markerform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
-          	<a style="float:left; padding:0 .4em;" name="marker_assist_btn" title="click a location!" href="javascript:addAssistant('marker', 'new');">Use Locating Assistant</a>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="new_marker" type="hidden" value="true"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="title" type="text" size="15" value="a title"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lat" type="text" size="15" value=""></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lon" type="text" size="15" value=""></div>
+                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="edit" cols="15" rows="3"></textarea></div>
+                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
+                	<div style="float:left; padding:0 .4em; width:50px"><input name="marker_zi" type="text" size="3" value="0"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><select name="set_id" id="set_id">
+                                                                        <option value="n" >someset</option>
+                                                							   			</select></div>
+                	<div style="float:left; padding:0 .4em; width:70px"><a name="new_marker_btn" title="save" href="javascript:storeNewMarker('edit_marker.php', document.markerform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+                	<a style="float:left; padding:0 .4em;" name="marker_assist_btn" title="click a location!" href="javascript:addAssistant('marker', 'new');">Use Locating Assistant</a>
     			</div>
     			</form>
   		  </div>
@@ -379,20 +393,20 @@
       		<div class="table" id="editmarkerstyletable_n">
       			<form action="javascript:;" name="markerstyleform_n" id="markerstyleform_n" style="display:none;">
       			<div class="data" id="markerstyleformdata_n">
-            	<div style="float:left; padding:0 .4em; width:10px"><input name="save_markerstyle" type="hidden" value="true"></div>
-            	<div style="float:left; padding:0 .4em; width:10px"><input name="style_array_n" type="hidden" value="true"></div>
-            	<div style="float:left; padding:0 .4em; width:10px"><input name="style_id" type="hidden" value="n"></div>
-            	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
-            	<div style="float:left; padding:0 .4em; width:90px"><select name="type">
-                                                                    <option value="0">GMarker</option>
-                                                                    <option value="1">PdMarker</option>
-                                                                    <option value="2">XMarker</option>
-                                            							   			</select></div>
-            	<div style="float:left; padding:0 .4em; width:70px"><input name="label_hover_opacity" type="text" size="5" value="70"></div>
-            	<div style="float:left; padding:0 .4em; width:70px"><input name="label_opacity" type="text" size="5" value="100"></div>
-            	<div style="float:left; padding:0 .4em; width:140px"><textarea name="label_hover_styles" cols="15" rows="3"></textarea></div>
-            	<div style="float:left; padding:0 .4em; width:140px"><textarea name="window_styles" cols="15" rows="3"></textarea></div>
-            	<a style="float:left; padding:0 .4em;" name="save_markerstyle_btn" title="save" href="javascript:storeMarkerStyle('edit_markerstyle.php', document.markerstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+                	<div style="float:left; padding:0 .4em; width:10px"><input name="save_markerstyle" type="hidden" value="true"></div>
+                	<div style="float:left; padding:0 .4em; width:10px"><input name="style_array_n" type="hidden" value="true"></div>
+                	<div style="float:left; padding:0 .4em; width:10px"><input name="style_id" type="hidden" value="n"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><select name="type">
+                                                                        <option value="0">GMarker</option>
+                                                                        <option value="1">PdMarker</option>
+                                                                        <option value="2">XMarker</option>
+                                                							   			</select></div>
+                	<div style="float:left; padding:0 .4em; width:70px"><input name="label_hover_opacity" type="text" size="5" value="70"></div>
+                	<div style="float:left; padding:0 .4em; width:70px"><input name="label_opacity" type="text" size="5" value="100"></div>
+                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="label_hover_styles" cols="15" rows="3"></textarea></div>
+                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="window_styles" cols="15" rows="3"></textarea></div>
+                	<a style="float:left; padding:0 .4em;" name="save_markerstyle_btn" title="save" href="javascript:storeMarkerStyle('edit_markerstyle.php', document.markerstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
       			</div>
       			</form>
     		  </div>
@@ -408,10 +422,9 @@
 		<h2>Marker Sets Associated With This Map</h2>		
 		<div id="markerset_n" style="display:none; clear:both;">
     		<form action="javascript:;" name="markersetform_n" id="markersetform_n" style="display:none;">
-					<input name="set_id" type="hidden" size="3" value="n">
-					<input name="set_type" type="hidden" size="3" value="n">
-                <input name="set_array_n" type="hidden" value="n">
   				<div class="data" id="markersetformdata_n">
+  					<input name="set_id" type="hidden" value="n">
+                  	<input name="set_array_n" type="hidden" value="n">
     				<b id="setname">Set Name:</b> <span id="setdesc">Description Here</span><br/>
     				<a id="seteditmarkers" href="javascript:editSet('n');">Edit These Markers</a> | 
     				<a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a> | 
@@ -421,9 +434,25 @@
             		Icon: <select name="icon_id">
                                       <option value="0">Google (standard)</option>
                                    	</select> | 
-    				<a id="setstore" href="javascript:storeMarkerSet('edit_markerset.php', set_id);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
-    				<a id="setremove" href="javascript:removeMarkerSet('edit_markerset.php', set_id, set_type);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-    				<a id="setdelete" href="javascript:expungeMarkerSet('edit_markerset.php', set_id);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
+						Plot-On-Load: <select name="plot_on_load">
+                  					<option value="true">Yes</option>
+                  					<option value="false">No</option>
+                      				</select> | 
+						Side: <select name="side_panel">
+                  					<option value="true">Yes</option>
+                  					<option value="false">No</option>
+                      				</select> | 
+						List: <select name="explode">
+                  					<option value="true">Yes</option>
+                  					<option value="false">No</option>
+                      				</select> | 
+						Cluster: <select name="cluster">
+                  					<option value="true">Yes</option>
+                  					<option value="false">No</option>
+                      				</select> | 
+    				<a id="setstore" href="javascript:storeMarkerSet('edit_markerset.php', markersetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+    				<a id="setremove" href="javascript:removeMarkerSet('edit_markerset.php', markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+    				<a id="setdelete" href="javascript:expungeMarkerSet('edit_markerset.php', markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
   				</div>
         	</form>
 				<div id="setform_n" style="display:none;">
@@ -779,7 +808,8 @@
         <div class="tableheader">
     				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Description </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Style </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> FillStyle </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> LineStyle </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Load Option </div>
     				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
     		</div>
@@ -876,11 +906,11 @@
 		<h2>Add a New Polygon</h2>		
         <div class="tableheader">
     				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Shape </div>
+    				<div style="float:left; padding:0 .4em; width:90px"> Shape </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Points Data </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Circle Center </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Radius </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Border Text <br/>only for XPolygon type</div>
+    				<div style="float:left; padding:0 .4em; width:90px"> Circle Center </div>
+    				<div style="float:left; padding:0 .4em; width:90px"> Radius </div>
+    				<div style="float:left; padding:0 .4em; width:140px"> Border Text </div>
     				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
     				<div style="float:left; padding:0 .4em; width:50px"> Set </div>
     				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>						
@@ -889,14 +919,14 @@
     			<form action="javascript:;" name="polygonform_new" id="polygonform_new">
     			<div class="data">
                 	<div style="float:left; padding:0 .4em; width:10px"><input name="new_polygon" type="hidden" value="true"></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="new"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
                 	<div style="float:left; padding:0 .4em; width:90px"><select name="circle" >
                                                                         <option value="false" >Polygon </option>
                                                                         <option value="true" >Circle</option>
                                                 							   			</select></div>
                 	<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><input name="circle_center" type="text" size="15" value="new"></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><input name="radius" type="text" size="15" value="new"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="circle_center" type="text" size="15"></div>
+                	<div style="float:left; padding:0 .4em; width:90px"><input name="radius" type="text" size="15" value="0"></div>
                 	<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
                 	<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>
                 	<div style="float:left; padding:0 .4em; width:90px"><select name="set_id" id="polygonset_id">
@@ -940,10 +970,10 @@
 				<h3>Polygons In This Set</h3>
         	<div class="tableheader">
     				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Shape </div>
+    				<div style="float:left; padding:0 .4em; width:90px"> Shape </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Points Data </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Circle Center </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Radius </div>
+    				<div style="float:left; padding:0 .4em; width:90px"> Radius </div>
     				<div style="float:left; padding:0 .4em; width:140px"> Border Text <br/>only for XPolygon type</div>
     				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
     				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>						
@@ -954,13 +984,13 @@
       					<div style="float:left; padding:0 .4em; width:90px"><input name="save_polygon" type="hidden" value="true"></div>
                 		<div style="float:left; padding:0 .4em; width:30px"><input name="set_id" type="hidden" size="3" value="n"></div>
             			<div style="float:left; padding:0 .4em; width:30px"><input name="polygon_id" type="hidden" size="3" value="n"></div>
-                    	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="new"></div>
+                    	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value=""></div>
                     	<div style="float:left; padding:0 .4em; width:90px"><select name="circle" >
                                                                             <option value="false" >Polygon </option>
                                                                             <option value="true" >Circle</option>
                                                     							   			</select></div>
                     	<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
-                    	<div style="float:left; padding:0 .4em; width:90px"><input name="circle_center" type="text" size="15" value="new"></div>
+                    	<div style="float:left; padding:0 .4em; width:140px"><input name="circle_center" type="text" size="15" value="new"></div>
                     	<div style="float:left; padding:0 .4em; width:90px"><input name="radius" type="text" size="15" value="new"></div>
                 		<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
                 		<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>

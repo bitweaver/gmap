@@ -92,9 +92,8 @@ class BitGmap extends LibertyAttachable {
 				if( $pFullLoad ) {
 					$this->mMapTypes = $this->getMapTypes($lookupId);
 
-					$this->mMapInitMarkers = $this->getMarkers($lookupId, "init_markers");
-					$this->mMapSetMarkers = $this->getMarkers($lookupId, "set_markers");
-					$this->mMapMarkerSetDetails = $this->getMarkerSetsDetails($lookupId);
+					$this->mMapMarkers = $this->getMarkers($lookupId, "markers");
+					$this->mMapMarkerSets = $this->getMarkerSetsDetails($lookupId);
 					$this->mMapMarkerStyles = $this->getMarkerStyles($lookupId);
 					$this->mMapIconStyles = $this->getIconStyles($lookupId);
 
@@ -178,7 +177,7 @@ class BitGmap extends LibertyAttachable {
 		if ($gmap_id && is_numeric($gmap_id)) {
 
 		 	$bindVars = array((int)$gmap_id, $settype);
-			$query = "SELECT bmm.*, tc.*, bms.* 
+			$query = "SELECT bmm.*, tc.*, bms.*, bsk.*
                 FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."gmaps_markers` bmm, `".BIT_DB_PREFIX."gmaps_marker_sets` bms
 								INNER JOIN `".BIT_DB_PREFIX."tiki_content` tc ON( bmm.`content_id`=tc.`content_id` )
                 WHERE bsk.`gmap_id` = ?
@@ -230,9 +229,7 @@ class BitGmap extends LibertyAttachable {
 			$query = "SELECT DISTINCT bs.*
                 FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."gmaps_marker_sets` bms, `".BIT_DB_PREFIX."gmaps_marker_styles` bs
                 WHERE bmk.`gmap_id` = ?
-                AND bmk.`set_type` = 'init_markers'
-                AND bms.`set_id` = bmk.`set_id` AND bs.`style_id` = bms.`style_id`
-                OR bmk.`set_type` = 'set_markers'
+                AND bmk.`set_type` = 'markers'
                 AND bms.`set_id` = bmk.`set_id` AND bs.`style_id` = bms.`style_id`";
 
 			$result = $this->mDb->query( $query, array((int)$gmap_id) );
@@ -271,9 +268,7 @@ class BitGmap extends LibertyAttachable {
 			$query = "SELECT DISTINCT bis.*
 					FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."gmaps_marker_sets` bms, `".BIT_DB_PREFIX."gmaps_icon_styles` bis
 					WHERE bmk.`gmap_id` = ?
-					AND bmk.`set_type` = 'init_markers'
-					AND bms.`set_id` = bmk.`set_id` AND bis.`icon_id` = bms.`icon_id`
-					OR bmk.`set_type` = 'set_markers'
+					AND bmk.`set_type` = 'markers'
 					AND bms.`set_id` = bmk.`set_id` AND bis.`icon_id` = bms.`icon_id`";
 
 			$result = $this->mDb->query( $query, array((int)$gmap_id) );
@@ -311,9 +306,10 @@ class BitGmap extends LibertyAttachable {
 	function getMarkerSetData($set_id) {
 		global $gBitSystem;
 		if ($set_id && is_numeric($set_id)) {
-			$query = "SELECT bs.*
+			$query = "SELECT bs.*, bsk.*
 			FROM `".BIT_DB_PREFIX."gmaps_marker_sets` bs
-			WHERE bs.set_id = ?";
+			INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk ON ( bsk.`set_id` = bs.`set_id` )
+			WHERE bs.`set_id` = ?";
   		$result = $this->mDb->query( $query, array((int)$set_id));
 		}
 		return $result;
@@ -371,15 +367,21 @@ class BitGmap extends LibertyAttachable {
 		global $gBitSystem;
 		$ret = NULL;
 		if ($gmap_id && is_numeric($gmap_id)) {
+		 	$bindVars = array((int)$gmap_id, $gmap_id);
 			$query = "SELECT DISTINCT bs.*
-						 	  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."gmaps_polyline_sets` bps, `".BIT_DB_PREFIX."gmaps_polyline_styles` bs
-								WHERE bmk.`gmap_id` = ?
-								AND bmk.`set_type` = 'init_polylines'
-								AND bps.`set_id` = bmk.`set_id` AND bs.`style_id` = bps.`style_id`
-								OR bmk.`set_type` = 'set_polylines'
-								AND bps.`set_id` = bmk.`set_id` AND bs.`style_id` = bps.`style_id`";
+                  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
+                         INNER JOIN `".BIT_DB_PREFIX."gmaps_polygon_sets` bgs on bmk.`set_id`  = bgs.`set_id`
+                         INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_styles` bs on bs.`style_id` = bgs.`polylinestyle_id`
+                  WHERE bmk.`gmap_id` = ?
+                  AND bmk.`set_type` IN ('init_polygons', 'set_polygons' )
+                  UNION SELECT DISTINCT bs.*
+                  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
+                         INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` bps on bmk.`set_id`  = bps.`set_id`
+                         INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_styles` bs on bs.`style_id` = bps.`style_id`
+                  WHERE bmk.`gmap_id` = ?
+                  AND bmk.`set_type` IN ('init_polylines', 'set_polylines')";
 
-			$result = $this->mDb->query( $query, array((int)$gmap_id) );
+			$result = $this->mDb->query( $query, $bindVars );
 
 			$ret = array();
 
@@ -434,7 +436,7 @@ class BitGmap extends LibertyAttachable {
 		if ($gmap_id && is_numeric($gmap_id)) {
 
 		 	$bindVars = array((int)$gmap_id, $settype);
-			$query = "SELECT bmp.*, bps.*
+			$query = "SELECT bmp.*, bps.set_id, bps.style_id, bps.polylinestyle_id
 		 				 	  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_polygon_keychain` bpk, `".BIT_DB_PREFIX."gmaps_polygons` bmp, `".BIT_DB_PREFIX."gmaps_polygon_sets` bps
 								WHERE bsk.`gmap_id` = ?
 								AND bsk.`set_type` = ?
@@ -531,11 +533,11 @@ class BitGmap extends LibertyAttachable {
   		global $gBitSystem;
   		$ret = NULL;
   		if ($gmap_id && is_numeric($gmap_id)) {
-      $query = "SELECT DISTINCT bms.*, bmk.`set_type`
-                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."gmaps_marker_sets` bms
+      	$query = "SELECT DISTINCT bms.*, bmk.*
+                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` bms ON (bmk.`set_id` = bms.`set_id`)
                 WHERE bmk.`gmap_id` = ?
-                AND bmk.`set_id` = bms.`set_id` 
-                AND ( bmk.`set_type` = 'set_markers' OR bmk.`set_type` = 'init_markers')
+                AND bmk.`set_type` = 'markers'
                 ORDER BY bms.`set_id` ASC";
 							
 			$result = $this->mDb->query( $query, array((int)$gmap_id) );
@@ -629,7 +631,7 @@ class BitGmap extends LibertyAttachable {
               INNER JOIN `".BIT_DB_PREFIX."gmaps_markers` bmm ON ( bmm.`marker_id` = bmk.`marker_id` )
               LEFT OUTER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk
 							ON ( bsk.`set_id` = bms.`set_id`
-							AND ( bsk.`set_type` = 'set_markers' OR bsk.`set_type` = 'init_markers'))
+							AND bsk.`set_type` = 'markers')
               ORDER BY bms.`set_id` ASC, bmm.`marker_id` ASC";
 
 		$result = $this->mDb->query( $query );
@@ -1090,6 +1092,9 @@ class BitGmap extends LibertyAttachable {
 	function verifyMarkerSet( &$pParamHash ) {
 
 		$pParamHash['markerset_store'] = array();
+		$pParamHash['keychain_store'] = array();
+		$pParamHash['keychain_update'] = array();
+		$pParamHash['keychain_ids'] = array();
 		
 		if( !empty( $pParamHash['name'] ) ) {
 			$pParamHash['markerset_store']['name'] = $pParamHash['name'];
@@ -1110,11 +1115,43 @@ class BitGmap extends LibertyAttachable {
 		// set values for updating the map set keychain	if its a new set
 		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
 			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
+			$pParamHash['keychain_ids']['gmap_id'] = $pParamHash['gmap_id'];
 		}
 
-		if( !empty( $pParamHash['set_type'] ) ) {
-			$pParamHash['keychain_store']['set_type'] = $pParamHash['set_type'];
+		if( !empty( $pParamHash['plot_on_load'] ) ) {
+			$pParamHash['keychain_store']['plot_on_load'] = $pParamHash['plot_on_load'];
+			$pParamHash['keychain_update']['plot_on_load'] = $pParamHash['plot_on_load'];
+		}else{
+			$pParamHash['keychain_store']['plot_on_load'] = 'false';
+			$pParamHash['keychain_update']['plot_on_load'] = 'false';
 		}
+
+		if( !empty( $pParamHash['side_panel'] ) ) {
+			$pParamHash['keychain_store']['side_panel'] = $pParamHash['side_panel'];
+			$pParamHash['keychain_update']['side_panel'] = $pParamHash['side_panel'];
+		}else{
+			$pParamHash['keychain_store']['side_panel'] = 'false';
+			$pParamHash['keychain_update']['side_panel'] = 'false';
+		}
+
+		if( !empty( $pParamHash['explode'] ) ) {
+			$pParamHash['keychain_store']['explode'] = $pParamHash['explode'];
+			$pParamHash['keychain_update']['explode'] = $pParamHash['explode'];
+		}else{
+			$pParamHash['keychain_store']['explode'] = 'false';
+			$pParamHash['keychain_update']['explode'] = 'false';
+		}
+
+		if( !empty( $pParamHash['cluster'] ) ) {
+			$pParamHash['keychain_store']['cluster'] = $pParamHash['cluster'];
+			$pParamHash['keychain_update']['cluster'] = $pParamHash['cluster'];
+		}else{
+			$pParamHash['keychain_store']['cluster'] = 'false';
+			$pParamHash['keychain_update']['cluster'] = 'false';
+		}
+
+		$pParamHash['keychain_store']['set_type'] = 'markers';
+		$pParamHash['keychain_ids']['set_type'] = 'markers';
 				
 		return( count( $this->mErrors ) == 0 );
 	}
@@ -1129,14 +1166,19 @@ class BitGmap extends LibertyAttachable {
 			// store the posted changes
 			if ( !empty( $pParamHash['set_id'] ) ) {
 				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_marker_sets", $pParamHash['markerset_store'], array( "name" => "set_id", "value" => $pParamHash['set_id'] ) );
+				 // and we update the set keychain on map_id.
+				 $pParamHash['keychain_ids']['set_id'] = $pParamHash['set_id'];
+				 $this->mDb->associateUpdateKeys( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
 			}else{
+				 // if its a new markerset we get a new set_id and store the data
 				 $pParamHash['set_id'] = $this->mDb->GenID( 'gmaps_marker_sets_set_id_seq' );
 				 $pParamHash['markerset_store']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_marker_sets", $pParamHash['markerset_store'] );				 
-				 // if its a new markerset we also get a set_id for the keychain and automaticallly associate it with a map.
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_marker_sets", $pParamHash['markerset_store'] );
+				 // and insert an entry in the set keychain and associate it with a map.
 				 $pParamHash['keychain_store']['set_id'] = $pParamHash['markerset_store']['set_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_store'] );				 
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_store'] );
 			}
+
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
@@ -1192,7 +1234,7 @@ class BitGmap extends LibertyAttachable {
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polyline_sets", $pParamHash['polylineset_store'] );
 				 // if its a new polylineset we also get a set_id for the keychain and automaticallly associate it with a map.
 				 $pParamHash['keychain_store']['set_id'] = $pParamHash['polylineset_store']['set_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_store'] );				 
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_store'] );
 			}
 			$this->mDb->CompleteTrans();
 
@@ -1219,6 +1261,10 @@ class BitGmap extends LibertyAttachable {
 
 		if( ( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) || $pParamHash['style_id'] == 0 ) {
 			$pParamHash['polygonset_store']['style_id'] = $pParamHash['style_id'];
+		}
+
+		if( ( !empty( $pParamHash['polylinestyle_id'] ) && is_numeric( $pParamHash['polylinestyle_id'] ) ) || $pParamHash['polylinestyle_id'] == 0 ) {
+			$pParamHash['polygonset_store']['polylinestyle_id'] = $pParamHash['polylinestyle_id'];
 		}
 
 		// set values for updating the map set keychain	if its a new set
@@ -1708,14 +1754,14 @@ class BitGmap extends LibertyAttachable {
 		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
     		$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_marker_sets` 
-    		WHERE `set_id` =?";
+    			WHERE `set_id` =?";
     		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
     		$this->mDb->CompleteTrans();
   			
   			// delete all references to the marker set from the marker keychain
   			$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_marker_keychain` 
-    		WHERE `set_id` =?";
+    			WHERE `set_id` =?";
     		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
     		$this->mDb->CompleteTrans();
 
@@ -1723,7 +1769,7 @@ class BitGmap extends LibertyAttachable {
   			$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
     			WHERE `set_id` =?
-          AND ( `set_type` = 'set_markers' OR `set_type` = 'init_markers')";
+          		AND `set_type` = 'markers'";
   			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
   			$this->mDb->CompleteTrans();
     		$ret = TRUE;
@@ -1742,14 +1788,14 @@ class BitGmap extends LibertyAttachable {
 		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
     		$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polyline_sets` 
-    		WHERE `set_id` =?";
+    			WHERE `set_id` =?";
     		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
     		$this->mDb->CompleteTrans();
   			
   			// delete all references to the polyline set from the polyline keychain
   			$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polyline_keychain` 
-    		WHERE `set_id` =?";
+    			WHERE `set_id` =?";
     		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
     		$this->mDb->CompleteTrans();
 
@@ -1757,7 +1803,7 @@ class BitGmap extends LibertyAttachable {
   			$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
     			WHERE `set_id` =?
-          AND ( `set_type` = 'set_polylines' OR `set_type` = 'init_polylines' )";					
+          		AND ( `set_type` = 'set_polylines' OR `set_type` = 'init_polylines' )";					
   			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
   			$this->mDb->CompleteTrans();
     		$ret = TRUE;
@@ -1778,14 +1824,14 @@ class BitGmap extends LibertyAttachable {
 		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
     		$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polygon_sets` 
-    		WHERE `set_id` =?";
+    			WHERE `set_id` =?";
     		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
     		$this->mDb->CompleteTrans();
   			
   			// delete all references to the polygon set from the polygon keychain
   			$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polygon_keychain` 
-    		WHERE `set_id` =?";
+    			WHERE `set_id` =?";
     		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
     		$this->mDb->CompleteTrans();
 
@@ -1793,7 +1839,7 @@ class BitGmap extends LibertyAttachable {
   			$this->mDb->StartTrans();
     		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
     			WHERE `set_id` =?
-          AND ( `set_type` = 'set_polygons' OR `set_type` = 'init_polygons' )";					
+          		AND ( `set_type` = 'set_polygons' OR `set_type` = 'init_polygons' )";					
   			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
   			$this->mDb->CompleteTrans();
     		$ret = TRUE;
@@ -1943,12 +1989,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['markerset_remove']['gmap_id'] = $pParamHash['gmap_id'];
 		}
 		
-		if( !empty( $pParamHash['markerset_id'] ) && is_numeric( $pParamHash['markerset_id'] ) ) {
-			$pParamHash['markerset_remove']['set_id'] = $pParamHash['markerset_id'];
-		}
-
-		if( !empty( $pParamHash['set_type'] ) ) {
-			$pParamHash['markerset_remove']['set_type'] = $pParamHash['set_type'];
+		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
+			$pParamHash['markerset_remove']['set_id'] = $pParamHash['set_id'];
 		}
 		
 		return( count( $this->mErrors ) == 0 );
@@ -1965,7 +2007,7 @@ class BitGmap extends LibertyAttachable {
   			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
   			WHERE `gmap_id` = ?
   			AND `set_id` =?
-        AND `set_type` = ?";
+        	AND `set_type` = 'markers'";
   			$result = $this->mDb->query( $query, $pParamHash['markerset_remove'] );
   			$ret = TRUE;
   			$this->mDb->CompleteTrans();
@@ -2048,7 +2090,7 @@ class BitGmap extends LibertyAttachable {
   			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
   			WHERE `gmap_id` = ?
   			AND `set_id` =?
-        AND `set_type` = ?";
+        	AND `set_type` = ?";
   			$result = $this->mDb->query( $query, $pParamHash['polygonset_remove'] );
   			$ret = TRUE;
   			$this->mDb->CompleteTrans();

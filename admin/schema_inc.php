@@ -27,10 +27,17 @@ $tables = array(
  * set_markers, set_polylines, set_polygons, 
  * map_types
  */
+/*
+ * markers, polylines, polygons, map_types
+ */
 'gmaps_sets_keychain' => "
   gmap_id I4 NOTNULL,
-	set_type c(32),
-	set_id I4 NOTNULL
+	set_type c(32) NOTNULL,
+	set_id I4 NOTNULL,
+	plot_on_load C(5) DEFAULT 'true',
+	side_panel C(5) DEFAULT 'true',
+	explode C(5) DEFAULT 'true',
+	cluster C (5) DEFAULT 'false'
 	CONSTRAINTS ', CONSTRAINT `gmaps_map_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."gmaps`( `gmap_id` )'
 ",
 
