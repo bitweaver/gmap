@@ -2364,14 +2364,15 @@ function addIconStyle(rslt){
 
 			//make the icon available
   		if (i.type == 0) {
-  			defineGIcon(editObjectN);
+  			defineGIcon(n);
   		}else if(i.type == 1){
-  			defineXIcon(editObjectN);			
+  			defineXIcon(n);			
   		}
 
 			// clear the form
 			$('iconstyleform_new').reset();
 			// update the styles menus
+			editMarkers();
 			editIconStyles();
 }
 
@@ -2451,7 +2452,7 @@ function updateIconStyle(rslt){
 						attachMarker(n);
 					}
     		}
-    	}
+			}
 }
 
 
