@@ -2131,13 +2131,13 @@ function updateMarkerSet(rslt){
 			var ic = xml.documentElement.getElementsByTagName('icon_id');
 			s.icon_id = parseInt(ic[0].firstChild.nodeValue);
 			var pol = xml.documentElement.getElementsByTagName('plot_on_load');
-			s.plot_on_load = pol[0].firstChild.nodeValue;
+			if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
 			var sp = xml.documentElement.getElementsByTagName('side_panel');
-			s.side_panel = sp[0].firstChild.nodeValue;
+			if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
 			var ex = xml.documentElement.getElementsByTagName('explode');
-			s.explode = ex[0].firstChild.nodeValue;
+			if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
 			var cl = xml.documentElement.getElementsByTagName('cluster');
-			s.cluster = cl[0].firstChild.nodeValue;
+			if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
 
 			if ( ( oldStyle != s.style_id ) || ( oldIcon != s.icon_id ) ) {
 				a = bMData;
@@ -2704,10 +2704,10 @@ function updateIconStyle(rslt){
   		s.pattern = pt[0].firstChild.nodeValue;
 			var sc = xml.documentElement.getElementsByTagName('segment_count');			
   		s.segment_count = parseInt( sc[0].firstChild.nodeValue );
-			var ba = xml.documentElement.getElementsByTagName('begin_arrow');			
-  		s.begin_arrow = ba[0].firstChild.nodeValue;
-			var ea = xml.documentElement.getElementsByTagName('end_arrow');			
-  		s.end_arrow = ea[0].firstChild.nodeValue;
+			var ba = xml.documentElement.getElementsByTagName('begin_arrow');
+			if (ba[0].firstChild.nodeValue == 'true'){ s.begin_arrow = true; }else{ s.begin_arrow = false; };
+			var ea = xml.documentElement.getElementsByTagName('end_arrow');
+			if (ea[0].firstChild.nodeValue == 'true'){ s.end_arrow = true; }else{ s.end_arrow = false; };
 			var ae = xml.documentElement.getElementsByTagName('arrows_every');			
   		s.arrows_every = parseInt( ae[0].firstChild.nodeValue );
 			var te = xml.documentElement.getElementsByTagName('text_every');			
@@ -2732,6 +2732,7 @@ function updateIconStyle(rslt){
 			// clear the form
 			$('polylinestyleform_new').reset();
 			// update the styles menus
+			editPolylines();
 			editPolylineStyles();
 	 }
 
@@ -2761,17 +2762,9 @@ function updateIconStyle(rslt){
 			var sc = xml.documentElement.getElementsByTagName('segment_count');			
   		s.segment_count = parseInt( sc[0].firstChild.nodeValue );
 			var ba = xml.documentElement.getElementsByTagName('begin_arrow');
-			if (ba[0].firstChild.nodeValue == 'true'){
-	  		s.begin_arrow = true;
-			}else{
-	  		s.begin_arrow = false;
-			}
-			var ea = xml.documentElement.getElementsByTagName('end_arrow');			
-			if (ea[0].firstChild.nodeValue == 'true'){
-	  		s.end_arrow = true;
-			}else{
-	  		s.end_arrow = false;
-			}
+			if (ba[0].firstChild.nodeValue == 'true'){ s.begin_arrow = true; }else{ s.begin_arrow = false; };
+			var ea = xml.documentElement.getElementsByTagName('end_arrow');
+			if (ea[0].firstChild.nodeValue == 'true'){ s.end_arrow = true; }else{ s.end_arrow = false; };
 			var ae = xml.documentElement.getElementsByTagName('arrows_every');			
   		s.arrows_every = parseInt( ae[0].firstChild.nodeValue );
 			var te = xml.documentElement.getElementsByTagName('text_every');			
@@ -2798,7 +2791,6 @@ function updateIconStyle(rslt){
 			//for each marker
 			var arrayId = "I";
       	var a = bILData;
-    
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
@@ -2816,6 +2808,8 @@ function updateIconStyle(rslt){
     			}
     		}
     	}
+			// update the polyline menus
+			editPolylines();
 	 }
 
 
