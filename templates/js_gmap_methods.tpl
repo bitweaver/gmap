@@ -142,10 +142,6 @@ function attachMarker(n, o){
 
 
 
-
-
-
-
 function defineGMarker(n, i){
 	var a = bMData;
 
@@ -169,13 +165,13 @@ function defineGMarker(n, i){
 
 
 
-function defineGxMarker(n, c, s){
+function defineGxMarker(n, i, s){
 	var a = bMData;
 
 	var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var icon = null;
-	if (c != null){
-		icon = bMIconData[c].icon;
+	if (i != null){
+		icon = bMIconData[i].icon;
 	}
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new GxMarker(point, icon, mytip);
@@ -186,14 +182,14 @@ function defineGxMarker(n, c, s){
 
 
 
-function definePdMarker(n, c, s){
+function definePdMarker(n, i, s){
 	var a = bMData;
 
 	//PdMarker Style
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var icon = null;
-	if (c != null){
-		icon = bMIconData[c].icon;
+	if (i != null){
+		icon = bMIconData[i].icon;
 	}
   a[n].marker = new PdMarker(point, icon);
   a[n].marker.type = 1;
@@ -208,12 +204,12 @@ function definePdMarker(n, c, s){
 
 
 
-function defineXMarker(n, c, s){
+function defineXMarker(n, i, s){
 	var a = bMData;
 
 	var icon = null;
-	if (c != null){
-		icon = bMIconData[c].icon;
+	if (i != null){
+		icon = bMIconData[i].icon;
 	}
 
 	//XMarker Style
@@ -227,39 +223,16 @@ function defineXMarker(n, c, s){
 
 
 
-function attachPolylines(arrayId){
+function attachPolylines(){
 	//get the array we are working on
-	var a;
-	if (arrayId == "I"){
-  	a = bILData;
-	}else{
-  	a = bSLData;
-	};
-
+	var a = bLData;
 	//if the length of the array is > 0
 	if (a.length > 0){
   	//loop through the array
 		for(n=0; n<a.length; n++){
   		//if the array item is not Null
-			if (a[n]!= null){
-
-				if (a[n].style_id == 0){
-					defineGPolyline(arrayId, n);
-				}else{
-					var stylen;
-					for (var b=0; b<bLStyData.length; b++){
-						if ( bLStyData[b].style_id == a[n].style_id ){
-							stylen = b;
-						}
-					}
-
-					if ( bLStyData[stylen].type == 0){
-						defineGPolyline(arrayId, n, stylen);
-					}else{
-						defineXPolyline(arrayId, n, stylen);
-					}
-				}
-
+			if (a[n]!= null && a[n].plot_on_load == true){
+				attachPolyline(n);
 			}
 		}
 	}
@@ -267,15 +240,30 @@ function attachPolylines(arrayId){
 
 
 
-function defineGPolyline(i, n, s){
-	var a;
-	if (i == "I"){
-  	a = bILData;
+function attachPolyline(n){
+	var a = bLData;
+	if (a[n].style_id == 0){
+		defineGPolyline(n);
 	}else{
-  	a = bSLData;
-	};
+		var s;
+		for (var b=0; b<bLStyData.length; b++){
+			if ( bLStyData[b].style_id == a[n].style_id ){
+				s = b;
+			}
+		}
+		if ( bLStyData[s].type == 0){
+			defineGPolyline(n, s);
+		}else{
+			defineXPolyline(n, s);
+		}
+	}
+}
 
-	//make the array of points needed
+
+
+function defineGPolyline(n, s){
+	var a = bLData;
+
   var pointlist = new Array();
   for (p = 0; p < a[n].points_data.length; p+=2 ){
   	var point = new GPoint(
@@ -285,7 +273,7 @@ function defineGPolyline(i, n, s){
 		pointlist.push(point);
   };
 
-	if (s!=null){
+	if ( s != null ){
     var linecolor = "#"+bLStyData[s].color;
     var lineweight = bLStyData[s].weight;
     var lineopacity = bLStyData[s].opacity;
@@ -297,14 +285,8 @@ function defineGPolyline(i, n, s){
 
 
 
-
-function defineXPolyline(i, n, s){
-	var a;
-	if (i == "I"){
-  	a = bILData;
-	}else{
-  	a = bSLData;
-	};
+function defineXPolyline(n, s){
+	var a = bLData;
 
 	//make the array of points needed
   var pointlist = new Array();
@@ -510,8 +492,8 @@ function loadMap() {ldelim}
 	{/if}
 
 	//Attach Polylines
-	{if count($gContent->mMapInitLines) > 0}
-		attachPolylines("I");
+	{if count($gContent->mMapPolylines) > 0}
+		attachPolylines();
 	{/if}
 
 	//Attach Polygons

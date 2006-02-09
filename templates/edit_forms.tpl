@@ -47,7 +47,7 @@
    			</select><br/>
     <!-- Allow Comments <input name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
     <a name="map_assist_btn" title="click a center!" href="javascript:addAssistant('map');">Use Locating Assistant</a><br/>
-    <input type="button" name="save_map_btn" value="Submit" onclick="javascript:storeMap('edit.php', this.parentNode);"><br/>
+    <input type="button" name="save_map_btn" value="Submit" onclick="javascript:storeMap(document.mapform);"><br/>
    	<input type="button" name="closemapform" value="Cancel" onclick="javascript:canceledit('editmapform');">
     </form>
 </div>	
@@ -164,7 +164,8 @@
                             		</select><br/>
 								Icon<br/><select name="icon_id" id="icon_id">
                         				<option value="0" >Google (standard)</option>
-                        			</select></div>
+                        			</select>
+							</div>
                 		<div style="float:left; padding:0 .4em; width:200px">
     						Plot-On-Load: <select name="plot_on_load">
                       					<option value="true">Yes</option>
@@ -537,30 +538,41 @@
 
 <div id="newpolylinesetform" class="editform" style="display:none;">
 		<h2>Add a New Polyline Set</h2>		
-        <div class="tableheader">
-    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Description </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Style </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Load Option </div>
-    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
-    		</div>
-    		<div class="table" id="editpolylinesettable_new">
-    			<form action="javascript:;" name="polylinesetform_new" id="polylinesetform_new">
+    	<div class="table" id="editpolylinesettable_new">
+    		<form action="javascript:;" name="polylinesetform_new" id="polylinesetform_new">
     			<div class="data">
-          	<div style="float:left; padding:0 .4em; width:10px"><input name="save_polylineset" type="hidden" value="true"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="description" cols="15" rows="3"></textarea></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><select name="style_id" id="style_id">
-                                                                  <option value="0" >Google (standard)</option>
-                                          							   			</select></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><select name="set_type" id="set_type">
-                                                                  <option value="init_polylines" >On Page Load</option>
-                                                                  <option value="set_polylines" >Side Panel Only</option>
-                                          							   			</select></div>
-          	<div style="float:left; padding:0 .4em; width:70px"><a name="new_polylineset_btn" title="save" href="javascript:storeNewPolylineSet('edit_polylineset.php', document.polylinesetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+          			<input name="save_polylineset" type="hidden" value="true">
+          			<div style="float:left; padding:0 .4em; width:90px">
+							New: <input name="name" type="text" size="15" value="a name">
+						</div>
+          			<div style="float:left; padding:0 .4em; width:140px">
+							Description: <textarea name="description" cols="15" rows="3"></textarea>
+						</div>
+          			<div style="float:left; padding:0 .4em; width:140px">
+							Style: <select name="style_id" id="style_id">
+                                    	<option value="0" >Google (standard)</option>
+                                      	</select>
+						</div>
+                	<div style="float:left; padding:0 .4em; width:200px">
+    					Plot-On-Load: <select name="plot_on_load">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select><br/>
+    					Side: <select name="side_panel">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select><br/>
+    					List: <select name="explode">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select><br/>
+						</div>
+          			<div style="float:left; padding:0 .4em; width:70px">
+							ACTION:<br/><a name="new_polylineset_btn" title="save" href="javascript:storeNewPolylineSet(document.polylinesetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+						</div>
     			</div>
-    			</form>
-  		  </div>
+    		</form>
+			</div>
 		<div id="newpolylinesetcancel" style="clear:both;"><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:canceledit('newpolylinesetform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newpolylinesetform -->
@@ -619,7 +631,7 @@
                     	Text BG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
                     	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
 						</div>
-                	<div style="float:left; padding:0 .4em; width:70px">ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:storeNewPolylineStyle('edit_polylinestyle.php', document.polylinestyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+                	<div style="float:left; padding:0 .4em; width:70px">ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:storeNewPolylineStyle(document.polylinestyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
     			</div>
     			</form>
   		  </div>
@@ -676,7 +688,7 @@
                     	Text BG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
                     	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
 						</div>
-                	ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:storePolylineStyle('edit_polylinestyle.php', document.polylinestyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+                	ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:storePolylineStyle(document.polylinestyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
       			</div>
       			</form>
     		  </div>
@@ -709,7 +721,7 @@
           	<div style="float:left; padding:0 .4em; width:90px"><select name="set_id" id="polylineset_id">
                                                                   <option value="n" >someset</option>
                                           							   			</select></div>
-          	<div style="float:left; padding:0 .4em; width:70px"><a name="new_polyline_btn" title="save" href="javascript:storeNewPolyline('edit_polyline.php', document.polylineform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
+          	<div style="float:left; padding:0 .4em; width:70px"><a name="new_polyline_btn" title="save" href="javascript:storeNewPolyline(document.polylineform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
           	<a style="float:left; padding:0 .4em;" name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', 'new');">Use Drawing Assistant</a>
     			</div>
     			</form>
@@ -726,7 +738,6 @@
 		<div id="polylineset_n" style="display:none; clear:both;">
     	<form action="javascript:;" name="polylinesetform_n" id="polylinesetform_n" style="display:none;">
 				<input name="set_id" type="hidden" size="3" value="n">
-				<input name="set_type" type="hidden" size="3" value="n">
             <input name="set_array_n" type="hidden" value="n">
   			<div class="data" id="polylinesetformdata_n">
     			<b id="plsetname">Set Name:</b> <span id="plsetdesc">Description Here</span><br/>
@@ -735,9 +746,21 @@
 					Style: <select name="style_id">
                   				<option value="0">Google (standard)</option>
                       			</select> | 
-    			<a id="plsetstore" href="javascript:storePolylineSet('edit_polylineset.php', set_id);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
-  				<a id="plsetremove" href="javascript:removePolylineSet('edit_polylineset.php', set_id, set_type);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-  				<a id="plsetdelete" href="javascript:expungePolylineSet('edit_polylineset.php', set_id);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
+					Plot-On-Load: <select name="plot_on_load">
+                  				<option value="true">Yes</option>
+                  				<option value="false">No</option>
+                      			</select> | 
+					Side: <select name="side_panel">
+                  				<option value="true">Yes</option>
+                  				<option value="false">No</option>
+                      			</select> | 
+					List: <select name="explode">
+                  				<option value="true">Yes</option>
+                  				<option value="false">No</option>
+                      			</select> | 
+    			<a id="plsetstore" href="javascript:storePolylineSet(document.polylinesetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+  				<a id="plsetremove" href="javascript:removePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+  				<a id="plsetdelete" href="javascript:expungePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
   			</div>
         </form>
 			<div id="plsetform_n" style="display:none;">
@@ -761,10 +784,10 @@
                 		<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>						
                 		<div style="float:left; padding:0;"><input name="polyline_array" type="hidden" value=""></div>
                 		<div style="float:left; padding:0;"><input name="polyline_array_n" type="hidden" value=""></div>
-                		<a style="float:left; padding:0 .4em;" name="save_polyline_btn" title="save" href="javascript:storePolyline('edit_polyline.php', document.polylineform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+                		<a style="float:left; padding:0 .4em;" name="save_polyline_btn" title="save" href="javascript:storePolyline(document.polylineform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
                 		<a style="float:left; padding:0 .4em;" name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-                		<a style="float:left; padding:0 .4em;" name="remove_polyline_btn" title="remove from this set" href="javascript:removePolyline('edit_polyline.php', document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-                		<a style="float:left; padding:0 .4em;" name="expunge_polyline_btn" title="delete the polyline!" href="javascript:expungePolyline('edit_polyline.php', document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="remove_polyline_btn" title="remove from this set" href="javascript:removePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+                		<a style="float:left; padding:0 .4em;" name="expunge_polyline_btn" title="delete the polyline!" href="javascript:expungePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
                 		<a style="float:left; padding:0 .4em;" name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', n);">Use Drawing Assistant</a>
         			</div>
     			</form>

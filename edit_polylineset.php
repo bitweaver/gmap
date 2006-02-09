@@ -31,6 +31,9 @@ if (!empty($_REQUEST["save_polylineset"])) {
       		  ."<name>".$result->fields['name']."</name>"
       		  ."<description>".$result->fields['description']."</description>"
       		  ."<style_id>".$result->fields['style_id']."</style_id>"
+      		  ."<plot_on_load>".$result->fields['plot_on_load']."</plot_on_load>"
+      		  ."<side_panel>".$result->fields['side_panel']."</side_panel>"
+      		  ."<explode>".$result->fields['explode']."</explode>"
 						."</polylineset>";
 				
     }else{
