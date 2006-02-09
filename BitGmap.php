@@ -519,9 +519,11 @@ class BitGmap extends LibertyAttachable {
 	function getPolygonSetData($set_id) {
 		global $gBitSystem;
 		if ($set_id && is_numeric($set_id)) {
-			$query = "SELECT bs.*
+			$query = "SELECT bs.*, bsk.*
 			FROM `".BIT_DB_PREFIX."gmaps_polygon_sets` bs
-			WHERE bs.set_id = ?";
+			INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk ON ( bsk.`set_id` = bs.`set_id` )
+			WHERE bs.set_id = ?
+			AND bsk.`set_type` = 'polygons'";
   		$result = $this->mDb->query( $query, array((int)$set_id));
 		}
 		return $result;
@@ -1336,8 +1338,8 @@ class BitGmap extends LibertyAttachable {
 
 		$pParamHash['keychain_store']['cluster'] = 'false';
 		$pParamHash['keychain_update']['cluster'] = 'false';
-		$pParamHash['keychain_store']['set_type'] = 'polylines';
-		$pParamHash['keychain_ids']['set_type'] = 'polylines';
+		$pParamHash['keychain_store']['set_type'] = 'polygons';
+		$pParamHash['keychain_ids']['set_type'] = 'polygons';
 
 		return( count( $this->mErrors ) == 0 );		
 		

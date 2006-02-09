@@ -1654,7 +1654,9 @@ function newPolygonStyle(){
 	 
 	 function storeNewPolygonSet(f){
 			canceledit('editerror');
-	 		var str = "edit_polygonset.php?" + queryString(f) + "&set_type=polygons" + "&gmap_id=" + bMapID;
+	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + bMapID;
+$('editerror').innerHTML = str;
+show('editerror');
 			doSimpleXMLHttpRequest(str).addCallback( addPolygonSet );
 	 }
 
