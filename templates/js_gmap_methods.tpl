@@ -326,14 +326,9 @@ function defineXPolyline(n, s){
 
 
 
-function attachPolygons(arrayId){
+function attachPolygons(){
 	//get the array we are working on
-	var a;
-	if (arrayId == "I"){
-  	a = bIPData;
-	}else{
-  	a = bSPData;
-	};
+	var a = bPData;
 
 	//if the length of the array is > 0
 	if (a.length > 0){
@@ -341,36 +336,35 @@ function attachPolygons(arrayId){
 		for(n=0; n<a.length; n++){
   		//if the array item is not Null
 			if (a[n]!= null){
-					var lstylen;
-					var pstylen;
-					for (var b=0; b<bLStyData.length; b++){
-						if ( bLStyData[b].style_id == a[n].polylinestyle_id ){
-							lstylen = b;
-						}
-					}
-					for (var c=0; c<bPStyData.length; c++){
-						if ( bPStyData[c].style_id == a[n].style_id ){
-							pstylen = c;
-						}
-					}
-					defineXPolygon(arrayId, n, lstylen, pstylen);
+				attachPolygon(n);
 			}
 		}
 	}
 };
 
 
+function attachPolygon(n){
+	var s;
+	var p;
+	for (var b=0; b<bLStyData.length; b++){
+		if ( bLStyData[b].style_id == bPData[n].polylinestyle_id ){
+			s = b;
+		}
+	}
+	for (var c=0; c<bPStyData.length; c++){
+		if ( bPStyData[c].style_id == bPData[n].style_id ){
+			p = c;
+		}
+	}
+	defineXPolygon(n, s, p);
+}
 
-function defineXPolygon(i, n, s, p){
+
+function defineXPolygon(n, s, p){
 	var fillstyle = {};
 	var linestyle = {};
 
-	var a;
-	if (i == "I"){
-  	a = bIPData;
-	}else{
-  	a = bSPData;
-	};
+	var a = bPData;
 
 	//Create XPolygon styles
  	if (p != null){
@@ -485,20 +479,17 @@ function loadMap() {ldelim}
 	{if count($gContent->mMapIconStyles) > 0}
 		attachIcons();
 	{/if}
-		
 	//Attach Markers
 	{if count($gContent->mMapMarkers) > 0}
 		attachMarkers();
 	{/if}
-
 	//Attach Polylines
 	{if count($gContent->mMapPolylines) > 0}
 		attachPolylines();
 	{/if}
-
 	//Attach Polygons
-	{if count($gContent->mMapInitPolygons) > 0}
-		attachPolygons("I");
+	{if count($gContent->mMapPolygons) > 0}
+		attachPolygons();
 	{/if}
 
 	//opens any infoWindow when clicked if it has content	my_html

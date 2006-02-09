@@ -24,20 +24,20 @@ var editSetType;
 
 // for sorting arrays
 function sortOn(a,b){ 
-				 return a['set_id']-b['set_id']; 
-		} 
+	return a['set_id']-b['set_id']; 
+} 
 
 function sortIt(pParamHash){
-		pParamHash.sort(sortOn); 
+	pParamHash.sort(sortOn); 
 }
 
 // for displaying and hiding menu parts
 function show (i){
-				 $(i).style.display = "block";
+	$(i).style.display = "block";
 };
 
 function canceledit(i){
-   			$(i).style.display = "none";	
+	$(i).style.display = "none";	
 };
 
 
@@ -1154,7 +1154,7 @@ function editPolygons(){
 	show('editpolygoncancel');
 	
 	//if polygon data exists
-	if ( typeof(bIPData) ) {
+	if ( typeof(bPData) ) {
 
   	// We assume editPolygons has been called before and remove 
   	// any previously existing sets from the UI
@@ -1227,15 +1227,17 @@ function editPolygons(){
      			if (dataKids[c].id == "pgsetdesc"){dataKids[c].innerHTML = bPSetData[b].description;}
     			if (dataKids[c].id == "pgsetedit"){dataKids[c].href = "javascript:editPolygonSet("+newSetId+");";}
     			if (dataKids[c].id == "pgsetadd"){dataKids[c].href = "javascript:alert('feature coming soon');";}
-    			if (dataKids[c].id == "pgsetstore"){dataKids[c].href = "javascript:storePolygonSet('edit_polygonset.php', document.polygonsetform_"+newSetId+");";}
-    			if (dataKids[c].id == "pgsetremove"){dataKids[c].href = "javascript:removePolygonSet('edit_polygonset.php', document.polygonsetform_"+newSetId+");";}
-    			if (dataKids[c].id == "pgsetdelete"){dataKids[c].href = "javascript:expungePolygonSet('edit_polygonset.php', document.polygonsetform_"+newSetId+");";}
+    			if (dataKids[c].id == "pgsetstore"){dataKids[c].href = "javascript:storePolygonSet(document.polygonsetform_"+newSetId+");";}
+    			if (dataKids[c].id == "pgsetremove"){dataKids[c].href = "javascript:removePolygonSet(document.polygonsetform_"+newSetId+");";}
+    			if (dataKids[c].id == "pgsetdelete"){dataKids[c].href = "javascript:expungePolygonSet(document.polygonsetform_"+newSetId+");";}
 				}
 
 				//get form and update values
 				form = $('polygonsetform_'+newSetId);
 				form.set_id.value = newSetId;
-				form.set_type.value = bPSetData[b].set_type;
+				if (bPSetData[b].plot_on_load == false){ form.plot_on_load.options[1].selected=true; };
+				if (bPSetData[b].side_panel == false){ form.side_panel.options[1].selected=true; };
+				if (bPSetData[b].explode == false){ form.explode.options[1].selected=true };
 				form.set_array_n.value = b;
 				if ( (typeof(bPStyData) != 'undefined') && (bPStyData.length > 0) ){
 					var OptionN = form.style_id.options.length;
@@ -1261,11 +1263,11 @@ function editPolygons(){
 		}			
 
   	//for length of polygons add form to setelement on matching set_id
-  	for (g=0; g<bIPData.length; g++) {
-			if (bIPData[g]!= null){
+  	for (g=0; g<bPData.length; g++) {
+			if (bPData[g]!= null){
 
 				//add polygon form...again a little ugly here
-				var formCont = $("editpolygontable_"+bIPData[g].set_id);
+				var formCont = $("editpolygontable_"+bPData[g].set_id);
 
   			formContKids = formCont.childNodes;
 
@@ -1282,7 +1284,7 @@ function editPolygons(){
     					}
     				}
     							
-        			$('editpolygontable_'+bIPData[g].set_id).appendChild(newPolygonForm);
+        			$('editpolygontable_'+bPData[g].set_id).appendChild(newPolygonForm);
     				show('polygonform_'+g);
     			}
     		}
@@ -1290,21 +1292,21 @@ function editPolygons(){
 				// populate set form values
 				form = $('polygonform_'+g);
 
-            form.set_id.value = bIPData[g].set_id;
-            form.polygon_id.value = bIPData[g].polygon_id;
-            form.name.value = bIPData[g].name;
-				if (bIPData[g].circle == false){
+            form.set_id.value = bPData[g].set_id;
+            form.polygon_id.value = bPData[g].polygon_id;
+            form.name.value = bPData[g].name;
+				if (bPData[g].circle == false){
 					form.circle.options[0].selected=true;
 				}else{
 					form.circle.options[1].selected=true;
 				}
-            form.points_data.value = bIPData[g].points_data;
-            form.circle_center.value = bIPData[g].circle_center;
-            form.radius.value = bIPData[g].radius;
-            form.border_text.value = bIPData[g].border_text;
-            form.zindex.value = bIPData[g].zindex;
-            form.polygon_array.value = bIPData[g].array;
-            form.polygon_array_n.value = bIPData[g].array_n;
+            form.points_data.value = bPData[g].points_data;
+            form.circle_center.value = bPData[g].circle_center;
+            form.radius.value = bPData[g].radius;
+            form.border_text.value = bPData[g].border_text;
+            form.zindex.value = bPData[g].zindex;
+            form.polygon_array.value = bPData[g].array;
+            form.polygon_array_n.value = bPData[g].array_n;
 				
 				// just for a pretty button - js sucks it!
 				var linkParent = $('polygonformdata_'+g);
@@ -1627,67 +1629,62 @@ function newPolygonStyle(){
 			doSimpleXMLHttpRequest(str).addCallback( updatePolylineStyle ); 
 	 }
 	 
-	 function storeNewPolygon(u, f){
+	 function storeNewPolygon(f){
 			editSetId = f.set_id.value;
 	 		var str = "edit_polygon.php?" + queryString(f) + "&save_polygon=true";
 			doSimpleXMLHttpRequest(str).addCallback( addPolygon );
 	 }
 	 
-	 function storePolygon(u, f){
-			editArray = f.polygon_array.value;
+	 function storePolygon(f){
 			editObjectN = f.polygon_array_n.value;
 			doSimpleXMLHttpRequest("edit_polygon.php", f).addCallback( updatePolygon );
 	 }
 	 
-	 function removePolygon(u, f){
+	 function removePolygon(f){
 			editSetId = f.set_id.value;
 			editPolygonId = f.polygon_id.value;
-	 		var str = "edit_polygon.php?set_id=" + editSetId + "&polygon_id=" + editPolygonId + "&remove_polygon=true";
+	 		var str = "edit_polygon.php?set_id=" + editSetId + "&polygon_id=" + f.polygon_id.value + "&remove_polygon=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygon );
 	 }
 
-	 function expungePolygon(u, f){
+	 function expungePolygon(f){
 			editSetId = f.set_id.value;
 			editPolygonId = f.polygon_id.value;
-	 		var str = "edit_polygon.php?polygon_id=" + editPolygonId + "&expunge_polygon=true";
+	 		var str = "edit_polygon.php?polygon_id=" + f.polygon_id.value + "&expunge_polygon=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygon );
 	 }	 
 	 
-	 function storeNewPolygonSet(u, f){
+	 function storeNewPolygonSet(f){
 			canceledit('editerror');
-			editSetType = f.set_type.value;
-	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + bMapID;
+	 		var str = "edit_polygonset.php?" + queryString(f) + "&set_type=polygons" + "&gmap_id=" + bMapID;
 			doSimpleXMLHttpRequest(str).addCallback( addPolygonSet );
 	 }
 
-	 function storePolygonSet(u, f){
+	 function storePolygonSet(f){
 			editSetId = f.set_id.value;
 			editObjectN = f.set_array_n.value;
-			editSetType = f.set_type.value;
 	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + bMapID + "&save_polygonset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updatePolygonSet );
 	 }
 
-	 function removePolygonSet(u, f){
+	 function removePolygonSet(f){
 			editSetId = f.set_id.value;
-			editObjectN = f.set_array_n.value;
-			editSetType = f.set_type.value;
-	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + bMapID + "&remove_polygonset=true";
+	 		var str = "edit_polygonset.php?set_id=" + f.set_id.value + "&gmap_id=" + bMapID + "&remove_polygonset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygonSet );
 	 }
 	 
-	 function expungePolygonSet(u, f){
+	 function expungePolygonSet(f){
 			editSetId = f.set_id.value;
-	 		var str = "edit_polygonset.php?" + "set_id=" + editSetId + "&expunge_polygonset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateExpungePolygonSet );
+	 		var str = "edit_polygonset.php?set_id=" + f.set_id.value + "&expunge_polygonset=true";
+			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygonSet );
 	 }
 
-	 function storeNewPolygonStyle(u, f){
+	 function storeNewPolygonStyle(f){
 	 		var str = "edit_polygonstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( addPolygonStyle ); 
 	 }
 
-	 function storePolygonStyle(u, f){
+	 function storePolygonStyle(f){
 			editObjectN = f.style_array_n.value;
 	 		var str = "edit_polygonstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( updatePolygonStyle ); 
@@ -2466,9 +2463,16 @@ function updateIconStyle(rslt){
  *
  *******************/	 
 
-	 function addPolyline(rslt){
+function addPolyline(rslt){
       	var xml = rslt.responseXML;
 	 		var s;
+
+			//this is such a crappy way to get this number
+			for(var a=0; a<bLSetData.length; a++){
+				if (bLSetData[a] != null && bLSetData[a].set_id == editSetId){
+					s = a;
+				}
+			};
 
   		var n = bLData.length;
   		bLData[n] = new Array();
@@ -2487,13 +2491,6 @@ function updateIconStyle(rslt){
 			p.border_text = bt[0].firstChild.nodeValue;
 			var zi = xml.documentElement.getElementsByTagName('zindex');
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
-
-			//this is such a crappy way to get this number
-			for(var a=0; a<bLSetData.length; a++){
-				if (bLSetData[a] != null && bLSetData[a].set_id == editSetId){
-					s = a;
-				}
-			};
 			
 			p.set_id = bLSetData[s].set_id;
 			p.style_id = bLSetData[s].style_id;
@@ -2511,7 +2508,7 @@ function updateIconStyle(rslt){
 			editPolylines();
 			editPolylineSet(editSetId);
 			removeAssistant();
-	}	
+}	
 
 
 
@@ -2733,16 +2730,30 @@ function updateIconStyle(rslt){
 			var tbi = xml.documentElement.getElementsByTagName('text_bgstyle_zindex');			
   		s.text_bgstyle_zindex = parseInt( tbi[0].firstChild.nodeValue );
 
-			//for each marker
+			//for each polyline
       	var a = bLData;
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
     		for(n=0; n<a.length; n++){
       		//if the array item is not Null
-        		if (a[n]!= null && a[n].polyline != true && a[n].style_id == s.style_id){
-						map.removeOverlay(a[n].polyline);
+        		if (a[n]!= null && a[n].polyline != null && a[n].style_id == s.style_id){
+						map.removeOverlay( a[n].polyline );
         			attachPolyline(n);
+    			}
+    		}
+    	}
+
+			//for each polygon
+      	var b = bPData;
+    	//if the length of the array is > 0
+    	if (b.length > 0){
+      	//loop through the array
+    		for(i=0; i<b.length; i++){
+      		//if the array item is not Null
+        		if (b[i]!= null && b[i].polygon != null && b[i].style_id == s.style_id){
+						map.removeOverlay( b[i].polygon );
+        			attachPolygon(i);
     			}
     		}
     	}
@@ -2755,17 +2766,17 @@ function updateIconStyle(rslt){
 
 
 	
-	function updateRemovePolyline(){
-			for (var i=0; i<bLData.length; i++){
-					if ( ( bLData[i] != null ) && ( bLData[i].polyline_id == editPolylineId ) ){
-						map.removeOverlay(bLData[i].polyline);
-						bLData[i] = null;
-						break;
-					}
-			}
-			editPolylines();
-			editPolylineSet(editSetId);
+function updateRemovePolyline(){
+	for (var i=0; i<bLData.length; i++){
+		if ( bLData[i] != null && bLData[n].polyline != null && bLData[i].polyline_id == editPolylineId ){
+			map.removeOverlay(bLData[i].polyline);
+			bLData[i].polyline = null;
+			bLData[i] = null;
+		}
 	}
+	editPolylines();
+	editPolylineSet(editSetId);
+}
 
 
 
@@ -2802,32 +2813,20 @@ function updateRemovePolylineSet(){
  *
  *******************/	 
 
-	 function addPolygon(rslt){
+function addPolygon(rslt){
       	var xml = rslt.responseXML;
 	 		var s;
-			var n;
-			var p;
 
 			for(var a=0; a<bPSetData.length; a++){
-					if ( ( bPSetData[a] != null ) && ( bPSetData[a].set_id == editSetId ) ){
-						 s = a;
-						 editArray = bPSetData[a].set_type;
-					}
+				if ( bPSetData[a] != null && bPSetData[a].set_id == editSetId ){
+					s = a;
+				}
 			};
 
-			if (editArray == "init_polygons"){
-  			n = bIPData.length;
-  			bIPData[n] = new Array();
-				p = bIPData[n];
-  			p.array = "I";
-  			p.array_n = n;
-			}else{
-  			n = bSPData.length;
-  			bSPData[n] = new Array();
-				p = bSPData[n];
-  			p.array = "S";
-  			p.array_n = n;
-			};
+  		var n = bPData.length;
+  		bPData[n] = new Array();
+			var p = bPData[n];
+  		p.array_n = n;
 			
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('polygon_id');			
@@ -2849,24 +2848,16 @@ function updateRemovePolylineSet(){
 			var zi = xml.documentElement.getElementsByTagName('zindex');
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 
-			p.set_id = parseFloat(bPSetData[s].set_id);
-			p.polylinestyle_id = parseFloat(bPSetData[s].polylinestyle_id);
-			p.style_id = parseFloat(bPSetData[s].style_id);
+			p.set_id = bPSetData[s].set_id;
+			p.style_id = bPSetData[s].style_id;
+			p.polylinestyle_id = bPSetData[s].polylinestyle_id;
+			p.plot_on_load = bPSetData[s].plot_on_load;
+			p.side_panel = bPSetData[s].side_panel;
+			p.explode = bPSetData[s].explode;
+			p.array_n = parseInt(n);
 
 			//create polygon
-			var lstylen;
-			var pstylen;
-			for (var b=0; b<bLStyData.length; b++){
-				if ( bLStyData[b].style_id == p.polylinestyle_id ){
-					lstylen = b;
-				}
-			}
-			for (var c=0; c<bPStyData.length; c++){
-				if ( bPStyData[c].style_id == p.style_id ){
-					pstylen = c;
-				}
-			}
-			defineXPolygon(p.array, p.array_n, lstylen, pstylen);
+			attachPolygon(n);
 
 			// clear the form
 			$('polygonform_new').reset();
@@ -2874,15 +2865,14 @@ function updateRemovePolylineSet(){
 			editPolygons();
 			editPolygonSet(editSetId);
 			removeAssistant();
-	}	
+}	
 
 
 
-	 function updatePolygon(rslt){
+function updatePolygon(rslt){
 			var xml = rslt.responseXML;
-			var p;
-
-			if (editArray == "I"){p = bIPData[editObjectN];}else{p = bSPData[editObjectN];};
+			var n = editObjectN;
+			var p = bPData[n];
 			
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('polygon_id');			
@@ -2906,29 +2896,16 @@ function updateRemovePolylineSet(){
 			
 			//remove old version
 			map.removeOverlay(p.polygon);
-
 			//create polygon
-			var lstylen;
-			var pstylen;
-			for (var b=0; b<bLStyData.length; b++){
-				if ( bLStyData[b].style_id == p.polylinestyle_id ){
-					lstylen = b;
-				}
-			}
-			for (var c=0; c<bPStyData.length; c++){
-				if ( bPStyData[c].style_id == p.style_id ){
-					pstylen = c;
-				}
-			}
-			defineXPolygon(p.array, p.array_n, lstylen, pstylen);
+			attachPolygon(n);
 
 			removeAssistant();
-	}
+}
 
 
 
 
-	 function addPolygonSet(rslt){
+function addPolygonSet(rslt){
       var xml = rslt.responseXML;
 
 			//@todo modify this to handle either bLData or bSLData sets
@@ -2947,20 +2924,25 @@ function updateRemovePolylineSet(){
 			s.style_id = parseInt(sy[0].firstChild.nodeValue);
 			var psy = xml.documentElement.getElementsByTagName('polylinestyle_id');
 			s.polylinestyle_id = parseInt(psy[0].firstChild.nodeValue);
-			
-  		s.set_type = editSetType;
+			var pol = xml.documentElement.getElementsByTagName('plot_on_load');
+			if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
+			var sp = xml.documentElement.getElementsByTagName('side_panel');
+			if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
+			var ex = xml.documentElement.getElementsByTagName('explode');
+			if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
+  		s.set_type = 'polygons';
 			
 			// clear the form
 			$('polygonsetform_new').reset();
 			// update the sets menus
 			if ( $('newpolygonform').style.display == "block" ){ newPolygon(); };
 			editPolygons();
-	 }
+}
 
 
 
 
-	function updatePolygonSet(rslt){
+function updatePolygonSet(rslt){
       	var xml = rslt.responseXML;
 
 			var s = bPSetData[editObjectN];
@@ -2978,48 +2960,39 @@ function updateRemovePolylineSet(){
 			s.style_id = parseInt(sy[0].firstChild.nodeValue);			
 			var psy = xml.documentElement.getElementsByTagName('polylinestyle_id');
 			s.polylinestyle_id = parseInt(psy[0].firstChild.nodeValue);
+			var pol = xml.documentElement.getElementsByTagName('plot_on_load');
+			if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
+			var sp = xml.documentElement.getElementsByTagName('side_panel');
+			if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
+			var ex = xml.documentElement.getElementsByTagName('explode');
+			if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
 
 			if ( oldStyle != s.style_id || oldLineStyle != s.polylinestyle_id) {
-				var arrayId = "I";
-				a = bIPData;
+				a = bPData;
            	//if the length of the array is > 0
            	if (a.length > 0){
              	//loop through the array
            		for(n=0; n<a.length; n++){
              		//if the array item is not Null
-           			if (a[n]!= null){
-       					if (a[n].set_id == s.set_id){
-								//update the style ids
-								a[n].style_id = s.style_id;
-								a[n].polylinestyle_id = s.polylinestyle_id
-								//unload the polygon
-         					map.removeOverlay( a[n].polygon );
-                 			//create polygon
-        					var lstylen;
-        					var pstylen;
-        					for (var b=0; b<bLStyData.length; b++){
-        						if ( bLStyData[b].style_id == a[n].polylinestyle_id ){
-        							lstylen = b;
-        						}
-        					}
-        					for (var c=0; c<bPStyData.length; c++){
-        						if ( bPStyData[c].style_id == a[n].style_id ){
-        							pstylen = c;
-        						}
-        					}
-        					defineXPolygon(arrayId, n, lstylen, pstylen);
-       					}
+           			if (a[n]!= null && a[n].polygon != null && a[n].set_id == s.set_id){
+							//update the style ids
+							a[n].style_id = s.style_id;
+							a[n].polylinestyle_id = s.polylinestyle_id
+							//unload the polygon
+         				map.removeOverlay( a[n].polygon );
+                 		//create polygon
+							attachPolygon(n);
        				}
        			}
        		}
 			};
 			// update the sets menus
 			editPolygons();
-	}
+}
 
 
 
-	 function addPolygonStyle(rslt){
+function addPolygonStyle(rslt){
       var xml = rslt.responseXML;
 
 			// create a spot for a new polygonstyle in the data array
@@ -3045,11 +3018,12 @@ function updateRemovePolylineSet(){
 			$('polygonstyleform_new').reset();
 			// update the styles menus
 			editPolygonStyles();
-	 }
+			editPolygons();
+}
 
 
 
-	 function updatePolygonStyle(rslt){
+function updatePolygonStyle(rslt){
       	var xml = rslt.responseXML;
 
 			//get the style we are updating
@@ -3069,117 +3043,61 @@ function updateRemovePolylineSet(){
 			var op = xml.documentElement.getElementsByTagName('opacity');			
   		s.opacity = op[0].firstChild.nodeValue;
 
-			//@todo - this needs to be made to support more than just init_polygons
 			//update all polygons
-			//for each marker
-			var arrayId = "I";
-      	var a = bIPData;
-    
+      	var a = bPData;    
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
     		for(n=0; n<a.length; n++){
       		//if the array item is not Null
-    			if (a[n]!= null){
-						if (a[n].style_id == s.style_id){
-							map.removeOverlay(a[n].polygon);
-        				var lstylen;
-        				var pstylen;
-        				for (var b=0; b<bLStyData.length; b++){
-        					if ( bLStyData[b].style_id == a[n].polylinestyle_id ){
-        						lstylen = b;
-        					}
-        				}
-        				for (var c=0; c<bPStyData.length; c++){
-        					if ( bPStyData[c].style_id == a[n].style_id ){
-        						pstylen = c;
-        					}
-        				}
-        				defineXPolygon(arrayId, n, lstylen, pstylen);
-						}
+    			if (a[n]!= null && a[n].polygon != null && a[n].style_id == s.style_id){
+						map.removeOverlay(a[n].polygon);
+						attachPolygon(n);
     			}
     		}
     	}
-	 }
 
-
-
-	function updateRemovePolygon(){
-			for (var i=0; i<bIPData.length; i++){
-					if ( ( bIPData[i] != null ) && ( bIPData[i].polygon_id == editPolygonId ) ){
-						map.removeOverlay(bIPData[i].polygon);
-						bIPData[i] = null;
-						break;
-					}
-			}
+			// update the styles menus
+			editPolygonStyles();
 			editPolygons();
-			editPolygonSet(editSetId);
-	}
+}
 
 
 
-	function updateRemovePolygonSet(){
-  	if (editSetType == 'init_polygons') {
-  			for (var i=0; i<bIPData.length; i++){
-  					if ( ( bIPData[i] != null ) && ( bIPData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bIPData[i].polygon);
-  						bIPData[i] = null;
-  					}
-  			}
-  	}else{
-  			for (var i=0; i<bSPData.length; i++){
-  					if ( ( bSPData[i] != null ) && ( bSPData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bSPData[i].polygon);
-  						bSPData[i] = null;
-  					}
-  			}
-		}		
-		for (var j=0; j<bPSetData.length; j++){
-  			if ( ( bPSetData[j] != null ) && ( bPSetData[j].set_id == editSetId ) ){
-      		var getElem = "polygonset_"+bPSetData[j].set_id;
-      		if ( $(getElem) ) {
-          	var extraPolygonForm = $(getElem);
-      			$('editpolygonform').removeChild(extraPolygonForm);
-      		}
-  				bPSetData[j] = null;
-  			}
+function updateRemovePolygon(){
+	for (var n=0; n<bPData.length; n++){
+		if ( bPData[n] != null && bPData[n].polygon != null && bPData[n].polygon_id == editPolygonId ){
+			map.removeOverlay(bPData[n].polygon);
+			bPData[n].polygon = null;
+			bPData[n] = null;
 		}
 	}
+	editPolygons();
+	editPolygonSet(editSetId);
+}
 
 
-
-	function updateExpungePolygonSet(){
-  			for (var i=0; i<bIPData.length; i++){
-  					if ( ( bIPData[i] != null ) && ( bIPData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bIPData[i].polygon);
-  						bIPData[i] = null;
-  					}
-  			}
-				/**  
-				 * This is turned off, cause when it doesn't exist it breaks. 
-				 * The thing to do is to always create the array, but not fill it out
-				 * if there are no markers, then all detection to see if the array exists
-				 * can be striped from the code
-				 **/
-				/*
-  			for (var i=0; i<bSPData.length; i++){
-  					if ( ( bSPData[i] != null ) && ( bSPData[i].set_id == editSetId ) ){
-  						map.removeOverlay(bSPData[i].polygon);
-  						bSPData[i] = null;
-  					}
-  			}
-				*/
-    		for (var j=0; j<bPSetData.length; j++){
-      			if ( ( bPSetData[j] != null ) && ( bPSetData[j].set_id == editSetId ) ){
-          		var getElem = "polygonset_"+bPSetData[j].set_id;
-          		if ( $(getElem) ) {
-              	var extraPolygonForm = $(getElem);
-          			$('editpolygonform').removeChild(extraPolygonForm);
-          		}
-      				bPSetData[j] = null;
-      			}
-    		}
+function updateRemovePolygonSet(){
+	for (var n=0; n<bPData.length; n++){
+		if ( bPData[n] != null && bPData[n].polygon != null && bPData[n].set_id == editSetId ){
+			map.removeOverlay(bPData[n].polygon);
+			bPData[n].polygon = null;
+			bPData[n] = null;
+		}
 	}
+	for (var s=0; s<bPSetData.length; s++){
+		if ( ( bPSetData[s] != null ) && ( bPSetData[s].set_id == editSetId ) ){
+			var getElem = "polygonset_"+bPSetData[s].set_id;
+			if ( $(getElem) ) {
+				var extraPolygonForm = $(getElem);
+				$('editpolygonform').removeChild(extraPolygonForm);
+			}
+			bPSetData[s].set_id = null;
+			bPSetData[s] = null;
+  	}
+	}
+}
+
 
 
 
@@ -3232,8 +3150,6 @@ function updateRemovePolylineSet(){
               	});
 	}
 
-
-
  	if (a == 'polygon'){
 		bModForm = $('polygonform_'+b);
 
@@ -3276,7 +3192,6 @@ function updateRemovePolylineSet(){
               	});
 		}
 	}
-
 	
 	if (a == 'marker'){
 		bModForm = $('markerform_'+b);
@@ -3298,7 +3213,6 @@ function updateRemovePolylineSet(){
     });
 	}
 
-
 	if (a == 'map'){
 		f = $('mapform');
 		alert ('Map centering assistant activated. \n Click to get center lat and lon values!');
@@ -3311,7 +3225,6 @@ function updateRemovePolylineSet(){
       }
     });
 	}
-
 
 }	
 

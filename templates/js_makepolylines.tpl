@@ -29,35 +29,35 @@ var bLData = new Array();
 
 
 var bLStyData = new Array();
-{if ( count($gContent->mMapPolylineStyles) > 0 ) }
-	{section name=linestyles loop=$gContent->mMapPolylineStyles}
-		bLStyData[{$smarty.section.linestyles.index}] = new Array();
-		bLStyData[{$smarty.section.linestyles.index}].style_id = {$gContent->mMapPolylineStyles[linestyles].style_id};
-		bLStyData[{$smarty.section.linestyles.index}].name = "{$gContent->mMapPolylineStyles[linestyles].name}";
-		bLStyData[{$smarty.section.linestyles.index}].type = {$gContent->mMapPolylineStyles[linestyles].type};
-		bLStyData[{$smarty.section.linestyles.index}].color = "{$gContent->mMapPolylineStyles[linestyles].color}";
-		bLStyData[{$smarty.section.linestyles.index}].weight = {$gContent->mMapPolylineStyles[linestyles].weight};
-		bLStyData[{$smarty.section.linestyles.index}].opacity = {$gContent->mMapPolylineStyles[linestyles].opacity};
-		bLStyData[{$smarty.section.linestyles.index}].pattern = new Array();
-		{if $gContent->mMapPolylineStyles[linestyles].pattern != NULL}
-			bLStyData[{$smarty.section.linestyles.index}].pattern = {$gContent->mMapPolylineStyles[linestyles].pattern};
+{if count($gContent->mMapPolylineStyles) > 0 }
+	{section name=style_n loop=$gContent->mMapPolylineStyles}
+		bLStyData[{$smarty.section.style_n.index}] = new Array();
+		bLStyData[{$smarty.section.style_n.index}].style_id = {$gContent->mMapPolylineStyles[style_n].style_id};
+		bLStyData[{$smarty.section.style_n.index}].name = "{$gContent->mMapPolylineStyles[style_n].name}";
+		bLStyData[{$smarty.section.style_n.index}].type = {$gContent->mMapPolylineStyles[style_n].type};
+		bLStyData[{$smarty.section.style_n.index}].color = "{$gContent->mMapPolylineStyles[style_n].color}";
+		bLStyData[{$smarty.section.style_n.index}].weight = {$gContent->mMapPolylineStyles[style_n].weight};
+		bLStyData[{$smarty.section.style_n.index}].opacity = {$gContent->mMapPolylineStyles[style_n].opacity};
+		bLStyData[{$smarty.section.style_n.index}].pattern = new Array();
+		{if $gContent->mMapPolylineStyles[style_n].pattern != NULL}
+			bLStyData[{$smarty.section.style_n.index}].pattern = {$gContent->mMapPolylineStyles[style_n].pattern};
 		{/if}
-		bLStyData[{$smarty.section.linestyles.index}].segment_count = {$gContent->mMapPolylineStyles[linestyles].segment_count};
-		bLStyData[{$smarty.section.linestyles.index}].text_every = {$gContent->mMapPolylineStyles[linestyles].text_every};
-		bLStyData[{$smarty.section.linestyles.index}].begin_arrow = {$gContent->mMapPolylineStyles[linestyles].begin_arrow};
-		bLStyData[{$smarty.section.linestyles.index}].end_arrow = {$gContent->mMapPolylineStyles[linestyles].end_arrow};
-		bLStyData[{$smarty.section.linestyles.index}].arrows_every = {$gContent->mMapPolylineStyles[linestyles].arrows_every};
-		bLStyData[{$smarty.section.linestyles.index}].text_fgstyle_color = "{$gContent->mMapPolylineStyles[linestyles].text_fgstyle_color}";
-		bLStyData[{$smarty.section.linestyles.index}].text_fgstyle_weight = {$gContent->mMapPolylineStyles[linestyles].text_fgstyle_weight};
-		bLStyData[{$smarty.section.linestyles.index}].text_fgstyle_opacity = {$gContent->mMapPolylineStyles[linestyles].text_fgstyle_opacity};
-		{if $gContent->mMapPolylineStyles[linestyles].text_fgstyle_zindex != NULL}
-			bLStyData[{$smarty.section.linestyles.index}].text_fgstyle_zindex = {$gContent->mMapPolylineStyles[linestyles].text_fgstyle_zindex};
+		bLStyData[{$smarty.section.style_n.index}].segment_count = {$gContent->mMapPolylineStyles[style_n].segment_count};
+		bLStyData[{$smarty.section.style_n.index}].text_every = {$gContent->mMapPolylineStyles[style_n].text_every};
+		bLStyData[{$smarty.section.style_n.index}].begin_arrow = {$gContent->mMapPolylineStyles[style_n].begin_arrow};
+		bLStyData[{$smarty.section.style_n.index}].end_arrow = {$gContent->mMapPolylineStyles[style_n].end_arrow};
+		bLStyData[{$smarty.section.style_n.index}].arrows_every = {$gContent->mMapPolylineStyles[style_n].arrows_every};
+		bLStyData[{$smarty.section.style_n.index}].text_fgstyle_color = "{$gContent->mMapPolylineStyles[style_n].text_fgstyle_color}";
+		bLStyData[{$smarty.section.style_n.index}].text_fgstyle_weight = {$gContent->mMapPolylineStyles[style_n].text_fgstyle_weight};
+		bLStyData[{$smarty.section.style_n.index}].text_fgstyle_opacity = {$gContent->mMapPolylineStyles[style_n].text_fgstyle_opacity};
+		{if $gContent->mMapPolylineStyles[style_n].text_fgstyle_zindex != NULL}
+			bLStyData[{$smarty.section.style_n.index}].text_fgstyle_zindex = {$gContent->mMapPolylineStyles[style_n].text_fgstyle_zindex};
 		{/if}
-		bLStyData[{$smarty.section.linestyles.index}].text_bgstyle_color = "{$gContent->mMapPolylineStyles[linestyles].text_bgstyle_color}";
-		bLStyData[{$smarty.section.linestyles.index}].text_bgstyle_weight = {$gContent->mMapPolylineStyles[linestyles].text_bgstyle_weight};
-		bLStyData[{$smarty.section.linestyles.index}].text_bgstyle_opacity = {$gContent->mMapPolylineStyles[linestyles].text_bgstyle_opacity};
-		{if $gContent->mMapPolylineStyles[linestyles].text_bgstyle_zindex != NULL}
-			bLStyData[{$smarty.section.linestyles.index}].text_bgstyle_zindex = {$gContent->mMapPolylineStyles[linestyles].text_bgstyle_zindex};
+		bLStyData[{$smarty.section.style_n.index}].text_bgstyle_color = "{$gContent->mMapPolylineStyles[style_n].text_bgstyle_color}";
+		bLStyData[{$smarty.section.style_n.index}].text_bgstyle_weight = {$gContent->mMapPolylineStyles[style_n].text_bgstyle_weight};
+		bLStyData[{$smarty.section.style_n.index}].text_bgstyle_opacity = {$gContent->mMapPolylineStyles[style_n].text_bgstyle_opacity};
+		{if $gContent->mMapPolylineStyles[style_n].text_bgstyle_zindex != NULL}
+			bLStyData[{$smarty.section.style_n.index}].text_bgstyle_zindex = {$gContent->mMapPolylineStyles[style_n].text_bgstyle_zindex};
 		{/if}
 	{/section}
 {/if}
@@ -65,15 +65,15 @@ var bLStyData = new Array();
 
 var bLSetData = new Array();
 {if count($gContent->mMapPolylineSets) > 0}
-	{section name=polylinesetdata loop=$gContent->mMapPolylineSets}
-		bLSetData[{$smarty.section.polylinesetdata.index}] = new Array();
-		bLSetData[{$smarty.section.polylinesetdata.index}].set_id = {$gContent->mMapPolylineSets[polylinesetdata].set_id};
-		bLSetData[{$smarty.section.polylinesetdata.index}].name = "{$gContent->mMapPolylineSets[polylinesetdata].name}";
-		bLSetData[{$smarty.section.polylinesetdata.index}].description = "{$gContent->mMapPolylineSets[polylinesetdata].description}";
-		bLSetData[{$smarty.section.polylinesetdata.index}].style_id = {$gContent->mMapPolylineSets[polylinesetdata].style_id};
-		bLSetData[{$smarty.section.polylinesetdata.index}].plot_on_load = {$gContent->mMapPolylineSets[polylinesetdata].plot_on_load};
-		bLSetData[{$smarty.section.polylinesetdata.index}].side_panel = {$gContent->mMapPolylineSets[polylinesetdata].side_panel};
-		bLSetData[{$smarty.section.polylinesetdata.index}].explode = {$gContent->mMapPolylineSets[polylinesetdata].explode};
+	{section name=set_n loop=$gContent->mMapPolylineSets}
+		bLSetData[{$smarty.section.set_n.index}] = new Array();
+		bLSetData[{$smarty.section.set_n.index}].set_id = {$gContent->mMapPolylineSets[set_n].set_id};
+		bLSetData[{$smarty.section.set_n.index}].name = "{$gContent->mMapPolylineSets[set_n].name}";
+		bLSetData[{$smarty.section.set_n.index}].description = "{$gContent->mMapPolylineSets[set_n].description}";
+		bLSetData[{$smarty.section.set_n.index}].style_id = {$gContent->mMapPolylineSets[set_n].style_id};
+		bLSetData[{$smarty.section.set_n.index}].plot_on_load = {$gContent->mMapPolylineSets[set_n].plot_on_load};
+		bLSetData[{$smarty.section.set_n.index}].side_panel = {$gContent->mMapPolylineSets[set_n].side_panel};
+		bLSetData[{$smarty.section.set_n.index}].explode = {$gContent->mMapPolylineSets[set_n].explode};
 	{/section}
 {/if}
 
