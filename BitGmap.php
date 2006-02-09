@@ -980,6 +980,8 @@ class BitGmap extends LibertyAttachable {
 
 		if( !empty( $pParamHash['border_text'] ) ) {
 			$pParamHash['polyline_store']['border_text'] = $pParamHash['border_text'];
+		}else{
+			$pParamHash['polyline_store']['border_text'] = "";
 		}
 
 		if( ( !empty( $pParamHash['zindex'] ) && is_numeric( $pParamHash['line_z'] ) ) || $pParamHash['zindex'] == 0 ) {
@@ -1047,6 +1049,8 @@ class BitGmap extends LibertyAttachable {
 
 		if( !empty( $pParamHash['border_text'] ) ) {
 			$pParamHash['polygon_store']['border_text'] = $pParamHash['border_text'];
+		}else{
+			$pParamHash['polygon_store']['border_text'] = "";
 		}
 
 		if( ( !empty( $pParamHash['zindex'] ) && is_numeric( $pParamHash['line_z'] ) ) || $pParamHash['zindex'] == 0 ) {

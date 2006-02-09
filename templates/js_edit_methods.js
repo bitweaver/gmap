@@ -768,8 +768,6 @@ function newPolylineSet(){
 
 
 
-
-
 /* @todo needs to support markers in bSLData as well as bLData */
 function editPolylines(){
 	show('editpolylinemenu');
@@ -1313,16 +1311,16 @@ function editPolygons(){
 				var linkPKids = linkParent.childNodes;
 				for (var p=0; p<linkPKids.length; p++){
 						if (linkPKids[p].name == "save_polygon_btn"){
-							 linkPKids[p].href = "javascript:storePolygon('edit_polygon.php', document.polygonform_"+g+");" ;
+							 linkPKids[p].href = "javascript:storePolygon(document.polygonform_"+g+");" ;
 						}
 						if (linkPKids[p].name == "locate_polygon_btn"){
 							 linkPKids[p].href = "javascript:alert('feature coming soon');" ;
 						}
 						if (linkPKids[p].name == "remove_polygon_btn"){
-							 linkPKids[p].href = "javascript:removePolygon('edit_polygon.php', document.polygonform_"+g+");" ;
+							 linkPKids[p].href = "javascript:removePolygon(document.polygonform_"+g+");" ;
 						}
 						if (linkPKids[p].name == "expunge_polygon_btn"){
-							 linkPKids[p].href = "javascript:expungePolygon('edit_polygon.php', document.polygonform_"+g+");" ;
+							 linkPKids[p].href = "javascript:expungePolygon(document.polygonform_"+g+");" ;
 						}
 						if (linkPKids[p].name == "polygon_assist_btn"){
 							 linkPKids[p].href = "javascript:addAssistant('polygon', " + g + ");" ;
@@ -2488,7 +2486,7 @@ function addPolyline(rslt){
 			var points_data = dt[0].firstChild.nodeValue;
 	 		p.points_data = points_data.split(",");			
 			var bt = xml.documentElement.getElementsByTagName('border_text');
-			p.border_text = bt[0].firstChild.nodeValue;
+			if (bt[0].firstChild != null){p.border_text = bt[0].firstChild.nodeValue;}else{p.border_text = "";}	
 			var zi = xml.documentElement.getElementsByTagName('zindex');
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 			
@@ -2513,21 +2511,21 @@ function addPolyline(rslt){
 
 
 
-	 function updatePolyline(rslt){
+function updatePolyline(rslt){
 			var xml = rslt.responseXML;
 			var n = editObjectN;
 			var p = bLData[n];
 			
 	 		//shorten var names
-			var id = xml.documentElement.getElementsByTagName('polyline_id');			
+			var id = xml.documentElement.getElementsByTagName('polyline_id');
 			p.polyline_id = id[0].firstChild.nodeValue;
 			var nm = xml.documentElement.getElementsByTagName('name');
-			p.name = nm[0].firstChild.nodeValue;	
+			p.name = nm[0].firstChild.nodeValue;
 			var dt = xml.documentElement.getElementsByTagName('points_data');
 			var points_data = dt[0].firstChild.nodeValue;
-	 		p.points_data = points_data.split(",");			
+	 		p.points_data = points_data.split(",");
 			var bt = xml.documentElement.getElementsByTagName('border_text');
-			p.border_text = bt[0].firstChild.nodeValue;
+			if (bt[0].firstChild != null){p.border_text = bt[0].firstChild.nodeValue;}else{p.border_text = "";}	
 			var zi = xml.documentElement.getElementsByTagName('zindex');
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 			
@@ -2537,7 +2535,7 @@ function addPolyline(rslt){
 			attachPolyline(n);
 
 			removeAssistant();
-	}
+}
 
 
 	
@@ -2844,7 +2842,7 @@ function addPolygon(rslt){
 			var rd = xml.documentElement.getElementsByTagName('radius');
 			p.radius = rd[0].firstChild.nodeValue;
 			var bt = xml.documentElement.getElementsByTagName('border_text');
-			p.border_text = bt[0].firstChild.nodeValue;
+			if (bt[0].firstChild != null){p.border_text = bt[0].firstChild.nodeValue;}else{p.border_text = "";}	
 			var zi = xml.documentElement.getElementsByTagName('zindex');
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 
@@ -2875,7 +2873,7 @@ function updatePolygon(rslt){
 			var p = bPData[n];
 			
 	 		//shorten var names
-			var id = xml.documentElement.getElementsByTagName('polygon_id');			
+			var id = xml.documentElement.getElementsByTagName('polygon_id');
 			p.polygon_id = parseInt(id[0].firstChild.nodeValue);
 			var nm = xml.documentElement.getElementsByTagName('name');
 			p.name = nm[0].firstChild.nodeValue;
@@ -2890,7 +2888,7 @@ function updatePolygon(rslt){
 			var rd = xml.documentElement.getElementsByTagName('radius');
 			p.radius = rd[0].firstChild.nodeValue;
 			var bt = xml.documentElement.getElementsByTagName('border_text');
-			p.border_text = bt[0].firstChild.nodeValue;
+			if (bt[0].firstChild != null){p.border_text = bt[0].firstChild.nodeValue;}else{p.border_text = "";}
 			var zi = xml.documentElement.getElementsByTagName('zindex');
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 			
