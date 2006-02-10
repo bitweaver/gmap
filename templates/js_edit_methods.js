@@ -1416,7 +1416,7 @@ function editPolygonStyles(){
       			var linkPKids = linkParent.childNodes;
       			for (var p=0; p<linkPKids.length; p++){
       				if (linkPKids[p].name == "save_polygonstyle_btn"){
-        				linkPKids[p].href = "javascript:storePolygonStyle('edit_polygonstyle.php', document.polygonstyleform_"+editPolygonStyleId+");" ;
+        				linkPKids[p].href = "javascript:storePolygonStyle(document.polygonstyleform_"+editPolygonStyleId+");" ;
       				}
     			}
       		}
@@ -1655,8 +1655,6 @@ function newPolygonStyle(){
 	 function storeNewPolygonSet(f){
 			canceledit('editerror');
 	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + bMapID;
-$('editerror').innerHTML = str;
-show('editerror');
 			doSimpleXMLHttpRequest(str).addCallback( addPolygonSet );
 	 }
 

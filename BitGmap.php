@@ -437,7 +437,7 @@ class BitGmap extends LibertyAttachable {
 		if ($gmap_id && is_numeric($gmap_id)) {
 
 		 	$bindVars = array((int)$gmap_id);
-			$query = "SELECT bmp.*, bps.*, bsk.*
+			$query = "SELECT bmp.*, bps.`set_id`, bps.`style_id`, bps.`polylinestyle_id`, bsk.`plot_on_load`, bsk.`side_panel`, bsk.`explode`
 		 				 	  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_polygon_keychain` bpk, `".BIT_DB_PREFIX."gmaps_polygons` bmp, `".BIT_DB_PREFIX."gmaps_polygon_sets` bps
 								WHERE bsk.`gmap_id` = ?
 								AND bsk.`set_type` = 'polygons'
@@ -830,7 +830,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mError['map_lat'] = tra( 'You must enter a longitude.' );
 		}
 
-		if( !empty( $pParamHash['map_z'] ) && is_numeric( $pParamHash['map_z'] ) ) {
+		if( ( !empty( $pParamHash['map_z'] ) && is_numeric( $pParamHash['map_z'] ) ) || $pParamHash['map_z'] == 0 ) {
 			$pParamHash['gmap_store']['zoom_level'] = $pParamHash['map_z'];
 		}
 
