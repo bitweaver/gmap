@@ -16,39 +16,47 @@
 <div id="editmapform" style="display:none;">
     <h3>Map Tools</h3>
     <form action="javascript:;" name="mapform" id="mapform">
-		   <input name="save_map" type="hidden" size="25" value="true">
-		   <!-- Map Id --> <input name="gmap_id" id="gmap_id" type="hidden" size="25" value="">
-    	 Title <input name="title" id="map_title" type="text" size="25" value=""><br/>
-    	 Description <input name="map_desc" id="map_desc" type="text" size="25" value=""><br/>
-    	 Width <input name="map_w" id="map_w" type="text" size="25" value=""><br/>
-    	 Height <input name="map_h" id="map_h" type="text" size="25" value=""><br/>
-    	 Latitude <input name="map_lat" id="map_lat"type="text" size="25" value=""><br/>
-    	 Longitude <input name="map_lon" id="map_lon" type="text" size="25" value=""><br/>
-    	 Zoom Level <input name="map_z" id="map_z" type="text" size="25" value=""><br/>		
-    	 Show Controls <select name="map_showcont" id="map_showcont">
-          <option value="s" >Small</option>
-          <option value="l" >Large</option>
-          <option value="z" >Zoom Only</option>
-          <option value="n" >None</option>
-          </select><br/>
-    	 Show Scale <select name="map_showscale" id="map_showscale">
-          <option value="TRUE" >Yes</option>
-          <option value="FALSE" >No</option>
-          </select><br/>
-    	 Show Map Type Buttons <select name="map_showtypecont" id="map_showtypecont">
-          <option value="TRUE" >Yes</option>
-          <option value="FALSE" >No</option>
-          </select><br/>
-    	 Default Map Type
-    			<select name="map_type" id="map_type">
-          <option value="G_MAP_TYPE" >Street Map</option>
-          <option value="G_SATELLITE_TYPE" >Satellite</option>
-          <option value="G_HYBRID_TYPE" >Hybrid</option>
-   			</select><br/>
-    <!-- Allow Comments <input name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
-    <a name="map_assist_btn" title="click a center!" href="javascript:addAssistant('map');">Use Locating Assistant</a><br/>
-    <input type="button" name="save_map_btn" value="Submit" onclick="javascript:storeMap(document.mapform);"><br/>
-   	<input type="button" name="closemapform" value="Cancel" onclick="javascript:canceledit('editmapform');">
+			<input name="save_map" type="hidden" size="25" value="true">
+		   	<input name="gmap_id" id="gmap_id" type="hidden" size="25" value="">
+			<table class="data" id="mapdata">
+        	<tr><td width="180px">Title</td><td><input name="title" id="map_title" type="text" size="40" value=""></td></tr>
+        	<tr><td>Description</td><td><input name="map_desc" id="map_desc" type="text" size="40" value=""></td></tr>
+        	<tr>
+					<td>Center Latitude</td>
+					<td><input name="map_lat" id="map_lat"type="text" size="40" value=""></td>
+				</tr>
+        	<tr>
+					<td>Center Longitude</td>
+					<td><input name="map_lon" id="map_lon" type="text" size="40" value=""></td>
+				</tr>
+				<tr><td></td><td><a name="map_assist_btn" title="click a center!" href="javascript:addAssistant('map');">( Use Locating Assistant )</a></td></tr>
+        	<tr><td>Width (use '0' for auto)</td><td><input name="map_w" id="map_w" type="text" size="12" value=""></td></tr>
+        	<tr><td>Height</td><td><input name="map_h" id="map_h" type="text" size="12" value=""></td></tr>
+        	<tr><td>Zoom Level</td><td><input name="map_z" id="map_z" type="text" size="12" value=""></td></tr>
+        	<tr><td>Show Controls</td><td><select name="map_showcont" id="map_showcont">
+              <option value="s" >Small</option>
+              <option value="l" >Large</option>
+              <option value="z" >Zoom Only</option>
+              <option value="n" >None</option>
+              </select></td></tr>
+        	<tr><td>Show Scale</td><td><select name="map_showscale" id="map_showscale">
+              <option value="TRUE" >Yes</option>
+              <option value="FALSE" >No</option>
+              </select></td></tr>
+        	<tr><td>Show Map Type Buttons</td><td><select name="map_showtypecont" id="map_showtypecont">
+              <option value="TRUE" >Yes</option>
+              <option value="FALSE" >No</option>
+              </select></td></tr>
+        	<tr><td>Default Map Type</td><td><select name="map_type" id="map_type">
+              <option value="G_MAP_TYPE" >Street Map</option>
+              <option value="G_SATELLITE_TYPE" >Satellite</option>
+              <option value="G_HYBRID_TYPE" >Hybrid</option>
+       			</select></td></tr>
+              <!-- Allow Comments <input name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
+            <tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:storeMap(document.mapform);"> 
+						<input type="button" name="closemapform" value="Cancel" onclick="javascript:canceledit('editmapform');"></td>
+				</tr>
+			</table>
     </form>
 </div>	
 <!--end map editing form -->
@@ -59,69 +67,97 @@
 
 <div id="newmaptypeform" class="editform" style="display:none;">
 		<h2>Add A New Map Type</h2>
-    		<div class="table" id="editmaptypetable_new">
-    			<form action="javascript:;" name="maptypeform_new" id="maptypeform_new">
-    			<div class="data" id="maptypeformdata_new">
-          	<div style="float:left; padding:0 .4em; width:10px"><input name="save_maptype" type="hidden" value="true"></div>
-          	<div style="float:left; padding:0 .4em; width:140px">Name<br/><input name="name" type="text" size="25" value="a name">
-          			 																					 <br/>Description<br/><input name="description" type="text" size="25" value="a name"></div>
-          	<div style="float:left; padding:0 .4em; width:60px">Copyright<br/><input name="copyright" type="text" size="10" value="">
-          			 																					 <br/>Max Zoom<br/><input name="maxzoom" type="text" size="3" value="0"></div>
-          	<div style="float:left; padding:0 .4em; width:90px">Base Map Type<br/><select name="basetype">
-                                                                  <option value="0" >Street Map</option>
-                                                                  <option value="1" >Satellite</option>
-                                                                  <option value="2" >Hybrid</option>
-                                          							   			</select><br/>
-          																											Alt Map Type<br/><select name="alttype">
-                                                                  <option value="0" >Street Map</option>
-                                                                  <option value="1" >Satellite</option>
-                                                                  <option value="2" >Hybrid</option>
-                                          							   			</select></div>
-          	<div style="float:left; padding:0 .4em; width:140px">Bounds<br/><textarea name="bounds" cols="15" rows="3"></textarea></div>
-          	<div style="float:left; padding:0 .4em; width:140px">Map Tiles URL<br/><input name="maptiles_url" type="text" size="25" value="">
-          			 																					 <br/>Low Res Map Tiles URL<br/><input name="lowtiles_url" type="text" size="25" value="google"></div>
-          	<div style="float:left; padding:0 .4em; width:140px">Hybrid Tiles URL<br/><input name="hybridtiles_url" type="text" size="25" value="none">
-          			 																					 <br/>Low Res Hybrid Tiles URL<br/><input name="lowhybridtiles_url" type="text" size="25" value="google"></div>
-          	 ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_maptype_btn" title="save" href="javascript:storeNewMapType('edit_maptype.php', document.maptypeform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-    			</div>
-    			</form>
-  		  </div>
-			<div id="newmaptypecancel" style="clear:both;"><input type="button" name="closenewmaptypeform" value="Cancel Adding A New Map Type" onclick="javascript:canceledit('newmaptypeform');"></div>
+    <div class="table" id="editmaptypetable_new">
+    	<form action="javascript:;" name="maptypeform_new" id="maptypeform_new">
+				<input name="save_maptype" type="hidden" value="true">
+    		<table class="data" id="maptypeformdata_new">
+  				<tr>
+						<td>Name<br/>
+							<input name="name" type="text" size="25" value="a name"><br/>
+							Description<br/>
+							<input name="description" type="text" size="25" value="a description"></td>
+  					<td>Base Map Type<br/>
+							<select name="basetype">
+								<option value="0" >Street Map</option>
+								<option value="1" >Satellite</option>
+								<option value="2" >Hybrid</option>
+							</select><br/>
+							Alt Map Type<br/>
+							<select name="alttype">
+								<option value="0" >Street Map</option>
+								<option value="1" >Satellite</option>
+								<option value="2" >Hybrid</option>
+							</select></td>
+						<td>Map Tiles URL<br/>
+							<input name="maptiles_url" type="text" size="25" value=""><br/>
+							Low Res Map Tiles URL<br/>
+							<input name="lowtiles_url" type="text" size="25" value="google"></td>
+						<td>Hybrid Tiles URL<br/>
+							<input name="hybridtiles_url" type="text" size="25" value="none"><br/>
+							Low Res Hybrid Tiles URL<br/>
+							<input name="lowhybridtiles_url" type="text" size="25" value="google"></td>
+						<td>Copyright<br/>
+							<input name="copyright" type="text" size="10" value=""><br/>
+							Max Zoom<br/>
+							<input name="maxzoom" type="text" size="3" value="0"></td>
+						<td>Bounds<br/>
+							<textarea name="bounds" style="width:120px" rows="3"></textarea></td>
+						<td>ACTIONS<br/>
+							<a name="save_maptype_btn" title="save" href="javascript:storeNewMapType(document.maptypeform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+					</tr>
+    		</table>
+    	</form>
+  	</div>
+		<div id="newmaptypecancel" style="clear:both;"><input type="button" name="closenewmaptypeform" value="Cancel Adding A New Map Type" onclick="javascript:canceledit('newmaptypeform');"></div>
 </div> <!-- end of editmaptypeform -->
 
 
 <div id="editmaptypeform" class="editform" style="display:none;">
 		<h2>Map Types Associated With This Map</h2>		
-    		<div class="table" id="editmaptypetable_n" style="display:none;">
-    			<form action="javascript:;" name="maptypeform_n" id="maptypeform_n" style="display:none;">
-    			<div class="data" id="maptypeformdata_n">
-          	<div style="float:left; padding:0 .4em; width:10px"><input name="array_n" type="hidden" value="n"></div>
-          	<div style="float:left; padding:0 .4em; width:10px"><input name="save_maptype" type="hidden" value="true"></div>
-          	<div style="float:left; padding:0 .4em; width:10px"><input name="maptype_id" type="hidden" size="3" value="n"></div>
-          	<div style="float:left; padding:0 .4em; width:140px">Name<br/><input name="name" type="text" size="25" value="a name">
-          			 																					 <br/>Description<br/><input name="description" type="text" size="25" value="a name"></div>
-          	<div style="float:left; padding:0 .4em; width:60px">Copyright<br/><input name="copyright" type="text" size="10" value="">
-          			 																					 <br/>Max Zoom<br/><input name="maxzoom" type="text" size="3" value="0"></div>
-          	<div style="float:left; padding:0 .4em; width:90px">Base Map Type<br/><select name="basetype">
-                                                                  <option value="0" >Street Map</option>
-                                                                  <option value="1" >Satellite</option>
-                                                                  <option value="2" >Hybrid</option>
-                                          							   			</select><br/>
-          																											Alt Map Type<br/><select name="alttype">
-                                                                  <option value="0" >Street Map</option>
-                                                                  <option value="1" >Satellite</option>
-                                                                  <option value="2" >Hybrid</option>
-                                          							   			</select></div>
-          	<div style="float:left; padding:0 .4em; width:140px">Bounds<br/><textarea name="bounds" cols="15" rows="3"></textarea></div>
-          	<div style="float:left; padding:0 .4em; width:140px">Map Tiles URL<br/><input name="maptiles_url" type="text" size="25" value="">
-          			 																					 <br/>Low Res Map Tiles URL<br/><input name="lowtiles_url" type="text" size="25" value="google"></div>
-          	<div style="float:left; padding:0 .4em; width:140px">Hybrid Tiles URL<br/><input name="hybridtiles_url" type="text" size="25" value="none">
-          			 																					 <br/>Low Res Hybrid Tiles URL<br/><input name="lowhybridtiles_url" type="text" size="25" value="google"></div>
-          	 ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_maptype_btn" title="save" href="javascript:storeMapType('edit_maptype.php', document.maptypeform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-          	<a style="float:left; padding:0 .4em;" name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-          	<a style="float:left; padding:0 .4em;" name="remove_maptype_btn" title="remove from this map" href="javascript:removeMapType('edit_maptype.php', document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-          	<a style="float:left; padding:0 .4em;" name="expunge_maptype_btn" title="delete the maptype!" href="javascript:expungeMapType('edit_maptype.php', document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
-    			</div>
+		<div class="table" id="editmaptypetable_n" style="display:none;">
+			<form action="javascript:;" name="maptypeform_n" id="maptypeform_n" style="display:none;">
+				<input name="array_n" type="hidden" value="n">
+				<input name="save_maptype" type="hidden" value="true">
+				<input name="maptype_id" type="hidden" size="3" value="n">
+    		<table class="data" id="maptypeformdata_n">
+  				<tr>
+						<td>Name<br/>
+							<input name="name" type="text" size="25" value="a name"><br/>
+							Description<br/>
+							<input name="description" type="text" size="25" value="a description"></td>
+  					<td>Base Map Type<br/>
+							<select name="basetype">
+								<option value="0" >Street Map</option>
+								<option value="1" >Satellite</option>
+								<option value="2" >Hybrid</option>
+							</select><br/>
+							Alt Map Type<br/>
+							<select name="alttype">
+								<option value="0" >Street Map</option>
+								<option value="1" >Satellite</option>
+								<option value="2" >Hybrid</option>
+							</select></td>
+						<td>Map Tiles URL<br/>
+							<input name="maptiles_url" type="text" size="25" value=""><br/>
+							Low Res Map Tiles URL<br/>
+							<input name="lowtiles_url" type="text" size="25" value="google"></td>
+						<td>Hybrid Tiles URL<br/>
+							<input name="hybridtiles_url" type="text" size="25" value="none"><br/>
+							Low Res Hybrid Tiles URL<br/>
+							<input name="lowhybridtiles_url" type="text" size="25" value="google"></td>
+						<td>Copyright<br/>
+							<input name="copyright" type="text" size="10" value=""><br/>
+							Max Zoom<br/>
+							<input name="maxzoom" type="text" size="3" value="0"></td>
+						<td>Bounds<br/>
+							<textarea name="bounds" style="width:120px" rows="3"></textarea></td>
+						<td>ACTIONS<br/>
+							<a name="save_maptype_btn" title="save" href="javascript:storeMapType(document.maptypeform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+							<a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
+							<a name="remove_maptype_btn" title="remove from this map" href="javascript:removeMapType(document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+							<a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:expungeMapType(document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+					</tr>
+    		</table>
     			</form>
   		  </div>
 </div> <!-- end of editmaptypeform -->
@@ -148,48 +184,47 @@
 
 <div id="newmarkersetform" class="editform" style="display:none;">
 		<h2>Add a New Marker Set</h2>
-    		<div class="table" id="editmarkersettable_new">
-    			<form action="javascript:;" name="markersetform_new" id="markersetform_new">
-    				<div class="data">
-                		<input name="save_markerset" type="hidden" value="true">
-                		<div style="float:left; padding:0 .4em; width:140px">
-								Name<br/><input name="name" type="text" size="20" value="a name">
-							</div>
-                		<div style="float:left; padding:0 .4em; width:140px">
-                			Description<br/><textarea name="description" cols="15" rows="3"></textarea>
-							</div>
-                		<div style="float:left; padding:0 .4em; width:140px">
-								Style<br/><select name="style_id" id="style_id">
-                        				<option value="0" >Google (standard)</option>
-                            		</select><br/>
-								Icon<br/><select name="icon_id" id="icon_id">
-                        				<option value="0" >Google (standard)</option>
-                        			</select>
-							</div>
-                		<div style="float:left; padding:0 .4em; width:200px">
-    						Plot-On-Load: <select name="plot_on_load">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select><br/>
-    						Side: <select name="side_panel">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select><br/>
-    						List: <select name="explode">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select><br/>
-    						Cluster: <select name="cluster">
+    <div class="table" id="editmarkersettable_new">
+    	<form action="javascript:;" name="markersetform_new" id="markersetform_new">
+            <input name="save_markerset" type="hidden" value="true">
+				<input name="style_id" type="hidden" value="0"><!-- Google (standard) -->
+				<input name="icon_id" type="hidden" value="0" ><!-- Google (standard) -->
+    		<table class="data">
+					<tr>
+						<th>Name</th>
+						<th>Description</th>
+						<th width="160px">Map Display Settings</th>
+						<th width="170px">Side Panel Display Settings</th>
+						<th width="80px">ACTIONS</th>
+					</tr>
+					<tr class="gmapeditstrong">
+						<td><input name="name" type="text" style="width:90%" value="a name"></td>
+						<td><textarea name="description" style="width:90%" rows="2"></textarea></td>
+						<td width="160px">Cluster: 
+    									<select name="cluster">
                       					<option value="true">Yes</option>
                       					<option value="false" selected>No</option>
-                          				</select> 
-							</div>
-                		<div style="float:left; padding:0 .4em; width:70px">
-								ACTIONS<br/><a name="new_markerset_btn" title="save" href="javascript:storeNewMarkerSet('edit_markerset.php', document.markersetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-							</div>
-    				</div>
-    			</form>
-  		  </div>
+                          				</select><br/>
+											Plot-On-Load: 
+											<select name="plot_on_load">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select>
+						<td width="170px">List Set: 
+    									<select name="side_panel">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select><br/>
+											List Each Marker: 
+											<select name="explode">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select></td>
+						<td width="80px"><a name="new_markerset_btn" title="save" href="javascript:storeNewMarkerSet(document.markersetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+					</tr>
+				</table>
+			</form>
+		</div>
 		<div id="newmarkersetcancel" style="clear:both;"><input type="button" name="closemarkersetform" value="Cancel New Marker Set" onclick="javascript:canceledit('newmarkersetform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newmarkersetform -->
@@ -197,35 +232,36 @@
 
 
 <div id="newmarkerform" class="editform" style="display:none;">
-		<h2>Add a New Marker</h2>		
-        <div class="tableheader">
-    				<div style="float:left; padding:0 .4em; width:90px"> Title </div>
-    				<div style="float:left; padding:0 .4em; width:90px"> Latitude </div>
-    				<div style="float:left; padding:0 .4em; width:90px"> Longitude </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Window Text </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Label Text </div>
-    				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
-    				<div style="float:left; padding:0 .4em; width:50px"> Set </div>
-    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
-    		</div>
-    		<div class="table" id="editmarkertable_new">
-    			<form action="javascript:;" name="markerform_new" id="markerform_new">
-    			<div class="data">
-                	<div style="float:left; padding:0 .4em; width:90px"><input name="new_marker" type="hidden" value="true"></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><input name="title" type="text" size="15" value="a title"></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lat" type="text" size="15" value=""></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lon" type="text" size="15" value=""></div>
-                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="edit" cols="15" rows="3"></textarea></div>
-                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
-                	<div style="float:left; padding:0 .4em; width:50px"><input name="marker_zi" type="text" size="3" value="0"></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><select name="set_id" id="set_id">
-                                                                        <option value="n" >someset</option>
-                                                							   			</select></div>
-                	<div style="float:left; padding:0 .4em; width:70px"><a name="new_marker_btn" title="save" href="javascript:storeNewMarker('edit_marker.php', document.markerform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
-                	<a style="float:left; padding:0 .4em;" name="marker_assist_btn" title="click a location!" href="javascript:addAssistant('marker', 'new');">Use Locating Assistant</a>
-    			</div>
-    			</form>
-  		  </div>
+		<h2>Add a New Marker</h2>
+    <div class="table" id="editmarkertable_new">
+    	<form action="javascript:;" name="markerform_new" id="markerform_new">
+				<input name="new_marker" type="hidden" value="true">
+    		<table class="data">
+    			<tr>
+    				<th style="width:160px">Title </th>
+    				<th style="width:160px">Latitude/Longitude</th>
+    				<th style="width:160px">Label Text </th>
+    				<th >Window Text </th>
+    				<th style="width:80px">zIndex </th>
+    				<th>Add to Set </th>
+    				<th style="width:80px">ACTIONS </th>
+    			</tr>
+					<tr class="gmapeditstrong">
+						<td width="160px"><input name="title" type="text" style="width:90%" value="a title"></td>
+						<td width="160px"><input name="marker_lat" type="text" style="width:90%" value=""><br/>
+							<input name="marker_lon" type="text" style="width:90%" value=""><br/>
+							<a name="marker_assist_btn" title="click a location!" href="javascript:addAssistant('marker', 'new');">( Use Locating Assistant )</a></td>
+						<td width="160px"><textarea name="marker_labeltext" style="width:90%" rows="1"></textarea></td>
+						<td><textarea name="edit" style="width:90%" rows="3"></textarea></td>
+						<td width="80px"><input name="marker_zi" type="text" size="3" value="0"></td>
+						<td><select name="set_id" id="set_id">
+								<option value="n">someset</option>
+							</select></td>
+						<td width="80px"><a name="new_marker_btn" title="save" href="javascript:storeNewMarker(document.markerform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+					</tr>
+    		</table>
+    	</form>
+		</div>
 		<div id="newmarkercancel" style="clear:both;"><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:canceledit('newmarkerform'); removeAssistant(); canceledit('editerror');"></div>
 </div> <!-- end of newmarkerform -->
 
@@ -241,45 +277,51 @@
 		<h2>Add a New Icon Style</h2>		
     		<div class="table" id="editiconstyletable_new">
     			<form action="javascript:;" name="iconstyleform_new" id="iconstyleform_new">
-    			<div class="data">
-                	<div style="float:left; padding:0 .4em; width:10px">
-							<input name="save_iconstyle" type="hidden" value="true">
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
-							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
-							Type <br/><select name="type">
+					<input name="save_iconstyle" type="hidden" value="true">
+    			<table class="data" class="gmapeditstrong">
+						<tr>
+							<td>Name<br/><input name="name" type="text" size="15" value="a name"></td>
+							<td>Type<br/><select name="type" onChange="javascript:toggleIconMenu(this.value, 'new');">
                                 <option value="0">GIcon</option>
                                 <option value="1">XIcon</option>
-                             </select><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
-                     	Image <br/><input name="image" type="text" size="15" value="icons/flat_color_pins/205.png"><br/>
-                     	Rollover Image <br/><input name="rollover_image" type="text" size="15" value="icons/flat_color_pins/090.png"><br/>
-                     	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value="20"><br/>
-                     	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value="34"><br/>
-                     	Shadow Image <br/><input name="shadow_image" type="text" size="15" value="http://www.google.com/mapfiles/shadow50.png"><br/>
-                     	Shadow Width <br/><input name="shadow_w" type="text" size="15" value="37"><br/>
-                     	Shadow Height <br/><input name="shadow_h" type="text" size="15" value="34"><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
-                     	Icon Anchor X (px)<br/><input name="icon_anchor_x" type="text" size="15" value="9"><br/>
-                     	Icon Anchor Y (px)<br/><input name="icon_anchor_y" type="text" size="15" value="34"><br/>
-                     	Shadow Anchor X (px)<br/><input name="shadow_anchor_x" type="text" size="15" value="18"><br/>
-                     	Shadow Anchor Y (px)<br/><input name="shadow_anchor_y" type="text" size="15" value="25"><br/>
-                     	InfoWindow Anchor X (px)<br/><input name="infowindow_anchor_x" type="text" size="15" value="9"><br/>
-                     	IconWindow Anchor Y (px)<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
-							XIcon Styles
-                     	Points<br/><input name="points" type="text" size="15" value="0"><br/>
-                     	Scale<br/><input name="scale" type="text" size="15" value="1"><br/>
-                     	Outline Color (HEX)<br/><input name="outline_color" type="text" size="15" value="ffffff"><br/>
-                     	Outline Weight<br/><input name="outline_weight" type="text" size="15" value="2"><br/>
-                     	Fill Color<br/><input name="fill_color" type="text" size="15" value="ff3300"><br/>
-                     	Fill Opacity<br/><input name="fill_opacity" type="text" size="15" value=".5"><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:70px">ACTIONS<br/><a name="new_iconstyle_btn" title="save" href="javascript:storeNewIconStyle('edit_iconstyle.php', document.iconstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
-    			</div>
+                             </select></td>
+                		<td>Window Anchor X<br/><input name="infowindow_anchor_x" type="text" size="15" value="9"></td>
+                		<td>Window Anchor Y<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"></td>
+							<td></td>
+							<td></td>
+                		<td>ACTIONS<br/><a name="new_iconstyle_btn" title="save" href="javascript:storeNewIconStyle(document.iconstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						</tr>
+                	<tr id="gicon_style_head_new">
+                		<th colspan="7">GIcon Styles</th>
+						</tr>
+                	<tr id="gicon_style_menu1_new">
+                		<td>Image <br/><input name="image" type="text" size="15" value="icons/flat_color_pins/205.png"></td>
+                		<td>Rollover Image <br/><input name="rollover_image" type="text" size="15" value="icons/flat_color_pins/090.png"></td>
+                		<td>Icon Width<br/><input name="icon_w" type="text" size="15" value="20"></td>
+                		<td>Icon Height<br/><input name="icon_h" type="text" size="15" value="34"></td>
+                		<td>Icon Anchor X<br/><input name="icon_anchor_x" type="text" size="15" value="9"></td>
+                		<td>Icon Anchor Y<br/><input name="icon_anchor_y" type="text" size="15" value="34"></td>
+						</tr>
+                	<tr id="gicon_style_menu2_new">
+							<td></td>
+                		<td>Shadow Image <br/><input name="shadow_image" type="text" size="15" value="http://www.google.com/mapfiles/shadow50.png"></td>
+                		<td>Shadow Width <br/><input name="shadow_w" type="text" size="15" value="37"></td>
+                		<td>Shadow Height <br/><input name="shadow_h" type="text" size="15" value="34"></td>
+                		<td>Shadow Anchor X<br/><input name="shadow_anchor_x" type="text" size="15" value="18"></td>
+                		<td>Shadow Anchor Y<br/><input name="shadow_anchor_y" type="text" size="15" value="25"></td>
+						</tr>
+                	<tr id="xicon_style_head_new" style="display:none">
+                		<th colspan="7">XIcon Styles</th>
+						</tr>
+                	<tr id="xicon_style_menu_new" style="display:none">			
+                		<td>Points<br/><input name="points" type="text" size="15" value="0"></td>
+                		<td>Scale<br/><input name="scale" type="text" size="15" value="1"></td>
+                		<td>Outline Color (HEX)<br/><input name="outline_color" type="text" size="15" value="ffffff"></td>
+                		<td>Outline Weight<br/><input name="outline_weight" type="text" size="15" value="2"></td>
+                		<td>Fill Color<br/><input name="fill_color" type="text" size="15" value="ff3300"></td>
+                		<td>Fill Opacity<br/><input name="fill_opacity" type="text" size="15" value=".5"></td
+						</tr>
+    			</table>
     			</form>
   		  </div>
 		<div id="newiconstylecancel" style="clear:both;"><input type="button" name="closeiconstyleform" value="Cancel New Icon Style" onclick="javascript:canceledit('newiconstyleform'); canceledit('editerror');"></div>
@@ -289,51 +331,57 @@
 
 <div id="editiconstyleform" class="editform" style="display:none;">
 		<h2>Icon Styles Associated with Marker Sets on This Map</h2>		
-      		<div class="table" id="editiconstyletable_n">
-      			<form action="javascript:;" name="iconstyleform_n" id="iconstyleform_n" style="display:none;">
-      			<div class="data" id="iconstyleformdata_n">
-                	<div style="float:left; padding:0 .4em; width:10px">
-							<input name="save_iconstyle" type="hidden" value="true">
-                        <input name="style_array_n" type="hidden" value="n">
-                        <input name="icon_id" type="hidden" value="n">
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
-							Name <br/><input name="name" type="text" size="15" value=""><br/>
-							Type <br/><select name="type">
+		<div class="table" id="editiconstyletable_n">
+			<form action="javascript:;" name="iconstyleform_n" id="iconstyleform_n" style="display:none;">
+				<input name="save_iconstyle" type="hidden" value="true">
+				<input name="style_array_n" type="hidden" value="n">
+				<input name="icon_id" type="hidden" value="n">
+				<table class="data" id="iconstyleformdata_n">
+					<tr>
+						<td>Name<br/><input name="name" type="text" size="15" value=""></td>
+						<td>Type<br/><select name="type" onChange="javascript:toggleIconMenu(this.value, this.form.icon_id.value);">
                                 <option value="0">GIcon</option>
                                 <option value="1">XIcon</option>
-                             </select><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
-                     	Image <br/><input name="image" type="text" size="15" value=""><br/>
-                     	Rollover Image <br/><input name="rollover_image" type="text" size="15" value=""><br/>
-                     	Icon Width (px)<br/><input name="icon_w" type="text" size="15" value=""><br/>
-                     	Icon Height (px)<br/><input name="icon_h" type="text" size="15" value=""><br/>
-                     	Shadow Image <br/><input name="shadow_image" type="text" size="15" value=""><br/>
-                     	Shadow Width <br/><input name="shadow_w" type="text" size="15" value=""><br/>
-                     	Shadow Height <br/><input name="shadow_h" type="text" size="15" value=""><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
-                     	Icon Anchor X (px)<br/><input name="icon_anchor_x" type="text" size="15" value=""><br/>
-                     	Icon Anchor Y (px)<br/><input name="icon_anchor_y" type="text" size="15" value=""><br/>
-                     	Shadow Anchor X (px)<br/><input name="shadow_anchor_x" type="text" size="15" value=""><br/>
-                     	Shadow Anchor Y (px)<br/><input name="shadow_anchor_y" type="text" size="15" value=""><br/>
-                     	InfoWindow Anchor X (px)<br/><input name="infowindow_anchor_x" type="text" size="15" value=""><br/>
-                     	IconWindow Anchor Y (px)<br/><input name="infowindow_anchor_y" type="text" size="15" value=""><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
-							XIcon Styles
-                     	Points<br/><input name="points" type="text" size="15" value=""><br/>
-                     	Scale<br/><input name="scale" type="text" size="15" value=""><br/>
-                     	Outline Color (HEX)<br/><input name="outline_color" type="text" size="15" value=""><br/>
-                     	Outline Weight<br/><input name="outline_weight" type="text" size="15" value=""><br/>
-                     	Fill Color<br/><input name="fill_color" type="text" size="15" value=""><br/>
-                     	Fill Opacity<br/><input name="fill_opacity" type="text" size="15" value=""><br/>
-						</div>
-                	ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_iconstyle_btn" title="save" href="javascript:storeIconStyle('edit_iconstyle.php', document.iconstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-      			</div>
-      			</form>
-    		  </div>
+                             </select></td>
+                	<td>Window Anchor X<br/><input name="infowindow_anchor_x" type="text" size="15" value="9"></td>
+                	<td>Window Anchor Y<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"></td>
+						<td></td>
+						<td></td>
+                	<td>ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_iconstyle_btn" title="save" href="javascript:storeIconStyle(document.iconstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+					</tr>
+                <tr id="gicon_style_head_new">
+                	<th colspan="7">GIcon Styles</th>
+					</tr>
+                <tr id="gicon_style_menu1_new">
+                	<td>Image <br/><input name="image" type="text" size="15" value=""></td>
+                	<td>Rollover Image <br/><input name="rollover_image" type="text" size="15" value=""></td>
+                	<td>Icon Width<br/><input name="icon_w" type="text" size="15" value=""></td>
+                	<td>Icon Height<br/><input name="icon_h" type="text" size="15" value=""></td>
+                	<td>Icon Anchor X<br/><input name="icon_anchor_x" type="text" size="15" value=""></td>
+                	<td>Icon Anchor Y<br/><input name="icon_anchor_y" type="text" size="15" value=""></td>
+					</tr>
+                <tr id="gicon_style_menu2_new">
+						<td></td>
+                	<td>Shadow Image <br/><input name="shadow_image" type="text" size="15" value=""></td>
+                	<td>Shadow Width <br/><input name="shadow_w" type="text" size="15" value=""></td>
+               		<td>Shadow Height <br/><input name="shadow_h" type="text" size="15" value=""></td>
+               		<td>Shadow Anchor X<br/><input name="shadow_anchor_x" type="text" size="15" value=""></td>
+               		<td>Shadow Anchor Y<br/><input name="shadow_anchor_y" type="text" size="15" value=""></td>
+					</tr>
+               	<tr id="xicon_style_head_new" style="display:none">
+               		<th colspan="7">XIcon Styles</th>
+					</tr>
+               	<tr id="xicon_style_menu_new" style="display:none">			
+               		<td>Points<br/><input name="points" type="text" size="15" value=""></td>
+               		<td>Scale<br/><input name="scale" type="text" size="15" value=""></td>
+               		<td>Outline Color (HEX)<br/><input name="outline_color" type="text" size="15" value=""></td>
+               		<td>Outline Weight<br/><input name="outline_weight" type="text" size="15" value=""></td>
+               		<td>Fill Color<br/><input name="fill_color" type="text" size="15" value=""></td>
+               		<td>Fill Opacity<br/><input name="fill_opacity" type="text" size="15" value=""></td
+					</tr>
+				</table>
+			</form>
+		</div>
 </div> <!-- end of editiconstylesform -->
 
 <div id="editiconstylescancel" style="display:none; clear:both;"><input type="button" name="closeiconstylesform" value="Cancel Editing Icon Styles" onclick="javascript:canceledit('editiconstylesmenu'); canceledit('newiconstyleform'); canceledit('editiconstyleform'); canceledit('editiconstylescancel');"></div>
@@ -348,69 +396,75 @@
 
 <div id="newmarkerstyleform" class="editform" style="display:none;">
 		<h2>Add a New Marker Style</h2>		
-        <div class="tableheader">
-    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
-    				<div style="float:left; padding:0 .4em; width:90px"> Type </div>
-    				<div style="float:left; padding:0 .4em; width:70px"> Label Hover Opacity (%)</div>
-    				<div style="float:left; padding:0 .4em; width:70px"> Label Opacity (%)</div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Label Hover Styles (CSS)</div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Window Styles (CSS)</div>
-    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
-    		</div>
-    		<div class="table" id="editmarkerstyletable_new">
-    			<form action="javascript:;" name="markerstyleform_new" id="markerstyleform_new">
-    			<div class="data">
-                	<div style="float:left; padding:0 .4em; width:10px"><input name="save_markerstyle" type="hidden" value="true"></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><select name="type">
-                                                                        <option value="0">GMarker</option>
-                                                                        <option value="1">PdMarker</option>
-                                                                        <option value="2">XMarker</option>
-                                                							   			</select></div>
-                	<div style="float:left; padding:0 .4em; width:70px"><input name="label_hover_opacity" type="text" size="5" value="70"></div>
-                	<div style="float:left; padding:0 .4em; width:70px"><input name="label_opacity" type="text" size="5" value="100"></div>
-                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="label_hover_styles" cols="15" rows="3"></textarea></div>
-                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="window_styles" cols="15" rows="3"></textarea></div>
-                	<div style="float:left; padding:0 .4em; width:70px"><a name="new_markerstyle_btn" title="save" href="javascript:storeNewMarkerStyle('edit_markerstyle.php', document.markerstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
-    			</div>
-    			</form>
-  		  </div>
+		<div class="table" id="editmarkerstyletable_new">
+			<form action="javascript:;" name="markerstyleform_new" id="markerstyleform_new">
+				<input name="save_markerstyle" type="hidden" value="true">
+    		<table class="data">
+					<tr>
+    				<th width="110px">Name </th>
+    				<th width="90px">Type </th>
+    				<th width="150px">Label Hover Opacity (%)</th>
+    				<th width="120px">Label Opacity (%)</th>
+    				<th>Label Hover Styles (CSS)</th>
+    				<th>Window Styles (CSS)</th>
+    				<th width="80px">ACTION </th>
+					</tr>
+					<tr class="gmapeditstrong">
+  					<td width="110px"><input name="name" type="text" style="width:90%" value="a name"></td>
+  					<td width="90px"><select name="type">
+  							<option value="0">GMarker</option>
+  							<option value="1">PdMarker</option>
+  							<option value="2">XMarker</option>
+  							</select></td>
+  					<td width="150px"><input name="label_hover_opacity" type="text" size="5" value="70"></td>
+  					<td width="120px"><input name="label_opacity" type="text" size="5" value="100"></td>
+  					<td><textarea name="label_hover_styles" style="width:90%" rows="3"></textarea></td>
+  					<td><textarea name="window_styles" style="width:90%" rows="3"></textarea></td>
+  					<td width="80px"><a name="new_markerstyle_btn" title="save" href="javascript:storeNewMarkerStyle(document.markerstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+					</tr>
+    		</table>
+			</form>
+		</div>
 		<div id="newmarkerstylecancel" style="clear:both;"><input type="button" name="closemarkerstyleform" value="Cancel New Marker Style" onclick="javascript:canceledit('newmarkerstyleform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newmarkerstyleform -->
 
 
 <div id="editmarkerstyleform" class="editform" style="display:none;">
-		<h2>Marker Styles Associated with Marker Sets on This Map</h2>		
-        <div class="tableheader">
-    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
-    				<div style="float:left; padding:0 .4em; width:90px"> Type </div>
-    				<div style="float:left; padding:0 .4em; width:70px"> Label Hover Opacity (%)</div>
-    				<div style="float:left; padding:0 .4em; width:70px"> Label Opacity (%)</div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Label Hover Styles (CSS)</div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Window Styles (CSS)</div>
-    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>
-    		</div>
-      		<div class="table" id="editmarkerstyletable_n">
-      			<form action="javascript:;" name="markerstyleform_n" id="markerstyleform_n" style="display:none;">
-      			<div class="data" id="markerstyleformdata_n">
-                	<div style="float:left; padding:0 .4em; width:10px"><input name="save_markerstyle" type="hidden" value="true"></div>
-                	<div style="float:left; padding:0 .4em; width:10px"><input name="style_array_n" type="hidden" value="true"></div>
-                	<div style="float:left; padding:0 .4em; width:10px"><input name="style_id" type="hidden" value="n"></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
-                	<div style="float:left; padding:0 .4em; width:90px"><select name="type">
-                                                                        <option value="0">GMarker</option>
-                                                                        <option value="1">PdMarker</option>
-                                                                        <option value="2">XMarker</option>
-                                                							   			</select></div>
-                	<div style="float:left; padding:0 .4em; width:70px"><input name="label_hover_opacity" type="text" size="5" value="70"></div>
-                	<div style="float:left; padding:0 .4em; width:70px"><input name="label_opacity" type="text" size="5" value="100"></div>
-                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="label_hover_styles" cols="15" rows="3"></textarea></div>
-                	<div style="float:left; padding:0 .4em; width:140px"><textarea name="window_styles" cols="15" rows="3"></textarea></div>
-                	<a style="float:left; padding:0 .4em;" name="save_markerstyle_btn" title="save" href="javascript:storeMarkerStyle('edit_markerstyle.php', document.markerstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-      			</div>
-      			</form>
-    		  </div>
+		<h2>Marker Styles Associated with Marker Sets on This Map</h2>
+		<table>
+			<tr>
+    		<th width="110px">Name </th>
+    		<th width="90px">Type </th>
+    		<th width="150px">Label Hover Opacity (%)</th>
+    		<th width="120px">Label Opacity (%)</th>
+    		<th>Label Hover Styles (CSS)</th>
+    		<th>Window Styles (CSS)</th>
+    		<th width="80px">ACTION </th>
+			</tr>
+		</table>
+		<div class="table" id="editmarkerstyletable_n">
+			<form action="javascript:;" name="markerstyleform_n" id="markerstyleform_n" style="display:none;">
+  			<input name="save_markerstyle" type="hidden" value="true">
+  			<input name="style_array_n" type="hidden" value="true">
+  			<input name="style_id" type="hidden" value="n">
+    		<table class="data" id="markerstyleformdata_n">
+					<tr>
+  					<td width="110px"><input name="name" type="text" style="width:90%" value=""></td>
+  					<td width="90px"><select name="type">
+								<option value="0">GMarker</option>
+								<option value="1">PdMarker</option>
+								<option value="2">XMarker</option>
+								</select></td>
+  					<td width="150px"><input name="label_hover_opacity" type="text" size="5" value="70"></td>
+  					<td width="120px"><input name="label_opacity" type="text" size="5" value="100"></td>
+  					<td><textarea name="label_hover_styles" style="width:90%" rows="3"></textarea></td>
+  					<td><textarea name="window_styles" style="width:90%" rows="3"></textarea></td>
+  					<td width="80px"><a name="save_markerstyle_btn" title="save" href="javascript:storeMarkerStyle(document.markerstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+					</tr>
+    		</table>
+			</form>
+		</div>
 </div> <!-- end of editmarkerstylesform -->
 
 <div id="editmarkerstylescancel" style="display:none; clear:both;"><input type="button" name="closemarkerstylesform" value="Cancel Editing Marker Styles" onclick="javascript:canceledit('editmarkerstylesmenu'); canceledit('newmarkerstyleform'); canceledit('editmarkerstyleform'); canceledit('editmarkerstylescancel');"></div>
@@ -420,96 +474,103 @@
 
 
 <div id="editmarkerform" class="editform" style="display:none;">
-		<h2>Marker Sets Associated With This Map</h2>		
+		<h2>Marker Sets Associated With This Map</h2>
+		<table>
+			<tr>
+				<th style="width:160px">Name</th>
+				<th style="width:160px">Style</th>
+				<th style="width:160px">Icon</th>
+				<th style="width:80px">Custer</th>
+				<th style="width:80px">Plot-on-Load</th>
+				<th style="width:80px">List Set</th>
+				<th style="width:80px">List Markers</th>
+				<th style="width:80px">ACTIONS</th>
+			</tr>
+		</table>
 		<div id="markerset_n" style="display:none; clear:both;">
-    		<form action="javascript:;" name="markersetform_n" id="markersetform_n" style="display:none;">
-  				<div class="data" id="markersetformdata_n">
-  					<input name="set_id" type="hidden" value="n">
-                  	<input name="set_array_n" type="hidden" value="n">
-    				<b id="setname">Set Name:</b> <span id="setdesc">Description Here</span><br/>
-    				<a id="seteditmarkers" href="javascript:editSet('n');">Edit These Markers</a> | 
-    				<a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a> | 
-						Style: <select name="style_id">
+			<form action="javascript:;" name="markersetform_n" id="markersetform_n" style="display:none;">
+  			<input name="set_id" type="hidden" value="n">
+            <input name="set_array_n" type="hidden" value="n">
+    		<table class="data" id="markersetformdata_n">
+					<tr class="gmapeditstrong" >
+						<td style="width:160px"><b>Set Name:</b> <!-- <span id="setdesc">Description Here</span> --></td>
+						<td style="width:160px"><select name="style_id">
                   					<option value="0">Google (standard)</option>
-                      				</select> | 
-            		Icon: <select name="icon_id">
+                      				</select></td>
+						<td style="width:160px"><select name="icon_id">
                                       <option value="0">Google (standard)</option>
-                                   	</select> | 
-						Plot-On-Load: <select name="plot_on_load">
-                  					<option value="true">Yes</option>
-                  					<option value="false">No</option>
-                      				</select> | 
-						Side: <select name="side_panel">
-                  					<option value="true">Yes</option>
-                  					<option value="false">No</option>
-                      				</select> | 
-						List: <select name="explode">
-                  					<option value="true">Yes</option>
-                  					<option value="false">No</option>
-                      				</select> | 
-						Cluster: <select name="cluster">
-                  					<option value="true">Yes</option>
-                  					<option value="false">No</option>
-                      				</select> | 
-    				<a id="setstore" href="javascript:storeMarkerSet('edit_markerset.php', markersetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
-    				<a id="setremove" href="javascript:removeMarkerSet('edit_markerset.php', markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-    				<a id="setdelete" href="javascript:expungeMarkerSet('edit_markerset.php', markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
-  				</div>
-        	</form>
-				<div id="setform_n" style="display:none;">
-					<h3>Markers In This Set</h3>
-            	<div class="tableheader">
-        				<div style="float:left; padding:0 .4em; width:90px"> Title </div>
-        				<div style="float:left; padding:0 .4em; width:90px"> Latitude </div>
-        				<div style="float:left; padding:0 .4em; width:90px"> Longitude </div>
-        				<div style="float:left; padding:0 .4em; width:140px"> Window Text </div>
-        				<div style="float:left; padding:0 .4em; width:140px"> Label Text </div>
-        				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
-        				<div style="float:left; padding:0 .4em; width:70px"> ACTIONS </div>
-        		</div>
-    			<div class="table" id="editmarkertable_n">
-        			<form action="javascript:;" name="markerform_n" id="markerform_n" style="display:none;">
-        			<div class="data" id="formdata_n">
-                		<div style="float:left; padding:0 .4em; width:90px"><input name="save_marker" type="hidden" value="true"></div>
-                		<div style="float:left; padding:0 .4em; width:30px"><input name="set_id" type="hidden" size="3" value="n"></div>
-            			<div style="float:left; padding:0 .4em; width:30px"><input name="marker_id" type="hidden" size="3" value="n"></div>
-                		<div style="float:left; padding:0 .4em; width:90px"><input name="title" type="text" size="15" value="a title"></div>
-                		<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lat" type="text" size="15" value=""></div>
-                		<div style="float:left; padding:0 .4em; width:90px"><input name="marker_lon" type="text" size="15" value=""></div>
-                		<div style="float:left; padding:0 .4em; width:140px"><textarea name="edit" cols="15" rows="3"></textarea></div>
-                		<div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
-                		<div style="float:left; padding:0 .4em; width:50px"><input name="marker_zi" type="text" size="3" value="0"></div>
-                		<div style="float:left; padding:0;"><input name="marker_array" type="hidden" value=""></div>
-                		<div style="float:left; padding:0;"><input name="marker_array_n" type="hidden" value=""></div>
-                		<a style="float:left; padding:0 .4em;" name="save_marker_btn" title="save" href="javascript:storeMarker('edit_marker.php', document.markerform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-                		<a style="float:left; padding:0 .4em;" name="locate_marker_btn" title="locate on the map" href="javascript:bIMData[marker_array_n].marker.openInfoWindowHtml(bIMData[marker_array_n].marker.my_html);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-                		<a style="float:left; padding:0 .4em;" name="remove_marker_btn" title="remove from this set" href="javascript:removeMarker('edit_marker.php', document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-                		<a style="float:left; padding:0 .4em;" name="expunge_marker_btn" title="delete the marker!" href="javascript:expungeMarker('edit_marker.php', document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
-                		<a style="float:left; padding:0 .4em;" name="marker_assist_btn" title="click a location!" href="javascript:addAssistant('marker', 'n');">Use Locating Assistant</a>
-        			</div>
-        			</form>
-  		  		</div>
-      	<div id="allavailmarkers_n" style="display:none; clear:both;">
+                                   	</select></td>
+						<td style="width:80px"><select name="cluster">
+                      					<option value="true">Yes</option>
+                      					<option value="false" selected>No</option>
+                          				</select></td>
+						<td style="width:80px"><select name="plot_on_load">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select></td>
+						<td style="width:80px"><select name="side_panel">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select></td>
+						<td style="width:80px"><select name="explode">
+                      					<option value="true">Yes</option>
+                      					<option value="false">No</option>
+                          				</select></td>
+						<td style="width:80px">
+							<a id="setstore" href="javascript:storeMarkerSet(markersetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+							<a id="setremove" href="javascript:removeMarkerSet(markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+							<a id="setdelete" href="javascript:expungeMarkerSet(markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+					</tr>
+					<tr>
+						<td colspan="5"><a id="seteditmarkers" href="javascript:editSet('n');">Edit The Markers In This Set</a> | 
+							<a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a></td>
+					</tr>
+				</table>
+			</form>
+			<div id="setform_n" style="display:none;">
+				<h3>Markers In This Set</h3>
+            <table>
+					<tr>
+						<th style="width:160px">Title </th>
+						<th style="width:160px">Latitude/Longitude</th>
+						<th style="width:160px">Label Text </th>
+						<th>Window Text </th>
+						<th style="width:80px">zIndex </th>
+						<th style="width:80px">ACTIONS </th>
+					</tr>
+        	</table>
+				<div class="table" id="editmarkertable_n">
+					<form action="javascript:;" name="markerform_n" id="markerform_n" style="display:none;">
+						<input name="save_marker" type="hidden" value="true">
+						<input name="set_id" type="hidden" size="3" value="n">
+						<input name="marker_id" type="hidden" size="3" value="n">
+						<input name="marker_array_n" type="hidden" value="">
+        			<table class="data" id="formdata_n">
+							<tr>
+								<td style="width:160px"><input name="title" type="text" style="width:90%" value="a title"></td>
+								<td style="width:160px"><input name="marker_lat" type="text" style="width:90%" value=""><br/>
+									<input name="marker_lon" type="text" style="width:90%" value=""><br/>
+									<a name="marker_assist_btn" title="click a location!" href="javascript:addAssistant('marker', 'n');">( Use Locating Assistant )</a></td>
+								<td style="width:160px"><textarea name="marker_labeltext" style="width:90%" rows="3"></textarea></td>
+								<td><textarea name="edit" style="width:90%" rows="3"></textarea></td>
+								<td style="width:80px"><input name="marker_zi" type="text" size="3" value="0"></td>
+								<td style="width:80px">
+                				<a name="save_marker_btn" title="save" href="javascript:storeMarker(document.markerform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+                				<a name="locate_marker_btn" title="locate on the map" href="javascript:bMData[marker_array_n].marker.openInfoWindowHtml(bMData[marker_array_n].marker.my_html);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
+                				<a name="remove_marker_btn" title="remove from this set" href="javascript:removeMarker(document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+                				<a name="expunge_marker_btn" title="delete the marker!" href="javascript:expungeMarker(document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+							</tr>
+						</table>
+        		</form>
+				</div>
+      		<div id="allavailmarkers_n" style="display:none; clear:both;">
     			<h3>All Markers Available</h3>
-        	<div class="table" id="addmarkertable_n">
-        		<form action="javascript:;" name="addmarkerform_n" id="addmarkerform_n">
-        		<div class="data">
+        		<div class="table" id="addmarkertable_n">
+        			<form action="javascript:;" name="addmarkerform_n" id="addmarkerform_n">
+        			<div class="data">
 						<!-- @todo this is just placeholder stuff as a starting point -->
-						<!--
-          		<div style="float:left; padding:0 .4em; width:30px"><input name="marker_id" type="text" size="3" value="a number"></div>
-              <div style="float:left; padding:0 .4em; width:90px"><input name="title" type="text" size="15" value="a title"></div>
-              <div style="float:left; padding:0 .4em; width:90px"><input name="marker_lat" type="text" size="15" value=""></div>
-              <div style="float:left; padding:0 .4em; width:90px"><input name="marker_lon" type="text" size="15" value=""></div>
-              <div style="float:left; padding:0 .4em; width:140px"><textarea name="edit" cols="15" rows="3"></textarea></div>
-              <div style="float:left; padding:0 .4em; width:140px"><textarea name="marker_labeltext" cols="15" rows="3"></textarea></div>
-              <div style="float:left; padding:0 .4em; width:50px"><input name="marker_zi" type="text" size="3" value="undefined"></div>
-              <div style="float:left; padding:0;"><input name="marker_array" type="hidden" size="3" value=""></div>
-              <div style="float:left; padding:0;"><input name="marker_array_n" type="hidden" size="3" value=""></div>
-              <div style="float:left; padding:0 .4em; width:70px"><input type="button" name="save_marker" value="Submit" onclick="javascript:get('edit_marker.php', this.form, this.form.marker_array.value, this.form.marker_array_n.value);"></div>
-              <div style="float:left; padding:0 .4em; width:70px"><input type="button" name="locate" value="Locate" onclick="javascript:bIMData[this.form.marker_array_n.value].marker.openInfoWindowHtml(bIMData[this.form.marker_array_n.value].marker.my_html);"></div>
-							-->
-        		</div>
-        		</form>	
+        			</div>
+        			</form>	
     			</div>						
 				</div>
 			</div> <!--end of setform_n -->			

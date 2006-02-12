@@ -503,9 +503,15 @@ function loadMap() {ldelim}
 
 	// Monitor the window resize event and let the map know when it occurs 
   if (window.attachEvent) {ldelim} 
-      window.attachEvent("onresize", function() {ldelim} this.map.onResize() {rdelim} ); 
+      window.attachEvent("onresize", function() {ldelim} 
+				//document.getElementById('map').style.height = ( document.body.clientHeight*80/100 ) + "px"; 
+				this.map.onResize() 
+			{rdelim} ); 
   {rdelim} else {ldelim} 
-		  window.addEventListener("resize", function() {ldelim} this.map.onResize() {rdelim} , false); 
+		  window.addEventListener("resize", function() {ldelim} 
+				//document.getElementById('map').style.height = ( document.body.clientHeight*80/100 ) + "px"; 
+				this.map.onResize()
+			{rdelim} , false); 
   {rdelim}
 	
 {rdelim};

@@ -33,10 +33,15 @@
 <style type="text/css">
 	textarea	{ldelim}font-size:.9em;{rdelim}
 	.cell		{ldelim}float:left; background:#ccc; width:100px; padding-left:3px; padding-right:3px;{rdelim}
-	.data		{ldelim}clear:both;{rdelim}
+	.data 	{ldelim}clear:both;{rdelim}
+	table.data 	{ldelim}clear:both;{rdelim}
 	.editform	{ldelim}background-color:#fff;{rdelim}
-	.table		{ldelim}clear:both;{rdelim}
+	.table	{ldelim}clear:both;{rdelim}
+	.gmapeditstrong {ldelim}background-color:#ddd;{rdelim}
+	td {ldelim}vertical-align:top;{rdelim}
+	th {ldelim}text-align:left;{rdelim}
 </style>
+
 
 <style>
 {if count($gContent->mMapMarkerStyles) > 0}

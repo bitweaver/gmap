@@ -40,6 +40,21 @@ function canceledit(i){
 	$(i).style.display = "none";	
 };
 
+function toggleIconMenu(o, n){
+	if (o == 0){
+		$('xicon_style_head_'+n).style.display = 'none';
+		$('xicon_style_menu_'+n).style.display = 'none';
+		$('gicon_style_head_'+n).style.display = 'table-row';
+		$('gicon_style_menu1_'+n).style.display = 'table-row';
+		$('gicon_style_menu2_'+n).style.display = 'table-row';
+	}else{
+		$('xicon_style_head_'+n).style.display = 'table-row';
+		$('xicon_style_menu_'+n).style.display = 'table-row';
+		$('gicon_style_head_'+n).style.display = 'none';
+		$('gicon_style_menu1_'+n).style.display = 'none';
+		$('gicon_style_menu2_'+n).style.display = 'none';
+	}
+};
 
 
 
@@ -187,24 +202,17 @@ function editMapTypes(){
         form.lowtiles_url.value = bMapTypesData[b].lowresmaptiles_url;
         form.hybridtiles_url.value = bMapTypesData[b].hybridtiles_url;
         form.lowhybridtiles_url.value = bMapTypesData[b].lowreshybridtiles_url;
-							
+
 			// just for a pretty button - js sucks it!
-			var linkParent = $('maptypeformdata_'+editMapTypeId);
-			var linkPKids = linkParent.childNodes;
-			for (var p=0; p<linkPKids.length; p++){
-						if (linkPKids[p].name == "save_maptype_btn"){
-							 linkPKids[p].href = "javascript:storeMapType('edit_maptype.php', document.maptypeform_"+editMapTypeId+");" ;
-						}
-						if (linkPKids[p].name == "locate_maptype_btn"){
-							 linkPKids[p].href = "javascript:alert('feature coming soon');" ;
-						}
-						if (linkPKids[p].name == "remove_maptype_btn"){
-							 linkPKids[p].href = "javascript:removeMapType('edit_maptype.php', document.maptypeform_"+editMapTypeId+");" ;
-						}
-						if (linkPKids[p].name == "expunge_maptype_btn"){
-							 linkPKids[p].href = "javascript:expungeMapType('edit_maptype.php', document.maptypeform_"+editMapTypeId+");" ;
-						}
-			}
+        var mytable = $('maptypeformdata_'+editMapTypeId);
+        var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+			var myrow = mytablebody.getElementsByTagName("tr").item(0);
+        var mycel = myrow.getElementsByTagName("td").item(6);
+			mycel.getElementsByTagName("a").item(0).href = "javascript:storeMapType(document.maptypeform_"+editMapTypeId+");";
+			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
+			mycel.getElementsByTagName("a").item(2).href = "javascript:removeMapType(document.maptypeform_"+editMapTypeId+");";
+			mycel.getElementsByTagName("a").item(3).href = "javascript:expungeMapType(document.maptypeform_"+editMapTypeId+");";
+
   	}
 		}
 	}	
@@ -317,7 +325,7 @@ function editMarkers(){
 				for ( var n = 0; n < newMarkerSetKids.length; n++ ) {
           		if ( newMarkerSetKids[n].id == "markersetform_n" ) {					
               		newMarkerSetKids[n].id = "markersetform_" + newSetId;
-                	newMarkerSetKids[n].name = "markersetform_" + newSetId;					 
+                	newMarkerSetKids[n].name = "markersetform_" + newSetId;
             		var nMSFKids = newMarkerSetKids[n].childNodes;
             		for (var o=0; o<nMSFKids.length; o++){
               			if (nMSFKids[o].id == "markersetformdata_n"){
@@ -353,16 +361,22 @@ function editMarkers(){
 				show('markersetform_'+newSetId);
 
 				//get form data div children and update
-				var dataKids = $('markersetformdata_' + newSetId).childNodes;
-				for (var c=0; c<dataKids.length; c++) { 
-    			if (dataKids[c].id == "setname"){dataKids[c].innerHTML = bMSetData[b].name+":";}
-     			if (dataKids[c].id == "setdesc"){dataKids[c].innerHTML = bMSetData[b].description;}
-    			if (dataKids[c].id == "seteditmarkers"){dataKids[c].href = "javascript:editSet("+newSetId+");";}
-    			if (dataKids[c].id == "setaddmarkers"){dataKids[c].href = "javascript:alert('feature coming soon');";}
-    			if (dataKids[c].id == "setstore"){dataKids[c].href = "javascript:storeMarkerSet('edit_markerset.php', document.markersetform_"+newSetId+");";}
-    			if (dataKids[c].id == "setremove"){dataKids[c].href = "javascript:removeMarkerSet('edit_markerset.php', document.markersetform_"+newSetId+");";}
-    			if (dataKids[c].id == "setdelete"){dataKids[c].href = "javascript:expungeMarkerSet('edit_markerset.php', document.markersetform_"+newSetId+");";}
-				}
+           	var mytable = $('markersetformdata_'+newSetId);
+           	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+
+   			var myrow = mytablebody.getElementsByTagName("tr").item(0);
+           	var mycel = myrow.getElementsByTagName("td").item(0);
+   			mycel.getElementsByTagName("b").item(0).innerHTML = bMSetData[b].name;
+   			mycel = myrow.getElementsByTagName("td").item(7);
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:storeMarkerSet(document.markersetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(1).href = "javascript:removeMarkerSet(document.markersetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:expungeMarkerSet(document.markersetform_"+newSetId+");";
+
+   			myrow = mytablebody.getElementsByTagName("tr").item(1);
+   			mycel = myrow.getElementsByTagName("td").item(0);
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:editSet("+newSetId+");";
+   			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
+
 				//get form and update values
 				form = $('markersetform_'+newSetId);
 				form.set_id.value = newSetId;
@@ -397,32 +411,37 @@ function editMarkers(){
 		}			
 		
   	//for length of markers add form to setelement on matching set_id
+		var x = 0;
   	for (g=0; g<bMData.length; g++) {
 			if (bMData[g]!= null){
+				x++;
 				//add marker form...again a little ugly here
 				var formCont = $("editmarkertable_"+bMData[g].set_id);
   			formContKids = formCont.childNodes;
+
             for (var n = 0; n < formContKids.length; n++) {
-      				if (formContKids[n].id == "markerform_n"){
-            			var newMarkerForm = formContKids[n].cloneNode(true);
-        					newMarkerForm.id = "markerform_"+g;
-    							newMarkerForm.name = "markerform_"+g;
-    							var nMFKids = newMarkerForm.childNodes;
-    							for (var o=0; o<nMFKids.length; o++){
-    							  if (nMFKids[o].id == "formdata_n"){
-    									nMFKids[o].id = "formdata_"+g;
-    									}
-    							}
-    							
-        					$('editmarkertable_'+bMData[g].set_id).appendChild(newMarkerForm);
-    							show('markerform_'+g);
-    							break;
+      			if (formContKids[n].id == "markerform_n"){
+            		var newMarkerForm = formContKids[n].cloneNode(true);
+        			newMarkerForm.id = "markerform_"+g;
+    				newMarkerForm.name = "markerform_"+g;
+            		if (x % 2){
+            			addElementClass( newMarkerForm, 'even');
+            		}else{
+            			addElementClass( newMarkerForm, 'odd');
+            		}
+    				var nMFKids = newMarkerForm.childNodes;
+    				for (var o=0; o<nMFKids.length; o++){
+    					if (nMFKids[o].id == "formdata_n"){
+    						nMFKids[o].id = "formdata_"+g;
     					}
-    			  }
+    				}
+						$('editmarkertable_'+bMData[g].set_id).appendChild(newMarkerForm);
+    				show('markerform_'+g);
+    			}
+    		}
 				
 				// populate set form values
 				form = $('markerform_'+g);
-
             form.set_id.value = bMData[g].set_id;
             form.marker_id.value = bMData[g].marker_id;
             form.title.value = bMData[g].title;
@@ -431,29 +450,21 @@ function editMarkers(){
             form.edit.value = bMData[g].data;
             form.marker_labeltext.value = bMData[g].label_data;
             form.marker_zi.value = bMData[g].zindex;
-            form.marker_array.value = bMData[g].array;
             form.marker_array_n.value = bMData[g].array_n;
 				
 				// just for a pretty button - js sucks it!
-				var linkParent = $('formdata_'+g);
-				var linkPKids = linkParent.childNodes;
-				for (var p=0; p<linkPKids.length; p++){
-						if (linkPKids[p].name == "save_marker_btn"){
-							 linkPKids[p].href = "javascript:storeMarker('edit_marker.php', document.markerform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "locate_marker_btn"){
-							 linkPKids[p].href = "javascript:bMData["+bMData[g].array_n+"].marker.openInfoWindowHtml(bMData["+bMData[g].array_n+"].marker.my_html);" ;
-						}
-						if (linkPKids[p].name == "remove_marker_btn"){
-							 linkPKids[p].href = "javascript:removeMarker('edit_marker.php', document.markerform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "expunge_marker_btn"){
-							 linkPKids[p].href = "javascript:expungeMarker('edit_marker.php', document.markerform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "marker_assist_btn"){
-							 linkPKids[p].href = "javascript:addAssistant('marker', "+g+");" ;
-						}
-				}
+           	var mytable = $('formdata_'+g);
+           	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+   			var myrow = mytablebody.getElementsByTagName("tr").item(0);
+           	var mycel = myrow.getElementsByTagName("td").item(1);
+				mycel.getElementsByTagName("a").item(0).href = "javascript:addAssistant('marker', "+g+");";
+
+				mycel = myrow.getElementsByTagName("td").item(5);
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:storeMarker(document.markerform_"+g+");";
+   			mycel.getElementsByTagName("a").item(1).href = "javascript:bMData["+bMData[g].array_n+"].marker.openInfoWindowHtml(bMData["+bMData[g].array_n+"].marker.my_html);";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:removeMarker(document.markerform_"+g+");";
+   			mycel.getElementsByTagName("a").item(3).href = "javascript:expungeMarker(document.markerform_"+g+");";
+
 			}
 		}		
 	}
@@ -514,11 +525,11 @@ function editIconStyles(){
     	}
   
     	var editIconStyleId;
-  
+			var x = 0;  
     	// for each iconstyle data set clone the form
     	for (var b=0; b<bMIconData.length; b++) {
         	if ( bMIconData[b]!= null ){  						
-    
+					x++;    
         		editIconStyleId = bMIconData[b].icon_id;
     
         		// clone the form container
@@ -531,7 +542,12 @@ function editIconStyles(){
                 for ( var n = 0; n < newIconStyleForm.length; n++ ) {
             		if ( newIconStyleForm[n].id == "iconstyleform_n" ) {					
                   		newIconStyleForm[n].id = "iconstyleform_" + editIconStyleId;
-                  		newIconStyleForm[n].name = "iconstyleform_" + editIconStyleId;					 
+                  		newIconStyleForm[n].name = "iconstyleform_" + editIconStyleId;
+            			if (x % 2){
+            				addElementClass( newIconStyleForm[n], 'even');
+            			}else{
+            				addElementClass( newIconStyleForm[n], 'odd');
+            			}			 
           				var nLSFKids = newIconStyleForm[n].childNodes;
           				for (var o=0; o<nLSFKids.length; o++){
           					if (nLSFKids[o].id == "iconstyleformdata_n"){
@@ -589,14 +605,24 @@ function editIconStyles(){
                 form.fill_color.value = bMIconData[b].fill_color;
                 form.fill_opacity.value = bMIconData[b].fill_opacity;
     
-      			// just for a pretty button - js sucks it!
-      			var linkParent = $('iconstyleformdata_'+editIconStyleId);
-      			var linkPKids = linkParent.childNodes;
-      			for (var p=0; p<linkPKids.length; p++){
-      				if (linkPKids[p].name == "save_iconstyle_btn"){
-        				linkPKids[p].href = "javascript:storeIconStyle('edit_iconstyle.php', document.iconstyleform_"+editIconStyleId+");" ;
-      				}
-    			}
+      			// custom menu options and a pretty button
+           		var mytable = $('iconstyleformdata_'+editIconStyleId);
+           		var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+   				var myrow = mytablebody.getElementsByTagName("tr").item(0);
+           		var mycel = myrow.getElementsByTagName("td").item(1);
+
+//					alert(mycel.getElementsByTagName("select").item(0).onchange);
+//					mycel.getElementsByTagName("select").item(0).onchange = "javascript:toggleIconMenu(this.value, "+editIconStyleId+");";
+
+					mycel = myrow.getElementsByTagName("td").item(6);
+					mycel.getElementsByTagName("a").item(0).href = "javascript:storeIconStyle(document.iconstyleform_"+editIconStyleId+");";
+
+					mytablebody.getElementsByTagName("tr").item(1).id = "gicon_style_head_"+editIconStyleId;
+					mytablebody.getElementsByTagName("tr").item(2).id = "gicon_style_menu1_"+editIconStyleId;
+					mytablebody.getElementsByTagName("tr").item(3).id = "gicon_style_menu2_"+editIconStyleId;
+					mytablebody.getElementsByTagName("tr").item(4).id = "xicon_style_head_"+editIconStyleId;
+					mytablebody.getElementsByTagName("tr").item(5).id = "xicon_style_menu_"+editIconStyleId;
+
       		}
   		}
   	}
@@ -634,8 +660,8 @@ function editMarkerStyles(){
 		show('editmarkerstyleform');
 		show('editmarkerstylescancel');
 
-	//if markerstyles data exists
-	if ( typeof( bMStyleData ) ) {
+		//if markerstyles data exists
+		if ( typeof( bMStyleData ) ) {
 
   	// We assume editMarkerStyles has been called before and remove 
   	// any previously existing sets from the UI
@@ -651,10 +677,11 @@ function editMarkerStyles(){
 
   	var editMarkerStyleId;
 
+		var x = 0;
   	// for each markerstyle data set clone the form
   	for (var b=0; b<bMStyleData.length; b++) {
     	if ( bMStyleData[b]!= null ){  						
-
+				x++
     		editMarkerStyleId = bMStyleData[b].style_id;
 
     		// clone the form container
@@ -665,16 +692,21 @@ function editMarkerStyles(){
   			// update the new form ids
     		newMarkerStyleForm = newMarkerStyle.childNodes;
             for ( var n = 0; n < newMarkerStyleForm.length; n++ ) {
-        				if ( newMarkerStyleForm[n].id == "markerstyleform_n" ) {					
-              			 newMarkerStyleForm[n].id = "markerstyleform_" + editMarkerStyleId;
-              			 newMarkerStyleForm[n].name = "markerstyleform_" + editMarkerStyleId;					 
-      							 var nMSFKids = newMarkerStyleForm[n].childNodes;
-      							 for (var o=0; o<nMSFKids.length; o++){
-      							   if (nMSFKids[o].id == "markerstyleformdata_n"){
-      									 nMSFKids[o].id = "markerstyleformdata_" + editMarkerStyleId;
-      								 }
-      							 }
+					if ( newMarkerStyleForm[n].id == "markerstyleform_n" ) {					
+						newMarkerStyleForm[n].id = "markerstyleform_" + editMarkerStyleId;
+              		newMarkerStyleForm[n].name = "markerstyleform_" + editMarkerStyleId;					 
+            		if (x % 2){
+            			addElementClass( newMarkerStyleForm[n], 'even');
+            		}else{
+            			addElementClass( newMarkerStyleForm[n], 'odd');
+            		}
+      				var nMSFKids = newMarkerStyleForm[n].childNodes;
+      				for (var o=0; o<nMSFKids.length; o++){
+      					if (nMSFKids[o].id == "markerstyleformdata_n"){
+      						nMSFKids[o].id = "markerstyleformdata_" + editMarkerStyleId;
       					}
+      				}
+      			}
       		}
 
         	// add form to style table
@@ -699,6 +731,7 @@ function editMarkerStyles(){
             form.window_styles.value = bMStyleData[b].window_styles;
 
   			// just for a pretty button - js sucks it!
+	/*
   			var linkParent = $('markerstyleformdata_'+editMarkerStyleId);
   			var linkPKids = linkParent.childNodes;
   			for (var p=0; p<linkPKids.length; p++){
@@ -706,7 +739,13 @@ function editMarkerStyles(){
   							 linkPKids[p].href = "javascript:storeMarkerStyle('edit_markerstyle.php', document.markerstyleform_"+editMarkerStyleId+");" ;
   						}
 				}
+	*/
 
+           	var mytable = $('markerstyleformdata_'+editMarkerStyleId);
+           	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+   			var myrow = mytablebody.getElementsByTagName("tr").item(0);
+           	var mycel = myrow.getElementsByTagName("td").item(6);
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:storeMarkerStyle(document.markerstyleform_"+editMarkerStyleId+");";
   		}
 		}
 	}
@@ -1468,99 +1507,99 @@ function newPolygonStyle(){
 			doSimpleXMLHttpRequest("edit.php", f).addCallback(updateMap); 
 	 }
 
-	 function storeNewMapType(u, f){
+	 function storeNewMapType(f){
 	 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + bMapID;
 			doSimpleXMLHttpRequest(str).addCallback( addMapType ); 
 	 }
 
-	 function storeMapType(u, f){	 
+	 function storeMapType(f){	 
 			editObjectN = f.array_n.value;
 	 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + bMapID;
 			doSimpleXMLHttpRequest(str).addCallback( updateMapType ); 
 	 }
 	 
-	 function removeMapType(u, f){
+	 function removeMapType(f){
 			editObjectN = f.array_n.value;
 			editSetId = f.maptype_id.value;
 	 		var str = "edit_maptype.php?" + "maptype_id=" + editSetId + "&gmap_id=" + bMapID + "&remove_maptype=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMapType ); 
 	 }
 	 
-	 function expungeMapType(u, f){
+	 function expungeMapType(f){
 			editObjectN = f.array_n.value;
 			editSetId = f.maptype_id.value;
 	 		var str = "edit_maptype.php?" + "maptype_id=" + editSetId + "&expunge_maptype=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMapType ); 
 	 }
 	 
-	 function storeNewMarker(u, f){
+	 function storeNewMarker(f){
 			editSetId = f.set_id.value;
 	 		var str = "edit_marker.php?" + queryString(f) + "&save_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( addMarker ); 
 	 }
 	 
-	 function storeMarker(u, f){
+	 function storeMarker(f){
 			editObjectN = f.marker_array_n.value;
 	 		var str = "edit_marker.php?" + queryString(f) + "&save_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateMarker ); 
 	 }
 	 
-	 function removeMarker(u, f){
+	 function removeMarker(f){
 			editSetId = f.set_id.value;
 			editMarkerId = f.marker_id.value;
 	 		var str = "edit_marker.php?set_id=" + editSetId + "&marker_id=" + editMarkerId + "&remove_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarker ); 
 	 }
 
-	 function expungeMarker(u, f){
+	 function expungeMarker(f){
 			editSetId = f.set_id.value;
 			editMarkerId = f.marker_id.value;
 	 		var str = "edit_marker.php?marker_id=" + editMarkerId + "&expunge_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarker ); 
 	 }	 
 
-	 function storeNewMarkerSet(u, f){
+	 function storeNewMarkerSet(f){
 			canceledit('editerror');
 	 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + bMapID;
 			doSimpleXMLHttpRequest(str).addCallback( addMarkerSet ); 
 	 }
 
-	 function storeMarkerSet(u, f){
+	 function storeMarkerSet(f){
 			editSetId = f.set_id.value;
 			editObjectN = f.set_array_n.value;
 	 		var str = "edit_markerset.php?" + queryString(f) + "&gmap_id=" + bMapID + "&save_markerset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateMarkerSet ); 
 	 }
 
-	 function removeMarkerSet(u, f){
+	 function removeMarkerSet(f){
 			editSetId = f.set_id.value;
 			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + bMapID + "&remove_markerset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarkerSet ); 
 	 }
 
-	 function expungeMarkerSet(u, f){
+	 function expungeMarkerSet(f){
 			editSetId = f.set_id.value;
 			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarkerSet ); 
 	 }
 	 
-	 function storeNewMarkerStyle(u, f){
+	 function storeNewMarkerStyle(f){
 	 		var str = "edit_markerstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( addMarkerStyle ); 
 	 }
 
-	 function storeMarkerStyle(u, f){
+	 function storeMarkerStyle(f){
 			editObjectN = f.style_array_n.value;
 	 		var str = "edit_markerstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( updateMarkerStyle ); 
 	 }
 
-	 function storeNewIconStyle(u, f){
+	 function storeNewIconStyle(f){
 	 		var str = "edit_iconstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( addIconStyle ); 
 	 }
 
-	 function storeIconStyle(u, f){
+	 function storeIconStyle(f){
 			editObjectN = f.style_array_n.value;
 	 		var str = "edit_iconstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( updateIconStyle ); 
