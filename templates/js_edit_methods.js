@@ -1264,16 +1264,21 @@ function editPolygons(){
 				show('polygonsetform_'+newSetId);
 
 				//get form data div children and update
-				var dataKids = $('polygonsetformdata_' + newSetId).childNodes;
-				for (var c=0; c<dataKids.length; c++) { 
-    			if (dataKids[c].id == "pgsetname"){dataKids[c].innerHTML = bPSetData[b].name+":";}
-     			if (dataKids[c].id == "pgsetdesc"){dataKids[c].innerHTML = bPSetData[b].description;}
-    			if (dataKids[c].id == "pgsetedit"){dataKids[c].href = "javascript:editPolygonSet("+newSetId+");";}
-    			if (dataKids[c].id == "pgsetadd"){dataKids[c].href = "javascript:alert('feature coming soon');";}
-    			if (dataKids[c].id == "pgsetstore"){dataKids[c].href = "javascript:storePolygonSet(document.polygonsetform_"+newSetId+");";}
-    			if (dataKids[c].id == "pgsetremove"){dataKids[c].href = "javascript:removePolygonSet(document.polygonsetform_"+newSetId+");";}
-    			if (dataKids[c].id == "pgsetdelete"){dataKids[c].href = "javascript:expungePolygonSet(document.polygonsetform_"+newSetId+");";}
-				}
+           	var mytable = $('polygonsetformdata_' + newSetId);
+           	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+   			var myrow = mytablebody.getElementsByTagName("tr").item(0);
+           	var mycel = myrow.getElementsByTagName("td").item(0);
+   			mycel.getElementsByTagName("b").item(0).innerHTML = bPSetData[b].name;
+           	mycel = myrow.getElementsByTagName("td").item(5);
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:storePolygonSet(document.polygonsetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(1).href = "javascript:removePolygonSet(document.polygonsetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:expungePolygonSet(document.polygonsetform_"+newSetId+");";
+
+   			myrow = mytablebody.getElementsByTagName("tr").item(1);
+   			mycel = myrow.getElementsByTagName("td").item(0);
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:editPolygonSet("+newSetId+");";
+  			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
+
 
 				//get form and update values
 				form = $('polygonsetform_'+newSetId);
@@ -1306,9 +1311,10 @@ function editPolygons(){
 		}			
 
   	//for length of polygons add form to setelement on matching set_id
+		x = 0;
   	for (g=0; g<bPData.length; g++) {
 			if (bPData[g]!= null){
-
+				x++;
 				//add polygon form...again a little ugly here
 				var formCont = $("editpolygontable_"+bPData[g].set_id);
 
@@ -1319,8 +1325,12 @@ function editPolygons(){
             		var newPolygonForm = formContKids[n].cloneNode(true);
         			newPolygonForm.id = "polygonform_"+g;
     				newPolygonForm.name = "polygonform_"+g;
+                 	if (x % 2){
+                 		addElementClass( newPolygonForm, 'even');
+                 	}else{
+                 		addElementClass( newPolygonForm, 'odd');
+                 	}							
     				var nPFKids = newPolygonForm.childNodes;
-
      				for (var o=0; o<nPFKids.length; o++){
     					if (nPFKids[o].id == "polygonformdata_n"){
     						nPFKids[o].id = "polygonformdata_"+g;
@@ -1348,29 +1358,20 @@ function editPolygons(){
             form.radius.value = bPData[g].radius;
             form.border_text.value = bPData[g].border_text;
             form.zindex.value = bPData[g].zindex;
-            form.polygon_array.value = bPData[g].array;
             form.polygon_array_n.value = bPData[g].array_n;
 				
 				// just for a pretty button - js sucks it!
-				var linkParent = $('polygonformdata_'+g);
-				var linkPKids = linkParent.childNodes;
-				for (var p=0; p<linkPKids.length; p++){
-						if (linkPKids[p].name == "save_polygon_btn"){
-							 linkPKids[p].href = "javascript:storePolygon(document.polygonform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "locate_polygon_btn"){
-							 linkPKids[p].href = "javascript:alert('feature coming soon');" ;
-						}
-						if (linkPKids[p].name == "remove_polygon_btn"){
-							 linkPKids[p].href = "javascript:removePolygon(document.polygonform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "expunge_polygon_btn"){
-							 linkPKids[p].href = "javascript:expungePolygon(document.polygonform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "polygon_assist_btn"){
-							 linkPKids[p].href = "javascript:addAssistant('polygon', " + g + ");" ;
-						}
-				}
+           	var mytable = $('polygonformdata_'+g);
+           	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+   			var myrow = mytablebody.getElementsByTagName("tr").item(0);
+           	var mycel = myrow.getElementsByTagName("td").item(2);
+				mycel.getElementsByTagName("a").item(0).href = "javascript:addAssistant('polygon', "+g+");";
+
+				mycel = myrow.getElementsByTagName("td").item(7);
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:storePolygon(document.polygonform_"+g+");";
+   			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:removePolygon(document.polygonform_"+g+");";
+   			mycel.getElementsByTagName("a").item(3).href = "javascript:expungePolygon(document.polygonform_"+g+");";
 			}
 		}		
 	}
@@ -1413,11 +1414,11 @@ function editPolygonStyles(){
     	}
   
     	var editPolygonStyleId;
-  
+  		var x=0;
     	// for each markerstyle data set clone the form
     	for (var b=0; b<bPStyData.length; b++) {
         	if ( bPStyData[b]!= null ){  						
-    
+					x++;    
         		editPolygonStyleId = bPStyData[b].style_id;
 
         		// clone the form container
@@ -1431,6 +1432,11 @@ function editPolygonStyles(){
             		if ( newPolygonStyleForm[n].id == "polygonstyleform_n" ) {
                   		newPolygonStyleForm[n].id = "polygonstyleform_" + editPolygonStyleId;
                   		newPolygonStyleForm[n].name = "polygonstyleform_" + editPolygonStyleId;
+							if (x % 2){
+                 			addElementClass( newPolygonStyleForm[n], 'even');
+                 		}else{
+                 			addElementClass( newPolygonStyleForm[n], 'odd');
+                 		}							
           				var nPSFKids = newPolygonStyleForm[n].childNodes;
           				for (var o=0; o<nPSFKids.length; o++){
           					if (nPSFKids[o].id == "polygonstyleformdata_n"){
@@ -1456,14 +1462,11 @@ function editPolygonStyles(){
                 form.opacity.value = bPStyData[b].opacity;
  
       			// just for a pretty button - js sucks it!
-      			var linkParent = $('polygonstyleformdata_'+editPolygonStyleId);
-
-      			var linkPKids = linkParent.childNodes;
-      			for (var p=0; p<linkPKids.length; p++){
-      				if (linkPKids[p].name == "save_polygonstyle_btn"){
-        				linkPKids[p].href = "javascript:storePolygonStyle(document.polygonstyleform_"+editPolygonStyleId+");" ;
-      				}
-    			}
+           		var mytable = $('polygonstyleformdata_'+editPolygonStyleId);
+           		var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+   				var myrow = mytablebody.getElementsByTagName("tr").item(0);
+           		var mycel = myrow.getElementsByTagName("td").item(5);
+					mycel.getElementsByTagName("a").item(0).href = "javascript:storePolygonStyle(document.polygonstyleform_"+editPolygonStyleId+");";
       		}
   		}
   	}
