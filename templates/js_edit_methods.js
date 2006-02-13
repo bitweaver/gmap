@@ -881,16 +881,21 @@ function editPolylines(){
 				show('polylinesetform_'+newSetId);
   
 				//get form data div children and update
-				var dataKids = $('polylinesetformdata_' + newSetId).childNodes;
-				for (var c=0; c<dataKids.length; c++) { 
-    			if (dataKids[c].id == "plsetname"){dataKids[c].innerHTML = bLSetData[b].name+":";}
-     			if (dataKids[c].id == "plsetdesc"){dataKids[c].innerHTML = bLSetData[b].description;}
-    			if (dataKids[c].id == "plsetedit"){dataKids[c].href = "javascript:editPolylineSet("+newSetId+");";}
-    			if (dataKids[c].id == "plsetadd"){dataKids[c].href = "javascript:alert('feature coming soon');";}
-    			if (dataKids[c].id == "plsetstore"){dataKids[c].href = "javascript:storePolylineSet(document.polylinesetform_"+newSetId+");";}
-    			if (dataKids[c].id == "plsetremove"){dataKids[c].href = "javascript:removePolylineSet(document.polylinesetform_"+newSetId+");";}
-    			if (dataKids[c].id == "plsetdelete"){dataKids[c].href = "javascript:expungePolylineSet(document.polylinesetform_"+newSetId+");";}
-				}
+           	var mytable = $('polylinesetformdata_' + newSetId);
+           	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+   			var myrow = mytablebody.getElementsByTagName("tr").item(0);
+           	var mycel = myrow.getElementsByTagName("td").item(0);
+   			mycel.getElementsByTagName("b").item(0).innerHTML = bLSetData[b].name;
+           	mycel = myrow.getElementsByTagName("td").item(5);
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:storePolylineSet(document.polylinesetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(1).href = "javascript:removePolylineSet(document.polylinesetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:expungePolylineSet(document.polylinesetform_"+newSetId+");";
+
+   			myrow = mytablebody.getElementsByTagName("tr").item(1);
+   			mycel = myrow.getElementsByTagName("td").item(0);
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:editPolylineSet("+newSetId+");";
+  			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
+
 				//get form and update values
 				form = $('polylinesetform_'+newSetId);
 				form.set_id.value = newSetId;
@@ -913,8 +918,10 @@ function editPolylines(){
 		}			
 
   	//for length of polylines add form to setelement on matching set_id
+		var x = 0;
   	for (g=0; g<bLData.length; g++) {
 			if (bLData[g]!= null){
+				x++;
 				//add polyline form...again a little ugly here
 				var formCont = $("editpolylinetable_"+bLData[g].set_id);
   			formContKids = formCont.childNodes;
@@ -923,6 +930,11 @@ function editPolylines(){
             		var newPolylineForm = formContKids[n].cloneNode(true);
         			newPolylineForm.id = "polylineform_"+g;
     				newPolylineForm.name = "polylineform_"+g;
+            		if (x % 2){
+            			addElementClass( newPolylineForm, 'even');
+            		}else{
+            			addElementClass( newPolylineForm, 'odd');
+            		}
     				var nLFKids = newPolylineForm.childNodes;
     				for (var o=0; o<nLFKids.length; o++){
     					if (nLFKids[o].id == "polylineformdata_n"){
@@ -932,42 +944,32 @@ function editPolylines(){
     							
         			$('editpolylinetable_'+bLData[g].set_id).appendChild(newPolylineForm);
     				show('polylineform_'+g);
-    				break;
     			}
     		}
-				
+
 				// populate set form values
 				form = $('polylineform_'+g);
 
             form.set_id.value = bLData[g].set_id;
             form.polyline_id.value = bLData[g].polyline_id;
-            form.name.value = bLData[g].name;				
+            form.name.value = bLData[g].name;
             form.points_data.value = bLData[g].points_data;
             form.border_text.value = bLData[g].border_text;
             form.zindex.value = bLData[g].zindex;
-            form.polyline_array.value = bLData[g].array;
             form.polyline_array_n.value = bLData[g].array_n;
 				
 				// just for a pretty button - js sucks it!
-				var linkParent = $('polylineformdata_'+g);
-				var linkPKids = linkParent.childNodes;
-				for (var p=0; p<linkPKids.length; p++){
-						if (linkPKids[p].name == "save_polyline_btn"){
-							 linkPKids[p].href = "javascript:storePolyline(document.polylineform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "locate_polyline_btn"){
-							 linkPKids[p].href = "javascript:alert('feature coming soon');" ;
-						}
-						if (linkPKids[p].name == "remove_polyline_btn"){
-							 linkPKids[p].href = "javascript:removePolyline(document.polylineform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "expunge_polyline_btn"){
-							 linkPKids[p].href = "javascript:expungePolyline(document.polylineform_"+g+");" ;
-						}
-						if (linkPKids[p].name == "polyline_assist_btn"){
-							 linkPKids[p].href = "javascript:addAssistant('polyline', " + g + ");" ;
-						}
-				}
+           	var mytable = $('polylineformdata_'+g);
+           	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+   			var myrow = mytablebody.getElementsByTagName("tr").item(0);
+           	var mycel = myrow.getElementsByTagName("td").item(1);
+				mycel.getElementsByTagName("a").item(0).href = "javascript:addAssistant('polyline', "+g+");";
+
+				mycel = myrow.getElementsByTagName("td").item(4);
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:storePolyline(document.polylineform_"+g+");";
+   			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:removePolyline(document.polylineform_"+g+");";
+   			mycel.getElementsByTagName("a").item(3).href = "javascript:expungePolyline(document.polylineform_"+g+");";
 			}
 		}		
 	}
@@ -1012,9 +1014,10 @@ function editPolylineStyles(){
     	var editPolylineStyleId;
   
     	// for each markerstyle data set clone the form
+			var x = 0;
     	for (var b=0; b<bLStyData.length; b++) {
         	if ( bLStyData[b]!= null ){  						
-    
+					x++;    
         		editPolylineStyleId = bLStyData[b].style_id;
     
         		// clone the form container
@@ -1028,6 +1031,11 @@ function editPolylineStyles(){
             		if ( newPolylineStyleForm[n].id == "polylinestyleform_n" ) {					
                   		newPolylineStyleForm[n].id = "polylinestyleform_" + editPolylineStyleId;
                   		newPolylineStyleForm[n].name = "polylinestyleform_" + editPolylineStyleId;					 
+                 		if (x % 2){
+                 			addElementClass( newPolylineStyleForm[n], 'even');
+                 		}else{
+                 			addElementClass( newPolylineStyleForm[n], 'odd');
+                 		}							
           				var nLSFKids = newPolylineStyleForm[n].childNodes;
           				for (var o=0; o<nLSFKids.length; o++){
           					if (nLSFKids[o].id == "polylinestyleformdata_n"){
@@ -1080,13 +1088,11 @@ function editPolylineStyles(){
                 form.text_bgstyle_zindex.value = bLStyData[b].text_bgstyle_zindex;
     
       			// just for a pretty button - js sucks it!
-      			var linkParent = $('polylinestyleformdata_'+editPolylineStyleId);
-      			var linkPKids = linkParent.childNodes;
-      			for (var p=0; p<linkPKids.length; p++){
-      				if (linkPKids[p].name == "save_polylinestyle_btn"){
-        				linkPKids[p].href = "javascript:storePolylineStyle(document.polylinestyleform_"+editPolylineStyleId+");" ;
-      				}
-    			}
+           		var mytable = $('polylinestyleformdata_'+editPolylineStyleId);
+           		var mytablebody = mytable.getElementsByTagName("tbody").item(0);
+   				var myrow = mytablebody.getElementsByTagName("tr").item(0);
+           		var mycel = myrow.getElementsByTagName("td").item(5);
+					mycel.getElementsByTagName("a").item(0).href = "javascript:storePolylineStyle(document.polylinestyleform_"+editPolylineStyleId+");";
       		}
   		}
   	}

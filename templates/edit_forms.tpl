@@ -108,7 +108,7 @@
     		</table>
     	</form>
   	</div>
-		<div id="newmaptypecancel" style="clear:both;"><input type="button" name="closenewmaptypeform" value="Cancel Adding A New Map Type" onclick="javascript:canceledit('newmaptypeform');"></div>
+		<div id="newmaptypecancel" ><input type="button" name="closenewmaptypeform" value="Cancel Adding A New Map Type" onclick="javascript:canceledit('newmaptypeform');"></div>
 </div> <!-- end of editmaptypeform -->
 
 
@@ -162,7 +162,7 @@
   		  </div>
 </div> <!-- end of editmaptypeform -->
 
-<div id="editmaptypecancel" style="display:none; clear:both;"><input type="button" name="closemaptypeform" value="Cancel Editing Map Types" onclick="javascript:canceledit('editmaptypemenu'); canceledit('editmaptypeform'); canceledit('editmaptypecancel'); canceledit('newmaptypeform')"></div>
+<div id="editmaptypecancel" style="display:none;"><input type="button" name="closemaptypeform" value="Cancel Editing Map Types" onclick="javascript:canceledit('editmaptypemenu'); canceledit('editmaptypeform'); canceledit('editmaptypecancel'); canceledit('newmaptypeform')"></div>
 <!--end maptype editing forms -->
 
 
@@ -225,7 +225,7 @@
 				</table>
 			</form>
 		</div>
-		<div id="newmarkersetcancel" style="clear:both;"><input type="button" name="closemarkersetform" value="Cancel New Marker Set" onclick="javascript:canceledit('newmarkersetform'); canceledit('editerror');"></div>
+		<div id="newmarkersetcancel" ><input type="button" name="closemarkersetform" value="Cancel New Marker Set" onclick="javascript:canceledit('newmarkersetform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newmarkersetform -->
 
@@ -262,7 +262,7 @@
     		</table>
     	</form>
 		</div>
-		<div id="newmarkercancel" style="clear:both;"><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:canceledit('newmarkerform'); removeAssistant(); canceledit('editerror');"></div>
+		<div id="newmarkercancel" ><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:canceledit('newmarkerform'); removeAssistant(); canceledit('editerror');"></div>
 </div> <!-- end of newmarkerform -->
 
 
@@ -278,7 +278,7 @@
     		<div class="table" id="editiconstyletable_new">
     			<form action="javascript:;" name="iconstyleform_new" id="iconstyleform_new">
 					<input name="save_iconstyle" type="hidden" value="true">
-    			<table class="data" class="gmapeditstrong">
+    			<table class="data gmapeditstrong">
 						<tr>
 							<td>Name<br/><input name="name" type="text" size="15" value="a name"></td>
 							<td>Type<br/><select name="type" onChange="javascript:toggleIconMenu(this.value, 'new');">
@@ -324,7 +324,7 @@
     			</table>
     			</form>
   		  </div>
-		<div id="newiconstylecancel" style="clear:both;"><input type="button" name="closeiconstyleform" value="Cancel New Icon Style" onclick="javascript:canceledit('newiconstyleform'); canceledit('editerror');"></div>
+		<div id="newiconstylecancel" ><input type="button" name="closeiconstyleform" value="Cancel New Icon Style" onclick="javascript:canceledit('newiconstyleform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newiconstyleform -->
 
@@ -384,7 +384,7 @@
 		</div>
 </div> <!-- end of editiconstylesform -->
 
-<div id="editiconstylescancel" style="display:none; clear:both;"><input type="button" name="closeiconstylesform" value="Cancel Editing Icon Styles" onclick="javascript:canceledit('editiconstylesmenu'); canceledit('newiconstyleform'); canceledit('editiconstyleform'); canceledit('editiconstylescancel');"></div>
+<div id="editiconstylescancel" style="display:none;"><input type="button" name="closeiconstylesform" value="Cancel Editing Icon Styles" onclick="javascript:canceledit('editiconstylesmenu'); canceledit('newiconstyleform'); canceledit('editiconstyleform'); canceledit('editiconstylescancel');"></div>
 <!--end icon style editing forms -->
 
 
@@ -425,7 +425,7 @@
     		</table>
 			</form>
 		</div>
-		<div id="newmarkerstylecancel" style="clear:both;"><input type="button" name="closemarkerstyleform" value="Cancel New Marker Style" onclick="javascript:canceledit('newmarkerstyleform'); canceledit('editerror');"></div>
+		<div id="newmarkerstylecancel" ><input type="button" name="closemarkerstyleform" value="Cancel New Marker Style" onclick="javascript:canceledit('newmarkerstyleform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newmarkerstyleform -->
 
@@ -467,7 +467,7 @@
 		</div>
 </div> <!-- end of editmarkerstylesform -->
 
-<div id="editmarkerstylescancel" style="display:none; clear:both;"><input type="button" name="closemarkerstylesform" value="Cancel Editing Marker Styles" onclick="javascript:canceledit('editmarkerstylesmenu'); canceledit('newmarkerstyleform'); canceledit('editmarkerstyleform'); canceledit('editmarkerstylescancel');"></div>
+<div id="editmarkerstylescancel" style="display:none;"><input type="button" name="closemarkerstylesform" value="Cancel Editing Marker Styles" onclick="javascript:canceledit('editmarkerstylesmenu'); canceledit('newmarkerstyleform'); canceledit('editmarkerstyleform'); canceledit('editmarkerstylescancel');"></div>
 <!--end marker style editing forms -->
 
 
@@ -487,7 +487,7 @@
 				<th style="width:80px">ACTIONS</th>
 			</tr>
 		</table>
-		<div id="markerset_n" style="display:none; clear:both;">
+		<div id="markerset_n" style="display:none;">
 			<form action="javascript:;" name="markersetform_n" id="markersetform_n" style="display:none;">
   			<input name="set_id" type="hidden" value="n">
             <input name="set_array_n" type="hidden" value="n">
@@ -563,7 +563,7 @@
 						</table>
         		</form>
 				</div>
-      		<div id="allavailmarkers_n" style="display:none; clear:both;">
+      		<div id="allavailmarkers_n" style="display:none;">
     			<h3>All Markers Available</h3>
         		<div class="table" id="addmarkertable_n">
         			<form action="javascript:;" name="addmarkerform_n" id="addmarkerform_n">
@@ -578,7 +578,7 @@
 </div> <!-- end of editmarkerform -->
 
 
-<div id="editmarkercancel" style="display:none; clear:both;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:canceledit('editmarkermenu'); canceledit('newmarkerform'); canceledit('editmarkerform'); canceledit('newmarkersetform'); canceledit('editmarkercancel'); canceledit('editmarkerstylesmenu'); canceledit('newmarkerstyleform'); canceledit('editmarkerstylesform'); canceledit('editmarkerstylescancel'); removeAssistant();  canceledit('editerror');"></div>
+<div id="editmarkercancel" style="display:none;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:canceledit('editmarkermenu'); canceledit('newmarkerform'); canceledit('editmarkerform'); canceledit('newmarkersetform'); canceledit('editmarkercancel'); canceledit('editmarkerstylesmenu'); canceledit('newmarkerstyleform'); canceledit('editmarkerstylesform'); canceledit('editmarkerstylescancel'); removeAssistant();  canceledit('editerror');"></div>
 <!--end marker editing forms -->
 
 
@@ -598,43 +598,43 @@
 </div>
 
 <div id="newpolylinesetform" class="editform" style="display:none;">
-		<h2>Add a New Polyline Set</h2>		
-    	<div class="table" id="editpolylinesettable_new">
-    		<form action="javascript:;" name="polylinesetform_new" id="polylinesetform_new">
-    			<div class="data">
-          			<input name="save_polylineset" type="hidden" value="true">
-          			<div style="float:left; padding:0 .4em; width:90px">
-							New: <input name="name" type="text" size="15" value="a name">
-						</div>
-          			<div style="float:left; padding:0 .4em; width:140px">
-							Description: <textarea name="description" cols="15" rows="3"></textarea>
-						</div>
-          			<div style="float:left; padding:0 .4em; width:140px">
-							Style: <select name="style_id" id="style_id">
+		<h2>Add a New Polyline Set</h2>
+    <div class="table" id="editpolylinesettable_new">
+    	<form action="javascript:;" name="polylinesetform_new" id="polylinesetform_new">
+				<input name="save_polylineset" type="hidden" value="true">
+    		<table class="data">
+					<tr>
+						<th>Name</th>
+						<th>Description</th>
+						<th>Style</th>
+						<th>Map Display Settings</th>
+						<th>Side Panel Display Settings</th>
+						<th style="width:80px">ACTIONS</th>
+					</tr>
+					<tr class="gmapeditstrong">
+						<td><input name="name" type="text" style="width:90%" value="a name"></td>
+						<td><textarea name="description" style="width:90%" rows="2"></textarea></td>
+						<td><select name="style_id" id="style_id">
                                     	<option value="0" >Google (standard)</option>
-                                      	</select>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:200px">
-    					Plot-On-Load: <select name="plot_on_load">
+                                      	</select></td>
+						<td>Plot-On-Load: <select name="plot_on_load">
                       					<option value="true">Yes</option>
                       					<option value="false">No</option>
-                          				</select><br/>
-    					Side: <select name="side_panel">
+                          				</select></td>
+						<td>Side: <select name="side_panel">
                       					<option value="true">Yes</option>
                       					<option value="false">No</option>
                           				</select><br/>
     					List: <select name="explode">
                       					<option value="true">Yes</option>
                       					<option value="false">No</option>
-                          				</select><br/>
-						</div>
-          			<div style="float:left; padding:0 .4em; width:70px">
-							ACTION:<br/><a name="new_polylineset_btn" title="save" href="javascript:storeNewPolylineSet(document.polylinesetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-						</div>
-    			</div>
-    		</form>
-			</div>
-		<div id="newpolylinesetcancel" style="clear:both;"><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:canceledit('newpolylinesetform'); canceledit('editerror');"></div>
+                          				</select></td>
+						<td style="width:80px"><a name="new_polylineset_btn" title="save" href="javascript:storeNewPolylineSet(document.polylinesetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+					</tr>
+				</table>
+    	</form>
+		</div>
+		<div id="newpolylinesetcancel" ><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:canceledit('newpolylinesetform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newpolylinesetform -->
 
@@ -648,13 +648,12 @@
 
 <div id="newpolylinestyleform" class="editform" style="display:none;">
 		<h2>Add a New Polyline Style</h2>		
-    		<div class="table" id="editpolylinestyletable_new">
-    			<form action="javascript:;" name="polylinestyleform_new" id="polylinestyleform_new">
-    			<div class="data">
-                	<div style="float:left; padding:0 .4em; width:10px">
-							<input name="save_polylinestyle" type="hidden" value="true">
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
+    <div class="table" id="editpolylinestyletable_new">
+    	<form action="javascript:;" name="polylinestyleform_new" id="polylinestyleform_new">
+				<input name="save_polylinestyle" type="hidden" value="true">
+    		<table class="data gmapeditstrong">
+					<tr>
+                	<td>
 							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
 							Type <br/><select name="type">
                                 <option value="0">Google Default</option>
@@ -663,13 +662,13 @@
                      	Color <br/><input name="color" type="text" size="15" value="ff3300"><br/>
                      	Weight <br/><input name="weight" type="text" size="15" value="2"><br/>
                      	Opacity <br/><input name="opacity" type="text" size="15" value=".75"><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
+						</td>
+                	<td>
 							Pattern <br/><input name="pattern" type="text" size="15" value=""><br/>
                         Segment Count <br/><input name="segment_count" type="text" size="15" value=""><br/>
                 		Text Every <br/><input name="text_every" type="text" size="15" value="">
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
+						</td>
+                	<td>
                 		Begin Arrow <br/><select name="begin_arrow">
                         				<option value="false">No</option>
                                         <option value="true">Yes</option>
@@ -679,39 +678,39 @@
                                         <option value="true">Yes</option>
                                     </select><br/>
                 		Arrow Every <br/><input name="arrows_every" type="text" size="15" value=""><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
+						</td>
+                	<td>
                     	Text FG Color <br/><input name="text_fgstyle_color" type="text" size="15" value="ffffff"><br/>
                     	Text FG Weight <br/><input name="text_fgstyle_weight" type="text" size="15" value="1"><br/>
                     	Text FG Opacity <br/><input name="text_fgstyle_opacity" type="text" size="15" value="1"><br/>
                     	Text FG zIndex <br/><input name="text_fgstyle_zindex" type="text" size="15" value="0">
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
+						</td>
+                	<td>
                     	Text BG Color <br/><input name="text_bgstyle_color" type="text" size="15" value="ff3300"><br/>
                     	Text BG Weight <br/><input name="text_bgstyle_weight" type="text" size="15" value="2"><br/>
                     	Text BG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
                     	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
-						</div>
-                	<div style="float:left; padding:0 .4em; width:70px">ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:storeNewPolylineStyle(document.polylinestyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
-    			</div>
-    			</form>
-  		  </div>
-		<div id="newpolylinestylecancel" style="clear:both;"><input type="button" name="closepolylinestyleform" value="Cancel New Polyline Style" onclick="javascript:canceledit('newpolylinestyleform'); canceledit('editerror');"></div>
+						</td>
+                	<td>ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:storeNewPolylineStyle(document.polylinestyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						</tr>
+    		</table>
+    	</form>
+  	</div>
+		<div id="newpolylinestylecancel" ><input type="button" name="closepolylinestyleform" value="Cancel New Polyline Style" onclick="javascript:canceledit('newpolylinestyleform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newpolylinestyleform -->
 
 
 <div id="editpolylinestyleform" class="editform" style="display:none;">
 		<h2>Polyline Styles Associated with Polyline Sets on This Map</h2>		
-      		<div class="table" id="editpolylinestyletable_n">
-      			<form action="javascript:;" name="polylinestyleform_n" id="polylinestyleform_n" style="display:none;">
-      			<div class="data" id="polylinestyleformdata_n">
-                	<div style="float:left; padding:0 .4em; width:10px">
-							<input name="save_polylinestyle" type="hidden" value="true">
-                        <input name="style_array_n" type="hidden" value="n">
-                        <input name="style_id" type="hidden" value="n">
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
+		<div class="table" id="editpolylinestyletable_n">
+			<form action="javascript:;" name="polylinestyleform_n" id="polylinestyleform_n" style="display:none;">
+				<input name="save_polylinestyle" type="hidden" value="true">
+				<input name="style_array_n" type="hidden" value="n">
+				<input name="style_id" type="hidden" value="n">
+				<table class="data" id="polylinestyleformdata_n">
+					<tr>
+                	<td>
 							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
 							Type <br/><select name="type">
                                 <option value="0">Google Default</option>
@@ -720,13 +719,13 @@
                      	Color <br/><input name="color" type="text" size="15" value="ff3300"><br/>
                      	Weight <br/><input name="weight" type="text" size="15" value="2"><br/>
                      	Opacity <br/><input name="opacity" type="text" size="15" value=".75"><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
+						</td>
+                	<td>
 							Pattern <br/><input name="pattern" type="text" size="15" value=""><br/>
                         Segment Count <br/><input name="segment_count" type="text" size="15" value=""><br/>
                 		Text Every <br/><input name="text_every" type="text" size="15" value="">
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
+						</td>
+                	<td>
                 		Begin Arrow <br/><select name="begin_arrow">
                         				<option value="false">No</option>
                                         <option value="true">Yes</option>
@@ -736,58 +735,63 @@
                                         <option value="true">Yes</option>
                                     </select><br/>
                 		Arrow Every <br/><input name="arrows_every" type="text" size="15" value=""><br/>
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
+						</td>
+                	<td>
                     	Text FG Color <br/><input name="text_fgstyle_color" type="text" size="15" value="ffffff"><br/>
                     	Text FG Weight <br/><input name="text_fgstyle_weight" type="text" size="15" value="1"><br/>
                     	Text FG Opacity <br/><input name="text_fgstyle_opacity" type="text" size="15" value="1"><br/>
                     	Text FG zIndex <br/><input name="text_fgstyle_zindex" type="text" size="15" value="0">
-						</div>
-                	<div style="float:left; padding:0 .4em; width:120px">
+						</td>
+                	<td>
                     	Text BG Color <br/><input name="text_bgstyle_color" type="text" size="15" value="ff3300"><br/>
                     	Text BG Weight <br/><input name="text_bgstyle_weight" type="text" size="15" value="2"><br/>
                     	Text BG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
                     	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
-						</div>
-                	ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:storePolylineStyle(document.polylinestyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-      			</div>
-      			</form>
-    		  </div>
+						</td>
+						<td>
+							ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:storePolylineStyle(document.polylinestyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+      				</td>
+					</tr>
+				</table>
+      	</form>
+		</div>
 </div> <!-- end of editpolylinestylesform -->
 
-<div id="editpolylinestylescancel" style="display:none; clear:both;"><input type="button" name="closepolylinestylesform" value="Cancel Editing Polyline Styles" onclick="javascript:canceledit('editpolylinestylesmenu'); canceledit('newpolylinestyleform'); canceledit('editpolylinestyleform'); canceledit('editpolylinestylescancel');"></div>
+<div id="editpolylinestylescancel" style="display:none;"><input type="button" name="closepolylinestylesform" value="Cancel Editing Polyline Styles" onclick="javascript:canceledit('editpolylinestylesmenu'); canceledit('newpolylinestyleform'); canceledit('editpolylinestyleform'); canceledit('editpolylinestylescancel');"></div>
 <!--end polyline style editing forms -->
 
 
 
 
 <div id="newpolylineform" class="editform" style="display:none;">
-		<h2>Add a New Polyline</h2>		
-        <div class="tableheader">
-    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Points Data </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Border Text <br/>only for XPolyline type</div>
-    				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
-    				<div style="float:left; padding:0 .4em; width:50px"> Set </div>
-    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>						
-    		</div>
-    		<div class="table" id="editpolylinetable_new">
-    			<form action="javascript:;" name="polylineform_new" id="polylineform_new">
-    			<div class="data">
-          	<div style="float:left; padding:0 .4em; width:10px"><input name="new_polyline" type="hidden" value="true"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="new"></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
-          	<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
-          	<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>
-          	<div style="float:left; padding:0 .4em; width:90px"><select name="set_id" id="polylineset_id">
-                                                                  <option value="n" >someset</option>
-                                          							   			</select></div>
-          	<div style="float:left; padding:0 .4em; width:70px"><a name="new_polyline_btn" title="save" href="javascript:storeNewPolyline(document.polylineform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></div>
-          	<a style="float:left; padding:0 .4em;" name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', 'new');">Use Drawing Assistant</a>
-    			</div>
-    			</form>
-  		  </div>
-		<div id="newpolylinecancel" style="clear:both;"><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:canceledit('newpolylineform'); removeAssistant(); canceledit('editerror');"></div>
+		<h2>Add a New Polyline</h2>
+    <div class="table" id="editpolylinetable_new">
+    	<form action="javascript:;" name="polylineform_new" id="polylineform_new">
+				<input name="new_polyline" type="hidden" value="true">
+    		<table class="data">
+					<tr>
+    				<th>Name </th>
+    				<th>Points Data </th>
+    				<th>Border Text <br/>only for XPolyline type</th>
+    				<th>zIndex </th>
+    				<th>Set </th>
+    				<th style="width:80px">ACTION </th>
+					</tr>
+					<tr class="gmapeditstrong">
+						<td><input name="name" type="text" style="width:90%" value="new"></td>
+						<td><textarea name="points_data" style="width:90%" rows="3"></textarea><br/>
+							<a name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', 'new');">Use Drawing Assistant</a></td>
+						<td><input name="border_text" type="text" style="width:90%" value=""></td>
+						<td><input name="zindex" type="text" size="3" value="0"></td>
+						<td><select name="set_id" id="polylineset_id">
+								<option value="n" >someset</option>
+								</select></td>
+						<td style="width:80px"><a name="new_polyline_btn" title="save" href="javascript:storeNewPolyline(document.polylineform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+					</tr>
+    		</table>
+    	</form>
+  	</div>
+		<div id="newpolylinecancel" ><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:canceledit('newpolylineform'); removeAssistant(); canceledit('editerror');"></div>
 </div> <!-- end of newpolylineform -->
 
 
@@ -796,64 +800,83 @@
 
 <div id="editpolylineform" class="editform" style="display:none;">
 		<h2>Polyline Sets Associated With This Map</h2>
-		<div id="polylineset_n" style="display:none; clear:both;">
+		<table>
+			<tr>
+				<th style="width:240px">Name</th>
+				<th>Style</th>
+				<th style="width:100px">Plot-on-Load</th>
+				<th style="width:80px">List Set</th>
+				<th style="width:100px">List Markers</th>
+				<th style="width:80px">ACTIONS</th>
+			</tr>
+		</table>
+		<div id="polylineset_n" style="display:none;">
     	<form action="javascript:;" name="polylinesetform_n" id="polylinesetform_n" style="display:none;">
 				<input name="set_id" type="hidden" size="3" value="n">
             <input name="set_array_n" type="hidden" value="n">
-  			<div class="data" id="polylinesetformdata_n">
-    			<b id="plsetname">Set Name:</b> <span id="plsetdesc">Description Here</span><br/>
-  				<a id="plsetedit" href="javascript:editPolylineSet('n');">Edit These Polylines</a> | 
-    			<a id="plsetadd" href="javascript:alert('feature coming soon');">Add Polylines from Archives</a> | 
-					Style: <select name="style_id">
+  			<table class="data" id="polylinesetformdata_n">
+					<tr class="gmapeditstrong">
+    				<td style="width:240px"><b>Set Name:</b> <!-- <span id="plsetdesc">Description Here</span><br/> --></td>
+						<td><select name="style_id">
                   				<option value="0">Google (standard)</option>
-                      			</select> | 
-					Plot-On-Load: <select name="plot_on_load">
+                      			</select></td> 
+						<td style="width:100px"><select name="plot_on_load">
                   				<option value="true">Yes</option>
                   				<option value="false">No</option>
-                      			</select> | 
-					Side: <select name="side_panel">
+                      			</select></td>
+						<td style="width:80px"><select name="side_panel">
                   				<option value="true">Yes</option>
                   				<option value="false">No</option>
-                      			</select> | 
-					List: <select name="explode">
+                      			</select></td>
+						<td style="width:100px"><select name="explode">
                   				<option value="true">Yes</option>
                   				<option value="false">No</option>
-                      			</select> | 
-    			<a id="plsetstore" href="javascript:storePolylineSet(document.polylinesetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
-  				<a id="plsetremove" href="javascript:removePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-  				<a id="plsetdelete" href="javascript:expungePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
-  			</div>
+                      			</select></td>
+    				<td style="width:80px">
+							<a id="plsetstore" href="javascript:storePolylineSet(document.polylinesetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+  						<a id="plsetremove" href="javascript:removePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+  						<a id="plsetdelete" href="javascript:expungePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+					</tr>
+					<tr>
+  					<td colspan="5"><a id="plsetedit" href="javascript:editPolylineSet('n');">Edit These Polylines</a> | 
+    					<a id="plsetadd" href="javascript:alert('feature coming soon');">Add Polylines from Archives</a></td>
+					</tr>
+  			</table>
         </form>
 			<div id="plsetform_n" style="display:none;">
 				<h3>Polylines In This Set</h3>
-        	<div class="tableheader">
-    				<div style="float:left; padding:0 .4em; width:90px"> Name </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Points Data </div>
-    				<div style="float:left; padding:0 .4em; width:140px"> Border Text <br/>only for XPolyline type</div>
-    				<div style="float:left; padding:0 .4em; width:50px"> zIndex </div>
-    				<div style="float:left; padding:0 .4em; width:70px"> ACTION </div>						
-    		</div>
+        	<table>
+					<tr>
+    				<th style="width:160px">Name </th>
+    				<th style="width:160px">Points Data </th>
+    				<th>Border Text <br/>only for XPolyline type</th>
+    				<th style="width:80px">zIndex </th>
+    				<th style="width:80px">ACTION </th>
+					</tr>
+    		</table>
     		<div class="table" id="editpolylinetable_n">
     			<form action="javascript:;" name="polylineform_n" id="polylineform_n" style="display:none;">
-        			<div class="data" id="polylineformdata_n">
-      					<div style="float:left; padding:0 .4em; width:90px"><input name="save_polyline" type="hidden" value="true"></div>
-                		<div style="float:left; padding:0 .4em; width:30px"><input name="set_id" type="hidden" size="3" value="n"></div>
-            			<div style="float:left; padding:0 .4em; width:30px"><input name="polyline_id" type="hidden" size="3" value="n"></div>
-                		<div style="float:left; padding:0 .4em; width:90px"><input name="name" type="text" size="15" value="a name"></div>
-                		<div style="float:left; padding:0 .4em; width:140px"><textarea name="points_data" cols="15" rows="3"></textarea></div>
-                		<div style="float:left; padding:0 .4em; width:140px"><input name="border_text" type="text" size="15" value=""></div>
-                		<div style="float:left; padding:0 .4em; width:50px"><input name="zindex" type="text" size="3" value="0"></div>						
-                		<div style="float:left; padding:0;"><input name="polyline_array" type="hidden" value=""></div>
-                		<div style="float:left; padding:0;"><input name="polyline_array_n" type="hidden" value=""></div>
-                		<a style="float:left; padding:0 .4em;" name="save_polyline_btn" title="save" href="javascript:storePolyline(document.polylineform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-                		<a style="float:left; padding:0 .4em;" name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-                		<a style="float:left; padding:0 .4em;" name="remove_polyline_btn" title="remove from this set" href="javascript:removePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-                		<a style="float:left; padding:0 .4em;" name="expunge_polyline_btn" title="delete the polyline!" href="javascript:expungePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
-                		<a style="float:left; padding:0 .4em;" name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', n);">Use Drawing Assistant</a>
-        			</div>
+      				<input name="save_polyline" type="hidden" value="true">
+                	<input name="set_id" type="hidden" size="3" value="n">
+            		<input name="polyline_id" type="hidden" size="3" value="n">
+						<input name="polyline_array_n" type="hidden" value="n">
+        			<table class="data" id="polylineformdata_n">
+							<tr>
+								<td style="width:160px"><input name="name" type="text" style="width:90%" value="a name"></td>
+								<td style="width:160px"><textarea name="points_data" style="width:90%" rows="3"></textarea><br/>
+									<a name="polyline_assist_btn" title="draw the line!" href="javascript:addAssistant('polyline', n);">Use Drawing Assistant</a></td>
+								<td><input name="border_text" type="text" style="width:90%" value=""></td>
+								<td style="width:80px"><input name="zindex" type="text" size="3" value="0"></td>
+								<td style="width:80px">
+									<a name="save_polyline_btn" title="save" href="javascript:storePolyline(document.polylineform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+									<a name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
+									<a name="remove_polyline_btn" title="remove from this set" href="javascript:removePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+									<a name="expunge_polyline_btn" title="delete the polyline!" href="javascript:expungePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+							</tr>
+        			</table>
     			</form>
   		  </div>
-      	<div id="allavailpolylines_n" style="display:none; clear:both;">
+      	<div id="allavailpolylines_n" style="display:none;">
     			<h3>All Polylines Available</h3>
         		<div class="table" id="addpolylinetable_n">
             		<form action="javascript:;" name="addpolylineform_n" id="addpolylineform_n">
@@ -867,7 +890,7 @@
 		</div> <!-- end of polylineset_n -->
 </div> <!-- end of editpolylineform -->
 
-<div id="editpolylinecancel" style="display:none; clear:both;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:cancelPolylineEdit(); canceledit('newpolylinesetform'); canceledit('editerror');"></div>
+<div id="editpolylinecancel" style="display:none;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:cancelPolylineEdit(); canceledit('newpolylinesetform'); canceledit('editerror');"></div>
 <!--end polyline editing forms -->
 
 
@@ -927,7 +950,7 @@
     			</div>
     		</form>
 			</div>
-		<div id="newpolygonsetcancel" style="clear:both;"><input type="button" name="closepolygonsetform" value="Cancel New Polygon Set" onclick="javascript:canceledit('newpolygonsetform'); canceledit('editerror');"></div>
+		<div id="newpolygonsetcancel" ><input type="button" name="closepolygonsetform" value="Cancel New Polygon Set" onclick="javascript:canceledit('newpolygonsetform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newpolygonsetform -->
 
@@ -960,7 +983,7 @@
     			</div>
     			</form>
   		  </div>
-		<div id="newpolygonstylecancel" style="clear:both;"><input type="button" name="closepolygonstyleform" value="Cancel New Polygon Style" onclick="javascript:canceledit('newpolygonstyleform'); canceledit('editerror');"></div>
+		<div id="newpolygonstylecancel" ><input type="button" name="closepolygonstyleform" value="Cancel New Polygon Style" onclick="javascript:canceledit('newpolygonstyleform'); canceledit('editerror');"></div>
 </div>
 <!-- end of newpolygonstyleform -->
 
@@ -990,7 +1013,7 @@
     		  </div>
 </div> <!-- end of editpolygonstylesform -->
 
-<div id="editpolygonstylescancel" style="display:none; clear:both;"><input type="button" name="closepolygonstylesform" value="Cancel Editing Polygon Styles" onclick="javascript:canceledit('editpolygonstylesmenu'); canceledit('newpolygonstyleform'); canceledit('editpolygonstyleform'); canceledit('editpolygonstylescancel');"></div>
+<div id="editpolygonstylescancel" style="display:none;"><input type="button" name="closepolygonstylesform" value="Cancel Editing Polygon Styles" onclick="javascript:canceledit('editpolygonstylesmenu'); canceledit('newpolygonstyleform'); canceledit('editpolygonstyleform'); canceledit('editpolygonstylescancel');"></div>
 <!--end polygon style editing forms -->
 
 
@@ -1031,7 +1054,7 @@
     			</div>
     			</form>
   		  </div>
-		<div id="newpolygoncancel" style="clear:both;"><input type="button" name="closepolygonform" value="Cancel New Polygon" onclick="javascript:canceledit('newpolygonform'); removeAssistant(); canceledit('editerror');"></div>
+		<div id="newpolygoncancel" ><input type="button" name="closepolygonform" value="Cancel New Polygon" onclick="javascript:canceledit('newpolygonform'); removeAssistant(); canceledit('editerror');"></div>
 </div> <!-- end of newpolygonform -->
 
 
@@ -1040,7 +1063,7 @@
 
 <div id="editpolygonform" class="editform" style="display:none;">
 		<h2>Polygon Sets Associated With This Map</h2>
-		<div id="polygonset_n" style="display:none; clear:both;">
+		<div id="polygonset_n" style="display:none;">
     	<form action="javascript:;" name="polygonsetform_n" id="polygonsetform_n" style="display:none;">
   			<div class="data" id="polygonsetformdata_n">
 					<input name="set_id" type="hidden" size="3" value="n">
@@ -1109,7 +1132,7 @@
         			</div>
     			</form>
   		  </div>
-      	<div id="allavailpolygons_n" style="display:none; clear:both;">
+      	<div id="allavailpolygons_n" style="display:none;">
     			<h3>All Polygons Available</h3>
         		<div class="table" id="addpolygontable_n">
             		<form action="javascript:;" name="addpolygonform_n" id="addpolygonform_n">
@@ -1123,6 +1146,6 @@
 		</div> <!-- end of polygonset_n -->
 </div> <!-- end of editpolygonform -->
 
-<div id="editpolygoncancel" style="display:none; clear:both;"><input type="button" name="closepolygonform" value="Cancel Editing Polygons" onclick="javascript:cancelPolygonEdit(); canceledit('newpolygonsetform'); canceledit('editerror');"></div>
+<div id="editpolygoncancel" style="display:none;"><input type="button" name="closepolygonform" value="Cancel Editing Polygons" onclick="javascript:cancelPolygonEdit(); canceledit('newpolygonsetform'); canceledit('editerror');"></div>
 <!--end polygon editing forms -->
 
