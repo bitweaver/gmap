@@ -14,5 +14,8 @@
 		<div id="map" style="width:{if $gContent->mInfo.width == 0}auto{else}{$gContent->mInfo.width}px{/if}; height:{if $gContent->mInfo.height == 0}auto{else}{$gContent->mInfo.height}px{/if};"></div>
 		<div id="editerror" class="fade-000000 warning" style="display:none"><img src="/bw/liberty/icons/warning.png" alt="warning" title="warning" class="icon" /> <span id="errortext">Warning Placeholder</span></div>
 		{include file="bitpackage:gmap/edit_forms.tpl"}
+	<div id="mapcontent" class="content">
+		{$gContent->mInfo.parsed_data}
+	</div>
 	</div> <!-- end .body -->
 </div>

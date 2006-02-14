@@ -28,7 +28,7 @@ if (!empty($_REQUEST["save_marker"])) {
               ."<title>".$gContent->getTitle()."</title>"
               ."<lat>".$gContent->mInfo['lat']."</lat>"
               ."<lon>".$gContent->mInfo['lon']."</lon>"
-              ."<data>".$gContent->mInfo['data']."</data>"
+              ."<data>".$gContent->mInfo['xml_data']."</data>"
               ."<parsed_data><![CDATA[".$gContent->mInfo['parsed_data']."]]></parsed_data>"
               ."<label>".$gContent->mInfo['label_data']."</label>"
               ."<z>".$gContent->mInfo['zindex']."</z>"

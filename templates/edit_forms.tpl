@@ -14,12 +14,13 @@
 
 <!--map editing form -->
 <div id="editmapform" style="display:none;">
-    <h3>Map Tools</h3>
+    <h3>Map Properties</h3>
     <form action="javascript:;" name="mapform" id="mapform">
 			<input name="save_map" type="hidden" size="25" value="true">
 		   	<input name="gmap_id" id="gmap_id" type="hidden" size="25" value="">
 			<table class="data" id="mapdata">
-        	<tr><td width="180px">Title</td><td><input name="title" id="map_title" type="text" size="40" value=""></td></tr>
+        	<tr><td width="180px">Title</td>
+					<td><input name="title" id="map_title" type="text" size="40" value=""></td></tr>
         	<tr><td>Description</td><td><input name="map_desc" id="map_desc" type="text" size="40" value=""></td></tr>
         	<tr>
 					<td>Center Latitude</td>
@@ -52,6 +53,8 @@
               <option value="G_SATELLITE_TYPE" >Satellite</option>
               <option value="G_HYBRID_TYPE" >Hybrid</option>
        			</select></td></tr>
+				<tr><td>Page Text</td><td><textarea name="edit" style="width:90%;" rows="20">textbox</textarea></td></tr>
+
               <!-- Allow Comments <input name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
             <tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:storeMap(document.mapform);"> 
 						<input type="button" name="closemapform" value="Cancel" onclick="javascript:canceledit('editmapform');"></td>

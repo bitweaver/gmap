@@ -81,6 +81,9 @@ function editMap(){
     			$('map_lon').value = bMapLon;
     			$('map_z').value = bMapZoom;
 
+					form = $('mapform');
+					form.edit.value = bMapData;
+
         	for (var i=0; i < 4; i++) {
              if ($('map_showcont').options[i].value == bMapControl){
                 $('map_showcont').options[i].selected=true;
@@ -1773,7 +1776,13 @@ function newPolygonStyle(){
  			var t = xml.documentElement.getElementsByTagName('title');
 			bMapTitle = t[0].firstChild.nodeValue;
 			var d = xml.documentElement.getElementsByTagName('desc');
-			bMapDesc = d[0].firstChild.nodeValue;			
+			bMapDesc = d[0].firstChild.nodeValue;
+			var dt = xml.documentElement.getElementsByTagName('data');
+			var data = dt[0].firstChild.nodeValue;
+	 		bMapData = data;
+			var pdt = xml.documentElement.getElementsByTagName('parsed_data');
+			var parsed_data = pdt[0].firstChild.nodeValue;
+	 		bMapParsedData = parsed_data;
 			var w = xml.documentElement.getElementsByTagName('w');
 			bMapWidth = w[0].firstChild.nodeValue;
 			var h = xml.documentElement.getElementsByTagName('h');
@@ -1799,6 +1808,8 @@ function newPolygonStyle(){
 
       var mapdesc = $('mymapdesc');
       if (mapdesc){mapdesc.innerHTML=bMapDesc;}
+
+      $('mapcontent').innerHTML = bMapParsedData;
 
       var mapdiv = $('map');
 			if (bMapWidth !== '0' && bMapWidth !== 0){

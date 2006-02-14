@@ -27,6 +27,7 @@ if ( empty($_REQUEST['gmap_id']) && empty($_REQUEST['content_id']) ){
 		$gContent->mInfo['title'] = '';
 		$gContent->mInfo['description'] = '';
 		$gContent->mInfo['data'] = '';
+		$gContent->mInfo['parsed_data'] = '';
 		$gContent->mInfo['width'] = 0;
 		$gContent->mInfo['height'] = 400;
 		$gContent->mInfo['lat'] = 0;
@@ -48,6 +49,8 @@ if (!empty($_REQUEST["save_map"])) {
 					."<gmap_id>".$gContent->mInfo['gmap_id']."</gmap_id>"
 					."<title>".$gContent->getTitle()."</title>"
 					."<desc>".$gContent->mInfo['description']."</desc>"
+					."<data>".$gContent->mInfo['xml_data']."</data>"
+					."<parsed_data><![CDATA[".$gContent->mInfo['parsed_data']."]]></parsed_data>"				
 					."<w>".$gContent->mInfo['width']."</w>"
 					."<h>".$gContent->mInfo['height']."</h>"
 					."<lat>".$gContent->mInfo['lat']."</lat>"
@@ -58,9 +61,6 @@ if (!empty($_REQUEST["save_map"])) {
 					."<scale>".$gContent->mInfo['show_scale']."</scale>"
 					."<typecon>".$gContent->mInfo['show_typecontrols']."</typecon>"
 					."</map>";
-
-				//@todo add back into xml when can be validated
-				//	."<data>".$gContent->parseData()."</data>"
 					
       	//since we are returning xml we must report so in the header
       	//we also need to tell the browser not to cache the page
@@ -76,7 +76,8 @@ if (!empty($_REQUEST["save_map"])) {
         header("Pragma: no-cache");
         //XML Header
         header("content-type:text/xml");
-     		
+
+			print_r('<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>');
       	print_r($mRet);
 								
         die;

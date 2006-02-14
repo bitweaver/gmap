@@ -10,6 +10,8 @@ var zoomcontrols;
 var bMapID{if $gContent->mInfo.gmap_id} = {$gContent->mInfo.gmap_id}{/if};
 var bMapTitle = "{$gContent->mInfo.title}";
 var bMapDesc = "{$gContent->mInfo.description}";
+var bMapData = "{$gContent->mInfo.data}";
+var bMapParsedData = "{$gContent->mInfo.parsed_data}";
 var bMapWidth{if $gContent->mInfo.width} = {$gContent->mInfo.width}{/if};
 var bMapHeight{if $gContent->mInfo.height} = {$gContent->mInfo.height}{/if};
 var bMapLat = {$gContent->mInfo.lat};
