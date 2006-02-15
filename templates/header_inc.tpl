@@ -38,11 +38,17 @@
 	.editform	{ldelim}background-color:#fff;{rdelim}
 	.table {ldelim}clear:both;{rdelim}
 *}
+{literal}
 <style type="text/css">
-	.gmapeditstrong {ldelim}background-color:#ddd;{rdelim}
-	td {ldelim}vertical-align:top;{rdelim}
-	th {ldelim}text-align:left;{rdelim}
-</style>
+	.gmapeditstrong {background-color:#ddd;}
+	td {vertical-align:top;}
+	th {text-align:left;}
+	.mapsidepanel {float:right; overflow:auto; margin-left:10px; background-color:#fff; width:160px;}
+{/literal}
+{*
+	.sidelist {padding:0px 4px; margin-bottom:6px; line-height:1.5em; background:red;}
+	.mapsidepanel h1 {background:#ccc; padding:0px 2px;}
+*}
 
 
 <style>

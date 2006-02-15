@@ -3,6 +3,10 @@
 {* escape smarty *}
 {literal}
 
+// for displaying and hiding menu parts
+function show (i){
+	document.getElementById(i).style.display = "block";
+};
 
 // Copy Object Function
 function copy_obj(o) {
@@ -419,6 +423,75 @@ function defineXPolygon(n, s, p){
 };
 
 
+
+
+
+
+
+
+//make side panel of markers
+function attachSideMarkers(){
+
+	//add tracking var to get count of side sets
+	var x = 0;
+	//go through all marker sets
+	for ( var n=0; n<bMSetData.length; n++ ){
+		//if show set == y
+		if ( bMSetData[n].side_panel == true ){
+			//up the counter
+			x++;
+			//add set container to side and mod id
+			var theNewDiv = document.createElement('div');
+			theNewDiv.id = 'sideset_'+ bMSetData[n].set_id;
+			theNewDiv.className = 'module';
+			var theNewH1 = document.createElement('h3');
+//			theNewH1.className = 'boxtitle';
+			var theText = document.createTextNode( bMSetData[n].name );
+			theNewH1.appendChild(theText);
+
+			var theListDiv = document.createElement('div');
+			theListDiv.id = 'listset_'+ bMSetData[n].set_id;
+			theListDiv.className = 'boxcontent';
+
+			theNewDiv.appendChild(theNewH1);
+			theNewDiv.appendChild(theListDiv);
+			document.getElementById('mapsidepanel').appendChild(theNewDiv);
+		}
+	}
+
+	if ( x != 0 ){
+ 		show('mapsidepanel');
+		//go through all markers
+		for ( var q=0; q<bMData.length; q++ ){
+			//sort alphabetically
+			//if show set == y and show marker == y
+			if ( bMData[q].side_panel == true && bMData[q].explode == true ) {
+				//add marker to side list 
+					var theNewLink = document.createElement('a');
+					theNewLink.href = "javascript: bMData["+q+"].marker.openInfoWindowHtml(bMData["+q+"].marker.my_html);";
+					var theText = document.createTextNode( bMData[q].title );
+					theNewLink.appendChild(theText);
+					var BR = document.createElement('br');
+					document.getElementById('listset_'+ bMData[q].set_id).appendChild(theNewLink);
+					document.getElementById('listset_'+ bMData[q].set_id).appendChild(BR);
+					//copy model html div
+					//attach to document
+  				//if marker is set to init
+					if ( bMData[q].plot_on_load == true ) {
+  					//set loaded to true
+					}else{
+  					//set loaded to false
+					}
+			}
+		}
+	}
+};
+
+
+
+
+
+
 {/literal}
 {* end smarty escaping *}
 
@@ -482,6 +555,7 @@ function loadMap() {ldelim}
 	//Attach Markers
 	{if count($gContent->mMapMarkers) > 0}
 		attachMarkers();
+		attachSideMarkers();
 	{/if}
 	//Attach Polylines
 	{if count($gContent->mMapPolylines) > 0}

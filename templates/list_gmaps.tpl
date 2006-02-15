@@ -27,10 +27,6 @@
 						<th>{smartlink ititle="Description" isort=description offset=$control.offset}</th>
 {*					{/if}											 																						*}
 
-{*					{if $gBitSystem->isFeatureActive( 'gmap_list_data' ) eq 'y'}					*}
-						<th>{smartlink ititle="Text" isort=data offset=$control.offset}</th>
-{*					{/if}											 																						*}
-
 {*					{if $gBitUser->hasPermission( 'bit_p_remove_gmap' )}									*}
 						<th>{tr}Actions{/tr}</th>
 {*					{/if}											 																						*}
@@ -50,16 +46,12 @@
 							<td>{$list[changes].description}</td>
 {*						{/if}																 		 *}
 
-{*						{if $gmap_list_data eq 'y'}							 *}
-							<td>{$list[changes].data}</td>
-{*						{/if}																		 *}
-
-						{if $gBitUser->hasPermission( 'bit_p_remove_gmap' )}
 							<td class="actionicon">
+						{if $gBitUser->hasPermission( 'bit_p_remove_gmap' )}
 								{smartlink ititle="Edit" ifile="edit.php" ibiticon="liberty/edit" gmap_id=$list[changes].gmap_id}
 								<input type="checkbox" name="checked[]" title="{$list[changes].title}" value="{$list[changes].gmap_id|escape}" />
-							</td>
 						{/if}
+							</td>
 					</tr>
 				{sectionelse}
 					<tr class="norecords"><td colspan="16">

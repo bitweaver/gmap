@@ -31,11 +31,6 @@ function sortIt(pParamHash){
 	pParamHash.sort(sortOn); 
 }
 
-// for displaying and hiding menu parts
-function show (i){
-	$(i).style.display = "block";
-};
-
 function canceledit(i){
 	$(i).style.display = "none";	
 };
