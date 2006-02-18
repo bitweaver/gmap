@@ -434,6 +434,7 @@ function attachSideMarkers(){
 
 	//add tracking var to get count of side sets
 	var x = 0;
+
 	//go through all marker sets
 	for ( var n=0; n<bMSetData.length; n++ ){
 		//if show set == y
@@ -443,24 +444,32 @@ function attachSideMarkers(){
 			//add set container to side and mod id
 			var theNewDiv = document.createElement('div');
 			theNewDiv.id = 'sideset_'+ bMSetData[n].set_id;
-			theNewDiv.className = 'module';
-			var theNewH1 = document.createElement('h3');
-//			theNewH1.className = 'boxtitle';
-			var theText = document.createTextNode( bMSetData[n].name );
-			theNewH1.appendChild(theText);
+			theNewDiv.className = 'module box';
 
-			var theListDiv = document.createElement('div');
-			theListDiv.id = 'listset_'+ bMSetData[n].set_id;
-			theListDiv.className = 'boxcontent';
+			var setTitle = "<h3 class='gmapsidetitle'>" + bMSetData[n].name + "</h3>";
+ 			
+			var theIcon = "<img src='http://www.google.com/mapfiles/marker.png' class='gmapsideicon' style='width:20px; height:34px;'>"; 
+			for (var m=0; m<bMIconData.length; m++){
+				if ( bMIconData[m].icon_id == bMSetData[n].icon_id ){
+					var theIcon = "<img src='" + bMIconData[m].image + "' class='gmapsideicon' style='width:" + bMIconData[m].icon_w + "px; height:" + bMIconData[m].icon_h + "px;'>"; 
+				}
+			}
 
-			theNewDiv.appendChild(theNewH1);
-			theNewDiv.appendChild(theListDiv);
+			var setDesc = "<div class='gmapsidedesc'>" + theIcon + " " + bMSetData[n].description + "<div style='clear:both'></div></div>";
+			var setList = "<div class='boxcontent gmapsidelist' id='listset_" + bMSetData[n].set_id + "'></div>";
+
+			theNewDiv.innerHTML += setTitle + setDesc + setList;
+
 			document.getElementById('mapsidepanel').appendChild(theNewDiv);
 		}
 	}
 
+
 	if ( x != 0 ){
- 		show('mapsidepanel');
+			document.getElementById('mapsidepanel').className = 'mapsidepanel';
+		if (bBrowser == 'op'){
+			document.getElementById('map').className = 'map-op';
+		}
 		//go through all markers
 		for ( var q=0; q<bMData.length; q++ ){
 			//sort alphabetically
@@ -474,6 +483,13 @@ function attachSideMarkers(){
 					var BR = document.createElement('br');
 					document.getElementById('listset_'+ bMData[q].set_id).appendChild(theNewLink);
 					document.getElementById('listset_'+ bMData[q].set_id).appendChild(BR);
+
+					/*
+					var openWindowLink = "<a href='javascript: bMData["+q+"].marker.openInfoWindowHtml(bMData["+q+"].marker.my_html'>"+bMData[q].title+"</a>";
+					var attachLink = "<a href='javascript: attachMarker(" + bMData[q].array_n + ", true);'>attach</a>";
+					document.getElementById('listset_'+ bMData[q].set_id).innerHTML = openWindowLink + " " + attachLink;
+					*/
+
 					//copy model html div
 					//attach to document
   				//if marker is set to init
@@ -486,10 +502,6 @@ function attachSideMarkers(){
 		}
 	}
 };
-
-
-
-
 
 
 {/literal}

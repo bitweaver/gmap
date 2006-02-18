@@ -29,29 +29,22 @@
 {/if}
 
 
-{* these styles need to be moved into a style sheet and out of here! They are only here for testing *}
-{* 
-	textarea	{ldelim}font-size:.9em;{rdelim}
-	.cell		{ldelim}float:left; background:#ccc; width:100px; padding-left:3px; padding-right:3px;{rdelim}
-	.data 	{ldelim}clear:both;{rdelim}
-	table.data 	{ldelim}clear:both;{rdelim}
-	.editform	{ldelim}background-color:#fff;{rdelim}
-	.table {ldelim}clear:both;{rdelim}
-*}
 {literal}
 <style type="text/css">
-	.gmapeditstrong {background-color:#ddd;}
 	td {vertical-align:top;}
 	th {text-align:left;}
-	.mapsidepanel {float:right; overflow:auto; margin-left:10px; background-color:#fff; width:160px;}
+	.map-op {margin-right:160px;}
+	.gmapeditstrong {background-color:#ddd;}
+	.hide {float:right; width:160px; display:none;}
+	.mapsidepanel {float:right; overflow:auto; width:160px; display:block; border:1px #ddd solid;}
+	.gmapsideicon {float:left; margin-right:3px;}
+	.gmapsidedesc {margin:6px 0px;}
+	.gmapsidelist {padding:0px 2px 0px 6px; line-height:1.5em; clear:both;}
+</style>
 {/literal}
-{*
-	.sidelist {padding:0px 4px; margin-bottom:6px; line-height:1.5em; background:red;}
-	.mapsidepanel h1 {background:#ccc; padding:0px 2px;}
-*}
 
 
-<style>
+<style type="text/css">
 {if count($gContent->mMapMarkerStyles) > 0}
 	{section name=markerstyledata loop=$gContent->mMapMarkerStyles}
 		.tip-{$gContent->mMapMarkerStyles[markerstyledata].name} {ldelim}{$gContent->mMapMarkerStyles[markerstyledata].label_hover_styles}{rdelim}

@@ -56,7 +56,7 @@ if (!isset($_REQUEST['gmap_id'] ) ) {
     
     //set onload function in body
     $gBodyOnload[] = 'loadMap();';
-    
+
     // Display the template
     $gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Gmap') );
 }

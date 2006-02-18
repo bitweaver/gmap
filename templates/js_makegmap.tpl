@@ -7,6 +7,7 @@ var smallcontrols;
 var largecontrols;
 var zoomcontrols;
 
+var bBrowser = "{$browserInfo.browser}";
 var bMapID{if $gContent->mInfo.gmap_id} = {$gContent->mInfo.gmap_id}{/if};
 var bMapTitle = "{$gContent->mInfo.title}";
 var bMapDesc = "{$gContent->mInfo.description}";
@@ -48,5 +49,6 @@ var bMapTypesData = new Array();
 		{/if}
 	{/section}
 {/if}
+
 
 //]]></script>
