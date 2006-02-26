@@ -53,7 +53,7 @@ class BitGmap extends LibertyAttachable {
 		$this->registerContentType( BITGMAP_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGMAP_CONTENT_TYPE_GUID,
 			'content_description' => 'Google Map',
-			'handler_class' => 'BitGMap',
+			'handler_class' => 'BitGmap',
 			'handler_package' => 'gmap',
 			'handler_file' => 'BitGmap.php',
 			'maintainer_url' => 'http://www.bitweaver.org'

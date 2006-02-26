@@ -26,11 +26,13 @@ if (!empty($_REQUEST["save_marker"])) {
 				$mRet = "<marker>"
               ."<id>".$gContent->mInfo['marker_id']."</id>"
               ."<title>".$gContent->getTitle()."</title>"
+              ."<type>".$gContent->mInfo['type']."</type>"
               ."<lat>".$gContent->mInfo['lat']."</lat>"
               ."<lon>".$gContent->mInfo['lon']."</lon>"
               ."<data>".$gContent->mInfo['xml_data']."</data>"
               ."<parsed_data><![CDATA[".$gContent->mInfo['parsed_data']."]]></parsed_data>"
               ."<label>".$gContent->mInfo['label_data']."</label>"
+              ."<photo_url>".$gContent->mInfo['photo_url']."</photo_url>"
               ."<z>".$gContent->mInfo['zindex']."</z>"
 						 	."</marker>";
 

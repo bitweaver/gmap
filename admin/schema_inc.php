@@ -57,12 +57,15 @@ $tables = array(
 	lowreshybridtiles_url X DEFAULT 'google'
 ",
 
+//types has two options: 0 => Normal, 1 => AutoPhoto
 'gmaps_markers' => "
   marker_id I8 AUTO PRIMARY,
   content_id I4 NOTNULL,
+  type I2 DEFAULT 0,
   lat F NOTNULL,
   lon F NOTNULL,
   label_data X,
+	photo_url X,
   zindex I8 DEFAULT 0,
 	allow_comments C(5) DEFAULT 'true'
 ",

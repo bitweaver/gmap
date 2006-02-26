@@ -441,12 +441,16 @@ function editMarkers(){
 				// populate set form values
 				form = $('markerform_'+g);
             form.set_id.value = bMData[g].set_id;
+				if ( bMData[g].type == 1 ){
+					form.type.options[1].selected = true;
+  			}
             form.marker_id.value = bMData[g].marker_id;
             form.title.value = bMData[g].title;
             form.marker_lat.value = bMData[g].lat;
             form.marker_lon.value = bMData[g].lon;
             form.edit.value = bMData[g].data;
             form.marker_labeltext.value = bMData[g].label_data;
+            form.photo_url.value = bMData[g].photo_url;
             form.marker_zi.value = bMData[g].zindex;
             form.marker_array_n.value = bMData[g].array_n;
 				
@@ -454,10 +458,10 @@ function editMarkers(){
            	var mytable = $('formdata_'+g);
            	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
    			var myrow = mytablebody.getElementsByTagName("tr").item(0);
-           	var mycel = myrow.getElementsByTagName("td").item(1);
+           	var mycel = myrow.getElementsByTagName("td").item(2);
 				mycel.getElementsByTagName("a").item(0).href = "javascript:addAssistant('marker', "+g+");";
 
-				mycel = myrow.getElementsByTagName("td").item(5);
+				mycel = myrow.getElementsByTagName("td").item(7);
    			mycel.getElementsByTagName("a").item(0).href = "javascript:storeMarker(document.markerform_"+g+");";
    			mycel.getElementsByTagName("a").item(1).href = "javascript:bMData["+bMData[g].array_n+"].marker.openInfoWindowHtml(bMData["+bMData[g].array_n+"].marker.my_html);";
    			mycel.getElementsByTagName("a").item(2).href = "javascript:removeMarker(document.markerform_"+g+");";
@@ -2035,6 +2039,8 @@ function addMarker(rslt){
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('id');			
 			m.marker_id = id[0].firstChild.nodeValue;
+			var ty = xml.documentElement.getElementsByTagName('type');			
+			m.type = ty[0].firstChild.nodeValue;
 			var tl = xml.documentElement.getElementsByTagName('title');
 			m.title = tl[0].firstChild.nodeValue;
 			var lt = xml.documentElement.getElementsByTagName('lat');
@@ -2047,6 +2053,8 @@ function addMarker(rslt){
 	 		m.parsed_data = pdt[0].firstChild.nodeValue;
 			var l = xml.documentElement.getElementsByTagName('label');
 			m.label_data = l[0].firstChild.nodeValue;
+			var pu = xml.documentElement.getElementsByTagName('photo_url');
+			m.photo_url = pu[0].firstChild.nodeValue;
 			var z = xml.documentElement.getElementsByTagName('z');
 			m.zindex = parseInt(z[0].firstChild.nodeValue);
 
@@ -2086,6 +2094,8 @@ function updateMarker(rslt){
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('id');			
 			var marker_id = id[0].firstChild.nodeValue;
+			var ty = xml.documentElement.getElementsByTagName('type');			
+			m.type = ty[0].firstChild.nodeValue;
 			var tl = xml.documentElement.getElementsByTagName('title');
 			var title = tl[0].firstChild.nodeValue;			
 	 		m.title = title;
@@ -2104,6 +2114,8 @@ function updateMarker(rslt){
 			var l = xml.documentElement.getElementsByTagName('label');
 			var label = l[0].firstChild.nodeValue;			
 	 		m.label_data = label;			
+			var pu = xml.documentElement.getElementsByTagName('photo_url');
+			m.photo_url = pu[0].firstChild.nodeValue;
 			var z = xml.documentElement.getElementsByTagName('z');
 			var zindex = parseInt(z[0].firstChild.nodeValue);
 			m.zindex = zindex;

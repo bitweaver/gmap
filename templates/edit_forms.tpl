@@ -242,20 +242,27 @@
     		<table class="data">
     			<tr>
     				<th style="width:160px">Title </th>
+    				<th style="width:160px">Type </th>
     				<th style="width:160px">Latitude/Longitude</th>
     				<th style="width:160px">Label Text </th>
     				<th >Window Text </th>
+    				<th style="width:160px">Photo Url </th>
     				<th style="width:80px">zIndex </th>
     				<th>Add to Set </th>
     				<th style="width:80px">ACTIONS </th>
     			</tr>
 					<tr class="gmapeditstrong">
 						<td width="160px"><input name="title" type="text" style="width:90%" value="a title"></td>
+        			<td width="160px"><select name="type">
+											<option value="0" >Normal</option>
+											<option value="1" >Auto-Photo</option>
+											</select></td>
 						<td width="160px"><input name="marker_lat" type="text" style="width:90%" value=""><br/>
 							<input name="marker_lon" type="text" style="width:90%" value=""><br/>
 							<a name="marker_assist_btn" title="click a location!" href="javascript:addAssistant('marker', 'new');">( Use Locating Assistant )</a></td>
 						<td width="160px"><textarea name="marker_labeltext" style="width:90%" rows="1"></textarea></td>
 						<td><textarea name="edit" style="width:90%" rows="3"></textarea></td>
+						<td width="160px"><input name="photo_url" type="text" style="width:90%" value=""></td>
 						<td width="80px"><input name="marker_zi" type="text" size="3" value="0"></td>
 						<td><select name="set_id" id="set_id">
 								<option value="n">someset</option>
@@ -534,12 +541,14 @@
 				<h3>Markers In This Set</h3>
             <table>
 					<tr>
-						<th style="width:160px">Title </th>
-						<th style="width:160px">Latitude/Longitude</th>
-						<th style="width:160px">Label Text </th>
-						<th>Window Text </th>
-						<th style="width:80px">zIndex </th>
-						<th style="width:80px">ACTIONS </th>
+    				<th style="width:160px">Title </th>
+    				<th style="width:160px">Type </th>
+    				<th style="width:160px">Latitude/Longitude</th>
+    				<th style="width:160px">Label Text </th>
+    				<th >Window Text </th>
+    				<th style="width:160px">Photo Url </th>
+    				<th style="width:80px">zIndex </th>
+    				<th style="width:80px">ACTIONS </th>
 					</tr>
         	</table>
 				<div class="table" id="editmarkertable_n">
@@ -551,11 +560,16 @@
         			<table class="data" id="formdata_n">
 							<tr>
 								<td style="width:160px"><input name="title" type="text" style="width:90%" value="a title"></td>
+								<td width="160px"><select name="type">
+											<option value="0" >Normal</option>
+											<option value="1" >Auto-Photo</option>
+											</select></td>
 								<td style="width:160px"><input name="marker_lat" type="text" style="width:90%" value=""><br/>
 									<input name="marker_lon" type="text" style="width:90%" value=""><br/>
 									<a name="marker_assist_btn" title="click a location!" href="javascript:addAssistant('marker', 'n');">( Use Locating Assistant )</a></td>
 								<td style="width:160px"><textarea name="marker_labeltext" style="width:90%" rows="3"></textarea></td>
 								<td><textarea name="edit" style="width:90%" rows="3"></textarea></td>
+								<td width="160px"><input name="photo_url" type="text" style="width:90%" value=""></td>
 								<td style="width:80px"><input name="marker_zi" type="text" size="3" value="0"></td>
 								<td style="width:80px">
                 				<a name="save_marker_btn" title="save" href="javascript:storeMarker(document.markerform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>

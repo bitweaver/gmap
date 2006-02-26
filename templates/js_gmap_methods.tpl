@@ -156,7 +156,13 @@ function defineGMarker(n, i){
 	}
   a[n].marker = new GMarker(point, icon);
   a[n].marker.style_id = 0;
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
+
+	var imgLink ='';
+	if (a[n].type == 1){
+		var imgLink = "<p><img src='"+a[n].photo_url+"'></p>"
+	}
+
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
   //add the marker label if it exists
   if (typeof(a[n].label_data) != 'undefined'){
@@ -180,7 +186,13 @@ function defineGxMarker(n, i, s){
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new GxMarker(point, icon, mytip);
   a[n].marker.type = 0;
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
+
+	var imgLink ='';
+	if (a[n].type == 1){
+		var imgLink = "<p><img src='"+a[n].photo_url+"'></p>"
+	}
+
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
 }
 
@@ -200,7 +212,13 @@ function definePdMarker(n, i, s){
   a[n].marker.setTooltipClass( "tip-"+bMStyleData[s].name );
   a[n].marker.setDetailWinClass( "win-"+bMStyleData[s].name );
   a[n].marker.setTooltip( "<div>" + a[n].label_data + "</div>");
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
+
+	var imgLink ='';
+	if (a[n].type == 1){
+		var imgLink = "<p><img src='"+a[n].photo_url+"'></p>"
+	}
+
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
   a[n].marker.setDetailWinHTML( a[n].marker.my_html );
   //rollover-icon: a[n].marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
   map.addOverlay(a[n].marker);
@@ -221,7 +239,13 @@ function defineXMarker(n, i, s){
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new XMarker(point, icon, null, mytip);
   a[n].marker.type = 2;
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1><p>"+a[n].parsed_data+"</p></div>";
+
+	var imgLink ='';
+	if (a[n].type == 1){
+		var imgLink = "<p><img src='"+a[n].photo_url+"'></p>"
+	}
+
+  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
   map.addOverlay(a[n].marker);
 }
 
@@ -475,11 +499,21 @@ function attachSideMarkers(){
 			//sort alphabetically
 			//if show set == y and show marker == y
 			if ( bMData[q].side_panel == true && bMData[q].explode == true ) {
+
+				if (bMData[q].type == 1){
+					var imgLink = "<br/><img src='"+bMData[q].photo_url+"'>"
+				}else{
+					var imgLink ='';
+				}
+
 				//add marker to side list 
 					var theNewLink = document.createElement('a');
 					theNewLink.href = "javascript: bMData["+q+"].marker.openInfoWindowHtml(bMData["+q+"].marker.my_html);";
-					var theText = document.createTextNode( bMData[q].title );
-					theNewLink.appendChild(theText);
+					theNewLink.innerHTML = bMData[q].title + imgLink;
+
+//					var theText = document.createTextNode( bMData[q].title);
+//					theNewLink.appendChild(theText);
+
 					var BR = document.createElement('br');
 					document.getElementById('listset_'+ bMData[q].set_id).appendChild(theNewLink);
 					document.getElementById('listset_'+ bMData[q].set_id).appendChild(BR);

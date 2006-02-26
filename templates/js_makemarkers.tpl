@@ -5,12 +5,14 @@ var bMData = new Array();
 	{section name=marker_n loop=$gContent->mMapMarkers}
 		bMData[{$smarty.section.marker_n.index}] = new Array();
 		bMData[{$smarty.section.marker_n.index}].marker_id = {$gContent->mMapMarkers[marker_n].marker_id};
+		bMData[{$smarty.section.marker_n.index}].type = {$gContent->mMapMarkers[marker_n].type};
 		bMData[{$smarty.section.marker_n.index}].title = "{$gContent->mMapMarkers[marker_n].title}";
 		bMData[{$smarty.section.marker_n.index}].lat = {$gContent->mMapMarkers[marker_n].lat};
 		bMData[{$smarty.section.marker_n.index}].lon = {$gContent->mMapMarkers[marker_n].lon};
 		bMData[{$smarty.section.marker_n.index}].data = '{$gContent->mMapMarkers[marker_n].data}';
 		bMData[{$smarty.section.marker_n.index}].parsed_data = '{$gContent->mMapMarkers[marker_n].parsed_data}';
 		bMData[{$smarty.section.marker_n.index}].label_data = '{$gContent->mMapMarkers[marker_n].label_data}';
+		bMData[{$smarty.section.marker_n.index}].photo_url = '{$gContent->mMapMarkers[marker_n].photo_url}';
 		{if $gContent->mMapMarkers[marker_n].zindex != NULL}
 			bMData[{$smarty.section.marker_n.index}].zindex = {$gContent->mMapMarkers[marker_n].zindex};
 		{/if}
