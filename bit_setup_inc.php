@@ -1,11 +1,8 @@
 <?php
 global $gBitSystem, $gBitUser, $gBitSmarty;
 
-$registerHash = array(
-	'package_name' => 'gmap',
-	'package_path' => dirname( __FILE__ ).'/',
-);
-$gBitSystem->registerPackage( $registerHash );
+$gBitSystem->registerPackage( 'gmap', dirname( __FILE__ ).'/' );
+
 
 if($gBitSystem->isPackageActive( 'gmap' ) ) {
 	if ($gBitUser->hasPermission( 'bit_gm_view_map' )) {
