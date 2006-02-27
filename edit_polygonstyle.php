@@ -28,7 +28,7 @@ if (!empty($_REQUEST["save_polygonstyle"])) {
 				$mRet = "<polygonstyle>"
       		  ."<style_id>".$result->fields['style_id']."</style_id>"
       		  ."<name>".$result->fields['name']."</name>"
-      		  ."<type>".$result->fields['type']."</type>"
+      		  ."<polygon_style_type>".$result->fields['polygon_style_type']."</polygon_style_type>"
       		  ."<color>".$result->fields['color']."</color>"
       		  ."<weight>".$result->fields['weight']."</weight>"
       		  ."<opacity>".$result->fields['opacity']."</opacity>"

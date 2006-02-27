@@ -61,7 +61,7 @@ $tables = array(
 'gmaps_markers' => "
   marker_id I8 AUTO PRIMARY,
   content_id I4 NOTNULL,
-  type I2 DEFAULT 0,
+  marker_type I2 DEFAULT 0,
   lat F NOTNULL,
   lon F NOTNULL,
   label_data X,
@@ -74,7 +74,7 @@ $tables = array(
 'gmaps_icon_styles' => "
   icon_id I4 AUTO PRIMARY,
   name C(64),
-  type I2 DEFAULT 0,
+  icon_style_type I2 DEFAULT 0,
   image X 'icons/FlatColorPins/205.png',
   rollover_image X 'icons/FlatColorPins/090.png',
   icon_w I4 DEFAULT 20,
@@ -105,7 +105,7 @@ $tables = array(
 'gmaps_marker_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
-  type I2 DEFAULT 0,
+  marker_style_type I2 DEFAULT 0,
   label_hover_opacity I4 DEFAULT 70,
   label_opacity I4 DEFAULT 100,
   label_hover_styles C(255) DEFAULT 'border:none; color:black; background-color:#ccc',
@@ -144,7 +144,7 @@ $tables = array(
 'gmaps_polyline_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
-  type I4 DEFAULT 0,
+  polyline_style_type I4 DEFAULT 0,
   color C(6) DEFAULT 'ff3300',
   weight I4 DEFAULT 2,
   opacity F DEFAULT 1,
@@ -202,7 +202,7 @@ $tables = array(
 'gmaps_polygon_styles' => "
   style_id I4 AUTO PRIMARY,
   name C(64),
-  type I4 DEFAULT 0,
+  polygon_style_type I4 DEFAULT 0,
   color C(6),
   weight I4 DEFAULT 2,
   opacity F DEFAULT 1

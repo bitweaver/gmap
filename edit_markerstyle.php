@@ -29,7 +29,7 @@ if (!empty($_REQUEST["save_markerstyle"])) {
 				$mRet = "<markerstyle>"
       		  ."<style_id>".$result->fields['style_id']."</style_id>"
       		  ."<name>".$result->fields['name']."</name>"
-      		  ."<type>".$result->fields['type']."</type>"
+      		  ."<marker_style_type>".$result->fields['marker_style_type']."</marker_style_type>"
       		  ."<label_hover_opacity>".$result->fields['label_hover_opacity']."</label_hover_opacity>"
       		  ."<label_opacity>".$result->fields['label_opacity']."</label_opacity>"
       		  ."<label_hover_styles>".$result->fields['label_hover_styles']."</label_hover_styles>"

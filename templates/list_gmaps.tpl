@@ -1,7 +1,7 @@
 {* @todo header *}
 <div class="floaticon">{bithelp}</div>
 
-<div class="listing gmap">
+<div class="admin">
 	<div class="header">
 		<h1>{tr}Gmap Records{/tr}</h1>
 	</div>

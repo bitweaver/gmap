@@ -253,7 +253,7 @@
     			</tr>
 					<tr class="gmapeditstrong">
 						<td width="160px"><input name="title" type="text" style="width:90%" value="a title"></td>
-        			<td width="160px"><select name="type">
+        			<td width="160px"><select name="marker_type">
 											<option value="0" >Normal</option>
 											<option value="1" >Auto-Photo</option>
 											</select></td>
@@ -291,7 +291,7 @@
     			<table class="data gmapeditstrong">
 						<tr>
 							<td>Name<br/><input name="name" type="text" size="15" value="a name"></td>
-							<td>Type<br/><select name="type" onChange="javascript:toggleIconMenu(this.value, 'new');">
+							<td>Type<br/><select name="icon_style_type" onChange="javascript:toggleIconMenu(this.value, 'new');">
                                 <option value="0">GIcon</option>
                                 <option value="1">XIcon</option>
                              </select></td>
@@ -349,7 +349,7 @@
 				<table class="data" id="iconstyleformdata_n">
 					<tr>
 						<td>Name<br/><input name="name" type="text" size="15" value=""></td>
-						<td>Type<br/><select name="type" onChange="javascript:toggleIconMenu(this.value, this.form.icon_id.value);">
+						<td>Type<br/><select name="icon_style_type" onChange="javascript:toggleIconMenu(this.value, this.form.icon_id.value);">
                                 <option value="0">GIcon</option>
                                 <option value="1">XIcon</option>
                              </select></td>
@@ -421,7 +421,7 @@
 					</tr>
 					<tr class="gmapeditstrong">
   					<td width="110px"><input name="name" type="text" style="width:90%" value="a name"></td>
-  					<td width="90px"><select name="type">
+  					<td width="90px"><select name="marker_style_type">
   							<option value="0">GMarker</option>
   							<option value="1">PdMarker</option>
   							<option value="2">XMarker</option>
@@ -461,7 +461,7 @@
     		<table class="data" id="markerstyleformdata_n">
 					<tr>
   					<td width="110px"><input name="name" type="text" style="width:90%" value=""></td>
-  					<td width="90px"><select name="type">
+  					<td width="90px"><select name="marker_style_type">
 								<option value="0">GMarker</option>
 								<option value="1">PdMarker</option>
 								<option value="2">XMarker</option>
@@ -560,7 +560,7 @@
         			<table class="data" id="formdata_n">
 							<tr>
 								<td style="width:160px"><input name="title" type="text" style="width:90%" value="a title"></td>
-								<td width="160px"><select name="type">
+								<td width="160px"><select name="marker_type">
 											<option value="0" >Normal</option>
 											<option value="1" >Auto-Photo</option>
 											</select></td>
@@ -672,7 +672,7 @@
 					<tr>
                 	<td>
 							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
-							Type <br/><select name="type">
+							Type <br/><select name="polyline_style_type">
                                 <option value="0">Google Default</option>
                                 <option value="1">XPolyline</option>
                              </select><br/>
@@ -729,7 +729,7 @@
 					<tr>
                 	<td>
 							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
-							Type <br/><select name="type">
+							Type <br/><select name="polyline_style_type">
                                 <option value="0">Google Default</option>
                                 <option value="1">XPolyline</option>
                              </select><br/>
@@ -995,7 +995,7 @@
 					</tr>
 					<tr class="gmapeditstrong">
 						<td><input name="name" type="text" style="width:90%" value="a name"></td>
-						<td><select name="type">
+						<td><select name="polygon_style_type">
                                 <option value="0">XPolygon</option>
                              </select></td>
 						<td><input name="color" type="text" size="15" value="ff3300"></td>
@@ -1031,7 +1031,7 @@
 				<table class="data" id="polygonstyleformdata_n">
 					<tr>
 						<td><input name="name" type="text" style="width:90%" value="a name"></td>
-						<td style="width:120px"><select name="type">
+						<td style="width:120px"><select name="polygon_style_type">
                                 <option value="0">XPolygon</option>
                              </select></td>
 						<td style="width:120px"><input name="color" type="text" size="15" value="ff3300"></td>

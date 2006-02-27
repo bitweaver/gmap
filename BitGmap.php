@@ -1390,8 +1390,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['markerstyle_store']['name'] = $pParamHash['name'];
 		}
 		
-		if( ( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) || $pParamHash['type'] == 0 ) {
-			$pParamHash['markerstyle_store']['type'] = $pParamHash['type'];
+		if( ( !empty( $pParamHash['marker_style_type'] ) && is_numeric( $pParamHash['marker_style_type'] ) ) || $pParamHash['marker_style_type'] == 0 ) {
+			$pParamHash['markerstyle_store']['marker_style_type'] = $pParamHash['marker_style_type'];
 		}
 		
 		if( !empty( $pParamHash['label_hover_opacity'] ) && is_numeric( $pParamHash['label_hover_opacity'] ) ) {
@@ -1444,8 +1444,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['iconstyle_store']['name'] = $pParamHash['name'];
 		}
 
-		if( ( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) || $pParamHash['type'] == 0 ) {
-			$pParamHash['iconstyle_store']['type'] = $pParamHash['type'];
+		if( ( !empty( $pParamHash['icon_style_type'] ) && is_numeric( $pParamHash['icon_style_type'] ) ) || $pParamHash['icon_style_type'] == 0 ) {
+			$pParamHash['iconstyle_store']['icon_style_type'] = $pParamHash['icon_style_type'];
 		}
 		
 		if( !empty( $pParamHash['image'] ) ) {
@@ -1558,8 +1558,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylinestyle_store']['name'] = $pParamHash['name'];
 		}
 
-		if( ( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) || $pParamHash['type'] == 0 ) {
-			$pParamHash['polylinestyle_store']['type'] = $pParamHash['type'];
+		if( ( !empty( $pParamHash['polyline_style_type'] ) && is_numeric( $pParamHash['polyline_style_type'] ) ) || $pParamHash['polyline_style_type'] == 0 ) {
+			$pParamHash['polylinestyle_store']['polyline_style_type'] = $pParamHash['polyline_style_type'];
 		}
 				
 		if( !empty( $pParamHash['color'] ) ) {
@@ -1669,8 +1669,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polygonstyle_store']['name'] = $pParamHash['name'];
 		}
 
-		if( ( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) || $pParamHash['type'] == 0 ) {
-			$pParamHash['polygonstyle_store']['type'] = $pParamHash['type'];
+		if( ( !empty( $pParamHash['polygon_style_type'] ) && is_numeric( $pParamHash['polygon_style_type'] ) ) || $pParamHash['polygon_style_type'] == 0 ) {
+			$pParamHash['polygonstyle_store']['polygon_style_type'] = $pParamHash['polygon_style_type'];
 		}
 				
 		if( !empty( $pParamHash['color'] ) ) {

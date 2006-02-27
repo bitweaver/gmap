@@ -29,7 +29,7 @@ if (!empty($_REQUEST["save_polylinestyle"])) {
 				$mRet = "<polylinestyle>"
       		  ."<style_id>".$result->fields['style_id']."</style_id>"
       		  ."<name>".$result->fields['name']."</name>"
-      		  ."<type>".$result->fields['type']."</type>"
+      		  ."<polyline_style_type>".$result->fields['polyline_style_type']."</polyline_style_type>"
       		  ."<color>".$result->fields['color']."</color>"
       		  ."<weight>".$result->fields['weight']."</weight>"
       		  ."<opacity>".$result->fields['opacity']."</opacity>"

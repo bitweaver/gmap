@@ -5,17 +5,17 @@
   {rdelim}
 </style>
  
+{if $loadGoogleMapsAPI}
 <script src="http://maps.google.com/maps?file=api&v=1&key={$gBitSystem->getPreference('gmaps_api_key')}" type="text/javascript"></script>
 {include file="bitpackage:gmap/js_makemarkers.tpl"}
 {include file="bitpackage:gmap/js_makepolylines.tpl"}
 {include file="bitpackage:gmap/js_makepolygons.tpl"}
 {include file="bitpackage:gmap/js_makegmap.tpl"}
-
 {include file="bitpackage:gmap/js_gmap_methods.tpl"}
-
 <script src="libraries/pdmarker.js" type="text/javascript"></script>
 <script src="libraries/gxmarker.1.js" type="text/javascript"></script>
 <script src="libraries/xmaps.1c.js" type="text/javascript"></script>
+{/if}
 
 {* if we are editing a map we load the supporting methods *}
 {if $loadEditMethods}
@@ -36,7 +36,7 @@
 	.map-op {margin-right:160px;}
 	.gmapeditstrong {background-color:#ddd;}
 	.hide {float:right; width:160px; display:none;}
-	.mapsidepanel {float:right; overflow:auto; width:160px; display:block; border:1px #ddd solid;}
+	.mapsidepanel {float:right; overflow:auto; width:180px; display:block; border:1px #ddd solid;}
 	.gmapsideicon {float:left; margin-right:3px;}
 	.gmapsidedesc {margin:6px 0px;}
 	.gmapsidelist {padding:0px 2px 0px 6px; line-height:1.5em; clear:both;}

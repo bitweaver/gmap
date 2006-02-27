@@ -42,9 +42,9 @@ function attachIcons(){
 	var i = bMIconData;
 	if (i.length > 0){
   	for (n=0; n<i.length; n++){
-  		if (i[n].type != null && i[n].type == 0){
+  		if (i[n].icon_style_type != null && i[n].icon_style_type == 0){
   			defineGIcon(n);
-  		}else if(i[n].type != null && i[n].type == 1){
+  		}else if(i[n].icon_style_type != null && i[n].icon_style_type == 1){
   			defineXIcon(n);			
   		}
   	}
@@ -127,17 +127,17 @@ function attachMarker(n, o){
     		s = c;
     	}
   	}
-  	if ( bMStyleData[s].type == 0){
+  	if ( bMStyleData[s].marker_style_type == 0){
   		defineGxMarker(n, i, s);
 			if (o == true) {m.marker.openInfoWindowHtml(m.marker.my_html);};
-  	}else if ( bMStyleData[s].type == 1){
+  	}else if ( bMStyleData[s].marker_style_type == 1){
   		definePdMarker(n, i, s);
 			if (o == true) {
         	m.marker.showTooltip();
         	m.marker.hideTooltip();
 				m.marker.showDetailWin();
 			};
-  	}else if ( bMStyleData[s].type == 2){
+  	}else if ( bMStyleData[s].marker_style_type == 2){
   		defineXMarker(n, i, s);
 			if (o == true) {m.marker.openInfoWindowHtml(m.marker.my_html);};
   	}
@@ -158,8 +158,13 @@ function defineGMarker(n, i){
   a[n].marker.style_id = 0;
 
 	var imgLink ='';
-	if (a[n].type == 1){
-		var imgLink = "<p><img src='"+a[n].photo_url+"'></p>"
+	if (a[n].marker_type == 1){
+		var urlSrc = a[n].photo_url;
+		var pos = urlSrc.lastIndexOf('.');
+		var str_1 = urlSrc.substring(0, pos);
+		var str_2 = urlSrc.substring(pos, urlSrc.length); 
+		var medUrl = str_1 + "_medium" + str_2;
+		var imgLink = "<p><img src='"+medUrl+"'></p>"
 	}
 
   a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
@@ -185,11 +190,16 @@ function defineGxMarker(n, i, s){
 	}
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new GxMarker(point, icon, mytip);
-  a[n].marker.type = 0;
+  a[n].marker.marker_style_type = 0;
 
 	var imgLink ='';
-	if (a[n].type == 1){
-		var imgLink = "<p><img src='"+a[n].photo_url+"'></p>"
+	if (a[n].marker_type == 1){
+		var urlSrc = a[n].photo_url;
+		var pos = urlSrc.lastIndexOf('.');
+		var str_1 = urlSrc.substring(0, pos);
+		var str_2 = urlSrc.substring(pos, urlSrc.length); 
+		var medUrl = str_1 + "_medium" + str_2;
+		var imgLink = "<p><img src='"+medUrl+"'></p>"
 	}
 
   a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
@@ -208,14 +218,19 @@ function definePdMarker(n, i, s){
 		icon = bMIconData[i].icon;
 	}
   a[n].marker = new PdMarker(point, icon);
-  a[n].marker.type = 1;
+  a[n].marker.marker_style_type = 1;
   a[n].marker.setTooltipClass( "tip-"+bMStyleData[s].name );
   a[n].marker.setDetailWinClass( "win-"+bMStyleData[s].name );
   a[n].marker.setTooltip( "<div>" + a[n].label_data + "</div>");
 
 	var imgLink ='';
-	if (a[n].type == 1){
-		var imgLink = "<p><img src='"+a[n].photo_url+"'></p>"
+	if (a[n].marker_type == 1){
+		var urlSrc = a[n].photo_url;
+		var pos = urlSrc.lastIndexOf('.');
+		var str_1 = urlSrc.substring(0, pos);
+		var str_2 = urlSrc.substring(pos, urlSrc.length); 
+		var medUrl = str_1 + "_medium" + str_2;
+		var imgLink = "<p><img src='"+medUrl+"'></p>"
 	}
 
   a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
@@ -238,11 +253,16 @@ function defineXMarker(n, i, s){
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var mytip = "<div class='tip-"+bMStyleData[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new XMarker(point, icon, null, mytip);
-  a[n].marker.type = 2;
+  a[n].marker.marker_style_type = 2;
 
 	var imgLink ='';
-	if (a[n].type == 1){
-		var imgLink = "<p><img src='"+a[n].photo_url+"'></p>"
+	if (a[n].marker_type == 1){
+		var urlSrc = a[n].photo_url;
+		var pos = urlSrc.lastIndexOf('.');
+		var str_1 = urlSrc.substring(0, pos);
+		var str_2 = urlSrc.substring(pos, urlSrc.length); 
+		var medUrl = str_1 + "_medium" + str_2;
+		var imgLink = "<p><img src='"+medUrl+"'></p>"
 	}
 
   a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
@@ -279,7 +299,7 @@ function attachPolyline(n){
 				s = b;
 			}
 		}
-		if ( bLStyData[s].type == 0){
+		if ( bLStyData[s].polyline_style_type == 0){
 			defineGPolyline(n, s);
 		}else{
 			defineXPolyline(n, s);
@@ -500,8 +520,13 @@ function attachSideMarkers(){
 			//if show set == y and show marker == y
 			if ( bMData[q].side_panel == true && bMData[q].explode == true ) {
 
-				if (bMData[q].type == 1){
-					var imgLink = "<br/><img src='"+bMData[q].photo_url+"'>"
+				if (bMData[q].marker_type == 1){
+					var urlSrc = bMData[q].photo_url;
+					var pos = urlSrc.lastIndexOf('.');
+					var str_1 = urlSrc.substring(0, pos);
+					var str_2 = urlSrc.substring(pos, urlSrc.length); 
+					var thumbUrl = str_1 + "_thumb" + str_2;
+					var imgLink = "<br/><img src='" + thumbUrl + "'>"
 				}else{
 					var imgLink ='';
 				}
@@ -615,7 +640,7 @@ function loadMap() {ldelim}
 	//opens any infoWindow when clicked if it has content	my_html
 	GEvent.addListener(map, "click", function(overlay, point) {ldelim}
 		if (overlay) {ldelim}
-			if (overlay.my_html && (overlay.style_id == 0 || overlay.type == 0 || overlay.type == 2 ) ) {ldelim}
+			if (overlay.my_html && (overlay.style_id == 0 || overlay.marker_type == 0 || overlay.marker_type == 2 ) ) {ldelim}
 				overlay.openInfoWindowHtml(overlay.my_html);
 			{rdelim}
 		{rdelim}

@@ -26,7 +26,7 @@ if (!empty($_REQUEST["save_marker"])) {
 				$mRet = "<marker>"
               ."<id>".$gContent->mInfo['marker_id']."</id>"
               ."<title>".$gContent->getTitle()."</title>"
-              ."<type>".$gContent->mInfo['type']."</type>"
+              ."<marker_type>".$gContent->mInfo['marker_type']."</marker_type>"
               ."<lat>".$gContent->mInfo['lat']."</lat>"
               ."<lon>".$gContent->mInfo['lon']."</lon>"
               ."<data>".$gContent->mInfo['xml_data']."</data>"

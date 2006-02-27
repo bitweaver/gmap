@@ -29,7 +29,7 @@ if (!empty($_REQUEST["save_iconstyle"])) {
 				$mRet = "<iconstyle>"
       		  ."<icon_id>".$result->fields['icon_id']."</icon_id>"
       		  ."<name>".$result->fields['name']."</name>"
-      		  ."<type>".$result->fields['type']."</type>"
+      		  ."<icon_style_type>".$result->fields['icon_style_type']."</icon_style_type>"
       		  ."<image>".$result->fields['image']."</image>"
       		  ."<rollover_image>".$result->fields['rollover_image']."</rollover_image>"
       		  ."<icon_w>".$result->fields['icon_w']."</icon_w>"

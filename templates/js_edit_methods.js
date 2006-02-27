@@ -441,8 +441,8 @@ function editMarkers(){
 				// populate set form values
 				form = $('markerform_'+g);
             form.set_id.value = bMData[g].set_id;
-				if ( bMData[g].type == 1 ){
-					form.type.options[1].selected = true;
+				if ( bMData[g].marker_type == 1 ){
+					form.marker_type.options[1].selected = true;
   			}
             form.marker_id.value = bMData[g].marker_id;
             form.title.value = bMData[g].title;
@@ -571,8 +571,8 @@ function editIconStyles(){
                 form.icon_id.value = bMIconData[b].icon_id;
                 form.name.value = bMIconData[b].name;
                 for (var r=0; r < 2; r++) {
-                   if (form.type.options[r].value == bMIconData[b].type){
-                   		form.type.options[r].selected=true;
+                   if (form.icon_style_type.options[r].value == bMIconData[b].icon_style_type){
+                   		form.icon_style_type.options[r].selected=true;
                    }
                 };
                 form.image.value = bMIconData[b].image;
@@ -723,8 +723,8 @@ function editMarkerStyles(){
             form.style_array_n.value = b;
             form.name.value = bMStyleData[b].name;
             for (var r=0; r < 3; r++) {
-               if (form.type.options[r].value == bMStyleData[b].type){
-               		form.type.options[r].selected=true;
+               if (form.marker_style_type.options[r].value == bMStyleData[b].marker_style_type){
+               		form.marker_style_type.options[r].selected=true;
                }
             };
             form.label_hover_opacity.value = bMStyleData[b].label_hover_opacity;
@@ -1059,8 +1059,8 @@ function editPolylineStyles(){
                 form.style_id.value = bLStyData[b].style_id;
                 form.name.value = bLStyData[b].name;
                 for (var r=0; r < 2; r++) {
-                   if (form.type.options[r].value == bLStyData[b].type){
-                   		form.type.options[r].selected=true;
+                   if (form.polyline_style_type.options[r].value == bLStyData[b].polyline_style_type){
+                   		form.polyline_style_type.options[r].selected=true;
                    }
                 };
                 form.color.value = bLStyData[b].color;
@@ -2039,8 +2039,8 @@ function addMarker(rslt){
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('id');			
 			m.marker_id = id[0].firstChild.nodeValue;
-			var ty = xml.documentElement.getElementsByTagName('type');			
-			m.type = ty[0].firstChild.nodeValue;
+			var ty = xml.documentElement.getElementsByTagName('marker_type');			
+			m.marker_type = ty[0].firstChild.nodeValue;
 			var tl = xml.documentElement.getElementsByTagName('title');
 			m.title = tl[0].firstChild.nodeValue;
 			var lt = xml.documentElement.getElementsByTagName('lat');
@@ -2094,8 +2094,8 @@ function updateMarker(rslt){
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('id');			
 			var marker_id = id[0].firstChild.nodeValue;
-			var ty = xml.documentElement.getElementsByTagName('type');			
-			m.type = ty[0].firstChild.nodeValue;
+			var ty = xml.documentElement.getElementsByTagName('marker_type');			
+			m.marker_type = ty[0].firstChild.nodeValue;
 			var tl = xml.documentElement.getElementsByTagName('title');
 			var title = tl[0].firstChild.nodeValue;			
 	 		m.title = title;
@@ -2274,8 +2274,8 @@ function addMarkerStyle(rslt){
   		s.style_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
   		s.name = nm[0].firstChild.nodeValue;
-			var tp = xml.documentElement.getElementsByTagName('type');
-  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var tp = xml.documentElement.getElementsByTagName('marker_style_type');
+  		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
 			var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
   		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
 			var lo = xml.documentElement.getElementsByTagName('label_opacity');			
@@ -2311,15 +2311,15 @@ function updateMarkerStyle(rslt){
 
 			//get the style we are updating
 			var s = bMStyleData[editObjectN];
-			var oldtp = s.type;
+			var oldtp = s.marker_style_type;
 
 			// assign markerstyle values data array			
 			var id = xml.documentElement.getElementsByTagName('style_id');			
   		s.style_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
   		s.name = nm[0].firstChild.nodeValue;
-			var tp = xml.documentElement.getElementsByTagName('type');
-  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var tp = xml.documentElement.getElementsByTagName('marker_style_type');
+  		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
 			var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
   		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
 			var lo = xml.documentElement.getElementsByTagName('label_opacity');			
@@ -2349,7 +2349,7 @@ function updateMarkerStyle(rslt){
       	//loop through the array
     		for(n=0; n<a.length; n++){
       		//if the array item is not Null
-    			if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.type != oldtp){
+    			if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
 	      			//unload the marker
   					map.removeOverlay( a[n].marker );
 	      			//define new marker with new styles
@@ -2378,8 +2378,8 @@ function addIconStyle(rslt){
   		i.icon_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');
   		i.name = nm[0].firstChild.nodeValue;
-			var tp = xml.documentElement.getElementsByTagName('type');
-  		i.type = parseInt( tp[0].firstChild.nodeValue );
+			var tp = xml.documentElement.getElementsByTagName('icon_style_type');
+  		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
 			var ig = xml.documentElement.getElementsByTagName('image');
   		i.image = ig[0].firstChild.nodeValue;
 			var rig = xml.documentElement.getElementsByTagName('rollover_image');
@@ -2420,9 +2420,9 @@ function addIconStyle(rslt){
   		i.fill_opacity = fo[0].firstChild.nodeValue;
 
 			//make the icon available
-  		if (i.type == 0) {
+  		if (i.icon_style_type == 0) {
   			defineGIcon(n);
-  		}else if(i.type == 1){
+  		}else if(i.icon_style_type == 1){
   			defineXIcon(n);			
   		}
 
@@ -2446,8 +2446,8 @@ function updateIconStyle(rslt){
   		i.icon_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');
   		i.name = nm[0].firstChild.nodeValue;
-			var tp = xml.documentElement.getElementsByTagName('type');
-  		i.type = parseInt( tp[0].firstChild.nodeValue );
+			var tp = xml.documentElement.getElementsByTagName('icon_style_type');
+  		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
 			var ig = xml.documentElement.getElementsByTagName('image');
   		i.image = ig[0].firstChild.nodeValue;
 			var rig = xml.documentElement.getElementsByTagName('rollover_image');
@@ -2488,9 +2488,9 @@ function updateIconStyle(rslt){
   		i.fill_opacity = fo[0].firstChild.nodeValue;
 
 			//update the icon
-  		if (i.type == 0) {
+  		if (i.icon_style_type == 0) {
   			defineGIcon(editObjectN);
-  		}else if(i.type == 1){
+  		}else if(i.icon_style_type == 1){
   			defineXIcon(editObjectN);			
   		}
 
@@ -2700,8 +2700,8 @@ function updatePolyline(rslt){
   		s.style_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
   		s.name = nm[0].firstChild.nodeValue;
-			var tp = xml.documentElement.getElementsByTagName('type');			
-  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var tp = xml.documentElement.getElementsByTagName('polyline_style_type');			
+  		s.polyline_style_type = parseInt( tp[0].firstChild.nodeValue );
 			var cl = xml.documentElement.getElementsByTagName('color');			
   		s.color = cl[0].firstChild.nodeValue;
 			var wt = xml.documentElement.getElementsByTagName('weight');			
@@ -2757,8 +2757,8 @@ function updatePolyline(rslt){
   		s.style_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
   		s.name = nm[0].firstChild.nodeValue;
-			var tp = xml.documentElement.getElementsByTagName('type');			
-  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var tp = xml.documentElement.getElementsByTagName('polyline_style_type');			
+  		s.polyline_style_type = parseInt( tp[0].firstChild.nodeValue );
 			var cl = xml.documentElement.getElementsByTagName('color');			
   		s.color = cl[0].firstChild.nodeValue;
 			var wt = xml.documentElement.getElementsByTagName('weight');			
@@ -3069,8 +3069,8 @@ function addPolygonStyle(rslt){
   		s.style_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
   		s.name = nm[0].firstChild.nodeValue;
-			var tp = xml.documentElement.getElementsByTagName('type');			
-  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var tp = xml.documentElement.getElementsByTagName('polygon_style_type');			
+  		s.polygon_style_type = parseInt( tp[0].firstChild.nodeValue );
 			var cl = xml.documentElement.getElementsByTagName('color');			
   		s.color = cl[0].firstChild.nodeValue;
 			var wt = xml.documentElement.getElementsByTagName('weight');			
@@ -3098,8 +3098,8 @@ function updatePolygonStyle(rslt){
   		s.style_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
   		s.name = nm[0].firstChild.nodeValue;
-			var tp = xml.documentElement.getElementsByTagName('type');			
-  		s.type = parseInt( tp[0].firstChild.nodeValue );
+			var tp = xml.documentElement.getElementsByTagName('polygon_style_type');			
+  		s.polygon_style_type = parseInt( tp[0].firstChild.nodeValue );
 			var cl = xml.documentElement.getElementsByTagName('color');			
   		s.color = cl[0].firstChild.nodeValue;
 			var wt = xml.documentElement.getElementsByTagName('weight');			

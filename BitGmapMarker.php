@@ -97,8 +97,8 @@ class BitGmapMarker extends LibertyAttachable {
 		$pParamHash['marker_store'] = array();
 		$pParamHash['keychain_store'] = array();
 		
-		if( ( !empty( $pParamHash['type'] ) && is_numeric( $pParamHash['type'] ) ) || $pParamHash['type'] == 0) {
-			$pParamHash['marker_store']['type'] = $pParamHash['type'];
+		if( ( !empty( $pParamHash['marker_type'] ) && is_numeric( $pParamHash['marker_type'] ) ) || $pParamHash['marker_type'] == 0) {
+			$pParamHash['marker_store']['marker_type'] = $pParamHash['marker_type'];
 		}
 
 		if( !empty( $pParamHash['marker_lat'] ) && is_numeric( $pParamHash['marker_lat'] ) ) {
