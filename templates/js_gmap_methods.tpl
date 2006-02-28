@@ -164,7 +164,7 @@ function defineGMarker(n, i){
 		var str_1 = urlSrc.substring(0, pos);
 		var str_2 = urlSrc.substring(pos, urlSrc.length); 
 		var medUrl = str_1 + "_medium" + str_2;
-		var imgLink = "<p><img src='"+medUrl+"'></p>"
+		var imgLink = "<p><a onClick=\"javascript: window.open('"+urlSrc+"','onNYTurf')\"><img src='"+medUrl+"'></a></p>"
 	}
 
   a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";

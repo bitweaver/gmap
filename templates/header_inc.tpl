@@ -36,7 +36,7 @@
 	.map-op {margin-right:160px;}
 	.gmapeditstrong {background-color:#ddd;}
 	.hide {float:right; width:160px; display:none;}
-	.mapsidepanel {float:right; overflow:auto; width:180px; display:block; border:1px #ddd solid;}
+	.mapsidepanel {float:right; overflow:auto; width:190px; display:block; border:1px #ddd solid;}
 	.gmapsideicon {float:left; margin-right:3px;}
 	.gmapsidedesc {margin:6px 0px;}
 	.gmapsidelist {padding:0px 2px 0px 6px; line-height:1.5em; clear:both;}
