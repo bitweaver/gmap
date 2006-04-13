@@ -1,7 +1,11 @@
 <?php
 global $gBitSystem, $gBitUser, $gBitSmarty;
 
-$gBitSystem->registerPackage( 'gmap', dirname( __FILE__ ).'/' );
+$registerHash = array(
+	'package_name' => 'gmap',
+	'package_path' => dirname( __FILE__ ).'/',
+);
+$gBitSystem->registerPackage( $registerHash );
 
 
 if($gBitSystem->isPackageActive( 'gmap' ) ) {
