@@ -236,9 +236,6 @@ foreach( array_keys( $tables ) AS $tableName ) {
 $gBitInstaller->registerPackageInfo( GMAP_PKG_NAME, array(
 	'description' => "A wikid Map engine that adds wiki editing power to Google Maps and eliminates the need to understand the Google Map API or Javascript.",
 	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
-	'version' => '0.1',
-	'state' => 'experimental',
-	'dependencies' => '',
 ) );
 
 
