@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005 bitweaver Gmap
+// Copyright (c) 2005, 2006 bitweaver Gmap
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
@@ -8,11 +8,11 @@ if (isset($_REQUEST["gmapset"]) && isset($_REQUEST["homeGmap"])) {
     $gBitSmarty->assign('home_gmap', $_REQUEST["homeGmap"]);
 }
 
-if( !empty( $_REQUEST['gmaps_api_key'] ) ) {
-	$gBitSystem->storePreference( 'gmaps_api_key', $_REQUEST['gmaps_api_key'] );
+if( !empty( $_REQUEST['gmap_api_key'] ) ) {
+	$gBitSystem->storeConfig( 'gmap_api_key', $_REQUEST['gmap_api_key'], GMAP_PKG_NAME );
 }
 
-require_once(GMAP_PKG_PATH.'BitGmap.php' );
+require_once( GMAP_PKG_PATH.'BitGmap.php' );
 
 $formGmapLists = array(
 	"gmap_list_title" => array(
@@ -35,6 +35,5 @@ if( $processForm ) {
 		simple_set_toggle( $item );
 	}
 }
-
 
 ?>
