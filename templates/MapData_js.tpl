@@ -10,7 +10,7 @@ BitMap.MapData.push({ldelim}
   zoom_control:'{if $gBitSystem->getConfig("gmap_zoom_control_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_zoom_control_`$smarty.const.ACTIVE_PACKAGE`")}{else}s{/if}', //s,l,z,n
   overview_control:{if $gBitSystem->getConfig("gmap_overview_control_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_type_control_`$smarty.const.ACTIVE_PACKAGE`")}{else}true{/if}, //true,false 
   map_type:'{if $gBitSystem->getConfig("gmap_map_type_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_map_type_`$smarty.const.ACTIVE_PACKAGE`")}{else}Street{/if}',
-  Markers:[{if count($listcontent) > 0}{section name=listcontent_n loop=$listcontent}
+  Markers:[{if count($listcontent) > 0}{section name=listcontent_n loop=$listcontent}{if $listcontent[listcontent_n].lat != NULL}
   {ldelim}
 		content_id:{$listcontent[listcontent_n].content_id},
 		content_type_guid:'{$listcontent[listcontent_n].format_guid}',
@@ -21,11 +21,11 @@ BitMap.MapData.push({ldelim}
 		creator_real_name:'{$listcontent[listcontent_n].creator_real_name}',
 		display_url:'{$listcontent[listcontent_n].display_url}'
 		{rdelim},
-	{/section}
-  {else if $serviceHash || $gContent->mInfo.lat}
+	{/if}{/section}
+  {else if $serviceHash || $gContent->mInfo.lat}{if $serviceHash.lat != NULL || $gContent->mInfo.lat != NULL}
   {ldelim}
 		lat:{if $gContent}{$gContent->mInfo.lat}{else if $serviceHash}{$serviceHash.lat}{/if},
 		lng:{if $gContent}{$gContent->mInfo.lng}{else if $serviceHash}{$serviceHash.lng}{/if}
 	{rdelim},
-  {/if}]
+  {/if}{/if}]
 {rdelim});

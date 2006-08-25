@@ -21,8 +21,10 @@ BitMap.Map = function (index, mapdiv, center, zoom, map_type, controls, markers)
   this.SetMapType();
   this.SetControls();
   this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
-  var ref = this;
-  this.loopOver(ref.markers, function(i){ref.addMarker(i);});
+  if (this.markers.length > 0){
+  	var ref = this;
+  	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
+  }
 };
 
 
