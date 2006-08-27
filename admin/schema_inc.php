@@ -3,7 +3,7 @@ $tables = array(
 //@todo should allow_comments be here, or will this be covered by Liberty?
 //maptype is keyed to custom maptype_id. 0, 1, and 2 are reserved for Google's Street, Satellite, and Hybrid types
 //show_controls in gmaps takes s,l,z,n  small, large, zoom + -, or none
-'gmaps_maps' => "
+'gmaps' => "
   gmap_id I4 PRIMARY,
   content_id I4 NOTNULL,
   description C(200),
@@ -16,7 +16,7 @@ $tables = array(
   overview_control C(5) DEFAULT 'true',
   scale C(5) DEFAULT 'true',
   allow_comments C(5) DEFAULT 'true'
-  CONSTRAINT ', CONSTRAINT `gmaps_maps_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
 ",
 
 /*
@@ -31,11 +31,11 @@ $tables = array(
   side_panel C(5) DEFAULT 'true',
   explode C(5) DEFAULT 'true',
   cluster C (5) DEFAULT 'false'
-  CONSTRAINTS ', CONSTRAINT `gmaps_sets_keychain_gmap_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_maps`( `gmap_id` )'
+  CONSTRAINTS ', CONSTRAINT `gmaps_sets_keychain_gmap_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."gmaps`( `gmap_id` )'
 ",
 
 //basetype and alttype values: 0 => Streetmap 1 => Satellite, 2 => Hybrid
-'gmaps_map_types' => "
+'gmaps_maptypes' => "
   maptype_id I4 PRIMARY,
   name C(64),
   description C(255),
