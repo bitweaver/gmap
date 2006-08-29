@@ -36,7 +36,7 @@ BitMap.MapData.push({ldelim}
 		{/if}
 		{rdelim},
 	{/section}{/if}],
-	
+		
   Markers:[{if count($listcontent) > 0}{section name=listcontent_n loop=$listcontent}{if $listcontent[listcontent_n].lat != NULL}
   {ldelim}
 		content_id:{$listcontent[listcontent_n].content_id},
@@ -48,12 +48,12 @@ BitMap.MapData.push({ldelim}
 		creator_real_name:'{$listcontent[listcontent_n].creator_real_name}',
 		display_url:'{$listcontent[listcontent_n].display_url}'
 		{rdelim},
-	{/if}{/section}{else if $serviceHash && $serviceHash.lat != NULL}
+	{/if}{/section}{elseif $serviceHash && $serviceHash.lat != NULL}
   {ldelim}
 		lat:{if $gContent}{$gContent->mInfo.lat}{else if $serviceHash}{$serviceHash.lat}{/if},
 		lng:{if $gContent}{$gContent->mInfo.lng}{else if $serviceHash}{$serviceHash.lng}{/if}
 	{rdelim},
-  {else if count($gContent->mMapMarkers) > 0}{section name=marker_n loop=$gContent->mMapMarkers}
+	{elseif count($gContent->mMapMarkers) > 0}{section name=marker_n loop=$gContent->mMapMarkers}
   {ldelim}
 		marker_id: {$gContent->mMapMarkers[marker_n].marker_id},
 		marker_type: {$gContent->mMapMarkers[marker_n].marker_type},

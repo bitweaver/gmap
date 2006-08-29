@@ -359,7 +359,7 @@ BitMap.Map.prototype.defineGMarker = function(n, i){
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var icon = null;
 	if (i != null){
-		icon = 	var a = BitMap.MapData[this.index].IconStyles[i].icon;
+		icon = BitMap.MapData[this.index].IconStyles[i].icon;
 	}
   a[n].marker = new GMarker(point, icon);
   a[n].marker.style_id = 0;
@@ -387,7 +387,7 @@ BitMap.Map.prototype.defineGMarker = function(n, i){
 
 
 
-BitMap.Map.prototype.defineGxMarker(n, i, s){
+BitMap.Map.prototype.defineGxMarker = function(n, i, s){
 	var a = this.markers;
 
 	var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
@@ -624,7 +624,7 @@ BitMap.Map.prototype.attachPolygon = function(n){
 }
 
 
-BitMap.Map.prototype.defineXPolygon(n, s, p){
+BitMap.Map.prototype.defineXPolygon = function(n, s, p){
 	var fillstyle = {};
 	var linestyle = {};
 
@@ -689,7 +689,7 @@ BitMap.Map.prototype.defineXPolygon(n, s, p){
  *      with the same name that is up top
  */ 
 //make side panel of markers
-BitMap.Map.prototype.attachSideMarkers(){
+BitMap.Map.prototype.attachSideMarkers = function(){
 
 	//add tracking var to get count of side sets
 	var x = 0;
