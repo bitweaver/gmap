@@ -795,7 +795,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['gmap_store']['description'] = $pParamHash['map_desc'];
 		}
 		
-		if( ( !empty( $pParamHash['map_w'] ) && is_numeric( $pParamHash['map_w'] ) ) || $pParamHash['map_w'] == 0 ) {
+		if( isset( $pParamHash['map_w'] ) && is_numeric( $pParamHash['map_w'] ) ) {
 			$pParamHash['gmap_store']['width'] = $pParamHash['map_w'];
 		}
 
@@ -804,18 +804,18 @@ class BitGmap extends LibertyAttachable {
 		}
 
 		//@todo lat/lng values now stored via GeoPackage - should these values be part of this hash?
-		if( !empty( $pParamHash['map_lat'] ) && is_numeric( $pParamHash['map_lat'] ) ) {
+		if( isset( $pParamHash['map_lat'] ) && is_numeric( $pParamHash['map_lat'] ) ) {
 			$pParamHash['gmap_store']['lat'] = $pParamHash['map_lat'];
 		} else {
 			$this->mError['map_lat'] = tra( 'You must enter a latitude.' );
 		}
-		if( !empty( $pParamHash['map_lng'] ) && is_numeric( $pParamHash['map_lng'] ) ) {
+		if( isset( $pParamHash['map_lng'] ) && is_numeric( $pParamHash['map_lng'] ) ) {
 			$pParamHash['gmap_store']['lng'] = $pParamHash['map_lng'];
 		} else {
 			$this->mError['map_lng'] = tra( 'You must enter a longitude.' );
 		}
 
-		if( ( !empty( $pParamHash['map_z'] ) && is_numeric( $pParamHash['map_z'] ) ) || $pParamHash['map_z'] == 0 ) {
+		if( isset( $pParamHash['map_z'] ) && is_numeric( $pParamHash['map_z'] ) ) {
 			$pParamHash['gmap_store']['zoom'] = $pParamHash['map_z'];
 		}
 		if( !empty( $pParamHash['maptype'] ) ) {
@@ -882,23 +882,23 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['maptype_store']['copyright'] = $pParamHash['copyright'];
 		}
 
-		if( ( !empty( $pParamHash['basetype'] ) && is_numeric( $pParamHash['basetype'] ) ) || $pParamHash['basetype'] == 0 ) {
+		if( isset( $pParamHash['basetype'] ) && is_numeric( $pParamHash['basetype'] ) ) {
 			$pParamHash['maptype_store']['basetype'] = $pParamHash['basetype'];
 		}
 		
-		if( ( !empty( $pParamHash['alttype'] ) && is_numeric( $pParamHash['alttype'] ) ) || $pParamHash['alttype'] == 0 ) {
+		if( isset( $pParamHash['alttype'] ) && is_numeric( $pParamHash['alttype'] ) ) {
 			$pParamHash['maptype_store']['alttype'] = $pParamHash['alttype'];
 		}
 
-		if( ( !empty( $pParamHash['bounds'] ) && is_numeric( $pParamHash['bounds'] ) ) || $pParamHash['bounds'] == 0 ) {
+		if( isset( $pParamHash['bounds'] ) && is_numeric( $pParamHash['bounds'] ) ) {
 			$pParamHash['maptype_store']['bounds'] = $pParamHash['bounds'];
 		}
 
-		if( ( !empty( $pParamHash['minzoom'] ) && is_numeric( $pParamHash['minzoom'] ) ) || $pParamHash['minzoom'] == 0 ) {
+		if( isset( $pParamHash['minzoom'] ) && is_numeric( $pParamHash['minzoom'] ) ) {
 			$pParamHash['maptype_store']['minzoom'] = $pParamHash['minzoom'];
 		}
 
-		if( ( !empty( $pParamHash['maxzoom'] ) && is_numeric( $pParamHash['maxzoom'] ) ) || $pParamHash['maxzoom'] == 0 ) {
+		if( isset( $pParamHash['maxzoom'] ) && is_numeric( $pParamHash['maxzoom'] ) ) {
 			$pParamHash['maptype_store']['maxzoom'] = $pParamHash['maxzoom'];
 		}
 
@@ -1099,11 +1099,11 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['markerset_store']['description'] = $pParamHash['description'];
 		}
 		
-		if( ( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) || $pParamHash['style_id'] == 0 ) {
+		if( isset( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
 			$pParamHash['markerset_store']['style_id'] = $pParamHash['style_id'];
 		}
 		
-		if( ( !empty( $pParamHash['icon_id'] ) && is_numeric( $pParamHash['icon_id'] ) ) || $pParamHash['icon_id'] == 0 ) {
+		if( isset( $pParamHash['icon_id'] ) && is_numeric( $pParamHash['icon_id'] ) ) {
 			$pParamHash['markerset_store']['icon_id'] = $pParamHash['icon_id'];
 		}
 
@@ -1199,7 +1199,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylineset_store']['description'] = $pParamHash['description'];
 		}
 
-		if( ( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) || $pParamHash['style_id'] == 0 ) {
+		if( isset( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
 			$pParamHash['polylineset_store']['style_id'] = $pParamHash['style_id'];
 		}
 
@@ -1289,11 +1289,11 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polygonset_store']['description'] = $pParamHash['description'];
 		}
 
-		if( ( !empty( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) || $pParamHash['style_id'] == 0 ) {
+		if( isset( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
 			$pParamHash['polygonset_store']['style_id'] = $pParamHash['style_id'];
 		}
 
-		if( ( !empty( $pParamHash['polylinestyle_id'] ) && is_numeric( $pParamHash['polylinestyle_id'] ) ) || $pParamHash['polylinestyle_id'] == 0 ) {
+		if( isset( $pParamHash['polylinestyle_id'] ) && is_numeric( $pParamHash['polylinestyle_id'] ) ) {
 			$pParamHash['polygonset_store']['polylinestyle_id'] = $pParamHash['polylinestyle_id'];
 		}
 
@@ -1376,7 +1376,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['markerstyle_store']['name'] = $pParamHash['name'];
 		}
 		
-		if( ( !empty( $pParamHash['marker_style_type'] ) && is_numeric( $pParamHash['marker_style_type'] ) ) || $pParamHash['marker_style_type'] == 0 ) {
+		if( isset( $pParamHash['marker_style_type'] ) && is_numeric( $pParamHash['marker_style_type'] ) ) {
 			$pParamHash['markerstyle_store']['marker_style_type'] = $pParamHash['marker_style_type'];
 		}
 		
@@ -1430,7 +1430,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['iconstyle_store']['name'] = $pParamHash['name'];
 		}
 
-		if( ( !empty( $pParamHash['icon_style_type'] ) && is_numeric( $pParamHash['icon_style_type'] ) ) || $pParamHash['icon_style_type'] == 0 ) {
+		if( isset( $pParamHash['icon_style_type'] ) && is_numeric( $pParamHash['icon_style_type'] ) ) {
 			$pParamHash['iconstyle_store']['icon_style_type'] = $pParamHash['icon_style_type'];
 		}
 		
@@ -1544,7 +1544,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylinestyle_store']['name'] = $pParamHash['name'];
 		}
 
-		if( ( !empty( $pParamHash['polyline_style_type'] ) && is_numeric( $pParamHash['polyline_style_type'] ) ) || $pParamHash['polyline_style_type'] == 0 ) {
+		if( isset( $pParamHash['polyline_style_type'] ) && is_numeric( $pParamHash['polyline_style_type'] ) ) {
 			$pParamHash['polylinestyle_store']['polyline_style_type'] = $pParamHash['polyline_style_type'];
 		}
 				
@@ -1564,7 +1564,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylinestyle_store']['pattern'] = $pParamHash['pattern'];
 		}
 		
-		if( ( !empty( $pParamHash['segment_count'] ) && is_numeric( $pParamHash['segment_count'] ) ) || $pParamHash['segment_count'] == 0 ) {
+		if( isset( $pParamHash['segment_count'] ) && is_numeric( $pParamHash['segment_count'] ) ) {
 			$pParamHash['polylinestyle_store']['segment_count'] = $pParamHash['segment_count'];
 		}
 		
@@ -1576,7 +1576,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylinestyle_store']['end_arrow'] = $pParamHash['end_arrow'];
 		}
 		
-		if( ( !empty( $pParamHash['arrows_every'] ) && is_numeric( $pParamHash['arrows_every'] ) ) || $pParamHash['arrows_every'] == 0 ) {
+		if( isset( $pParamHash['arrows_every'] ) && is_numeric( $pParamHash['arrows_every'] ) ) {
 			$pParamHash['polylinestyle_store']['arrows_every'] = $pParamHash['arrows_every'];
 		}
 		
@@ -1584,7 +1584,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylinestyle_store']['font'] = $pParamHash['font'];
 		}
 		
-		if( ( !empty( $pParamHash['text_every'] ) && is_numeric( $pParamHash['text_every'] ) ) || $pParamHash['text_every'] == 0 ) {
+		if( isset( $pParamHash['text_every'] ) && is_numeric( $pParamHash['text_every'] ) ) {
 			$pParamHash['polylinestyle_store']['text_every'] = $pParamHash['text_every'];
 		}
 
@@ -1596,11 +1596,11 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylinestyle_store']['text_fgstyle_weight'] = $pParamHash['text_fgstyle_weight'];
 		}
 		
-		if( ( !empty( $pParamHash['text_fgstyle_opacity'] ) && is_numeric( $pParamHash['text_fgstyle_opacity'] ) ) || $pParamHash['text_fgstyle_opacity'] == 0 ) {
+		if( isset( $pParamHash['text_fgstyle_opacity'] ) && is_numeric( $pParamHash['text_fgstyle_opacity'] ) ) {
 			$pParamHash['polylinestyle_store']['text_fgstyle_opacity'] = $pParamHash['text_fgstyle_opacity'];
 		}
 		
-		if( ( !empty( $pParamHash['text_fgstyle_zindex'] ) && is_numeric( $pParamHash['text_fgstyle_zindex'] ) ) || $pParamHash['text_fgstyle_zindex'] == 0 ) {
+		if( isset( $pParamHash['text_fgstyle_zindex'] ) && is_numeric( $pParamHash['text_fgstyle_zindex'] ) ) {
 			$pParamHash['polylinestyle_store']['text_fgstyle_zindex'] = $pParamHash['text_fgstyle_zindex'];
 		}
 		
@@ -1612,11 +1612,11 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polylinestyle_store']['text_bgstyle_weight'] = $pParamHash['text_bgstyle_weight'];
 		}
 		
-		if( ( !empty( $pParamHash['text_bgstyle_opacity'] ) && is_numeric( $pParamHash['text_bgstyle_opacity'] ) ) || $pParamHash['text_bgstyle_opacity'] == 0 ) {
+		if( isset( $pParamHash['text_bgstyle_opacity'] ) && is_numeric( $pParamHash['text_bgstyle_opacity'] ) ) {
 			$pParamHash['polylinestyle_store']['text_bgstyle_opacity'] = $pParamHash['text_bgstyle_opacity'];
 		}
 		
-		if( ( !empty( $pParamHash['text_bgstyle_zindex'] ) && is_numeric( $pParamHash['text_bgstyle_zindex'] ) ) || $pParamHash['text_bgstyle_zindex'] == 0 ) {
+		if( isset( $pParamHash['text_bgstyle_zindex'] ) && is_numeric( $pParamHash['text_bgstyle_zindex'] ) ) {
 			$pParamHash['polylinestyle_store']['text_bgstyle_zindex'] = $pParamHash['text_bgstyle_zindex'];
 		}
 				
@@ -1655,7 +1655,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polygonstyle_store']['name'] = $pParamHash['name'];
 		}
 
-		if( ( !empty( $pParamHash['polygon_style_type'] ) && is_numeric( $pParamHash['polygon_style_type'] ) ) || $pParamHash['polygon_style_type'] == 0 ) {
+		if( isset( $pParamHash['polygon_style_type'] ) && is_numeric( $pParamHash['polygon_style_type'] ) ) {
 			$pParamHash['polygonstyle_store']['polygon_style_type'] = $pParamHash['polygon_style_type'];
 		}
 				
