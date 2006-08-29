@@ -894,6 +894,10 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['maptype_store']['bounds'] = $pParamHash['bounds'];
 		}
 
+		if( ( !empty( $pParamHash['minzoom'] ) && is_numeric( $pParamHash['minzoom'] ) ) || $pParamHash['minzoom'] == 0 ) {
+			$pParamHash['maptype_store']['minzoom'] = $pParamHash['minzoom'];
+		}
+
 		if( ( !empty( $pParamHash['maxzoom'] ) && is_numeric( $pParamHash['maxzoom'] ) ) || $pParamHash['maxzoom'] == 0 ) {
 			$pParamHash['maptype_store']['maxzoom'] = $pParamHash['maxzoom'];
 		}

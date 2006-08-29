@@ -43,6 +43,7 @@ $tables = array(
   basetype I2 DEFAULT 0,
   alttype I2 DEFAULT 0,
   bounds X,
+  minzoom C(4),
   maxzoom C(4),
   maptiles_url X,
   lowresmaptiles_url X DEFAULT 'google',

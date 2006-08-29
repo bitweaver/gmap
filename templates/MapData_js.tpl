@@ -20,6 +20,7 @@ BitMap.MapData.push({ldelim}
 		copyright: "{$gContent->mMapTypes[maptypes].copyright}",
 		basetype: {$gContent->mMapTypes[maptypes].basetype},
 		alttype: {$gContent->mMapTypes[maptypes].alttype},
+		minzoom: {$gContent->mMapTypes[maptypes].minzoom},
 		maxzoom: {$gContent->mMapTypes[maptypes].maxzoom},
 		{if $gContent->mMapTypes[maptypes].maptiles_url != NULL}
 			maptiles_url: "{$gContent->mMapTypes[maptypes].maptiles_url}",
