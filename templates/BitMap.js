@@ -6,6 +6,33 @@ if (typeof(BitMap.MapData) == 'undefined') {
     BitMap.MapData = [];
 }
 
+BitMap.DisplayList = function(){
+  BitMap.Initialize();
+  BitMap.MapData[0].Map.addOverlayListener();
+  BitMap.MapData[0].Map.attachSideMarkers();
+};
+
+
+BitMap.EditContent = function(){
+  BitMap.Initialize();
+  BitMap.MapData[0].Map.addLatLngCapture();
+};
+
+
+BitMap.Initialize = function(){
+  var count = BitMap.MapData.length;
+  for (n=0; n<count; n++){
+    BitMap.MapData[n].Map = new BitMap.Map(
+      n,
+      BitMap.MapData[n].mapdiv,
+      {lat: BitMap.MapData[n].lat, lng: BitMap.MapData[n].lng},
+      BitMap.MapData[n].zoom,
+      BitMap.MapData[n].map_type,
+      {scale: BitMap.MapData[n].scale, type_control:BitMap.MapData[n].type_control, zoom_control: BitMap.MapData[n].zoom_control, overview_control: BitMap.MapData[n].overview_control},
+      BitMap.MapData[n].Markers
+      );
+  };
+};
 
 //center is an object containing .lat and .lng
 //controls is an object containing .scale .type_control .zoom_control
@@ -25,6 +52,28 @@ BitMap.Map = function (index, mapdiv, center, zoom, map_type, controls, markers)
   	var ref = this;
   	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
   }
+};
+
+
+//a utility method we use instead of for loops
+BitMap.Map.prototype.loopOver = function(arr, fnc){
+	var iIterations = arr.length;
+	var iLoopCount = Math.ceil(iIterations / 8);
+	var iTestValue = iIterations % 8;
+	var n = 0;
+	do {
+		switch (iTestValue) {
+			case 0: fnc(n++);
+			case 7: fnc(n++);
+			case 6: fnc(n++);
+			case 5: fnc(n++);
+			case 4: fnc(n++);
+			case 3: fnc(n++);
+			case 2: fnc(n++);
+			case 1: fnc(n++);
+		}
+		iTestValue = 0;
+	} while (--iLoopCount > 0);
 };
 
 
@@ -62,41 +111,6 @@ BitMap.Map.prototype.SetMapType = function(){
 };
 
 
-BitMap.Map.prototype.addMarker = function(i){
-	var p = new GLatLng(parseFloat(this.markers[i].lat), parseFloat(this.markers[i].lng));
-	var tx = this.markers[i].title
-	this.createMarker(p, tx, i);
-};
-
-
-BitMap.Map.prototype.createMarker = function(p, tx, i, t) {
-	this.markers[i].gmarker = new GMarker(p);
-	this.markers[i].gmarker.my_html = tx;
-	this.map.addOverlay(this.markers[i].gmarker);
-};
-
-
-BitMap.Map.prototype.loopOver = function(arr, fnc){
-	var iIterations = arr.length;
-	var iLoopCount = Math.ceil(iIterations / 8);
-	var iTestValue = iIterations % 8;
-	var n = 0;
-	do {
-		switch (iTestValue) {
-			case 0: fnc(n++);
-			case 7: fnc(n++);
-			case 6: fnc(n++);
-			case 5: fnc(n++);
-			case 4: fnc(n++);
-			case 3: fnc(n++);
-			case 2: fnc(n++);
-			case 1: fnc(n++);
-		}
-		iTestValue = 0;
-	} while (--iLoopCount > 0);
-};
-
-
 BitMap.Map.prototype.addOverlayListener = function(){
 	GEvent.addListener(this.map, "click", function(overlay) {
     if (overlay){ 
@@ -125,56 +139,6 @@ BitMap.Map.prototype.addLatLngCapture = function(){
 };
 
 
-//make side panel of markers
-//works only with one map on a page
-BitMap.Map.prototype.attachSideMarkers = function(){
-	//unhide side list
-	document.getElementById('mapsidepanel').className = 'mapsidepanel';
-	//go through all markers and add marker to side list
-	for ( var i=0; i<this.markers.length; i++ ){
-		//make the link
-		var theNewLink = document.createElement('a');
-		theNewLink.href = "javascript: BitMap.MapData[0].Map.markers["+i+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+i+"].gmarker.my_html);";
-		theNewLink.innerHTML = this.markers[i].title;
-		
-		//make a br
-		var BR = document.createElement('br');
-		//add link and space to container
-		document.getElementById('mapsidepanel').appendChild(theNewLink);
-		document.getElementById('mapsidepanel').appendChild(BR);
-	}
-};
-
-
-BitMap.DisplayList = function(){
-  BitMap.Initialize();
-  BitMap.MapData[0].Map.addOverlayListener();
-  BitMap.MapData[0].Map.attachSideMarkers();
-};
-
-
-BitMap.EditContent = function(){
-  BitMap.Initialize();
-  BitMap.MapData[0].Map.addLatLngCapture();
-};
-
-
-BitMap.Initialize = function(){
-  var count = BitMap.MapData.length;
-  for (n=0; n<count; n++){
-    BitMap.MapData[n].Map = new BitMap.Map(
-      n,
-      BitMap.MapData[n].mapdiv,
-      {lat: BitMap.MapData[n].lat, lng: BitMap.MapData[n].lng},
-      BitMap.MapData[n].zoom,
-      BitMap.MapData[n].map_type,
-      {scale: BitMap.MapData[n].scale, type_control:BitMap.MapData[n].type_control, zoom_control: BitMap.MapData[n].zoom_control, overview_control: BitMap.MapData[n].overview_control},
-      BitMap.MapData[n].Markers
-      );
-  };
-};
-
-
 BitMap.Map.prototype.RequestContent = function(){
   //parse form
   //make ajax request
@@ -197,7 +161,6 @@ BitMap.Map.prototype.ReceiveContent = function(){
 BitMap.Map.prototype.UpdateMarkerList = function(){
   //add to general side panel list
 };
-
 
 /*--------------------------------------------------------------------*/
 /*@todo this is a rough rewrite 
@@ -231,9 +194,6 @@ BitMap.Map.prototype.addMapTypes = function(pParamHash){
     this.map.addMapType(custommap);
 	}
 };
-
-
-
 
 
 BitMap.Map.prototype.attachIcons = function(){
@@ -291,27 +251,24 @@ BitMap.Map.prototype.defineXIcon = function(n){
 };
 
 
-/*@todo reconcile with addMarkers up top
- *      also need to add in some sort of looping
- *      for adding markers as they become visible.
- *      would be best if this was written to use
- *      the loopOver method   
+
+/*@todo 
+ *
+ * reconcile with addMarkers below
+ *  
  */ 
-BitMap.Map.prototype.attachMarkers = function(){
-	var a = this.markers;
-	//if the length of the array is > 0
-	if (a.length > 0){
-  	//loop through the array
-		for(n=0; n<a.length; n++){
-  		//if the array item is not Null
-			if (a[n]!= null && a[n].plot_on_load == true){
-				this.attachMarker(n);
-			}
-		}
-	}
+BitMap.Map.prototype.addMarker = function(i){
+	if (this.markers[i]!= null && this.markers[i].plot_on_load == true){
+    var Marker = this.markers[i];
+    var p = new GLatLng(parseFloat(Marker.lat), parseFloat(Marker.lng));
+    Marker.gmarker = new GMarker(p);
+    Marker.gmarker.my_html = Marker.title;
+    this.map.addOverlay(Marker.gmarker);
+  }
 };
 
 
+/*@todo Merge this with function above */
 BitMap.Map.prototype.attachMarker = function(n, o){
 	var m = this.markers[n];
 	var i = null;
@@ -342,7 +299,7 @@ BitMap.Map.prototype.attachMarker = function(n, o){
 			if (o == true) {
         	m.marker.showTooltip();
         	m.marker.hideTooltip();
-				m.marker.showDetailWin();
+				  m.marker.showDetailWin();
 			};
   	}else if ( MarkerStyles[s].marker_style_type == 2){
   		this.defineXMarker(n, i, s);
@@ -445,37 +402,6 @@ BitMap.Map.prototype.definePdMarker = function(n, i, s){
   //rollover-icon: a[n].marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
   this.map.addOverlay(a[n].marker);
 }
-
-
-//@todo might not be able to support in V2, requires Xmaps Lib
-function defineXMarker(n, i, s){
-	var a = this.markers;
-
-	var icon = null;
-	if (i != null){
-		icon = BitMap.MapData[this.index].IconStyles[i].icon;
-	}
-
-	//XMarker Style
-  var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
-	var mytip = "<div class='tip-"+BitMap.MapData[this.index].MarkerStyles[s].name + "'>" + a[n].label_data + "</div>";
-  a[n].marker = new XMarker(point, icon, null, mytip);
-  a[n].marker.marker_style_type = 2;
-
-	var imgLink ='';
-	if (a[n].marker_type == 1){
-		var urlSrc = a[n].photo_url;
-		var pos = urlSrc.lastIndexOf('.');
-		var str_1 = urlSrc.substring(0, pos);
-		var str_2 = urlSrc.substring(pos, urlSrc.length); 
-		var medUrl = str_1 + "_medium" + str_2;
-		var imgLink = "<p><img src='"+medUrl+"'></p>"
-	}
-
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
-  this.map.addOverlay(a[n].marker);
-}
-
 
 
 BitMap.Map.prototype.attachPolylines = function(){
@@ -685,8 +611,30 @@ BitMap.Map.prototype.defineXPolygon = function(n, s, p){
 };
 
 
-/*@todo Merge this function with the one 
- *      with the same name that is up top
+
+
+//make side panel of markers
+//works only with one map on a page
+BitMap.Map.prototype.attachSideMarkers = function(){
+	//unhide side list
+	document.getElementById('mapsidepanel').className = 'mapsidepanel';
+	//go through all markers and add marker to side list
+	for ( var i=0; i<this.markers.length; i++ ){
+		//make the link
+		var theNewLink = document.createElement('a');
+		theNewLink.href = "javascript: BitMap.MapData[0].Map.markers["+i+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+i+"].gmarker.my_html);";
+		theNewLink.innerHTML = this.markers[i].title;
+		
+		//make a br
+		var BR = document.createElement('br');
+		//add link and space to container
+		document.getElementById('mapsidepanel').appendChild(theNewLink);
+		document.getElementById('mapsidepanel').appendChild(BR);
+	}
+};
+
+
+/*@todo Merge this function with the one above
  */ 
 //make side panel of markers
 BitMap.Map.prototype.attachSideMarkers = function(){
