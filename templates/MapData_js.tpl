@@ -1,4 +1,10 @@
 BitMap.MapData.push({ldelim}
+  browser:"{$browserInfo.browser}",
+  id:{if $gContent->mInfo.gmap_id}{$gContent->mInfo.gmap_id}{/if},
+  title:"{$gContent->mInfo.title}",
+  description:"{$gContent->mInfo.description}",
+  data:"{$gContent->mInfo.data}",
+  parsed_data:"{$gContent->mInfo.parsed_data}",
   mapdiv:'{$smarty.const.ACTIVE_PACKAGE}-map',
   width:'{if $gBitSystem->getConfig("gmap_width_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_width_`$smarty.const.ACTIVE_PACKAGE`")}{else}auto{/if}',
   height:'{if $gBitSystem->getConfig("gmap_height_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_height_`$smarty.const.ACTIVE_PACKAGE`")}{else}300px{/if}',
@@ -9,7 +15,7 @@ BitMap.MapData.push({ldelim}
   type_control:{if $gBitSystem->getConfig("gmap_type_control_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_type_control_`$smarty.const.ACTIVE_PACKAGE`")}{else}true{/if}, //true,false
   zoom_control:'{if $gBitSystem->getConfig("gmap_zoom_control_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_zoom_control_`$smarty.const.ACTIVE_PACKAGE`")}{else}s{/if}', //s,l,z,n
   overview_control:{if $gBitSystem->getConfig("gmap_overview_control_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_type_control_`$smarty.const.ACTIVE_PACKAGE`")}{else}true{/if}, //true,false 
-  map_type:'{if $gBitSystem->getConfig("gmap_map_type_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_map_type_`$smarty.const.ACTIVE_PACKAGE`")}{else}Street{/if}',
+  maptype:'{if $gBitSystem->getConfig("gmap_maptype_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_maptype_`$smarty.const.ACTIVE_PACKAGE`")}{else}0{/if}',
 
   Maptypes:[
   {if count($gContent->mMapTypes) > 0}{section name=maptypes loop=$gContent->mMapTypes}

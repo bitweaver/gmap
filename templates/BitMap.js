@@ -27,7 +27,7 @@ BitMap.Initialize = function(){
       BitMap.MapData[n].mapdiv,
       {lat: BitMap.MapData[n].lat, lng: BitMap.MapData[n].lng},
       BitMap.MapData[n].zoom,
-      BitMap.MapData[n].map_type,
+      BitMap.MapData[n].maptype,
       {scale: BitMap.MapData[n].scale, type_control:BitMap.MapData[n].type_control, zoom_control: BitMap.MapData[n].zoom_control, overview_control: BitMap.MapData[n].overview_control},
       BitMap.MapData[n].Maptypes,
       BitMap.MapData[n].Markers,
@@ -120,13 +120,17 @@ BitMap.Map.prototype.SetControls = function(){
 
 
 BitMap.Map.prototype.SetMapType = function(){
-  switch (this.maptype){
-    case 'Street': this.map.setMapType(G_NORMAL_MAP);
-      break;
-    case 'Satellite': this.map.setMapType(G_SATELLITE_MAP);
-      break;
-    case 'Hybrid': this.map.setMapType(G_HYBRID_MAP);
-      break;
+  if (this.maptype < 3){
+    switch (this.maptype){
+      case 0: this.map.setMapType(G_NORMAL_MAP);
+        break;
+      case 1: this.map.setMapType(G_SATELLITE_MAP);
+        break;
+      case 2: this.map.setMapType(G_HYBRID_MAP);
+        break;
+    }
+  }else{
+    //insert check for maptype name in maptype array and set map to that
   }
 };
 
