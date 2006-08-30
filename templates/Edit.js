@@ -9,7 +9,6 @@ BitMap.dumpProps(obj, parent) {
    }
 }
 
-
 if (typeof(BitMap) == 'undefined') {
     BitMap = {};
 }
@@ -18,6 +17,11 @@ if (typeof(BitMap.Edit) == 'undefined') {
     BitMap.Edit = [];
 }
 
+BitMap.EditMap = function(){
+  BitMap.Initialize();
+  BitMap.MapData[0].Map.addOverlayListener();
+  BitMap.MapData[0].Map.attachSideMarkers();
+};
 
 // We use Mochikit library for AJAX and substituting getElementById with '$()'
 // MAP EDITING FUNCTIONS
@@ -61,8 +65,6 @@ BitMap.Edit.toggleIconMenu = function(o, n){
 
 
 
-
-
 /*******************
  *
  * MAP FORM FUNCTIONS
@@ -72,7 +74,7 @@ BitMap.Edit.toggleIconMenu = function(o, n){
 // builds the map editing form
 BitMap.Edit.editMap = function(Map){
 				  $('mapform').reset();
-				 	show('editmapform');
+				 	BitMap.Edit.show('editmapform');
 
     			$('gmap_id').value = Map.id;
     			$('map_title').value = Map.title;
@@ -130,9 +132,9 @@ BitMap.Edit.editMap = function(Map){
 };
 
 BitMap.Edit.editMapTypes = function(Map){
-	show('editmaptypemenu');
-	show('editmaptypeform');
-	show('editmaptypecancel');
+	BitMap.Edit.show('editmaptypemenu');
+	BitMap.Edit.show('editmaptypeform');
+	BitMap.Edit.show('editmaptypecancel');
 
 	//if maptype data exists
 	if ( typeof( Map.Maptypes ) ) {
@@ -179,8 +181,8 @@ BitMap.Edit.editMapTypes = function(Map){
   									
       // add form to set table
   		$('editmaptypeform').appendChild(newMapType);
-  		show( 'editmaptypetable_'+editMapTypeId );
-  		show( 'maptypeform_'+editMapTypeId );
+  		BitMap.Edit.show( 'editmaptypetable_'+editMapTypeId );
+  		BitMap.Edit.show( 'maptypeform_'+editMapTypeId );
 						
 			//@todo add cloning of the all maptypes form
 	  
@@ -226,7 +228,7 @@ BitMap.Edit.editMapTypes = function(Map){
 
 BitMap.Edit.newMapType = function(){
     // Display the New Marker Div and Cancel Button
-   	show('newmaptypeform');
+   	BitMap.Edit.show('newmaptypeform');
 
 		// Reset the Form
 		$('maptypeform_new').reset();
@@ -252,14 +254,14 @@ BitMap.Edit.newMarker = function(Map){
   	if (check == false){
   		//set warning message, show it, fade it
   		$('errortext').innerHTML = "To add a marker, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new marker!";
-			show('editerror');
+			BitMap.Edit.show('editerror');
   		Fat.fade_all();
   		//display new marker set form
-      newMarkerSet();
+      BitMap.Edit.newMarkerSet();
 
 		}else{
       // Display the New Marker Div and Cancel Button
-     	show('newmarkerform');
+     	BitMap.Edit.show('newmarkerform');
 
   		// Reset the Form
   		$('markerform_new').reset();
@@ -284,7 +286,7 @@ BitMap.Edit.newMarker = function(Map){
 
 BitMap.Edit.newMarkerSet = function(){
     // Display the New Form Div
-   	show('newmarkersetform');
+   	BitMap.Edit.show('newmarkersetform');
 		// Reset the Form
 		$('markersetform_new').reset();
 };
@@ -293,9 +295,9 @@ BitMap.Edit.newMarkerSet = function(){
 
 BitMap.Edit.editMarkers = function(Map){		
   // Display the Edit Form Div and Cancel Button
-	show('editmarkermenu');
-  show('editmarkerform');
-	show('editmarkercancel');
+	BitMap.Edit.show('editmarkermenu');
+  BitMap.Edit.show('editmarkerform');
+	BitMap.Edit.show('editmarkercancel');
 
 	//if marker data exists
 	if ( typeof(Map.Markers) ) {
@@ -362,8 +364,8 @@ BitMap.Edit.editMarkers = function(Map){
   
         	// add form container to set table
     		$('editmarkerform').appendChild(newMarkerSet);
-    		show('markerset_'+newSetId);
-				show('markersetform_'+newSetId);
+    		BitMap.Edit.show('markerset_'+newSetId);
+				BitMap.Edit.show('markersetform_'+newSetId);
 
 				//get form data div children and update
            	var mytable = $('markersetformdata_'+newSetId);
@@ -441,7 +443,7 @@ BitMap.Edit.editMarkers = function(Map){
     					}
     				}
 						$('editmarkertable_'+Map.Markers[g].set_id).appendChild(newMarkerForm);
-    				show('markerform_'+g);
+    				BitMap.Edit.show('markerform_'+g);
     			}
     		}
 				
@@ -483,7 +485,7 @@ BitMap.Edit.editMarkers = function(Map){
 
 //@todo change this to editMarkerSet(n)
 BitMap.Edit.editSet = function(n){
-				show('setform_'+n);
+				BitMap.Edit.show('setform_'+n);
 };
 
 
@@ -498,14 +500,14 @@ BitMap.Edit.newIconStyle = function(Map){
   	if (check == false){
   		//set warning message, show it, fade it
   		$('errortext').innerHTML = "To add a icon style, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new icon style!";
-			show('editerror');
+			BitMap.Edit.show('editerror');
   		Fat.fade_all();
   		//display new marker set form
-      newMarkerSet();
+      BitMap.Edit.newMarkerSet();
 
 		}else{
       // Display the New Icon Style Div
-   		show('newiconstyleform');
+   		BitMap.Edit.show('newiconstyleform');
 
   		// Reset the Form
   		$('iconstyleform_new').reset();  		  
@@ -514,9 +516,9 @@ BitMap.Edit.newIconStyle = function(Map){
 
 
 BitMap.Edit.editIconStyles = function(Map){
-		show('editiconstylesmenu');
-		show('editiconstyleform');
-		show('editiconstylescancel');
+		BitMap.Edit.show('editiconstylesmenu');
+		BitMap.Edit.show('editiconstyleform');
+		BitMap.Edit.show('editiconstylescancel');
 
   	//if iconstyles data exists
   	if ( typeof( Map.IconStyles ) ) {
@@ -568,8 +570,8 @@ BitMap.Edit.editIconStyles = function(Map){
     
             	// add form to style table
         		$('editiconstyleform').appendChild(newIconStyle);
-        		show( 'editiconstyletable_'+editIconStyleId );
-        		show( 'iconstyleform_'+editIconStyleId );
+        		BitMap.Edit.show( 'editiconstyletable_'+editIconStyleId );
+        		BitMap.Edit.show( 'iconstyleform_'+editIconStyleId );
     
       			// populate set form values
       			form = $('iconstyleform_' + editIconStyleId );
@@ -649,14 +651,14 @@ BitMap.Edit.newMarkerStyle = function(Map){
   	if (check == false){
   		//set warning message, show it, fade it
   		$('errortext').innerHTML = "To add a marker style, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new marker style!";
-			show('editerror');
+			BitMap.Edit.show('editerror');
   		Fat.fade_all();
   		//display new marker set form
-      newMarkerSet();
+      BitMap.Edit.newMarkerSet();
 
 		}else{
       // Display the New Marker Style Div
-   		show('newmarkerstyleform');
+   		BitMap.Edit.show('newmarkerstyleform');
 
   		// Reset the Form
   		$('markerstyleform_new').reset();  		  
@@ -665,9 +667,9 @@ BitMap.Edit.newMarkerStyle = function(Map){
 
 
 BitMap.Edit.editMarkerStyles = function(Map){
-		show('editmarkerstylesmenu');
-		show('editmarkerstyleform');
-		show('editmarkerstylescancel');
+		BitMap.Edit.show('editmarkerstylesmenu');
+		BitMap.Edit.show('editmarkerstyleform');
+		BitMap.Edit.show('editmarkerstylescancel');
 
 		//if markerstyles data exists
 		if ( typeof( Map.MarkerStyles ) ) {
@@ -720,8 +722,8 @@ BitMap.Edit.editMarkerStyles = function(Map){
 
         	// add form to style table
     		$('editmarkerstyleform').appendChild(newMarkerStyle);
-    		show( 'editmarkerstyletable_'+editMarkerStyleId );
-    		show( 'markerstyleform_'+editMarkerStyleId );
+    		BitMap.Edit.show( 'editmarkerstyletable_'+editMarkerStyleId );
+    		BitMap.Edit.show( 'markerstyleform_'+editMarkerStyleId );
 
   			// populate set form values
   			form = $('markerstyleform_' + editMarkerStyleId );
@@ -778,14 +780,14 @@ BitMap.Edit.newPolyline = function(Map){
   	if (check == false){
   		//set warning message, show it, fade it
   		$('errortext').innerHTML = "To add a polyline, there first must be a polyline set associated with this map. Please create a new polyline set, then you can add your new polyline!";
-			show('editerror');
+			BitMap.Edit.show('editerror');
   		Fat.fade_all();
   		//display new polyline set form
-      newPolylineSet();
+      BitMap.Edit.newPolylineSet();
 
 		}else{
       // Display the New Form Div and Cancel Button
-     	show('newpolylineform');
+     	BitMap.Edit.show('newpolylineform');
   		// Reset the Form
   		$('polylineform_new').reset();
   		
@@ -809,7 +811,7 @@ BitMap.Edit.newPolyline = function(Map){
 
 BitMap.Edit.newPolylineSet = function(){
     // Display the New Form Div
-   	show('newpolylinesetform');
+   	BitMap.Edit.show('newpolylinesetform');
 		// Reset the Form
 		$('polylinesetform_new').reset();
 };
@@ -818,9 +820,9 @@ BitMap.Edit.newPolylineSet = function(){
 
 /* @todo needs to support markers in bSLData as well as Map.Polylines */
 BitMap.Edit.editPolylines = function(Map){
-	show('editpolylinemenu');
-  show('editpolylineform');
-	show('editpolylinecancel');
+	BitMap.Edit.show('editpolylinemenu');
+  BitMap.Edit.show('editpolylineform');
+	BitMap.Edit.show('editpolylinecancel');
 	
 	//if polyline data exists
 	if ( typeof(Map.Polylines) ) {
@@ -886,8 +888,8 @@ BitMap.Edit.editPolylines = function(Map){
 
         	// add form container to set table
   			$('editpolylineform').appendChild(newPolylineSet);
-    		show('polylineset_'+newSetId);
-				show('polylinesetform_'+newSetId);
+    		BitMap.Edit.show('polylineset_'+newSetId);
+				BitMap.Edit.show('polylinesetform_'+newSetId);
   
 				//get form data div children and update
            	var mytable = $('polylinesetformdata_' + newSetId);
@@ -952,7 +954,7 @@ BitMap.Edit.editPolylines = function(Map){
     				}
     							
         			$('editpolylinetable_'+Map.Polylines[g].set_id).appendChild(newPolylineForm);
-    				show('polylineform_'+g);
+    				BitMap.Edit.show('polylineform_'+g);
     			}
     		}
 
@@ -987,23 +989,23 @@ BitMap.Edit.editPolylines = function(Map){
 
 
 BitMap.Edit.editPolylineSet = function(n){
-		show('plsetform_'+n);
+		BitMap.Edit.show('plsetform_'+n);
 }
 
 
 BitMap.Edit.cancelPolylineEdit = function(){
-		canceledit('editpolylinemenu'); 
-		canceledit('newpolylineform'); 
-		canceledit('editpolylineform'); 
-		canceledit('editpolylinecancel');
-		removeAssistant();
+		BitMap.Edit.canceledit('editpolylinemenu'); 
+		BitMap.Edit.canceledit('newpolylineform');
+		BitMap.Edit.canceledit('editpolylineform'); 
+		BitMap.Edit.canceledit('editpolylinecancel');
+		BitMap.Edit.removeAssistant();
 }; 
 
 
 BitMap.Edit.editPolylineStyles = function(Map){
-		show('editpolylinestylesmenu');
-		show('editpolylinestyleform');
-		show('editpolylinestylescancel');
+		BitMap.Edit.show('editpolylinestylesmenu');
+		BitMap.Edit.show('editpolylinestyleform');
+		BitMap.Edit.show('editpolylinestylescancel');
 
   	//if polylinestyles data exists
   	if ( typeof( Map.PolylineStyles ) ) {
@@ -1056,8 +1058,8 @@ BitMap.Edit.editPolylineStyles = function(Map){
     
             	// add form to style table
         		$('editpolylinestyleform').appendChild(newPolylineStyle);
-        		show( 'editpolylinestyletable_'+editPolylineStyleId );
-        		show( 'polylinestyleform_'+editPolylineStyleId );
+        		BitMap.Edit.show( 'editpolylinestyletable_'+editPolylineStyleId );
+        		BitMap.Edit.show( 'polylinestyleform_'+editPolylineStyleId );
     
       			// populate set form values
       			form = $('polylinestyleform_' + editPolylineStyleId );
@@ -1124,14 +1126,14 @@ BitMap.Edit.newPolylineStyle = function(Map){
   	if (check == false){
   		//set warning message, show it, fade it
   		$('errortext').innerHTML = "To add a polyline style, there must be a polyline or polygon set associated with this map. Please create a new polyline or polygon set, then you can add your new polyline style!";
-			show('editerror');
+			BitMap.Edit.show('editerror');
   		Fat.fade_all();
   		//display new polyline set form
-      newPolylineSet();
+      BitMap.Edit.newPolylineSet();
 
 		}else{
       // Display the New Polyline Style Div
-   		show('newpolylinestyleform');
+   		BitMap.Edit.show('newpolylinestyleform');
 
   		// Reset the Form
   		$('polylinestyleform_new').reset();  		  
@@ -1159,14 +1161,14 @@ BitMap.Edit.newPolygon = function(Map){
   	if (check == false){
   		//set warning message, show it, fade it
   		$('errortext').innerHTML = "To add a polygon, there first must be a polygon set associated with this map. Please create a new polygon set, then you can add your new polygon!";
-			show('editerror');
+			BitMap.Edit.show('editerror');
   		Fat.fade_all();
   		//display new polygon set form
-      newPolygonSet();
+      BitMap.Edit.newPolygonSet();
 
 		}else{
       // Display the New Form Div and Cancel Button
-     	show('newpolygonform');
+     	BitMap.Edit.show('newpolygonform');
   		// Reset the Form
   		$('polygonform_new').reset();
   		
@@ -1190,7 +1192,7 @@ BitMap.Edit.newPolygon = function(Map){
 
 BitMap.Edit.newPolygonSet = function(){
     // Display the New Form Div
-   	show('newpolygonsetform');
+   	BitMap.Edit.show('newpolygonsetform');
 		// Reset the Form
 		$('polygonsetform_new').reset();
 };
@@ -1201,9 +1203,9 @@ BitMap.Edit.newPolygonSet = function(){
 
 /* @todo needs to support markers in bSLData as well as Map.Polylines */
 BitMap.Edit.editPolygons = function(Map){
-	show('editpolygonmenu');
-  show('editpolygonform');
-	show('editpolygoncancel');
+	BitMap.Edit.show('editpolygonmenu');
+  BitMap.Edit.show('editpolygonform');
+	BitMap.Edit.show('editpolygoncancel');
 	
 	//if polygon data exists
 	if ( typeof(Map.Polygons) ) {
@@ -1269,8 +1271,8 @@ BitMap.Edit.editPolygons = function(Map){
 
         	// add form container to set table
   			$('editpolygonform').appendChild(newPolygonSet);
-    		show('polygonset_'+newSetId);
-				show('polygonsetform_'+newSetId);
+    		BitMap.Edit.show('polygonset_'+newSetId);
+				BitMap.Edit.show('polygonsetform_'+newSetId);
 
 				//get form data div children and update
            	var mytable = $('polygonsetformdata_' + newSetId);
@@ -1347,7 +1349,7 @@ BitMap.Edit.editPolygons = function(Map){
     				}
     							
         			$('editpolygontable_'+Map.Polygons[g].set_id).appendChild(newPolygonForm);
-    				show('polygonform_'+g);
+    				BitMap.Edit.show('polygonform_'+g);
     			}
     		}
 				
@@ -1389,23 +1391,23 @@ BitMap.Edit.editPolygons = function(Map){
 
 
 BitMap.Edit.editPolygonSet = function(n){
-		show('pgsetform_'+n);
+		BitMap.Edit.show('pgsetform_'+n);
 }
 
 
 BitMap.Edit.cancelPolygonEdit = function(){
-		canceledit('editpolygonmenu'); 
-		canceledit('newpolygonform'); 
-		canceledit('editpolygonform'); 
-		canceledit('editpolygoncancel');
-		removeAssistant();
+		BitMap.Edit.canceledit('editpolygonmenu'); 
+		BitMap.Edit.canceledit('newpolygonform'); 
+		BitMap.Edit.canceledit('editpolygonform'); 
+		BitMap.Edit.canceledit('editpolygoncancel');
+		BitMap.Edit.removeAssistant();
 }; 
 
 
 BitMap.Edit.editPolygonStyles = function(Map){
-		show('editpolygonstylesmenu');
-		show('editpolygonstyleform');
-		show('editpolygonstylescancel');
+		BitMap.Edit.show('editpolygonstylesmenu');
+		BitMap.Edit.show('editpolygonstyleform');
+		BitMap.Edit.show('editpolygonstylescancel');
 
   	//if polygonstyles data exists
   	if ( typeof( Map.PolygonStyles ) ) {
@@ -1457,8 +1459,8 @@ BitMap.Edit.editPolygonStyles = function(Map){
     
             	// add form to style table
         		$('editpolygonstyleform').appendChild(newPolygonStyle);
-        		show( 'editpolygonstyletable_'+editPolygonStyleId );
-        		show( 'polygonstyleform_'+editPolygonStyleId );
+        		BitMap.Edit.show( 'editpolygonstyletable_'+editPolygonStyleId );
+        		BitMap.Edit.show( 'polygonstyleform_'+editPolygonStyleId );
     
       			// populate set form values
       			form = $('polygonstyleform_' + editPolygonStyleId );
@@ -1493,14 +1495,14 @@ BitMap.Edit.newPolygonStyle = function(Map){
   	if (check == false){
   		//set warning message, show it, fade it
   		$('errortext').innerHTML = "To add a polygon style, there first must be a polygon set associated with this map. Please create a new polygon set, then you can add your new polygon style!";
-			show('editerror');
+			BitMap.Edit.show('editerror');
   		Fat.fade_all();
   		//display new polygon set form
-      newPolygonSet();
+      BitMap.Edit.newPolygonSet();
 
 		}else{
       // Display the New Polygon Style Div
-   		show('newpolygonstyleform');
+   		BitMap.Edit.show('newpolygonstyleform');
 
   		// Reset the Form
   		$('polygonstyleform_new').reset();  		  
@@ -1774,7 +1776,7 @@ BitMap.Edit.newPolygonStyle = function(Map){
 	 
 	 BitMap.Edit.updateMap = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
 	 
       var xml = rslt.responseXML;
 			
@@ -1866,14 +1868,14 @@ BitMap.Edit.newPolygonStyle = function(Map){
 			
 			map.centerAndZoom(new GPoint(Map.lng, Map.lat), Map.zoom);
 			
-			editMap();
+			BitMap.Edit.editMap();
 	 }
 
 
 
 	 BitMap.Edit.addMapType = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       var xml = rslt.responseXML;
 
@@ -1933,7 +1935,7 @@ BitMap.Edit.newPolygonStyle = function(Map){
 			// clear the form
 			$('maptypeform_new').reset();
 			// update the sets menus
-			editMapTypes();
+			BitMap.Edit.editMapTypes();
 	 }
 
 
@@ -1941,7 +1943,7 @@ BitMap.Edit.newPolygonStyle = function(Map){
 	 
 	 BitMap.Edit.updateMapType = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
 
       var xml = rslt.responseXML;
 
@@ -1999,7 +2001,7 @@ BitMap.Edit.newPolygonStyle = function(Map){
 	 
 	 BitMap.Edit.updateRemoveMapType = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
 			var n = editObjectN;
 			
@@ -2050,7 +2052,7 @@ BitMap.Edit.newPolygonStyle = function(Map){
 
 BitMap.Edit.addMarker = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       var xml = rslt.responseXML;
 
@@ -2097,19 +2099,19 @@ BitMap.Edit.addMarker = function(rslt){
 			m.array_n = parseInt(n);
 
         //make the marker
-			attachMarker(n, true);
+			Map.attachMarker(n, true);
 			// clear the form
 			$('markerform_new').reset();
-			removeAssistant();
+			BitMap.Edit.removeAssistant();
 			// update the sets menus
-			editMarkers();
-			editSet(editSetId);
+			BitMap.Edit.editMarkers();
+			BitMap.Edit.editSet(editSetId);
 }
 
 	 	 
 BitMap.Edit.updateMarker = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
 
       var xml = rslt.responseXML;
 						
@@ -2147,11 +2149,11 @@ BitMap.Edit.updateMarker = function(rslt){
 			m.zindex = zindex;
 			
         //unload the marker
-        map.removeOverlay( m.marker );
+      Map.map.removeOverlay( m.marker );
         //remake the marker
-			attachMarker(n, true);
+			Map.attachMarker(n, true);
 			//remove the assistant
-			removeAssistant();
+			BitMap.Edit.removeAssistant();
 }
 
 
@@ -2159,7 +2161,7 @@ BitMap.Edit.updateMarker = function(rslt){
 
 BitMap.Edit.addMarkerSet = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       var xml = rslt.responseXML;
 
@@ -2193,14 +2195,14 @@ BitMap.Edit.addMarkerSet = function(rslt){
 			$('markersetform_new').reset();
 			// update the sets menus
 			if ( $('newmarkerform').style.display == "block" ){ newMarker(); };
-			editMarkers();
+			BitMap.Edit.editMarkers();
 }
 	
 
 
 BitMap.Edit.updateMarkerSet = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       var xml = rslt.responseXML;
 
@@ -2240,9 +2242,9 @@ BitMap.Edit.updateMarkerSet = function(rslt){
 								a[n].style_id = s.style_id;
 								a[n].icon_id = s.icon_id;
 								//unload the marker
-         					map.removeOverlay( a[n].marker );
+         				Map.map.removeOverlay( a[n].marker );
     						//define marker
-								attachMarker(n);
+								Map.attachMarker(n);
        					}
        				}
        			}
@@ -2250,7 +2252,7 @@ BitMap.Edit.updateMarkerSet = function(rslt){
 			};
 
 			// update the sets menus
-			editMarkers();
+			BitMap.Edit.editMarkers();
 }
 
 
@@ -2258,13 +2260,13 @@ BitMap.Edit.updateMarkerSet = function(rslt){
 BitMap.Edit.updateRemoveMarker = function(){
 		for (var n=0; n<Map.Markers.length; n++){
 			if ( ( Map.Markers[n] != null ) && ( Map.Markers[n].marker_id == editMarkerId ) ){
-				map.removeOverlay(Map.Markers[n].marker);
+				Map.map.removeOverlay(Map.Markers[n].marker);
 				Map.Markers[n].marker = null;
 				Map.Markers[n] = null;
 			}
 		}
-		editMarkers();
-		editSet(editSetId);
+		BitMap.Edit.editMarkers();
+		BitMap.Edit.editSet(editSetId);
 }
 
 
@@ -2272,7 +2274,7 @@ BitMap.Edit.updateRemoveMarker = function(){
 BitMap.Edit.updateRemoveMarkerSet = function(Map){
   	for (var n=0; n<Map.Markers.length; n++){
   		if ( ( Map.Markers[n] != null ) && ( Map.Markers[n].set_id == editSetId ) && ( Map.Markers[n].marker != null ) ){
-				map.removeOverlay(Map.Markers[n].marker); 			
+				Map.map.removeOverlay(Map.Markers[n].marker); 			
 				Map.Markers[n].marker = null;
 				Map.Markers[n] = null;
   		}
@@ -2288,14 +2290,14 @@ BitMap.Edit.updateRemoveMarkerSet = function(Map){
   			Map.MarkerSets[s] = null;
   		}
 		}
-		editMarkers();
+		BitMap.Edit.editMarkers();
 }
 	
 
 
 BitMap.Edit.addMarkerStyle = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       var xml = rslt.responseXML;
 
@@ -2335,15 +2337,15 @@ BitMap.Edit.addMarkerStyle = function(rslt){
 			// clear the form
 			$('markerstyleform_new').reset();
 			// update the styles menus
-			editMarkerStyles();
-			editMarkers();
+			BitMap.Edit.editMarkerStyles();
+			BitMap.Edit.editMarkers();
 }
 
 
 
 BitMap.Edit.updateMarkerStyle = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       var xml = rslt.responseXML;
 
@@ -2389,14 +2391,14 @@ BitMap.Edit.updateMarkerStyle = function(rslt){
       		//if the array item is not Null
     			if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
 	      			//unload the marker
-  					map.removeOverlay( a[n].marker );
+  					BitMap.Edit.map.removeOverlay( a[n].marker );
 	      			//define new marker with new styles
-						attachMarker(n);
+						BitMap.Edit.attachMarker(n);
 					}
 				}
 			}
-			editMarkerStyles();
-			editMarkers();
+			BitMap.Edit.editMarkerStyles();
+			BitMap.Edit.editMarkers();
 }
 
 	
@@ -2405,7 +2407,7 @@ BitMap.Edit.updateMarkerStyle = function(rslt){
 
 BitMap.Edit.addIconStyle = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       var xml = rslt.responseXML;
 
@@ -2462,21 +2464,21 @@ BitMap.Edit.addIconStyle = function(rslt){
 
 			//make the icon available
   		if (i.icon_style_type == 0) {
-  			defineGIcon(n);
+  			Map.defineGIcon(n);
   		}
 
 			// clear the form
 			$('iconstyleform_new').reset();
 			// update the styles menus
-			editMarkers();
-			editIconStyles();
+			BitMap.Edit.editMarkers();
+			BitMap.Edit.editIconStyles();
 }
 
 
 	
 BitMap.Edit.updateIconStyle = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       	var xml = rslt.responseXML;
 
@@ -2531,7 +2533,7 @@ BitMap.Edit.updateIconStyle = function(rslt){
 
 			//update the icon
   		if (i.icon_style_type == 0) {
-  			defineGIcon(editObjectN);
+  			Map.defineGIcon(editObjectN);
   		}
 
 			//update all markers
@@ -2544,9 +2546,9 @@ BitMap.Edit.updateIconStyle = function(rslt){
       		//if the array item is not Null
     			if (a[n]!= null && a[n].marker != null && a[n].icon_id == i.icon_id){
 	      			//unload the marker
-  					map.removeOverlay( a[n].marker );
+  					Map.map.removeOverlay( a[n].marker );
 						//define the marker
-						attachMarker(n);
+						BitMap.Edit.attachMarker(n);
 					}
     		}
 			}
@@ -2569,7 +2571,7 @@ BitMap.Edit.updateIconStyle = function(rslt){
 
 BitMap.Edit.addPolyline = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       	var xml = rslt.responseXML;
 	 		var s;
@@ -2607,14 +2609,14 @@ BitMap.Edit.addPolyline = function(rslt){
 			p.array_n = parseInt(n);
 
 			//create polyline
-			attachPolyline(n);
+			Map.attachPolyline(n);
 
 			// clear the form
 			$('polylineform_new').reset();
 			// update the sets menus
-			editPolylines();
-			editPolylineSet(editSetId);
-			removeAssistant();
+			BitMap.Edit.editPolylines();
+			BitMap.Edit.editPolylineSet(editSetId);
+			BitMap.Edit.removeAssistant();
 }	
 
 
@@ -2622,7 +2624,7 @@ BitMap.Edit.addPolyline = function(rslt){
 
 BitMap.Edit.updatePolyline = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
 			var xml = rslt.responseXML;
 			var n = editObjectN;
@@ -2642,18 +2644,18 @@ BitMap.Edit.updatePolyline = function(rslt){
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 			
 			//remove old version
-			map.removeOverlay(p.polyline);
+			Map.map.removeOverlay(p.polyline);
 			//create polyline
-			attachPolyline(n);
+			Map.attachPolyline(n);
 
-			removeAssistant();
+			BitMap.Edit.removeAssistant();
 }
 
 
 	
 	 BitMap.Edit.addPolylineSet = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       var xml = rslt.responseXML;
 
@@ -2683,7 +2685,7 @@ BitMap.Edit.updatePolyline = function(rslt){
 			$('polylinesetform_new').reset();
 			// update the sets menus
 			if ( $('newpolylineform').style.display == "block" ){ newPolyline(); };
-			editPolylines();
+			BitMap.Edit.editPolylines();
 	 }
 
 
@@ -2691,7 +2693,7 @@ BitMap.Edit.updatePolyline = function(rslt){
 
 	BitMap.Edit.updatePolylineSet = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       	var xml = rslt.responseXML;
 
@@ -2724,16 +2726,16 @@ BitMap.Edit.updatePolyline = function(rslt){
 						if (a[n]!= null && a[n].polyline != null && a[n].set_id == s.set_id){
 							a[n].style_id = s.style_id;
 							//unload the polyline
-         				map.removeOverlay( a[n].polyline );
+         				Map.map.removeOverlay( a[n].polyline );
                  		//create polyline
-							attachPolyline(n);
+							BitMap.Edit.attachPolyline(n);
        				}
        			}
        		}
 			};
 
 			// update the sets menus
-			editPolylines();
+			BitMap.Edit.editPolylines();
 	}
 	
 
@@ -2741,7 +2743,7 @@ BitMap.Edit.updatePolyline = function(rslt){
 
 	 BitMap.Edit.addPolylineStyle = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
 	 
       var xml = rslt.responseXML;
 
@@ -2795,15 +2797,15 @@ BitMap.Edit.updatePolyline = function(rslt){
 			// clear the form
 			$('polylinestyleform_new').reset();
 			// update the styles menus
-			editPolylines();
-			editPolylineStyles();
+			BitMap.Edit.editPolylines();
+			BitMap.Edit.editPolylineStyles();
 	 }
 
 
 
 	 BitMap.Edit.updatePolylineStyle = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       	var xml = rslt.responseXML;
 
@@ -2860,8 +2862,8 @@ BitMap.Edit.updatePolyline = function(rslt){
     		for(n=0; n<a.length; n++){
       		//if the array item is not Null
         		if (a[n]!= null && a[n].polyline != null && a[n].style_id == s.style_id){
-						map.removeOverlay( a[n].polyline );
-        			attachPolyline(n);
+						Map.map.removeOverlay( a[n].polyline );
+        		Map.attachPolyline(n);
     			}
     		}
     	}
@@ -2874,15 +2876,15 @@ BitMap.Edit.updatePolyline = function(rslt){
     		for(i=0; i<b.length; i++){
       		//if the array item is not Null
         		if (b[i]!= null && b[i].polygon != null && b[i].style_id == s.style_id){
-						map.removeOverlay( b[i].polygon );
-        			attachPolygon(i);
+						Map.map.removeOverlay( b[i].polygon );
+        			Map.attachPolygon(i);
     			}
     		}
     	}
 
 			// update the polyline menus
-			editPolylineStyles();
-			editPolylines();
+			BitMap.Edit.editPolylineStyles();
+			BitMap.Edit.editPolylines();
 	 }
 
 
@@ -2891,13 +2893,13 @@ BitMap.Edit.updatePolyline = function(rslt){
 BitMap.Edit.updateRemovePolyline = function(Map){
 	for (var i=0; i<Map.Polylines.length; i++){
 		if ( Map.Polylines[i] != null && Map.Polylines[n].polyline != null && Map.Polylines[i].polyline_id == editPolylineId ){
-			map.removeOverlay(Map.Polylines[i].polyline);
+			Map.map.removeOverlay(Map.Polylines[i].polyline);
 			Map.Polylines[i].polyline = null;
 			Map.Polylines[i] = null;
 		}
 	}
-	editPolylines();
-	editPolylineSet(editSetId);
+	BitMap.Edit.editPolylines();
+	BitMap.Edit.editPolylineSet(editSetId);
 }
 
 
@@ -2906,7 +2908,7 @@ BitMap.Edit.updateRemovePolyline = function(Map){
 BitMap.Edit.updateRemovePolylineSet = function(Map){
   	for (var n=0; n<Map.Polylines.length; n++){
   		if ( ( Map.Polylines[n] != null ) && ( Map.Polylines[n].set_id == editSetId ) && ( Map.Polylines[n].polyline != null ) ){
-  			map.removeOverlay(Map.Polylines[n].polyline);
+  			Map.map.removeOverlay(Map.Polylines[n].polyline);
 				Map.Polylines[n].polyline = null;
   			Map.Polylines[n] = null;
   		}
@@ -2937,7 +2939,7 @@ BitMap.Edit.updateRemovePolylineSet = function(Map){
 
 BitMap.Edit.addPolygon = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       	var xml = rslt.responseXML;
 	 		var s;
@@ -2982,21 +2984,21 @@ BitMap.Edit.addPolygon = function(rslt){
 			p.array_n = parseInt(n);
 
 			//create polygon
-			attachPolygon(n);
+			Map.attachPolygon(n);
 
 			// clear the form
 			$('polygonform_new').reset();
 			// update the sets menus
-			editPolygons();
-			editPolygonSet(editSetId);
-			removeAssistant();
+			BitMap.Edit.editPolygons();
+			BitMap.Edit.editPolygonSet(editSetId);
+			BitMap.Edit.removeAssistant();
 }	
 
 
 
 BitMap.Edit.updatePolygon = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
 			var xml = rslt.responseXML;
 			var n = editObjectN;
@@ -3023,11 +3025,11 @@ BitMap.Edit.updatePolygon = function(rslt){
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 			
 			//remove old version
-			map.removeOverlay(p.polygon);
+			Map.map.removeOverlay(p.polygon);
 			//create polygon
-			attachPolygon(n);
+			Map.attachPolygon(n);
 
-			removeAssistant();
+			BitMap.Edit.removeAssistant();
 }
 
 
@@ -3035,7 +3037,7 @@ BitMap.Edit.updatePolygon = function(rslt){
 
 BitMap.Edit.addPolygonSet = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       var xml = rslt.responseXML;
 
@@ -3067,7 +3069,7 @@ BitMap.Edit.addPolygonSet = function(rslt){
 			$('polygonsetform_new').reset();
 			// update the sets menus
 			if ( $('newpolygonform').style.display == "block" ){ newPolygon(); };
-			editPolygons();
+			BitMap.Edit.editPolygons();
 }
 
 
@@ -3075,7 +3077,7 @@ BitMap.Edit.addPolygonSet = function(rslt){
 
 BitMap.Edit.updatePolygonSet = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       	var xml = rslt.responseXML;
 
@@ -3113,22 +3115,22 @@ BitMap.Edit.updatePolygonSet = function(rslt){
 							a[n].style_id = s.style_id;
 							a[n].polylinestyle_id = s.polylinestyle_id
 							//unload the polygon
-         				map.removeOverlay( a[n].polygon );
+         				Map.map.removeOverlay( a[n].polygon );
                  		//create polygon
-							attachPolygon(n);
+							Map.attachPolygon(n);
        				}
        			}
        		}
 			};
 			// update the sets menus
-			editPolygons();
+			BitMap.Edit.editPolygons();
 }
 
 
 
 BitMap.Edit.addPolygonStyle = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
       
       var xml = rslt.responseXML;
 
@@ -3154,15 +3156,15 @@ BitMap.Edit.addPolygonStyle = function(rslt){
 			// clear the form
 			$('polygonstyleform_new').reset();
 			// update the styles menus
-			editPolygonStyles();
-			editPolygons();
+			BitMap.Edit.editPolygonStyles();
+			BitMap.Edit.editPolygons();
 }
 
 
 
 BitMap.Edit.updatePolygonStyle = function(rslt){
 	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0];
+      var Map = BitMap.MapData[0].Map;
 
       	var xml = rslt.responseXML;
 
@@ -3191,15 +3193,15 @@ BitMap.Edit.updatePolygonStyle = function(rslt){
     		for(n=0; n<a.length; n++){
       		//if the array item is not Null
     			if (a[n]!= null && a[n].polygon != null && a[n].style_id == s.style_id){
-						map.removeOverlay(a[n].polygon);
-						attachPolygon(n);
+						Map.map.removeOverlay(a[n].polygon);
+						Map.attachPolygon(n);
     			}
     		}
     	}
 
 			// update the styles menus
-			editPolygonStyles();
-			editPolygons();
+			BitMap.Edit.editPolygonStyles();
+			BitMap.Edit.editPolygons();
 }
 
 
@@ -3212,8 +3214,8 @@ BitMap.Edit.updateRemovePolygon = function(Map){
 			Map.Polygons[n] = null;
 		}
 	}
-	editPolygons();
-	editPolygonSet(editSetId);
+	BitMap.Edit.editPolygons();
+	BitMap.Edit.editPolygonSet(editSetId);
 }
 
 
@@ -3267,7 +3269,7 @@ BitMap.Edit.updateRemovePolygonSet = function(Map){
 		bLastpoint = null;
 	  bTempPoints = [];
   	bTP = new GPolyline(bTempPoints);
-  	map.addOverlay(bTP);		//create polyline object from points and add to map
+  	Map.map.addOverlay(bTP);		//create polyline object from points and add to map
   
   	bAssistant = GEvent.addListener(map, "click", function(overlay,point) {
                 		if(bLastpoint && bLastpoint.x==point.x && bLastpoint.y==point.y) return;
@@ -3299,7 +3301,7 @@ BitMap.Edit.updateRemovePolygonSet = function(Map){
      
        	bAssistant = GEvent.addListener(map, "click", function(overlay, point){
                          if (point) {
-                     		map.recenterOrPanToLatLng(point);
+                     		Map.map.recenterOrPanToLatLng(point);
                      		bModPData.value = point.x + ", " + point.y;
                          }
                        });
@@ -3309,16 +3311,16 @@ BitMap.Edit.updateRemovePolygonSet = function(Map){
    		bLastpoint = null;
    	 	bTempPoints = [];
      	bTP = new GPolyline(bTempPoints);
-     	map.addOverlay(bTP);		//create polyline object from points and add to map
+     	Map.map.addOverlay(bTP);		//create polyline object from points and add to map
      
      	bAssistant = GEvent.addListener(map, "click", function(overlay,point) {
                 		if(bLastpoint && bLastpoint.x==point.x && bLastpoint.y==point.y) return;
                 		bLastpoint = point;
                 		
                 		bTempPoints.push(point);
-                		map.removeOverlay(bTP);
+                		Map.map.removeOverlay(bTP);
                 		bTP = new GPolyline(bTempPoints);
-                		map.addOverlay(bTP);
+                		Map.map.addOverlay(bTP);
 
                 		for(var i=0; i<bTempPoints.length; i++){
 								if (i == 0){
@@ -3342,11 +3344,11 @@ BitMap.Edit.updateRemovePolygonSet = function(Map){
   	bAssistant = GEvent.addListener(map, "click", function(overlay, point){
       if (point) {
   		if (bTP != null) {
-        	map.removeOverlay(bTP);
+        	Map.map.removeOverlay(bTP);
   		}
   		bTP = new GMarker(point);
-  		map.addOverlay(bTP);
-  		map.recenterOrPanToLatLng(point);
+  		Map.map.addOverlay(bTP);
+  		Map.map.recenterOrPanToLatLng(point);
   		bModMLat.value = point.y;
   		bModMLon.value = point.x;											
       }
@@ -3359,7 +3361,7 @@ BitMap.Edit.updateRemovePolygonSet = function(Map){
 	
   	bAssistant = GEvent.addListener(map, "click", function(overlay, point){
       if (point) {
-  		map.recenterOrPanToLatLng(point);
+  		Map.map.recenterOrPanToLatLng(point);
   		f.map_lon.value = point.x;
   		f.map_lat.value = point.y;
       }
@@ -3371,7 +3373,7 @@ BitMap.Edit.updateRemovePolygonSet = function(Map){
 	
  BitMap.Edit.removeAssistant = function(){
    if (bAssistant != null){
-      map.removeOverlay(bTP);
+      Map.map.removeOverlay(bTP);
    		GEvent.removeListener(bAssistant);
   		bAssistant = null;
 	 }
