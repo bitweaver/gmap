@@ -29,21 +29,41 @@ BitMap.Initialize = function(){
       BitMap.MapData[n].zoom,
       BitMap.MapData[n].map_type,
       {scale: BitMap.MapData[n].scale, type_control:BitMap.MapData[n].type_control, zoom_control: BitMap.MapData[n].zoom_control, overview_control: BitMap.MapData[n].overview_control},
-      BitMap.MapData[n].Markers
+      BitMap.MapData[n].Maptypes,
+      BitMap.MapData[n].Markers,
+      BitMap.MapData[n].MarkerSets,
+      BitMap.MapData[n].MarkerStyles,
+      BitMap.MapData[n].IconStyles,
+      BitMap.MapData[n].Polylines,
+      BitMap.MapData[n].PolylineSets,
+      BitMap.MapData[n].PolylineStyles,
+      BitMap.MapData[n].Polygons,
+      BitMap.MapData[n].PolygonSets,
+      BitMap.MapData[n].PolygonStyles
       );
   };
 };
 
 //center is an object containing .lat and .lng
 //controls is an object containing .scale .type_control .zoom_control
-BitMap.Map = function (index, mapdiv, center, zoom, map_type, controls, markers) {
+BitMap.Map = function (index, mapdiv, center, zoom, maptype, controls, maptypes, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
   this.index = index;
   this.mapdiv = mapdiv;
   this.center = center;
   this.zoom = zoom;
-  this.map_type = map_type;
+  this.maptype = maptype;
   this.controls = controls;
+  this.maptypes = maptypes;
   this.markers = markers;
+  this.markersets = markersets;
+  this.markerstyles = markerstyles;
+  this.iconstyles = iconstyles;
+  this.polylines = polylines;
+  this.polylinesets = polylinesets;
+  this.polylinestyles = polylinestyles;
+  this.polygons = polygons;
+  this.polygonsets = polygonsets;
+  this.polygonstyles = polygonstyles;
   this.map = new GMap2(document.getElementById(this.mapdiv));
   this.SetMapType();
   this.SetControls();
@@ -162,6 +182,7 @@ BitMap.Map.prototype.UpdateMarkerList = function(){
   //add to general side panel list
 };
 
+
 /*--------------------------------------------------------------------*/
 /*@todo this is a rough rewrite 
  *      need to look into hybrid types
@@ -172,7 +193,7 @@ BitMap.Map.prototype.UpdateMarkerList = function(){
  */
 // Adds all MapTypes, it is called from loadMap()
 BitMap.Map.prototype.addMapTypes = function(pParamHash){
-  var Maptypes = BitMap.MapData[this.index].Maptypes;
+  var Maptypes = this.maptypes;
   var count = Maptypes.length;
 	for (var n=0; n < count; n++) {
 		//must insert some sort of check for the Maptypes[n].basetype and special provisions for hybrids 
@@ -197,13 +218,11 @@ BitMap.Map.prototype.addMapTypes = function(pParamHash){
 
 
 BitMap.Map.prototype.attachIcons = function(){
-	var i = BitMap.MapData[this.index].IconStyles;
+	var i = this.iconstyles;
 	if (i.length > 0){
   	for (n=0; n<i.length; n++){
   		if (i[n].icon_style_type != null && i[n].icon_style_type == 0){
   			this.defineGIcon(n);
-  		}else if(i[n].icon_style_type != null && i[n].icon_style_type == 1){
-  			this.defineXIcon(n);			
   		}
   	}
 	}
@@ -211,8 +230,8 @@ BitMap.Map.prototype.attachIcons = function(){
 
 
 //@todo - these image paths may not be universal enough, may need to get the root from kernel
-BitMap.Map.prototype.defineGIcon = function(n){
-		var IconStyle = BitMap.MapData[this.index].IconStyles[n];
+BitMap.Map.prototype.defineGIcon = function(i){
+		var IconStyle = this.iconstyles[i];
 		IconStyle.icon = new GIcon();
 		IconStyle.icon.image = IconStyle.image;
 		IconStyle.icon.iconSize = new GSize(IconStyle.icon_w, IconStyle.icon_h);
@@ -224,34 +243,6 @@ BitMap.Map.prototype.defineGIcon = function(n){
 };
 
 
-//this might not be supportable in V2 api, requires Xmaps lib
-BitMap.Map.prototype.defineXIcon = function(n){
-		var IconStyle = BitMap.MapData[this.index].IconStyles[n];
-    //make the shape
-    var xishape = new Object;
-    xishape.iconAnchor = new GPoint(IconStyle.icon_anchor_x, IconStyle.icon_anchor_y);
-    xishape.infoWindowAnchor = new GPoint(IconStyle.infowindow_anchor_x, IconStyle.infowindow_anchor_y);
-    xishape.shadow = true;
-    xishape.points = IconStyle.points.split(",");
-			/* @todo maybe in the future we'll add these
-        contentAnchor: new GPoint(0, 0),
-        contentSize: new GSize(31, 20),
-			*/
-    //put shape in the shape hash
-    XIcon.shapes[IconStyle.name] = xishape;    
-    //create the styles
-    var xistyle = new Object;
-    xistyle.scale = IconStyle.scale;
-    xistyle.outlineColor = "#" + IconStyle.outline_color;
-    xistyle.outlineWeight = IconStyle.outline_weight;
-    xistyle.fillColor = "#" + IconStyle.fill_color;
-    xistyle.fillOpacity = IconStyle.fill_opacity;
-    //create the icon
-		IconStyle.icon = new XIcon(IconStyle.name, xistyle);
-};
-
-
-
 /*@todo 
  *
  * reconcile with addMarkers below
@@ -260,53 +251,47 @@ BitMap.Map.prototype.defineXIcon = function(n){
 BitMap.Map.prototype.addMarker = function(i){
 	if (this.markers[i]!= null && this.markers[i].plot_on_load == true){
     var Marker = this.markers[i];
-    var p = new GLatLng(parseFloat(Marker.lat), parseFloat(Marker.lng));
-    Marker.gmarker = new GMarker(p);
-    Marker.gmarker.my_html = Marker.title;
-    this.map.addOverlay(Marker.gmarker);
-  }
-};
-
-
-/*@todo Merge this with function above */
-BitMap.Map.prototype.attachMarker = function(n, o){
-	var m = this.markers[n];
-	var i = null;
-	if (m.icon_id != 0){
-	  var IconStyles = BitMap.MapData[this.index].IconStyles;
-		for (var b=0; b<IconStyles.length; b++){
-			if ( IconStyles[b].icon_id == m.icon_id ){
-				i = b;
-			}
-		}
-	}	
-	if (m.style_id == 0){
-		this.defineGMarker(n, i);
-		if (o == true) {m.marker.openInfoWindowHtml( m.marker.my_html );};
-  }else{
-  	var s;
-  	var MarkerStyles = BitMap.Map[this.index].MarkerStyles; 
-    for (var c=0; c<MarkerStyles.length; c++){
-    	if ( MarkerStyles[c].style_id == m.style_id ){
+    if (Marker.icon_id == null){
+      var p = new GLatLng(parseFloat(Marker.lat), parseFloat(Marker.lng));
+      Marker.gmarker = new GMarker(p);
+      Marker.gmarker.my_html = Marker.title;
+      this.map.addOverlay(Marker.gmarker);
+    }
+    
+    var icon = null;
+    if (Marker.icon_id != 0){
+	   var IconStyles = this.iconstyles;
+		  for (var b=0; b<IconStyles.length; b++){
+			 if ( IconStyles[b].icon_id == Marker.icon_id ){
+			   icon = b;
+			 }
+		  }
+    }
+	  if (Marker.style_id == 0){
+		  this.defineGMarker(n, icon);
+		  if (o == true) {Marker.gmarker.openInfoWindowHtml( Marker.gmarker.my_html );};
+    }else{
+  	 var s;
+  	 var MarkerStyles = this.markerstyles; 
+      for (var c=0; c<MarkerStyles.length; c++){
+    	 if ( MarkerStyles[c].style_id == Marker.style_id ){
     		s = c;
-    	}
-  	}
-  	if ( MarkerStyles[s].marker_style_type == 0){
-  		this.defineGxMarker(n, i, s);
-			if (o == true) {m.marker.openInfoWindowHtml(m.marker.my_html);};
-  	}else if ( MarkerStyles[s].marker_style_type == 1){
-  		this.definePdMarker(n, i, s);
+    	 }
+  	  }
+  	 if ( MarkerStyles[s].marker_style_type == 0){
+  		this.defineGxMarker(n, icon, s);
+			if (o == true) {Marker.gmarker.openInfoWindowHtml(Marker.gmarker.my_html);};
+  	 }else if ( MarkerStyles[s].marker_style_type == 1){
+  		this.definePdMarker(n, icon, s);
 			if (o == true) {
-        	m.marker.showTooltip();
-        	m.marker.hideTooltip();
-				  m.marker.showDetailWin();
+        	Marker.gmarker.showTooltip();
+        	Marker.gmarker.hideTooltip();
+				  Marker.gmarker.showDetailWin();
 			};
-  	}else if ( MarkerStyles[s].marker_style_type == 2){
-  		this.defineXMarker(n, i, s);
-			if (o == true) {m.marker.openInfoWindowHtml(m.marker.my_html);};
-  	}
-	}
-}
+  	 }
+	 }
+  }   
+};
 
 
 
@@ -316,7 +301,7 @@ BitMap.Map.prototype.defineGMarker = function(n, i){
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var icon = null;
 	if (i != null){
-		icon = BitMap.MapData[this.index].IconStyles[i].icon;
+		icon = this.iconstyles[i].icon;
 	}
   a[n].marker = new GMarker(point, icon);
   a[n].marker.style_id = 0;
@@ -350,9 +335,9 @@ BitMap.Map.prototype.defineGxMarker = function(n, i, s){
 	var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var icon = null;
 	if (i != null){
-		icon = BitMap.MapData[this.index].IconStyles[i].icon;
+		icon = this.iconstyles[i].icon;
 	}
-	var mytip = "<div class='tip-"+BitMap.MapData[this.index].MarkerStyles[s].name + "'>" + a[n].label_data + "</div>";
+	var mytip = "<div class='tip-"+this.markerstyles[s].name + "'>" + a[n].label_data + "</div>";
   a[n].marker = new GxMarker(point, icon, mytip);
   a[n].marker.marker_style_type = 0;
 
@@ -379,12 +364,12 @@ BitMap.Map.prototype.definePdMarker = function(n, i, s){
   var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
 	var icon = null;
 	if (i != null){
-		icon = BitMap.MapData[this.index].IconStyles[i].icon;
+		icon = this.iconstyles[i].icon;
 	}
   a[n].marker = new PdMarker(point, icon);
   a[n].marker.marker_style_type = 1;
-  a[n].marker.setTooltipClass( "tip-"+BitMap.MapData[this.index].MarkerStyles[s].name );
-  a[n].marker.setDetailWinClass( "win-"+BitMap.MapData[this.index].MarkerStyles[s].name );
+  a[n].marker.setTooltipClass( "tip-"+this.markerstyles[s].name );
+  a[n].marker.setDetailWinClass( "win-"+this.markerstyles[s].name );
   a[n].marker.setTooltip( "<div>" + a[n].label_data + "</div>");
 
 	var imgLink ='';
@@ -406,28 +391,27 @@ BitMap.Map.prototype.definePdMarker = function(n, i, s){
 
 BitMap.Map.prototype.attachPolylines = function(){
 	//get the array we are working on
-	var a = BitMap.MapData[this.index].Polylines;
+	var a = this.polylines;
 	//if the length of the array is > 0
 	if (a.length > 0){
   	//loop through the array
 		for(n=0; n<a.length; n++){
   		//if the array item is not Null
 			if (a[n]!= null && a[n].plot_on_load == true){
-				attachPolyline(n);
+				this.attachPolyline(n);
 			}
 		}
 	}
 };
 
 
-
 BitMap.Map.prototype.attachPolyline = function(n){
-	var a = BitMap.MapData[this.index].Polylines;
+	var a = this.polylines;
 	if (a[n].style_id == 0){
 		this.defineGPolyline(n);
 	}else{
 		var s;
-		var PolylineStyles = BitMap.MapData[this.index].PolylineStyles;
+		var PolylineStyles = this.polylinestyles;
 		for (var b=0; b<PolylineStyles.length; b++){
 			if ( PolylineStyles[b].style_id == a[n].style_id ){
 				s = b;
@@ -444,7 +428,7 @@ BitMap.Map.prototype.attachPolyline = function(n){
 
 
 BitMap.Map.prototype.defineGPolyline = function(n, s){
-	var a = BitMap.MapData[this.index].Polylines;
+	var a = this.polylines;
 
   var pointlist = new Array();
   for (p = 0; p < a[n].points_data.length; p+=2 ){
@@ -456,10 +440,10 @@ BitMap.Map.prototype.defineGPolyline = function(n, s){
   };
 
 	if ( s != null ){
-		var PolylineStyles = BitMap.MapData[this.index].PolylineStyles;	
-    var linecolor = "#"+PolylineStyles[s].color;
-    var lineweight = PolylineStyles[s].weight;
-    var lineopacity = PolylineStyles[s].opacity;
+		var PolylineStyle = this.polylinestyles[s];	
+    var linecolor = "#"+PolylineStyle.color;
+    var lineweight = PolylineStyle.weight;
+    var lineopacity = PolylineStyle.opacity;
   };
 
   a[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
@@ -469,7 +453,7 @@ BitMap.Map.prototype.defineGPolyline = function(n, s){
 
 //@todo not sure if this can be supported in V2, requires Xmaps Lib
 BitMap.Map.prototype.defineXPolyline = function(n, s){
-	var a = BitMap.MapData[this.index].Polylines;
+	var a = this.polylines;
 
 	//make the array of points needed
   var pointlist = new Array();
@@ -482,7 +466,7 @@ BitMap.Map.prototype.defineXPolyline = function(n, s){
   };
 
 	//if we are given a style_id we look up the styles otherwise defaults kick in
-	var PolylineStyle = BitMap.MapData[this.index].PolylineStyles[s];	
+	var PolylineStyle = this.polylinestyles[s];	
   var linecolor = "#"+PolylineStyle.color;
   var txfgcolor = "#"+PolylineStyle.text_fgstyle_color;
   var txbgcolor = "#"+PolylineStyle.text_bgstyle_color;
@@ -515,7 +499,7 @@ BitMap.Map.prototype.defineXPolyline = function(n, s){
  */  
 BitMap.Map.prototype.attachPolygons = function(){
 	//get the array we are working on
-	var a = BitMap.MapData[this.index].Polygons;
+	var a = this.polygons;
 
 	//if the length of the array is > 0
 	if (a.length > 0){
@@ -533,15 +517,15 @@ BitMap.Map.prototype.attachPolygons = function(){
 BitMap.Map.prototype.attachPolygon = function(n){
 	var s;
 	var p;
-	var Polygon = BitMap.MapData[this.index].Polygons[n];
-	var PolylineStyles = BitMap.MapData[this.index].PolylineStyles;
-	var PolygonStyles = BitMap.MapData[this.index].PolygonStyles;
+	var Polygon = this.polygons[n];
+	var PolylineStyles = this.polylinestyles;
+	var PolygonStyles = this.polygonstyles;
 	for (var b=0; b<PolylineStyles.length; b++){
 		if ( PolylineStyles[b].style_id == Polygon.polylinestyle_id ){
 			s = b;
 		}
 	}
-	for (var c=0; c<bPStyData.length; c++){
+	for (var c=0; c<PolygonStyles.length; c++){
 		if ( PolygonStyles[c].style_id == Polygon.style_id ){
 			p = c;
 		}
@@ -554,11 +538,11 @@ BitMap.Map.prototype.defineXPolygon = function(n, s, p){
 	var fillstyle = {};
 	var linestyle = {};
 
-	var a = BitMap.MapData[this.index].Polygons;
+	var a = this.polygons;
 
 	//Create XPolygon styles
  	if (p != null){
-	  var PolygonStyle = BitMap.MapData[this.index].PolygonStyles[p];
+	  var PolygonStyle = this.polygonstyles[p];
 		var fillcolor = "#"+PolygonStyle.color;
 		fillstyle = {
   		color: fillcolor,
@@ -568,7 +552,7 @@ BitMap.Map.prototype.defineXPolygon = function(n, s, p){
 	}
 
  	if (s != null){
-	  var PolylineStyle = BitMap.MapData[this.index].PolylineStyles[s];
+	  var PolylineStyle = this.polylinestyles[s];
     var linecolor = "#"+PolylineStyle.color;
     var txfgcolor = "#"+PolylineStyle.text_fgstyle_color;
     var txbgcolor = "#"+PolylineStyle.text_bgstyle_color;
