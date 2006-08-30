@@ -338,8 +338,8 @@ BitMap.Map.prototype.defineGxMarker = function(n, i, s){
 		icon = this.iconstyles[i].icon;
 	}
 	var mytip = "<div class='tip-"+this.markerstyles[s].name + "'>" + a[n].label_data + "</div>";
-  a[n].marker = new GxMarker(point, icon, mytip);
-  a[n].marker.marker_style_type = 0;
+  a[n].gmarker = new GxMarker(point, icon, mytip);
+  a[n].gmarker.marker_style_type = 0;
 
 	var imgLink ='';
 	if (a[n].marker_type == 1){
@@ -351,8 +351,8 @@ BitMap.Map.prototype.defineGxMarker = function(n, i, s){
 		var imgLink = "<p><img src='"+medUrl+"'></p>"
 	}
 
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
-  this.map.addOverlay(a[n].marker);
+  a[n].gmarker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
+  this.map.addOverlay(a[n].gmarker);
 }
 
 
@@ -366,11 +366,11 @@ BitMap.Map.prototype.definePdMarker = function(n, i, s){
 	if (i != null){
 		icon = this.iconstyles[i].icon;
 	}
-  a[n].marker = new PdMarker(point, icon);
-  a[n].marker.marker_style_type = 1;
-  a[n].marker.setTooltipClass( "tip-"+this.markerstyles[s].name );
-  a[n].marker.setDetailWinClass( "win-"+this.markerstyles[s].name );
-  a[n].marker.setTooltip( "<div>" + a[n].label_data + "</div>");
+  a[n].gmarker = new PdMarker(point, icon);
+  a[n].gmarker.marker_style_type = 1;
+  a[n].gmarker.setTooltipClass( "tip-"+this.markerstyles[s].name );
+  a[n].gmarker.setDetailWinClass( "win-"+this.markerstyles[s].name );
+  a[n].gmarker.setTooltip( "<div>" + a[n].label_data + "</div>");
 
 	var imgLink ='';
 	if (a[n].marker_type == 1){
@@ -382,10 +382,10 @@ BitMap.Map.prototype.definePdMarker = function(n, i, s){
 		var imgLink = "<p><img src='"+medUrl+"'></p>"
 	}
 
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
-  a[n].marker.setDetailWinHTML( a[n].marker.my_html );
+  a[n].gmarker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
+  a[n].gmarker.setDetailWinHTML( a[n].marker.my_html );
   //rollover-icon: a[n].marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
-  this.map.addOverlay(a[n].marker);
+  this.map.addOverlay(a[n].gmarker);
 }
 
 
