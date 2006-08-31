@@ -27,7 +27,7 @@
 				</tr>
         	<tr>
 					<td>Center Longitude</td>
-					<td><input name="map_lon" id="map_lon" type="text" size="40" value=""></td>
+					<td><input name="map_lng" id="map_lng" type="text" size="40" value=""></td>
 				</tr>
 				<tr><td></td><td><a name="map_assist_btn" title="click a center!" href="javascript:BitMap.EditSession.addAssistant('map');">( Use Locating Assistant )</a></td></tr>
         	<tr><td>Width (use '0' for auto)</td><td><input name="map_w" id="map_w" type="text" size="12" value=""></td></tr>
