@@ -1,9 +1,9 @@
 <div>
-  <a id="emap" href="javascript:BitMap.Edit.editMap();">Edit Map</a> | 
-	<a id="emaptype" href="javascript:BitMap.Edit.editMapTypes();">Edit Map Types</a> |
-  <a id="emarker" href="javascript:BitMap.Edit.editMarkers();">Edit Markers</a> | 
-  <a id="epolyline" href="javascript:BitMap.Edit.editPolylines();">Edit Polylines</a> | 
-  <a id="epolygon" href="javascript:BitMap.Edit.editPolygons();">Edit Polygons</a>
+  <a id="emap" href="javascript:BitMap.EditSession.editMap();">Edit Map</a> | 
+	<a id="emaptype" href="javascript:BitMap.EditSession.editMapTypes();">Edit Map Types</a> |
+  <a id="emarker" href="javascript:BitMap.EditSession.editMarkers();">Edit Markers</a> | 
+  <a id="epolyline" href="javascript:BitMap.EditSession.editPolylines();">Edit Polylines</a> | 
+  <a id="epolygon" href="javascript:BitMap.EditSession.editPolygons();">Edit Polygons</a>
 </div>
 
 
@@ -29,7 +29,7 @@
 					<td>Center Longitude</td>
 					<td><input name="map_lon" id="map_lon" type="text" size="40" value=""></td>
 				</tr>
-				<tr><td></td><td><a name="map_assist_btn" title="click a center!" href="javascript:BitMap.Edit.addAssistant('map');">( Use Locating Assistant )</a></td></tr>
+				<tr><td></td><td><a name="map_assist_btn" title="click a center!" href="javascript:BitMap.EditSession.addAssistant('map');">( Use Locating Assistant )</a></td></tr>
         	<tr><td>Width (use '0' for auto)</td><td><input name="map_w" id="map_w" type="text" size="12" value=""></td></tr>
         	<tr><td>Height</td><td><input name="map_h" id="map_h" type="text" size="12" value=""></td></tr>
         	<tr><td>Zoom Level</td><td><input name="map_z" id="map_z" type="text" size="12" value=""></td></tr>
@@ -55,8 +55,8 @@
 				<tr><td>Page Text</td><td><textarea name="edit" style="width:90%;" rows="20">textbox</textarea></td></tr>
 
               <!-- Allow Comments <input name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
-            <tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.Edit.storeMap(document.mapform);"> 
-						<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.Edit.canceledit('editmapform');"></td>
+            <tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap(document.mapform);"> 
+						<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit('editmapform');"></td>
 				</tr>
 			</table>
     </form>
@@ -64,7 +64,7 @@
 <!--end map editing form -->
 
 <div id="editmaptypemenu" style="display:none;">
-		<a href="javascript:BitMap.Edit.newMapType();">Add New Map Type</a>
+		<a href="javascript:BitMap.EditSession.newMapType();">Add New Map Type</a>
 </div>
 
 <div id="newmaptypeform" class="editform" style="display:none;">
@@ -105,12 +105,12 @@
 						<td>Bounds<br/>
 							<textarea name="bounds" style="width:120px" rows="3"></textarea></td>
 						<td>ACTIONS<br/>
-							<a name="save_maptype_btn" title="save" href="javascript:BitMap.Edit.storeNewMapType(document.maptypeform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+							<a name="save_maptype_btn" title="save" href="javascript:BitMap.EditSession.storeNewMapType(document.maptypeform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
     		</table>
     	</form>
   	</div>
-		<div id="newmaptypecancel" ><input type="button" name="closenewmaptypeform" value="Cancel Adding A New Map Type" onclick="javascript:BitMap.Edit.canceledit('newmaptypeform');"></div>
+		<div id="newmaptypecancel" ><input type="button" name="closenewmaptypeform" value="Cancel Adding A New Map Type" onclick="javascript:BitMap.EditSession.canceledit('newmaptypeform');"></div>
 </div> <!-- end of editmaptypeform -->
 
 
@@ -154,17 +154,17 @@
 						<td>Bounds<br/>
 							<textarea name="bounds" style="width:120px" rows="3"></textarea></td>
 						<td>ACTIONS<br/>
-							<a name="save_maptype_btn" title="save" href="javascript:BitMap.Edit.storeMapType(document.maptypeform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+							<a name="save_maptype_btn" title="save" href="javascript:BitMap.EditSession.storeMapType(document.maptypeform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
 							<a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-							<a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.Edit.removeMapType(document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-							<a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.Edit.expungeMapType(document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+							<a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMapType(document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+							<a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMapType(document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
 					</tr>
     		</table>
     			</form>
   		  </div>
 </div> <!-- end of editmaptypeform -->
 
-<div id="editmaptypecancel" style="display:none;"><input type="button" name="closemaptypeform" value="Cancel Editing Map Types" onclick="javascript:BitMap.Edit.canceledit('editmaptypemenu'); BitMap.Edit.canceledit('editmaptypeform'); BitMap.Edit.canceledit('editmaptypecancel'); BitMap.Edit.canceledit('newmaptypeform')"></div>
+<div id="editmaptypecancel" style="display:none;"><input type="button" name="closemaptypeform" value="Cancel Editing Map Types" onclick="javascript:BitMap.EditSession.canceledit('editmaptypemenu'); BitMap.EditSession.canceledit('editmaptypeform'); BitMap.EditSession.canceledit('editmaptypecancel'); BitMap.EditSession.canceledit('newmaptypeform')"></div>
 <!--end maptype editing forms -->
 
 
@@ -177,10 +177,10 @@
 	
 <!--marker editing forms -->
 <div id="editmarkermenu" style="display:none;">
-		<a href="javascript:BitMap.Edit.newMarker();">New Marker</a> | 
-		<a href="javascript:BitMap.Edit.newMarkerSet();">New Marker Set</a> | 
-		<a href="javascript:BitMap.Edit.editMarkerStyles();">Edit Marker Styles</a> | 
-		<a href="javascript:BitMap.Edit.editIconStyles();">Edit Marker Icons</a>
+		<a href="javascript:BitMap.EditSession.newMarker();">New Marker</a> | 
+		<a href="javascript:BitMap.EditSession.newMarkerSet();">New Marker Set</a> | 
+		<a href="javascript:BitMap.EditSession.editMarkerStyles();">Edit Marker Styles</a> | 
+		<a href="javascript:BitMap.EditSession.editIconStyles();">Edit Marker Icons</a>
 </div>
 
 
@@ -222,12 +222,12 @@
                       					<option value="true">Yes</option>
                       					<option value="false">No</option>
                           				</select></td>
-						<td width="80px"><a name="new_markerset_btn" title="save" href="javascript:BitMap.Edit.storeNewMarkerSet(document.markersetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						<td width="80px"><a name="new_markerset_btn" title="save" href="javascript:BitMap.EditSession.storeNewMarkerSet(document.markersetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
 				</table>
 			</form>
 		</div>
-		<div id="newmarkersetcancel" ><input type="button" name="closemarkersetform" value="Cancel New Marker Set" onclick="javascript:BitMap.Edit.canceledit('newmarkersetform'); BitMap.Edit.canceledit('editerror');"></div>
+		<div id="newmarkersetcancel" ><input type="button" name="closemarkersetform" value="Cancel New Marker Set" onclick="javascript:BitMap.EditSession.canceledit('newmarkersetform'); BitMap.EditSession.canceledit('editerror');"></div>
 </div>
 <!-- end of newmarkersetform -->
 
@@ -258,7 +258,7 @@
 											</select></td>
 						<td width="160px"><input name="marker_lat" type="text" style="width:90%" value=""><br/>
 							<input name="marker_lon" type="text" style="width:90%" value=""><br/>
-							<a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.Edit.addAssistant('marker', 'new');">( Use Locating Assistant )</a></td>
+							<a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a></td>
 						<td width="160px"><textarea name="marker_labeltext" style="width:90%" rows="1"></textarea></td>
 						<td><textarea name="edit" style="width:90%" rows="3"></textarea></td>
 						<td width="160px"><input name="photo_url" type="text" style="width:90%" value=""></td>
@@ -266,19 +266,19 @@
 						<td><select name="set_id" id="set_id">
 								<option value="n">someset</option>
 							</select></td>
-						<td width="80px"><a name="new_marker_btn" title="save" href="javascript:BitMap.Edit.storeNewMarker(document.markerform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						<td width="80px"><a name="new_marker_btn" title="save" href="javascript:BitMap.EditSession.storeNewMarker(document.markerform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
     		</table>
     	</form>
 		</div>
-		<div id="newmarkercancel" ><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:BitMap.Edit.canceledit('newmarkerform'); BitMap.Edit.removeAssistant(); BitMap.Edit.canceledit('editerror');"></div>
+		<div id="newmarkercancel" ><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:BitMap.EditSession.canceledit('newmarkerform'); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');"></div>
 </div> <!-- end of newmarkerform -->
 
 
 
 
 <div id="editiconstylesmenu" style="display:none;">
-		<a href="javascript:BitMap.Edit.newIconStyle();">Add a New Icon Style</a>
+		<a href="javascript:BitMap.EditSession.newIconStyle();">Add a New Icon Style</a>
 </div>
 
 
@@ -290,7 +290,7 @@
     			<table class="data gmapeditstrong">
 						<tr>
 							<td>Name<br/><input name="name" type="text" size="15" value="a name"></td>
-							<td>Type<br/><select name="icon_style_type" onChange="javascript:BitMap.Edit.toggleIconMenu(this.value, 'new');">
+							<td>Type<br/><select name="icon_style_type" onChange="javascript:BitMap.EditSession.toggleIconMenu(this.value, 'new');">
                                 <option value="0">GIcon</option>
                                 <option value="1">XIcon</option>
                              </select></td>
@@ -298,7 +298,7 @@
                 		<td>Window Anchor Y<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"></td>
 							<td></td>
 							<td></td>
-                		<td>ACTIONS<br/><a name="new_iconstyle_btn" title="save" href="javascript:BitMap.Edit.storeNewIconStyle(document.iconstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+                		<td>ACTIONS<br/><a name="new_iconstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewIconStyle(document.iconstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 						</tr>
                 	<tr id="gicon_style_head_new">
                 		<th colspan="7">GIcon Styles</th>
@@ -333,7 +333,7 @@
     			</table>
     			</form>
   		  </div>
-		<div id="newiconstylecancel" ><input type="button" name="closeiconstyleform" value="Cancel New Icon Style" onclick="javascript:BitMap.Edit.canceledit('newiconstyleform'); BitMap.Edit.canceledit('editerror');"></div>
+		<div id="newiconstylecancel" ><input type="button" name="closeiconstyleform" value="Cancel New Icon Style" onclick="javascript:BitMap.EditSession.canceledit('newiconstyleform'); BitMap.EditSession.canceledit('editerror');"></div>
 </div>
 <!-- end of newiconstyleform -->
 
@@ -348,7 +348,7 @@
 				<table class="data" id="iconstyleformdata_n">
 					<tr>
 						<td>Name<br/><input name="name" type="text" size="15" value=""></td>
-						<td>Type<br/><select name="icon_style_type" onChange="javascript:BitMap.Edit.toggleIconMenu(this.value, this.form.icon_id.value);">
+						<td>Type<br/><select name="icon_style_type" onChange="javascript:BitMap.EditSession.toggleIconMenu(this.value, this.form.icon_id.value);">
                                 <option value="0">GIcon</option>
                                 <option value="1">XIcon</option>
                              </select></td>
@@ -356,7 +356,7 @@
                 	<td>Window Anchor Y<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"></td>
 						<td></td>
 						<td></td>
-                	<td>ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_iconstyle_btn" title="save" href="javascript:BitMap.Edit.storeIconStyle(document.iconstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+                	<td>ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_iconstyle_btn" title="save" href="javascript:BitMap.EditSession.storeIconStyle(document.iconstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
                 <tr id="gicon_style_head_new">
                 	<th colspan="7">GIcon Styles</th>
@@ -393,13 +393,13 @@
 		</div>
 </div> <!-- end of editiconstylesform -->
 
-<div id="editiconstylescancel" style="display:none;"><input type="button" name="closeiconstylesform" value="Cancel Editing Icon Styles" onclick="javascript:BitMap.Edit.canceledit('editiconstylesmenu'); BitMap.Edit.canceledit('newiconstyleform'); BitMap.Edit.canceledit('editiconstyleform'); BitMap.Edit.canceledit('editiconstylescancel');"></div>
+<div id="editiconstylescancel" style="display:none;"><input type="button" name="closeiconstylesform" value="Cancel Editing Icon Styles" onclick="javascript:BitMap.EditSession.canceledit('editiconstylesmenu'); BitMap.EditSession.canceledit('newiconstyleform'); BitMap.EditSession.canceledit('editiconstyleform'); BitMap.EditSession.canceledit('editiconstylescancel');"></div>
 <!--end icon style editing forms -->
 
 
 
 <div id="editmarkerstylesmenu" style="display:none;">
-		<a href="javascript:BitMap.Edit.newMarkerStyle();">Add a New Marker Style</a>
+		<a href="javascript:BitMap.EditSession.newMarkerStyle();">Add a New Marker Style</a>
 </div>
 
 
@@ -429,12 +429,12 @@
   					<td width="120px"><input name="label_opacity" type="text" size="5" value="100"></td>
   					<td><textarea name="label_hover_styles" style="width:90%" rows="3"></textarea></td>
   					<td><textarea name="window_styles" style="width:90%" rows="3"></textarea></td>
-  					<td width="80px"><a name="new_markerstyle_btn" title="save" href="javascript:BitMap.Edit.storeNewMarkerStyle(document.markerstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+  					<td width="80px"><a name="new_markerstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewMarkerStyle(document.markerstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
     		</table>
 			</form>
 		</div>
-		<div id="newmarkerstylecancel" ><input type="button" name="closemarkerstyleform" value="Cancel New Marker Style" onclick="javascript:BitMap.Edit.canceledit('newmarkerstyleform'); BitMap.Edit.canceledit('editerror');"></div>
+		<div id="newmarkerstylecancel" ><input type="button" name="closemarkerstyleform" value="Cancel New Marker Style" onclick="javascript:BitMap.EditSession.canceledit('newmarkerstyleform'); BitMap.EditSession.canceledit('editerror');"></div>
 </div>
 <!-- end of newmarkerstyleform -->
 
@@ -469,14 +469,14 @@
   					<td width="120px"><input name="label_opacity" type="text" size="5" value="100"></td>
   					<td><textarea name="label_hover_styles" style="width:90%" rows="3"></textarea></td>
   					<td><textarea name="window_styles" style="width:90%" rows="3"></textarea></td>
-  					<td width="80px"><a name="save_markerstyle_btn" title="save" href="javascript:BitMap.Edit.storeMarkerStyle(document.markerstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+  					<td width="80px"><a name="save_markerstyle_btn" title="save" href="javascript:BitMap.EditSession.storeMarkerStyle(document.markerstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
     		</table>
 			</form>
 		</div>
 </div> <!-- end of editmarkerstylesform -->
 
-<div id="editmarkerstylescancel" style="display:none;"><input type="button" name="closemarkerstylesform" value="Cancel Editing Marker Styles" onclick="javascript:BitMap.Edit.canceledit('editmarkerstylesmenu'); BitMap.Edit.canceledit('newmarkerstyleform'); BitMap.Edit.canceledit('editmarkerstyleform'); BitMap.Edit.canceledit('editmarkerstylescancel');"></div>
+<div id="editmarkerstylescancel" style="display:none;"><input type="button" name="closemarkerstylesform" value="Cancel Editing Marker Styles" onclick="javascript:BitMap.EditSession.canceledit('editmarkerstylesmenu'); BitMap.EditSession.canceledit('newmarkerstyleform'); BitMap.EditSession.canceledit('editmarkerstyleform'); BitMap.EditSession.canceledit('editmarkerstylescancel');"></div>
 <!--end marker style editing forms -->
 
 
@@ -526,12 +526,12 @@
                       					<option value="false">No</option>
                           				</select></td>
 						<td style="width:80px">
-							<a id="setstore" href="javascript:BitMap.Edit.storeMarkerSet(markersetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
-							<a id="setremove" href="javascript:BitMap.Edit.removeMarkerSet(markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-							<a id="setdelete" href="javascript:BitMap.Edit.expungeMarkerSet(markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+							<a id="setstore" href="javascript:BitMap.EditSession.storeMarkerSet(markersetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+							<a id="setremove" href="javascript:BitMap.EditSession.removeMarkerSet(markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+							<a id="setdelete" href="javascript:BitMap.EditSession.expungeMarkerSet(markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
 					</tr>
 					<tr>
-						<td colspan="5"><a id="seteditmarkers" href="javascript:BitMap.Edit.editSet('n');">Edit The Markers In This Set</a> | 
+						<td colspan="5"><a id="seteditmarkers" href="javascript:BitMap.EditSession.editSet('n');">Edit The Markers In This Set</a> | 
 							<a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a></td>
 					</tr>
 				</table>
@@ -565,16 +565,16 @@
 											</select></td>
 								<td style="width:160px"><input name="marker_lat" type="text" style="width:90%" value=""><br/>
 									<input name="marker_lon" type="text" style="width:90%" value=""><br/>
-									<a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.Edit.addAssistant('marker', 'n');">( Use Locating Assistant )</a></td>
+									<a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'n');">( Use Locating Assistant )</a></td>
 								<td style="width:160px"><textarea name="marker_labeltext" style="width:90%" rows="3"></textarea></td>
 								<td><textarea name="edit" style="width:90%" rows="3"></textarea></td>
 								<td width="160px"><input name="photo_url" type="text" style="width:90%" value=""></td>
 								<td style="width:80px"><input name="marker_zi" type="text" size="3" value="0"></td>
 								<td style="width:80px">
-                				<a name="save_marker_btn" title="save" href="javascript:BitMap.Edit.storeMarker(document.markerform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+                				<a name="save_marker_btn" title="save" href="javascript:BitMap.EditSession.storeMarker(document.markerform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
                 				<a name="locate_marker_btn" title="locate on the map" href="javascript:bMData[marker_array_n].marker.openInfoWindowHtml(bMData[marker_array_n].marker.my_html);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-                				<a name="remove_marker_btn" title="remove from this set" href="javascript:BitMap.Edit.removeMarker(document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-                				<a name="expunge_marker_btn" title="delete the marker!" href="javascript:BitMap.Edit.expungeMarker(document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+                				<a name="remove_marker_btn" title="remove from this set" href="javascript:BitMap.EditSession.removeMarker(document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+                				<a name="expunge_marker_btn" title="delete the marker!" href="javascript:BitMap.EditSession.expungeMarker(document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
 							</tr>
 						</table>
         		</form>
@@ -594,7 +594,7 @@
 </div> <!-- end of editmarkerform -->
 
 
-<div id="editmarkercancel" style="display:none;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:BitMap.Edit.canceledit('editmarkermenu'); BitMap.Edit.canceledit('newmarkerform'); BitMap.Edit.canceledit('editmarkerform'); BitMap.Edit.canceledit('newmarkersetform'); BitMap.Edit.canceledit('editmarkercancel'); BitMap.Edit.canceledit('editmarkerstylesmenu'); BitMap.Edit.canceledit('newmarkerstyleform'); BitMap.Edit.canceledit('editmarkerstylesform'); BitMap.Edit.canceledit('editmarkerstylescancel'); BitMap.Edit.removeAssistant(); BitMap.Edit.canceledit('editerror');"></div>
+<div id="editmarkercancel" style="display:none;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:BitMap.EditSession.canceledit('editmarkermenu'); BitMap.EditSession.canceledit('newmarkerform'); BitMap.EditSession.canceledit('editmarkerform'); BitMap.EditSession.canceledit('newmarkersetform'); BitMap.EditSession.canceledit('editmarkercancel'); BitMap.EditSession.canceledit('editmarkerstylesmenu'); BitMap.EditSession.canceledit('newmarkerstyleform'); BitMap.EditSession.canceledit('editmarkerstylesform'); BitMap.EditSession.canceledit('editmarkerstylescancel'); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');"></div>
 <!--end marker editing forms -->
 
 
@@ -608,9 +608,9 @@
 
 <!--polyline editing forms -->
 <div id="editpolylinemenu" style="display:none;">
-		<a href="javascript:BitMap.Edit.newPolyline();">New Polyline</a> | 
-		<a href="javascript:BitMap.Edit.newPolylineSet();">New Polyline Set</a> | 
-		<a href="javascript:BitMap.Edit.editPolylineStyles();">Edit Polyline Styles</a> | 
+		<a href="javascript:BitMap.EditSession.newPolyline();">New Polyline</a> | 
+		<a href="javascript:BitMap.EditSession.newPolylineSet();">New Polyline Set</a> | 
+		<a href="javascript:BitMap.EditSession.editPolylineStyles();">Edit Polyline Styles</a> | 
 </div>
 
 <div id="newpolylinesetform" class="editform" style="display:none;">
@@ -645,12 +645,12 @@
                       					<option value="true">Yes</option>
                       					<option value="false">No</option>
                           				</select></td>
-						<td style="width:80px"><a name="new_polylineset_btn" title="save" href="javascript:BitMap.Edit.storeNewPolylineSet(document.polylinesetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						<td style="width:80px"><a name="new_polylineset_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolylineSet(document.polylinesetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
 				</table>
     	</form>
 		</div>
-		<div id="newpolylinesetcancel" ><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:BitMap.Edit.canceledit('newpolylinesetform'); BitMap.Edit.canceledit('editerror');"></div>
+		<div id="newpolylinesetcancel" ><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:BitMap.EditSession.canceledit('newpolylinesetform'); BitMap.EditSession.canceledit('editerror');"></div>
 </div>
 <!-- end of newpolylinesetform -->
 
@@ -658,7 +658,7 @@
 
 
 <div id="editpolylinestylesmenu" style="display:none;">
-		<a href="javascript:BitMap.Edit.newPolylineStyle();">Add a New Polyline Style</a>
+		<a href="javascript:BitMap.EditSession.newPolylineStyle();">Add a New Polyline Style</a>
 </div>
 
 
@@ -707,12 +707,12 @@
                     	Text BG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
                     	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
 						</td>
-                	<td>ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:BitMap.Edit.storeNewPolylineStyle(document.polylinestyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+                	<td>ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolylineStyle(document.polylinestyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 						</tr>
     		</table>
     	</form>
   	</div>
-		<div id="newpolylinestylecancel" ><input type="button" name="closepolylinestyleform" value="Cancel New Polyline Style" onclick="javascript:BitMap.Edit.canceledit('newpolylinestyleform'); BitMap.Edit.canceledit('editerror');"></div>
+		<div id="newpolylinestylecancel" ><input type="button" name="closepolylinestyleform" value="Cancel New Polyline Style" onclick="javascript:BitMap.EditSession.canceledit('newpolylinestyleform'); BitMap.EditSession.canceledit('editerror');"></div>
 </div>
 <!-- end of newpolylinestyleform -->
 
@@ -765,7 +765,7 @@
                     	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
 						</td>
 						<td>
-							ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:BitMap.Edit.storePolylineStyle(document.polylinestyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+							ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:BitMap.EditSession.storePolylineStyle(document.polylinestyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
       				</td>
 					</tr>
 				</table>
@@ -773,7 +773,7 @@
 		</div>
 </div> <!-- end of editpolylinestylesform -->
 
-<div id="editpolylinestylescancel" style="display:none;"><input type="button" name="closepolylinestylesform" value="Cancel Editing Polyline Styles" onclick="javascript:BitMap.Edit.canceledit('editpolylinestylesmenu'); BitMap.Edit.canceledit('newpolylinestyleform'); BitMap.Edit.canceledit('editpolylinestyleform'); BitMap.Edit.canceledit('editpolylinestylescancel');"></div>
+<div id="editpolylinestylescancel" style="display:none;"><input type="button" name="closepolylinestylesform" value="Cancel Editing Polyline Styles" onclick="javascript:BitMap.EditSession.canceledit('editpolylinestylesmenu'); BitMap.EditSession.canceledit('newpolylinestyleform'); BitMap.EditSession.canceledit('editpolylinestyleform'); BitMap.EditSession.canceledit('editpolylinestylescancel');"></div>
 <!--end polyline style editing forms -->
 
 
@@ -796,18 +796,18 @@
 					<tr class="gmapeditstrong">
 						<td><input name="name" type="text" style="width:90%" value="new"></td>
 						<td><textarea name="points_data" style="width:90%" rows="3"></textarea><br/>
-							<a name="polyline_assist_btn" title="draw the line!" href="javascript:BitMap.Edit.addAssistant('polyline', 'new');">Use Drawing Assistant</a></td>
+							<a name="polyline_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polyline', 'new');">Use Drawing Assistant</a></td>
 						<td><input name="border_text" type="text" style="width:90%" value=""></td>
 						<td><input name="zindex" type="text" size="3" value="0"></td>
 						<td><select name="set_id" id="polylineset_id">
 								<option value="n" >someset</option>
 								</select></td>
-						<td style="width:80px"><a name="new_polyline_btn" title="save" href="javascript:BitMap.Edit.storeNewPolyline(document.polylineform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						<td style="width:80px"><a name="new_polyline_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolyline(document.polylineform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
     		</table>
     	</form>
   	</div>
-		<div id="newpolylinecancel" ><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:BitMap.Edit.canceledit('newpolylineform'); removeAssistant(); BitMap.Edit.canceledit('editerror');"></div>
+		<div id="newpolylinecancel" ><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:BitMap.EditSession.canceledit('newpolylineform'); removeAssistant(); BitMap.EditSession.canceledit('editerror');"></div>
 </div> <!-- end of newpolylineform -->
 
 
@@ -849,12 +849,12 @@
                   				<option value="false">No</option>
                       			</select></td>
     				<td style="width:80px">
-							<a id="plsetstore" href="javascript:BitMap.Edit.storePolylineSet(document.polylinesetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
-  						<a id="plsetremove" href="javascript:BitMap.Edit.removePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-  						<a id="plsetdelete" href="javascript:BitMap.Edit.expungePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+							<a id="plsetstore" href="javascript:BitMap.EditSession.storePolylineSet(document.polylinesetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+  						<a id="plsetremove" href="javascript:BitMap.EditSession.removePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+  						<a id="plsetdelete" href="javascript:BitMap.EditSession.expungePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
 					</tr>
 					<tr>
-  					<td colspan="5"><a id="plsetedit" href="javascript:BitMap.Edit.editPolylineSet('n');">Edit These Polylines</a> | 
+  					<td colspan="5"><a id="plsetedit" href="javascript:BitMap.EditSession.editPolylineSet('n');">Edit These Polylines</a> | 
     					<a id="plsetadd" href="javascript:alert('feature coming soon');">Add Polylines from Archives</a></td>
 					</tr>
   			</table>
@@ -880,14 +880,14 @@
 							<tr>
 								<td style="width:160px"><input name="name" type="text" style="width:90%" value="a name"></td>
 								<td style="width:160px"><textarea name="points_data" style="width:90%" rows="3"></textarea><br/>
-									<a name="polyline_assist_btn" title="draw the line!" href="javascript:BitMap.Edit.addAssistant('polyline', n);">Use Drawing Assistant</a></td>
+									<a name="polyline_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polyline', n);">Use Drawing Assistant</a></td>
 								<td><input name="border_text" type="text" style="width:90%" value=""></td>
 								<td style="width:80px"><input name="zindex" type="text" size="3" value="0"></td>
 								<td style="width:80px">
-									<a name="save_polyline_btn" title="save" href="javascript:BitMap.Edit.storePolyline(document.polylineform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+									<a name="save_polyline_btn" title="save" href="javascript:BitMap.EditSession.storePolyline(document.polylineform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
 									<a name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-									<a name="remove_polyline_btn" title="remove from this set" href="javascript:BitMap.Edit.removePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-									<a name="expunge_polyline_btn" title="delete the polyline!" href="javascript:BitMap.Edit.expungePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+									<a name="remove_polyline_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+									<a name="expunge_polyline_btn" title="delete the polyline!" href="javascript:BitMap.EditSession.expungePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
 							</tr>
         			</table>
     			</form>
@@ -906,7 +906,7 @@
 		</div> <!-- end of polylineset_n -->
 </div> <!-- end of editpolylineform -->
 
-<div id="editpolylinecancel" style="display:none;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:BitMap.Edit.cancelPolylineEdit(); BitMap.Edit.canceledit('newpolylinesetform'); BitMap.Edit.canceledit('editerror');"></div>
+<div id="editpolylinecancel" style="display:none;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:BitMap.EditSession.cancelPolylineEdit(); BitMap.EditSession.canceledit('newpolylinesetform'); BitMap.EditSession.canceledit('editerror');"></div>
 <!--end polyline editing forms -->
 
 
@@ -921,9 +921,9 @@
 
 <!--polygon editing forms -->
 <div id="editpolygonmenu" style="display:none;">
-		<a href="javascript:BitMap.Edit.newPolygon();">New Polygon</a> | 
-		<a href="javascript:BitMap.Edit.newPolygonSet();">New Polygon Set</a> | 
-		<a href="javascript:BitMap.Edit.editPolygonStyles();">Edit Polygon Styles</a> | 
+		<a href="javascript:BitMap.EditSession.newPolygon();">New Polygon</a> | 
+		<a href="javascript:BitMap.EditSession.newPolygonSet();">New Polygon Set</a> | 
+		<a href="javascript:BitMap.EditSession.editPolygonStyles();">Edit Polygon Styles</a> | 
 </div>
 
 <div id="newpolygonsetform" class="editform" style="display:none;">
@@ -961,12 +961,12 @@
                       					<option value="true">Yes</option>
                       					<option value="false">No</option>
                           				</select></td>
-						<td style="width:80px"><a name="new_polygonset_btn" title="save" href="javascript:BitMap.Edit.storeNewPolygonSet(document.polygonsetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						<td style="width:80px"><a name="new_polygonset_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygonSet(document.polygonsetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
     		</table>
     	</form>
 		</div>
-		<div id="newpolygonsetcancel" ><input type="button" name="closepolygonsetform" value="Cancel New Polygon Set" onclick="javascript:BitMap.Edit.canceledit('newpolygonsetform'); BitMap.Edit.canceledit('editerror');"></div>
+		<div id="newpolygonsetcancel" ><input type="button" name="closepolygonsetform" value="Cancel New Polygon Set" onclick="javascript:BitMap.EditSession.canceledit('newpolygonsetform'); BitMap.EditSession.canceledit('editerror');"></div>
 </div>
 <!-- end of newpolygonsetform -->
 
@@ -974,7 +974,7 @@
 
 
 <div id="editpolygonstylesmenu" style="display:none;">
-		<a href="javascript:BitMap.Edit.newPolygonStyle();">Add a New Polygon Style</a>
+		<a href="javascript:BitMap.EditSession.newPolygonStyle();">Add a New Polygon Style</a>
 </div>
 
 
@@ -1000,12 +1000,12 @@
 						<td><input name="color" type="text" size="15" value="ff3300"></td>
 						<td><input name="weight" type="text" size="15" value="2"></td>
 						<td><input name="opacity" type="text" size="15" value=".75"></td>
-						<td style="width:80px"><a name="new_polygonstyle_btn" title="save" href="javascript:BitMap.Edit.storeNewPolygonStyle(document.polygonstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						<td style="width:80px"><a name="new_polygonstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygonStyle(document.polygonstyleform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
 				</table>
 			</form>
 		</div>
-		<div id="newpolygonstylecancel" ><input type="button" name="closepolygonstyleform" value="Cancel New Polygon Style" onclick="javascript:BitMap.Edit.canceledit('newpolygonstyleform'); BitMap.Edit.canceledit('editerror');"></div>
+		<div id="newpolygonstylecancel" ><input type="button" name="closepolygonstyleform" value="Cancel New Polygon Style" onclick="javascript:BitMap.EditSession.canceledit('newpolygonstyleform'); BitMap.EditSession.canceledit('editerror');"></div>
 </div>
 <!-- end of newpolygonstyleform -->
 
@@ -1036,14 +1036,14 @@
 						<td style="width:120px"><input name="color" type="text" size="15" value="ff3300"></td>
 						<td style="width:120px"><input name="weight" type="text" size="15" value="2"></td>
 						<td style="width:120px"><input name="opacity" type="text" size="15" value=".75"></td>
-						<td style="width:80px"><a style="float:left; padding:0 .4em;" name="save_polygonstyle_btn" title="save" href="javascript:BitMap.Edit.storePolygonStyle(document.polygonstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						<td style="width:80px"><a style="float:left; padding:0 .4em;" name="save_polygonstyle_btn" title="save" href="javascript:BitMap.EditSession.storePolygonStyle(document.polygonstyleform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
       			</tr>
 				</table>
 			</form>
 		</div>
 </div> <!-- end of editpolygonstylesform -->
 
-<div id="editpolygonstylescancel" style="display:none;"><input type="button" name="closepolygonstylesform" value="Cancel Editing Polygon Styles" onclick="javascript:BitMap.Edit.canceledit('editpolygonstylesmenu'); BitMap.Edit.canceledit('newpolygonstyleform'); BitMap.Edit.canceledit('editpolygonstyleform'); BitMap.Edit.canceledit('editpolygonstylescancel');"></div>
+<div id="editpolygonstylescancel" style="display:none;"><input type="button" name="closepolygonstylesform" value="Cancel Editing Polygon Styles" onclick="javascript:BitMap.EditSession.canceledit('editpolygonstylesmenu'); BitMap.EditSession.canceledit('newpolygonstyleform'); BitMap.EditSession.canceledit('editpolygonstyleform'); BitMap.EditSession.canceledit('editpolygonstylescancel');"></div>
 <!--end polygon style editing forms -->
 
 
@@ -1073,7 +1073,7 @@
 								<option value="true" >Circle</option>
 								</select></td>
 						<td><textarea name="points_data" style="width:90%" rows="3"></textarea><br/>
-							<a name="polygon_assist_btn" title="draw the line!" href="javascript:BitMap.Edit.addAssistant('polygon', 'new');">Use Drawing Assistant</a></td>
+							<a name="polygon_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polygon', 'new');">Use Drawing Assistant</a></td>
 						<td><input name="circle_center" type="text" style="width:90%" ></td>
 						<td><input name="radius" type="text" size="8" value="0"></td>
 						<td><input name="border_text" type="text" style="width:90%" value=""></td>
@@ -1081,12 +1081,12 @@
 						<td><select name="set_id" id="polygonset_id">
 								<option value="n" >someset</option>
 								</select></td>
-						<td style="width:80px"><a name="new_polygon_btn" title="save" href="javascript:BitMap.Edit.storeNewPolygon(document.polygonform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						<td style="width:80px"><a name="new_polygon_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygon(document.polygonform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
 					</tr>
 				</table>
 			</form>
 		</div>
-		<div id="newpolygoncancel" ><input type="button" name="closepolygonform" value="Cancel New Polygon" onclick="javascript:BitMap.Edit.canceledit('newpolygonform'); removeAssistant(); BitMap.Edit.canceledit('editerror');"></div>
+		<div id="newpolygoncancel" ><input type="button" name="closepolygonform" value="Cancel New Polygon" onclick="javascript:BitMap.EditSession.canceledit('newpolygonform'); removeAssistant(); BitMap.EditSession.canceledit('editerror');"></div>
 </div> <!-- end of newpolygonform -->
 
 
@@ -1131,12 +1131,12 @@
                   				<option value="false">No</option>
                       			</select></td>
 						<td style="width:80px">
-							<a id="pgsetstore" href="javascript:BitMap.Edit.storePolygonSet(document.polygonsetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
-							<a id="pgsetremove" href="javascript:BitMap.Edit.removePolygonSet(document.polygonsetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-							<a id="pgsetdelete" href="javascript:BitMap.Edit.expungePolygonSet(document.polygonsetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+							<a id="pgsetstore" href="javascript:BitMap.EditSession.storePolygonSet(document.polygonsetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+							<a id="pgsetremove" href="javascript:BitMap.EditSession.removePolygonSet(document.polygonsetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+							<a id="pgsetdelete" href="javascript:BitMap.EditSession.expungePolygonSet(document.polygonsetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
 					</tr>
 					<tr>
-						<td colspan="5"><a id="pgsetedit" href="javascript:BitMap.Edit.editPolygonSet('n');">Edit These Polygons</a> | 
+						<td colspan="5"><a id="pgsetedit" href="javascript:BitMap.EditSession.editPolygonSet('n');">Edit These Polygons</a> | 
 							<a id="pgsetadd" href="javascript:alert('feature coming soon');">Add Polygons from Archives</a></td>
 					</tr>
   			</table>
@@ -1169,16 +1169,16 @@
 										<option value="true" >Circle</option>
 										</select></td>
 								<td style="width:160px"><textarea name="points_data" style="width:90%" rows="3"></textarea><br/>
-									<a name="polygon_assist_btn" title="draw the line!" href="javascript:BitMap.Edit.addAssistant('polygon', n);">Use Drawing Assistant</a></td>
+									<a name="polygon_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polygon', n);">Use Drawing Assistant</a></td>
 								<td style="width:80px"><input name="circle_center" type="text" style="width:90%" value="new"></td>
 								<td style="width:80px"><input name="radius" type="text" size="8" value="new"></td>
 								<td><input name="border_text" type="text" style="width:90%" value=""></td>
 								<td style="width:80px"><input name="zindex" type="text" size="3" value="0"></td>
 								<td style="width:80px">
-									<a name="save_polygon_btn" title="save" href="javascript:BitMap.Edit.storePolygon(document.polygonform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+									<a name="save_polygon_btn" title="save" href="javascript:BitMap.EditSession.storePolygon(document.polygonform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
 									<a name="locate_polygon_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-									<a name="remove_polygon_btn" title="remove from this set" href="javascript:BitMap.Edit.removePolygon(document.polygonform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-									<a name="expunge_polygon_btn" title="delete the polygon!" href="javascript:BitMap.Edit.expungePolygon(document.polygonform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+									<a name="remove_polygon_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolygon(document.polygonform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+									<a name="expunge_polygon_btn" title="delete the polygon!" href="javascript:BitMap.EditSession.expungePolygon(document.polygonform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
 							</tr>
         			</table>
     			</form>
@@ -1197,6 +1197,6 @@
 		</div> <!-- end of polygonset_n -->
 </div> <!-- end of editpolygonform -->
 
-<div id="editpolygoncancel" style="display:none;"><input type="button" name="closepolygonform" value="Cancel Editing Polygons" onclick="javascript:BitMap.Edit.cancelPolygonEdit(); BitMap.Edit.canceledit('newpolygonsetform'); BitMap.Edit.canceledit('editerror');"></div>
+<div id="editpolygoncancel" style="display:none;"><input type="button" name="closepolygonform" value="Cancel Editing Polygons" onclick="javascript:BitMap.EditSession.cancelPolygonEdit(); BitMap.EditSession.canceledit('newpolygonsetform'); BitMap.EditSession.canceledit('editerror');"></div>
 <!--end polygon editing forms -->
 

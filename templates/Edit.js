@@ -13,12 +13,9 @@ if (typeof(BitMap) == 'undefined') {
     BitMap = {};
 }
 
-if (typeof(BitMap.Edit) == 'undefined') {
-    BitMap.Edit = {};
-}
-
 BitMap.EditMap = function(){
   BitMap.Initialize();
+  BitMap.EditSession = new BitMap.Edit();
   BitMap.MapData[0].Map.addOverlayListener();
   BitMap.MapData[0].Map.attachSideMarkers();
 };
@@ -26,28 +23,41 @@ BitMap.EditMap = function(){
 // We use Mochikit library for AJAX and substituting getElementById with '$()'
 // MAP EDITING FUNCTIONS
 
-// for tracking which object we are updating
-BitMap.Edit.editArray;
-BitMap.Edit.editObjectN;
-BitMap.Edit.editSetId;
-BitMap.Edit.editMarkerId;
-BitMap.Edit.editPolylineId;
-BitMap.Edit.editSetType;
+BitMap.Edit = function(){
+  this.Map = BitMap.MapData[0].Map;
+  // for tracking which object we are updating
+  this.editArray;
+  this.editObjectN;
+  this.editSetId;
+  this.editMarkerId;
+  this.editPolylineId;
+  this.editSetType;
+  //constants for editing tools - declaired last in this script
+  this.bLastpoint;
+  this.bAssistant;
+  this.bTempPoints = new Array();	//create point array
+  this.bTP; //temporary polyline
+  this.bModForm;
+  this.bModPData; 
+  this.bModMLat;
+  this.bModMLng;
+}
+
 
 // for sorting arrays
-BitMap.Edit.sortOn = function(a,b){ 
+BitMap.Edit.prototype.sortOn = function(a,b){ 
 	return a['set_id']-b['set_id']; 
 } 
 
-BitMap.Edit.sortIt = function(pParamHash){
+BitMap.Edit.prototype.sortIt = function(pParamHash){
 	pParamHash.sort(sortOn); 
 }
 
-BitMap.Edit.canceledit = function(i){
+BitMap.Edit.prototype.canceledit = function(i){
 	$(i).style.display = "none";	
 };
 
-BitMap.Edit.toggleIconMenu = function(o, n){
+BitMap.Edit.prototype.toggleIconMenu = function(o, n){
 	if (o == 0){
 		$('gicon_style_head_'+n).style.display = 'table-row';
 		$('gicon_style_menu1_'+n).style.display = 'table-row';
@@ -68,36 +78,36 @@ BitMap.Edit.toggleIconMenu = function(o, n){
  *******************/
 
 // builds the map editing form
-BitMap.Edit.editMap = function(Map){
+BitMap.Edit.prototype.editMap = function(){
 				  $('mapform').reset();
 				 	BitMap.show('editmapform');
 
-    			$('gmap_id').value = Map.id;
-    			$('map_title').value = Map.title;
-    			$('map_desc').value = Map.description;
-    			$('map_w').value = Map.width;
-    			$('map_h').value = Map.height;
-    			$('map_lat').value = Map.lat;
-    			$('map_lng').value = Map.lng;
-    			$('map_z').value = Map.zoom;
+    			$('gmap_id').value = this.Map.id;
+    			$('map_title').value = this.Map.title;
+    			$('map_desc').value = this.Map.description;
+    			$('map_w').value = this.Map.width;
+    			$('map_h').value = this.Map.height;
+    			$('map_lat').value = this.Map.lat;
+    			$('map_lng').value = this.Map.lng;
+    			$('map_z').value = this.Map.zoom;
 
 					form = $('mapform');
-					form.edit.value = Map.data;
+					form.edit.value = this.Map.data;
 
         	for (var i=0; i < 4; i++) {
-             if ($('map_showcont').options[i].value == Map.zoom_control){
+             if ($('map_showcont').options[i].value == this.Map.zoom_control){
                 $('map_showcont').options[i].selected=true;
              }
           }
 
         	for (var i=0; i < 2; i++) {
-             if ($('map_showscale').options[i].value == Map.scale){
+             if ($('map_showscale').options[i].value == this.Map.scale){
                 $('map_showscale').options[i].selected=true;
              }
           }
 					
         	for (var i=0; i < 2; i++) {
-             if ($('map_showtypecont').options[i].value == Map.type_control){
+             if ($('map_showtypecont').options[i].value == this.Map.type_control){
                 $('map_showtypecont').options[i].selected=true;
              }
           }
@@ -106,18 +116,18 @@ BitMap.Edit.editMap = function(Map){
 
 					var mapTypeCount = 2;
 					
-					if (typeof(Map.Maptypes) != 'undefined'){
-						mapTypeCount += Map.Maptypes.length;
+					if (typeof(this.Map.Maptypes) != 'undefined'){
+						mapTypeCount += this.Map.Maptypes.length;
 						var newMapType = mapTypeRoot.options[0].cloneNode(false);
-  					for (i=0; i<Map.Maptypes.length; i++){
+  					for (i=0; i<this.Map.Maptypes.length; i++){
      					  mapTypeRoot.appendChild(newMapType);
-      					mapTypeRoot.options[i+3].value = Map.Maptypes[i].name;
-      					mapTypeRoot.options[i+3].text = Map.Maptypes[i].name;
+      					mapTypeRoot.options[i+3].value = this.Map.Maptypes[i].name;
+      					mapTypeRoot.options[i+3].text = this.Map.Maptypes[i].name;
   					}
 					}
 						
           for (var i=0; i<mapTypeCount; i++) {
-             if ($('map_type').options[i].value == Map.maptype){
+             if ($('map_type').options[i].value == this.Map.maptype){
                 $('map_type').options[i].selected=true;
              }
           }
@@ -127,19 +137,19 @@ BitMap.Edit.editMap = function(Map){
 					 */
 };
 
-BitMap.Edit.editMapTypes = function(Map){
+BitMap.Edit.prototype.editMapTypes = function(){
 	BitMap.show('editmaptypemenu');
 	BitMap.show('editmaptypeform');
 	BitMap.show('editmaptypecancel');
 
 	//if maptype data exists
-	if ( typeof( Map.Maptypes ) ) {
+	if ( typeof( this.Map.Maptypes ) ) {
 	
   	// We assume editMapTypes has been called before and remove 
   	// any previously existing sets from the UI
-  	for (var a=0; a<Map.Maptypes.length; a++) {
-  		if ( Map.Maptypes[a]!= null ){
-    		var getElem = "editmaptypetable_" + Map.Maptypes[a].maptype_id;
+  	for (var a=0; a<this.Map.Maptypes.length; a++) {
+  		if ( this.Map.Maptypes[a]!= null ){
+    		var getElem = "editmaptypetable_" + this.Map.Maptypes[a].maptype_id;
     		if ( $(getElem) ) {
         	var extraMapTypeForm = $(getElem);
     			$('editmaptypeform').removeChild(extraMapTypeForm);
@@ -150,10 +160,10 @@ BitMap.Edit.editMapTypes = function(Map){
   	var editMapTypeId;
   	  	
   	// for each maptype data set clone the form
-  	for (var b=0; b<Map.Maptypes.length; b++) {
-  	if ( Map.Maptypes[b]!= null ){
+  	for (var b=0; b<this.Map.Maptypes.length; b++) {
+  	if ( this.Map.Maptypes[b]!= null ){
 						
-  		editMapTypeId = Map.Maptypes[b].maptype_id;
+  		editMapTypeId = this.Map.Maptypes[b].maptype_id;
   	
   		// clone the form container
 			var newMapType = $('editmaptypetable_n').cloneNode(true);
@@ -186,35 +196,35 @@ BitMap.Edit.editMapTypes = function(Map){
 			form = $('maptypeform_' + editMapTypeId);
 
 			form.array_n.value = b;
-        form.maptype_id.value = Map.Maptypes[b].maptype_id;
-        form.name.value = Map.Maptypes[b].name;
-        form.description.value = Map.Maptypes[b].description;
-        form.copyright.value = Map.Maptypes[b].copyright;
-        form.maxzoom.value = Map.Maptypes[b].maxzoom;
+        form.maptype_id.value = this.Map.Maptypes[b].maptype_id;
+        form.name.value = this.Map.Maptypes[b].name;
+        form.description.value = this.Map.Maptypes[b].description;
+        form.copyright.value = this.Map.Maptypes[b].copyright;
+        form.maxzoom.value = this.Map.Maptypes[b].maxzoom;
         for (var r=0; r < 3; r++) {
-           if (form.basetype.options[r].value == Map.Maptypes[b].basetype){
+           if (form.basetype.options[r].value == this.Map.Maptypes[b].basetype){
            		form.basetype.options[r].selected=true;
            }
         };			
         for (var r=0; r < 3; r++) {
-           if (form.alttype.options[r].value == Map.Maptypes[b].alttype){
+           if (form.alttype.options[r].value == this.Map.Maptypes[b].alttype){
            		form.alttype.options[r].selected=true;
            }
         };
-        form.maptiles_url.value = Map.Maptypes[b].maptiles_url;
-        form.lowtiles_url.value = Map.Maptypes[b].lowresmaptiles_url;
-        form.hybridtiles_url.value = Map.Maptypes[b].hybridtiles_url;
-        form.lowhybridtiles_url.value = Map.Maptypes[b].lowreshybridtiles_url;
+        form.maptiles_url.value = this.Map.Maptypes[b].maptiles_url;
+        form.lowtiles_url.value = this.Map.Maptypes[b].lowresmaptiles_url;
+        form.hybridtiles_url.value = this.Map.Maptypes[b].hybridtiles_url;
+        form.lowhybridtiles_url.value = this.Map.Maptypes[b].lowreshybridtiles_url;
 
 			// just for a pretty button - js sucks it!
         var mytable = $('maptypeformdata_'+editMapTypeId);
         var mytablebody = mytable.getElementsByTagName("tbody").item(0);
 			var myrow = mytablebody.getElementsByTagName("tr").item(0);
         var mycel = myrow.getElementsByTagName("td").item(6);
-			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storeMapType(document.maptypeform_"+editMapTypeId+");";
+			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storeMapType(document.maptypeform_"+editMapTypeId+");";
 			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
-			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.Edit.removeMapType(document.maptypeform_"+editMapTypeId+");";
-			mycel.getElementsByTagName("a").item(3).href = "javascript:BitMap.Edit.expungeMapType(document.maptypeform_"+editMapTypeId+");";
+			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.EditSession.removeMapType(document.maptypeform_"+editMapTypeId+");";
+			mycel.getElementsByTagName("a").item(3).href = "javascript:BitMap.EditSession.expungeMapType(document.maptypeform_"+editMapTypeId+");";
 
   	}
 		}
@@ -222,7 +232,7 @@ BitMap.Edit.editMapTypes = function(Map){
 };
 
 
-BitMap.Edit.newMapType = function(){
+BitMap.Edit.prototype.newMapType = function(){
     // Display the New Marker Div and Cancel Button
    	BitMap.show('newmaptypeform');
 
@@ -239,10 +249,10 @@ BitMap.Edit.newMapType = function(){
  *
  *******************/
 
-BitMap.Edit.newMarker = function(Map){
+BitMap.Edit.prototype.newMarker = function(){
 		var check = false;
-  	for (var i=0; i<Map.MarkerSets.length; i++){
-  		if ( Map.MarkerSets[i] != null ){
+  	for (var i=0; i<this.Map.MarkerSets.length; i++){
+  		if ( this.Map.MarkerSets[i] != null ){
 				check = true;
   		}
   	}
@@ -253,7 +263,7 @@ BitMap.Edit.newMarker = function(Map){
 			BitMap.show('editerror');
   		Fat.fade_all();
   		//display new marker set form
-      BitMap.Edit.newMarkerSet();
+      this.newMarkerSet();
 
 		}else{
       // Display the New Marker Div and Cancel Button
@@ -269,10 +279,10 @@ BitMap.Edit.newMarker = function(Map){
   		selectRoot.options.length = 0;
   
   		// add option for each set available
-  		if ( typeof(Map.MarkerSets) != 'undefined' ){
-    			for ( i=0; i<Map.MarkerSets.length; i++ ){
-  						if ( Map.MarkerSets[i] != null ){
-								selectRoot.options[selectRoot.options.length] = new Option( Map.MarkerSets[i].name, Map.MarkerSets[i].set_id );
+  		if ( typeof(this.Map.MarkerSets) != 'undefined' ){
+    			for ( i=0; i<this.Map.MarkerSets.length; i++ ){
+  						if ( this.Map.MarkerSets[i] != null ){
+								selectRoot.options[selectRoot.options.length] = new Option( this.Map.MarkerSets[i].name, this.Map.MarkerSets[i].set_id );
   						}
     			}
   		}
@@ -280,7 +290,7 @@ BitMap.Edit.newMarker = function(Map){
 };
 
 
-BitMap.Edit.newMarkerSet = function(){
+BitMap.Edit.prototype.newMarkerSet = function(){
     // Display the New Form Div
    	BitMap.show('newmarkersetform');
 		// Reset the Form
@@ -289,20 +299,20 @@ BitMap.Edit.newMarkerSet = function(){
 
 
 
-BitMap.Edit.editMarkers = function(Map){		
+BitMap.Edit.prototype.editMarkers = function(){		
   // Display the Edit Form Div and Cancel Button
 	BitMap.show('editmarkermenu');
   BitMap.show('editmarkerform');
 	BitMap.show('editmarkercancel');
 
 	//if marker data exists
-	if ( typeof(Map.Markers) ) {
+	if ( typeof(this.Map.Markers) ) {
 	
   	// We assume editMarkers has been called before and remove 
   	// any previously existing sets from the UI
-  	for (var a=0; a<Map.MarkerSets.length; a++) {
-  		if (Map.MarkerSets[a]!= null){
-    		var getElem = "markerset_"+Map.MarkerSets[a].set_id;
+  	for (var a=0; a<this.Map.MarkerSets.length; a++) {
+  		if (this.Map.MarkerSets[a]!= null){
+    		var getElem = "markerset_"+this.Map.MarkerSets[a].set_id;
     		if ( $(getElem) ) {
         	var extraMarkerForm = $(getElem);
     			$('editmarkerform').removeChild(extraMarkerForm);
@@ -313,10 +323,10 @@ BitMap.Edit.editMarkers = function(Map){
   	var newSetId;
   	  	
   	// add a new set UI for each marker set
-  	for (var b=0; b<Map.MarkerSets.length; b++) {
-    	if (Map.MarkerSets[b]!= null){
+  	for (var b=0; b<this.Map.MarkerSets.length; b++) {
+    	if (this.Map.MarkerSets[b]!= null){
   						
-    		newSetId = Map.MarkerSets[b].set_id;
+    		newSetId = this.Map.MarkerSets[b].set_id;
     	
     		// clone model set UI
   			var newMarkerSet = $('markerset_n').cloneNode(true);
@@ -369,42 +379,42 @@ BitMap.Edit.editMarkers = function(Map){
 
    			var myrow = mytablebody.getElementsByTagName("tr").item(0);
            	var mycel = myrow.getElementsByTagName("td").item(0);
-   			mycel.getElementsByTagName("b").item(0).innerHTML = Map.MarkerSets[b].name;
+   			mycel.getElementsByTagName("b").item(0).innerHTML = this.Map.MarkerSets[b].name;
    			mycel = myrow.getElementsByTagName("td").item(7);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storeMarkerSet(document.markersetform_"+newSetId+");";
-   			mycel.getElementsByTagName("a").item(1).href = "javascript:BitMap.Edit.removeMarkerSet(document.markersetform_"+newSetId+");";
-   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.Edit.expungeMarkerSet(document.markersetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storeMarkerSet(document.markersetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.removeMarkerSet(document.markersetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.EditSession.expungeMarkerSet(document.markersetform_"+newSetId+");";
 
    			myrow = mytablebody.getElementsByTagName("tr").item(1);
    			mycel = myrow.getElementsByTagName("td").item(0);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.editSet("+newSetId+");";
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editSet("+newSetId+");";
    			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
 
 				//get form and update values
 				form = $('markersetform_'+newSetId);
 				form.set_id.value = newSetId;
 				form.set_array_n.value = b;
-				if (Map.MarkerSets[b].plot_on_load == false){ form.plot_on_load.options[1].selected=true; };
-				if (Map.MarkerSets[b].side_panel == false){ form.side_panel.options[1].selected=true; };
-				if (Map.MarkerSets[b].explode == false){ form.explode.options[1].selected=true };
-				if (Map.MarkerSets[b].cluster == false){ form.cluster.options[1].selected=true };
-				if ( (typeof(Map.MarkerStyles) != 'undefined') && (Map.MarkerStyles.length > 0) ){
+				if (this.Map.MarkerSets[b].plot_on_load == false){ form.plot_on_load.options[1].selected=true; };
+				if (this.Map.MarkerSets[b].side_panel == false){ form.side_panel.options[1].selected=true; };
+				if (this.Map.MarkerSets[b].explode == false){ form.explode.options[1].selected=true };
+				if (this.Map.MarkerSets[b].cluster == false){ form.cluster.options[1].selected=true };
+				if ( (typeof(this.Map.MarkerStyles) != 'undefined') && (this.Map.MarkerStyles.length > 0) ){
 					var OptionN = form.style_id.options.length;
-  				for (var d=0; d<Map.MarkerStyles.length; d++){
-						if ( Map.MarkerStyles[d] != null ){
-							form.style_id.options[OptionN + d] = new Option( Map.MarkerStyles[d].name, Map.MarkerStyles[d].style_id );
-							if ( Map.MarkerStyles[d].style_id == Map.MarkerSets[b].style_id){
+  				for (var d=0; d<this.Map.MarkerStyles.length; d++){
+						if ( this.Map.MarkerStyles[d] != null ){
+							form.style_id.options[OptionN + d] = new Option( this.Map.MarkerStyles[d].name, this.Map.MarkerStyles[d].style_id );
+							if ( this.Map.MarkerStyles[d].style_id == this.Map.MarkerSets[b].style_id){
 							form.style_id.options[OptionN + d].selected=true;
 							}
   					}
   				}
 				}
-				if ( (typeof(Map.IconStyles) != 'undefined') && (Map.IconStyles.length > 0) ){
+				if ( (typeof(this.Map.IconStyles) != 'undefined') && (this.Map.IconStyles.length > 0) ){
 					var IconN = form.icon_id.options.length;
-  				for (var e=0; e<Map.IconStyles.length; e++){
-						if ( Map.IconStyles[e] != null ){
-							form.icon_id.options[IconN+e] = new Option( Map.IconStyles[e].name, Map.IconStyles[e].icon_id );
-							if ( Map.IconStyles[e].icon_id == Map.MarkerSets[b].icon_id){
+  				for (var e=0; e<this.Map.IconStyles.length; e++){
+						if ( this.Map.IconStyles[e] != null ){
+							form.icon_id.options[IconN+e] = new Option( this.Map.IconStyles[e].name, this.Map.IconStyles[e].icon_id );
+							if ( this.Map.IconStyles[e].icon_id == this.Map.MarkerSets[b].icon_id){
 							form.icon_id.options[IconN+e].selected=true;
 							}
   					}
@@ -415,11 +425,11 @@ BitMap.Edit.editMarkers = function(Map){
 		
   	//for length of markers add form to setelement on matching set_id
 		var x = 0;
-  	for (g=0; g<Map.Markers.length; g++) {
-			if (Map.Markers[g]!= null){
+  	for (g=0; g<this.Map.Markers.length; g++) {
+			if (this.Map.Markers[g]!= null){
 				x++;
 				//add marker form...again a little ugly here
-				var formCont = $("editmarkertable_"+Map.Markers[g].set_id);
+				var formCont = $("editmarkertable_"+this.Map.Markers[g].set_id);
   			formContKids = formCont.childNodes;
 
             for (var n = 0; n < formContKids.length; n++) {
@@ -438,39 +448,39 @@ BitMap.Edit.editMarkers = function(Map){
     						nMFKids[o].id = "formdata_"+g;
     					}
     				}
-						$('editmarkertable_'+Map.Markers[g].set_id).appendChild(newMarkerForm);
+						$('editmarkertable_'+this.Map.Markers[g].set_id).appendChild(newMarkerForm);
     				BitMap.show('markerform_'+g);
     			}
     		}
 				
 				// populate set form values
 				form = $('markerform_'+g);
-            form.set_id.value = Map.Markers[g].set_id;
-				if ( Map.Markers[g].marker_type == 1 ){
+            form.set_id.value = this.Map.Markers[g].set_id;
+				if ( this.Map.Markers[g].marker_type == 1 ){
 					form.marker_type.options[1].selected = true;
   			}
-            form.marker_id.value = Map.Markers[g].marker_id;
-            form.title.value = Map.Markers[g].title;
-            form.marker_lat.value = Map.Markers[g].lat;
-            form.marker_lng.value = Map.Markers[g].lon;
-            form.edit.value = Map.Markers[g].data;
-            form.marker_labeltext.value = Map.Markers[g].label_data;
-            form.photo_url.value = Map.Markers[g].photo_url;
-            form.marker_zi.value = Map.Markers[g].zindex;
-            form.marker_array_n.value = Map.Markers[g].array_n;
+            form.marker_id.value = this.Map.Markers[g].marker_id;
+            form.title.value = this.Map.Markers[g].title;
+            form.marker_lat.value = this.Map.Markers[g].lat;
+            form.marker_lng.value = this.Map.Markers[g].lon;
+            form.edit.value = this.Map.Markers[g].data;
+            form.marker_labeltext.value = this.Map.Markers[g].label_data;
+            form.photo_url.value = this.Map.Markers[g].photo_url;
+            form.marker_zi.value = this.Map.Markers[g].zindex;
+            form.marker_array_n.value = this.Map.Markers[g].array_n;
 				
 				// just for a pretty button - js sucks it!
            	var mytable = $('formdata_'+g);
            	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
    			var myrow = mytablebody.getElementsByTagName("tr").item(0);
            	var mycel = myrow.getElementsByTagName("td").item(2);
-				mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.addAssistant('marker', "+g+");";
+				mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.addAssistant('marker', "+g+");";
 
 				mycel = myrow.getElementsByTagName("td").item(7);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storeMarker(document.markerform_"+g+");";
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storeMarker(document.markerform_"+g+");";
    			mycel.getElementsByTagName("a").item(1).href = "javascript:Map.Markers["+Map.Markers[g].array_n+"].marker.openInfoWindowHtml(Map.Markers["+Map.Markers[g].array_n+"].marker.my_html);";
-   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.Edit.removeMarker(document.markerform_"+g+");";
-   			mycel.getElementsByTagName("a").item(3).href = "javascript:BitMap.Edit.expungeMarker(document.markerform_"+g+");";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.EditSession.removeMarker(document.markerform_"+g+");";
+   			mycel.getElementsByTagName("a").item(3).href = "javascript:BitMap.EditSession.expungeMarker(document.markerform_"+g+");";
 
 			}
 		}		
@@ -480,15 +490,15 @@ BitMap.Edit.editMarkers = function(Map){
 
 
 //@todo change this to editMarkerSet(n)
-BitMap.Edit.editSet = function(n){
+BitMap.Edit.prototype.editSet = function(n){
 				BitMap.show('setform_'+n);
 };
 
 
-BitMap.Edit.newIconStyle = function(Map){
+BitMap.Edit.prototype.newIconStyle = function(){
 		var check = false;
-  	for (var i=0; i<Map.MarkerSets.length; i++){
-  		if ( Map.MarkerSets[i] != null ){
+  	for (var i=0; i<this.Map.MarkerSets.length; i++){
+  		if ( this.Map.MarkerSets[i] != null ){
 				check = true;
   		}
   	}
@@ -499,7 +509,7 @@ BitMap.Edit.newIconStyle = function(Map){
 			BitMap.show('editerror');
   		Fat.fade_all();
   		//display new marker set form
-      BitMap.Edit.newMarkerSet();
+      this.newMarkerSet();
 
 		}else{
       // Display the New Icon Style Div
@@ -511,19 +521,19 @@ BitMap.Edit.newIconStyle = function(Map){
 };
 
 
-BitMap.Edit.editIconStyles = function(Map){
+BitMap.Edit.prototype.editIconStyles = function(){
 		BitMap.show('editiconstylesmenu');
 		BitMap.show('editiconstyleform');
 		BitMap.show('editiconstylescancel');
 
   	//if iconstyles data exists
-  	if ( typeof( Map.IconStyles ) ) {
+  	if ( typeof( this.Map.IconStyles ) ) {
   
     	// We assume editIconStyles has been called before and remove 
     	// any previously existing sets from the UI
-    	for (var a=0; a<Map.IconStyles.length; a++) {
-    		if ( Map.IconStyles[a]!= null ){
-      			var getElem = "editiconstyletable_" + Map.IconStyles[a].icon_id;
+    	for (var a=0; a<this.Map.IconStyles.length; a++) {
+    		if ( this.Map.IconStyles[a]!= null ){
+      			var getElem = "editiconstyletable_" + this.Map.IconStyles[a].icon_id;
         		if ( $(getElem) ) {
             		var extraIconStyleForm = $(getElem);
         			$('editiconstyleform').removeChild(extraIconStyleForm);
@@ -534,10 +544,10 @@ BitMap.Edit.editIconStyles = function(Map){
     	var editIconStyleId;
 			var x = 0;  
     	// for each iconstyle data set clone the form
-    	for (var b=0; b<Map.IconStyles.length; b++) {
-        	if ( Map.IconStyles[b]!= null ){  						
+    	for (var b=0; b<this.Map.IconStyles.length; b++) {
+        	if ( this.Map.IconStyles[b]!= null ){  						
 					x++;    
-        		editIconStyleId = Map.IconStyles[b].icon_id;
+        		editIconStyleId = this.Map.IconStyles[b].icon_id;
     
         		// clone the form container
       			var newIconStyle = $('editiconstyletable_n').cloneNode(true);
@@ -573,44 +583,44 @@ BitMap.Edit.editIconStyles = function(Map){
       			form = $('iconstyleform_' + editIconStyleId );
     
                 form.style_array_n.value = b;
-                form.icon_id.value = Map.IconStyles[b].icon_id;
-                form.name.value = Map.IconStyles[b].name;
+                form.icon_id.value = this.Map.IconStyles[b].icon_id;
+                form.name.value = this.Map.IconStyles[b].name;
                 for (var r=0; r < 2; r++) {
-                   if (form.icon_style_type.options[r].value == Map.IconStyles[b].icon_style_type){
+                   if (form.icon_style_type.options[r].value == this.Map.IconStyles[b].icon_style_type){
                    		form.icon_style_type.options[r].selected=true;
                    }
                 };
-                form.image.value = Map.IconStyles[b].image;
-                form.rollover_image.value = Map.IconStyles[b].rollover_image;
-                form.icon_w.value = Map.IconStyles[b].icon_w;
-                form.icon_h.value = Map.IconStyles[b].icon_h;
+                form.image.value = this.Map.IconStyles[b].image;
+                form.rollover_image.value = this.Map.IconStyles[b].rollover_image;
+                form.icon_w.value = this.Map.IconStyles[b].icon_w;
+                form.icon_h.value = this.Map.IconStyles[b].icon_h;
 
 				 /* not sure want to both supporting these, 
 			 	  * probably more complex than people want to be bothered with
 				  * they are NOT in the edit_form.tpl
 					----------------------------------------------------------	
-					form.print_image.value = Map.IconStyles[b].print_image;
-                form.moz_print_image.value = Map.IconStyles[b].moz_print_image;
-                form.transparent.value = Map.IconStyles[b].transparent;
-                form.print_shadow.value = Map.IconStyles[b].print_shadow;
-                form.image_map.value = Map.IconStyles[b].image_map;
+					form.print_image.value = this.Map.IconStyles[b].print_image;
+                form.moz_print_image.value = this.Map.IconStyles[b].moz_print_image;
+                form.transparent.value = this.Map.IconStyles[b].transparent;
+                form.print_shadow.value = this.Map.IconStyles[b].print_shadow;
+                form.image_map.value = this.Map.IconStyles[b].image_map;
 				  */
 
-                form.shadow_image.value = Map.IconStyles[b].shadow_image;
-                form.shadow_w.value = Map.IconStyles[b].shadow_w;
-                form.shadow_h.value = Map.IconStyles[b].shadow_h;
-                form.icon_anchor_x.value = Map.IconStyles[b].icon_anchor_x;
-                form.icon_anchor_y.value = Map.IconStyles[b].icon_anchor_y;
-                form.shadow_anchor_x.value = Map.IconStyles[b].shadow_anchor_x;
-                form.shadow_anchor_y.value = Map.IconStyles[b].shadow_anchor_y;
-                form.infowindow_anchor_x.value = Map.IconStyles[b].infowindow_anchor_x;
-                form.infowindow_anchor_y.value = Map.IconStyles[b].infowindow_anchor_y;
-                form.points.value = Map.IconStyles[b].points;
-                form.scale.value = Map.IconStyles[b].scale;
-                form.outline_color.value = Map.IconStyles[b].outline_color;
-                form.outline_weight.value = Map.IconStyles[b].outline_weight;
-                form.fill_color.value = Map.IconStyles[b].fill_color;
-                form.fill_opacity.value = Map.IconStyles[b].fill_opacity;
+                form.shadow_image.value = this.Map.IconStyles[b].shadow_image;
+                form.shadow_w.value = this.Map.IconStyles[b].shadow_w;
+                form.shadow_h.value = this.Map.IconStyles[b].shadow_h;
+                form.icon_anchor_x.value = this.Map.IconStyles[b].icon_anchor_x;
+                form.icon_anchor_y.value = this.Map.IconStyles[b].icon_anchor_y;
+                form.shadow_anchor_x.value = this.Map.IconStyles[b].shadow_anchor_x;
+                form.shadow_anchor_y.value = this.Map.IconStyles[b].shadow_anchor_y;
+                form.infowindow_anchor_x.value = this.Map.IconStyles[b].infowindow_anchor_x;
+                form.infowindow_anchor_y.value = this.Map.IconStyles[b].infowindow_anchor_y;
+                form.points.value = this.Map.IconStyles[b].points;
+                form.scale.value = this.Map.IconStyles[b].scale;
+                form.outline_color.value = this.Map.IconStyles[b].outline_color;
+                form.outline_weight.value = this.Map.IconStyles[b].outline_weight;
+                form.fill_color.value = this.Map.IconStyles[b].fill_color;
+                form.fill_opacity.value = this.Map.IconStyles[b].fill_opacity;
     
       			// custom menu options and a pretty button
            		var mytable = $('iconstyleformdata_'+editIconStyleId);
@@ -622,7 +632,7 @@ BitMap.Edit.editIconStyles = function(Map){
 //					mycel.getElementsByTagName("select").item(0).onchange = "javascript:toggleIconMenu(this.value, "+editIconStyleId+");";
 
 					mycel = myrow.getElementsByTagName("td").item(6);
-					mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storeIconStyle(document.iconstyleform_"+editIconStyleId+");";
+					mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storeIconStyle(document.iconstyleform_"+editIconStyleId+");";
 
 					mytablebody.getElementsByTagName("tr").item(1).id = "gicon_style_head_"+editIconStyleId;
 					mytablebody.getElementsByTagName("tr").item(2).id = "gicon_style_menu1_"+editIconStyleId;
@@ -634,10 +644,10 @@ BitMap.Edit.editIconStyles = function(Map){
 }
 
 
-BitMap.Edit.newMarkerStyle = function(Map){
+BitMap.Edit.prototype.newMarkerStyle = function(){
 		var check = false;
-  	for (var i=0; i<Map.MarkerSets.length; i++){
-  		if ( Map.MarkerSets[i] != null ){
+  	for (var i=0; i<this.Map.MarkerSets.length; i++){
+  		if ( this.Map.MarkerSets[i] != null ){
 				check = true;
   		}
   	}
@@ -648,7 +658,7 @@ BitMap.Edit.newMarkerStyle = function(Map){
 			BitMap.show('editerror');
   		Fat.fade_all();
   		//display new marker set form
-      BitMap.Edit.newMarkerSet();
+      this.newMarkerSet();
 
 		}else{
       // Display the New Marker Style Div
@@ -660,19 +670,19 @@ BitMap.Edit.newMarkerStyle = function(Map){
 }
 
 
-BitMap.Edit.editMarkerStyles = function(Map){
+BitMap.Edit.prototype.editMarkerStyles = function(){
 		BitMap.show('editmarkerstylesmenu');
 		BitMap.show('editmarkerstyleform');
 		BitMap.show('editmarkerstylescancel');
 
 		//if markerstyles data exists
-		if ( typeof( Map.MarkerStyles ) ) {
+		if ( typeof( this.Map.MarkerStyles ) ) {
 
   	// We assume editMarkerStyles has been called before and remove 
   	// any previously existing sets from the UI
-  	for (var a=0; a<Map.MarkerStyles.length; a++) {
-  		if ( Map.MarkerStyles[a]!= null ){
-    		var getElem = "editmarkerstyletable_" + Map.MarkerStyles[a].style_id;
+  	for (var a=0; a<this.Map.MarkerStyles.length; a++) {
+  		if ( this.Map.MarkerStyles[a]!= null ){
+    		var getElem = "editmarkerstyletable_" + this.Map.MarkerStyles[a].style_id;
     		if ( $(getElem) ) {
         	var extraMarkerStyleForm = $(getElem);
     			$('editmarkerstyleform').removeChild(extraMarkerStyleForm);
@@ -684,10 +694,10 @@ BitMap.Edit.editMarkerStyles = function(Map){
 
 		var x = 0;
   	// for each markerstyle data set clone the form
-  	for (var b=0; b<Map.MarkerStyles.length; b++) {
-    	if ( Map.MarkerStyles[b]!= null ){  						
+  	for (var b=0; b<this.Map.MarkerStyles.length; b++) {
+    	if ( this.Map.MarkerStyles[b]!= null ){  						
 				x++
-    		editMarkerStyleId = Map.MarkerStyles[b].style_id;
+    		editMarkerStyleId = this.Map.MarkerStyles[b].style_id;
 
     		// clone the form container
   			var newMarkerStyle = $('editmarkerstyletable_n').cloneNode(true);
@@ -722,18 +732,18 @@ BitMap.Edit.editMarkerStyles = function(Map){
   			// populate set form values
   			form = $('markerstyleform_' + editMarkerStyleId );
 
-            form.style_id.value = Map.MarkerStyles[b].style_id;
+            form.style_id.value = this.Map.MarkerStyles[b].style_id;
             form.style_array_n.value = b;
-            form.name.value = Map.MarkerStyles[b].name;
+            form.name.value = this.Map.MarkerStyles[b].name;
             for (var r=0; r < 3; r++) {
-               if (form.marker_style_type.options[r].value == Map.MarkerStyles[b].marker_style_type){
+               if (form.marker_style_type.options[r].value == this.Map.MarkerStyles[b].marker_style_type){
                		form.marker_style_type.options[r].selected=true;
                }
             };
-            form.label_hover_opacity.value = Map.MarkerStyles[b].label_hover_opacity;
-            form.label_opacity.value = Map.MarkerStyles[b].label_opacity;
-            form.label_hover_styles.value = Map.MarkerStyles[b].label_hover_styles;
-            form.window_styles.value = Map.MarkerStyles[b].window_styles;
+            form.label_hover_opacity.value = this.Map.MarkerStyles[b].label_hover_opacity;
+            form.label_opacity.value = this.Map.MarkerStyles[b].label_opacity;
+            form.label_hover_styles.value = this.Map.MarkerStyles[b].label_hover_styles;
+            form.window_styles.value = this.Map.MarkerStyles[b].window_styles;
 
   			// just for a pretty button - js sucks it!
 	/*
@@ -750,7 +760,7 @@ BitMap.Edit.editMarkerStyles = function(Map){
            	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
    			var myrow = mytablebody.getElementsByTagName("tr").item(0);
            	var mycel = myrow.getElementsByTagName("td").item(6);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storeMarkerStyle(document.markerstyleform_"+editMarkerStyleId+");";
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storeMarkerStyle(document.markerstyleform_"+editMarkerStyleId+");";
   		}
 		}
 	}
@@ -763,10 +773,10 @@ BitMap.Edit.editMarkerStyles = function(Map){
  *
  *******************/
 
-BitMap.Edit.newPolyline = function(Map){
+BitMap.Edit.prototype.newPolyline = function(){
 		var check = false;
-  	for (var i=0; i<Map.PolylineSets.length; i++){
-  		if ( Map.PolylineSets[i] != null ){
+  	for (var i=0; i<this.Map.PolylineSets.length; i++){
+  		if ( this.Map.PolylineSets[i] != null ){
 				check = true;
   		}
   	}
@@ -777,7 +787,7 @@ BitMap.Edit.newPolyline = function(Map){
 			BitMap.show('editerror');
   		Fat.fade_all();
   		//display new polyline set form
-      BitMap.Edit.newPolylineSet();
+      this.newPolylineSet();
 
 		}else{
       // Display the New Form Div and Cancel Button
@@ -791,10 +801,10 @@ BitMap.Edit.newPolyline = function(Map){
   		selectRoot.options.length = 0;
   
   		// add option for each set available
-  		if ( typeof(Map.PolylineSets) != 'undefined' ){
-    			for ( i=0; i<Map.PolylineSets.length; i++ ){
-  						if ( Map.PolylineSets[i] != null ){
-                 	selectRoot.options[selectRoot.options.length] = new Option( Map.PolylineSets[i].name, Map.PolylineSets[i].set_id );
+  		if ( typeof(this.Map.PolylineSets) != 'undefined' ){
+    			for ( i=0; i<this.Map.PolylineSets.length; i++ ){
+  						if ( this.Map.PolylineSets[i] != null ){
+                 	selectRoot.options[selectRoot.options.length] = new Option( this.Map.PolylineSets[i].name, this.Map.PolylineSets[i].set_id );
   						}
     			}
   		}
@@ -803,7 +813,7 @@ BitMap.Edit.newPolyline = function(Map){
 
 
 
-BitMap.Edit.newPolylineSet = function(){
+BitMap.Edit.prototype.newPolylineSet = function(){
     // Display the New Form Div
    	BitMap.show('newpolylinesetform');
 		// Reset the Form
@@ -813,19 +823,19 @@ BitMap.Edit.newPolylineSet = function(){
 
 
 /* @todo needs to support markers in bSLData as well as Map.Polylines */
-BitMap.Edit.editPolylines = function(Map){
+BitMap.Edit.prototype.editPolylines = function(){
 	BitMap.show('editpolylinemenu');
   BitMap.show('editpolylineform');
 	BitMap.show('editpolylinecancel');
 	
 	//if polyline data exists
-	if ( typeof(Map.Polylines) ) {
+	if ( typeof(this.Map.Polylines) ) {
 	
   	// We assume editPolylines has been called before and remove 
   	// any previously existing sets from the UI
-  	for (var a=0; a<Map.PolylineSets.length; a++) {
-  		if (Map.PolylineSets[a]!= null){
-    		var getElem = "polylineset_"+Map.PolylineSets[a].set_id;
+  	for (var a=0; a<this.Map.PolylineSets.length; a++) {
+  		if (this.Map.PolylineSets[a]!= null){
+    		var getElem = "polylineset_"+this.Map.PolylineSets[a].set_id;
     		if ( $(getElem) ) {
         	var extraPolylineForm = $(getElem);
     			$('editpolylineform').removeChild(extraPolylineForm);
@@ -836,10 +846,10 @@ BitMap.Edit.editPolylines = function(Map){
   	var newSetId;
   	  	
   	// add a new set UI for each marker set
-  	for (var b=0; b<Map.PolylineSets.length; b++) {
-  	if (Map.PolylineSets[b]!= null){
+  	for (var b=0; b<this.Map.PolylineSets.length; b++) {
+  	if (this.Map.PolylineSets[b]!= null){
 		  	
-  		newSetId = Map.PolylineSets[b].set_id;
+  		newSetId = this.Map.PolylineSets[b].set_id;
   	
   		// clone model set UI
 			var newPolylineSet = $('polylineset_n').cloneNode(true);
@@ -890,30 +900,30 @@ BitMap.Edit.editPolylines = function(Map){
            	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
    			var myrow = mytablebody.getElementsByTagName("tr").item(0);
            	var mycel = myrow.getElementsByTagName("td").item(0);
-   			mycel.getElementsByTagName("b").item(0).innerHTML = Map.PolylineSets[b].name;
+   			mycel.getElementsByTagName("b").item(0).innerHTML = this.Map.PolylineSets[b].name;
            	mycel = myrow.getElementsByTagName("td").item(5);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storePolylineSet(document.polylinesetform_"+newSetId+");";
-   			mycel.getElementsByTagName("a").item(1).href = "javascript:BitMap.Edit.removePolylineSet(document.polylinesetform_"+newSetId+");";
-   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.Edit.expungePolylineSet(document.polylinesetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storePolylineSet(document.polylinesetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.removePolylineSet(document.polylinesetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.EditSession.expungePolylineSet(document.polylinesetform_"+newSetId+");";
 
    			myrow = mytablebody.getElementsByTagName("tr").item(1);
    			mycel = myrow.getElementsByTagName("td").item(0);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.editPolylineSet("+newSetId+");";
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editPolylineSet("+newSetId+");";
   			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
 
 				//get form and update values
 				form = $('polylinesetform_'+newSetId);
 				form.set_id.value = newSetId;
-				if (Map.PolylineSets[b].plot_on_load == false){ form.plot_on_load.options[1].selected=true; };
-				if (Map.PolylineSets[b].side_panel == false){ form.side_panel.options[1].selected=true; };
-				if (Map.PolylineSets[b].explode == false){ form.explode.options[1].selected=true };
+				if (this.Map.PolylineSets[b].plot_on_load == false){ form.plot_on_load.options[1].selected=true; };
+				if (this.Map.PolylineSets[b].side_panel == false){ form.side_panel.options[1].selected=true; };
+				if (this.Map.PolylineSets[b].explode == false){ form.explode.options[1].selected=true };
 				form.set_array_n.value = b;
-				if ( (typeof(Map.PolylineStyles) != 'undefined') && (Map.PolylineStyles.length > 0) ){
+				if ( (typeof(this.Map.PolylineStyles) != 'undefined') && (this.Map.PolylineStyles.length > 0) ){
 					var OptionN = form.style_id.options.length;
-  				for (var d=0; d<Map.PolylineStyles.length; d++){
-						if ( Map.PolylineStyles[d] != null ){
-							form.style_id.options[OptionN + d] = new Option( Map.PolylineStyles[d].name, Map.PolylineStyles[d].style_id );
-							if ( Map.PolylineStyles[d].style_id == Map.PolylineSets[b].style_id){
+  				for (var d=0; d<this.Map.PolylineStyles.length; d++){
+						if ( this.Map.PolylineStyles[d] != null ){
+							form.style_id.options[OptionN + d] = new Option( this.Map.PolylineStyles[d].name, this.Map.PolylineStyles[d].style_id );
+							if ( this.Map.PolylineStyles[d].style_id == this.Map.PolylineSets[b].style_id){
 							form.style_id.options[OptionN + d].selected=true;
 							}
   					}
@@ -924,11 +934,11 @@ BitMap.Edit.editPolylines = function(Map){
 
   	//for length of polylines add form to setelement on matching set_id
 		var x = 0;
-  	for (g=0; g<Map.Polylines.length; g++) {
-			if (Map.Polylines[g]!= null){
+  	for (g=0; g<this.Map.Polylines.length; g++) {
+			if (this.Map.Polylines[g]!= null){
 				x++;
 				//add polyline form...again a little ugly here
-				var formCont = $("editpolylinetable_"+Map.Polylines[g].set_id);
+				var formCont = $("editpolylinetable_"+this.Map.Polylines[g].set_id);
   			formContKids = formCont.childNodes;
             for (var n = 0; n < formContKids.length; n++) {
       			if (formContKids[n].id == "polylineform_n"){
@@ -947,7 +957,7 @@ BitMap.Edit.editPolylines = function(Map){
     					}
     				}
     							
-        			$('editpolylinetable_'+Map.Polylines[g].set_id).appendChild(newPolylineForm);
+        			$('editpolylinetable_'+this.Map.Polylines[g].set_id).appendChild(newPolylineForm);
     				BitMap.show('polylineform_'+g);
     			}
     		}
@@ -955,26 +965,26 @@ BitMap.Edit.editPolylines = function(Map){
 				// populate set form values
 				form = $('polylineform_'+g);
 
-            form.set_id.value = Map.Polylines[g].set_id;
-            form.polyline_id.value = Map.Polylines[g].polyline_id;
-            form.name.value = Map.Polylines[g].name;
-            form.points_data.value = Map.Polylines[g].points_data;
-            form.border_text.value = Map.Polylines[g].border_text;
-            form.zindex.value = Map.Polylines[g].zindex;
-            form.polyline_array_n.value = Map.Polylines[g].array_n;
+            form.set_id.value = this.Map.Polylines[g].set_id;
+            form.polyline_id.value = this.Map.Polylines[g].polyline_id;
+            form.name.value = this.Map.Polylines[g].name;
+            form.points_data.value = this.Map.Polylines[g].points_data;
+            form.border_text.value = this.Map.Polylines[g].border_text;
+            form.zindex.value = this.Map.Polylines[g].zindex;
+            form.polyline_array_n.value = this.Map.Polylines[g].array_n;
 				
 				// just for a pretty button - js sucks it!
            	var mytable = $('polylineformdata_'+g);
            	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
    			var myrow = mytablebody.getElementsByTagName("tr").item(0);
            	var mycel = myrow.getElementsByTagName("td").item(1);
-				mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.addAssistant('polyline', "+g+");";
+				mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.addAssistant('polyline', "+g+");";
 
 				mycel = myrow.getElementsByTagName("td").item(4);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storePolyline(document.polylineform_"+g+");";
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storePolyline(document.polylineform_"+g+");";
    			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
-   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.Edit.removePolyline(document.polylineform_"+g+");";
-   			mycel.getElementsByTagName("a").item(3).href = "javascript:BitMap.Edit.expungePolyline(document.polylineform_"+g+");";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.EditSession.removePolyline(document.polylineform_"+g+");";
+   			mycel.getElementsByTagName("a").item(3).href = "javascript:BitMap.EditSession.expungePolyline(document.polylineform_"+g+");";
 			}
 		}		
 	}
@@ -982,33 +992,33 @@ BitMap.Edit.editPolylines = function(Map){
 
 
 
-BitMap.Edit.editPolylineSet = function(n){
+BitMap.Edit.prototype.editPolylineSet = function(n){
 		BitMap.show('plsetform_'+n);
 }
 
 
-BitMap.Edit.cancelPolylineEdit = function(){
-		BitMap.Edit.canceledit('editpolylinemenu'); 
-		BitMap.Edit.canceledit('newpolylineform');
-		BitMap.Edit.canceledit('editpolylineform'); 
-		BitMap.Edit.canceledit('editpolylinecancel');
-		BitMap.Edit.removeAssistant();
+BitMap.Edit.prototype.cancelPolylineEdit = function(){
+		this.canceledit('editpolylinemenu'); 
+		this.canceledit('newpolylineform');
+		this.canceledit('editpolylineform'); 
+		this.canceledit('editpolylinecancel');
+		this.removeAssistant();
 }; 
 
 
-BitMap.Edit.editPolylineStyles = function(Map){
+BitMap.Edit.prototype.editPolylineStyles = function(){
 		BitMap.show('editpolylinestylesmenu');
 		BitMap.show('editpolylinestyleform');
 		BitMap.show('editpolylinestylescancel');
 
   	//if polylinestyles data exists
-  	if ( typeof( Map.PolylineStyles ) ) {
+  	if ( typeof( this.Map.PolylineStyles ) ) {
   
     	// We assume editPolylineStyles has been called before and remove 
     	// any previously existing sets from the UI
-    	for (var a=0; a<Map.PolylineStyles.length; a++) {
-    		if ( Map.PolylineStyles[a]!= null ){
-      			var getElem = "editpolylinestyletable_" + Map.PolylineStyles[a].style_id;
+    	for (var a=0; a<this.Map.PolylineStyles.length; a++) {
+    		if ( this.Map.PolylineStyles[a]!= null ){
+      			var getElem = "editpolylinestyletable_" + this.Map.PolylineStyles[a].style_id;
         		if ( $(getElem) ) {
             		var extraPolylineStyleForm = $(getElem);
         			$('editpolylinestyleform').removeChild(extraPolylineStyleForm);
@@ -1020,10 +1030,10 @@ BitMap.Edit.editPolylineStyles = function(Map){
   
     	// for each markerstyle data set clone the form
 			var x = 0;
-    	for (var b=0; b<Map.PolylineStyles.length; b++) {
-        	if ( Map.PolylineStyles[b]!= null ){  						
+    	for (var b=0; b<this.Map.PolylineStyles.length; b++) {
+        	if ( this.Map.PolylineStyles[b]!= null ){  						
 					x++;    
-        		editPolylineStyleId = Map.PolylineStyles[b].style_id;
+        		editPolylineStyleId = this.Map.PolylineStyles[b].style_id;
     
         		// clone the form container
       			var newPolylineStyle = $('editpolylinestyletable_n').cloneNode(true);
@@ -1059,60 +1069,60 @@ BitMap.Edit.editPolylineStyles = function(Map){
       			form = $('polylinestyleform_' + editPolylineStyleId );
     
                 form.style_array_n.value = b;
-                form.style_id.value = Map.PolylineStyles[b].style_id;
-                form.name.value = Map.PolylineStyles[b].name;
+                form.style_id.value = this.Map.PolylineStyles[b].style_id;
+                form.name.value = this.Map.PolylineStyles[b].name;
                 for (var r=0; r < 2; r++) {
-                   if (form.polyline_style_type.options[r].value == Map.PolylineStyles[b].polyline_style_type){
+                   if (form.polyline_style_type.options[r].value == this.Map.PolylineStyles[b].polyline_style_type){
                    		form.polyline_style_type.options[r].selected=true;
                    }
                 };
-                form.color.value = Map.PolylineStyles[b].color;
-                form.weight.value = Map.PolylineStyles[b].weight;
-                form.opacity.value = Map.PolylineStyles[b].opacity;
-                form.pattern.value = Map.PolylineStyles[b].pattern;
-                form.segment_count.value = Map.PolylineStyles[b].segment_count;
-                form.text_every.value = Map.PolylineStyles[b].text_every;
-                if (Map.PolylineStyles[b].begin_arrow == false){
+                form.color.value = this.Map.PolylineStyles[b].color;
+                form.weight.value = this.Map.PolylineStyles[b].weight;
+                form.opacity.value = this.Map.PolylineStyles[b].opacity;
+                form.pattern.value = this.Map.PolylineStyles[b].pattern;
+                form.segment_count.value = this.Map.PolylineStyles[b].segment_count;
+                form.text_every.value = this.Map.PolylineStyles[b].text_every;
+                if (this.Map.PolylineStyles[b].begin_arrow == false){
                 	form.begin_arrow.options[0].selected=true;
                 }else{
                 	form.begin_arrow.options[1].selected=true;
 					}
-                if (Map.PolylineStyles[b].end_arrow == false){
+                if (this.Map.PolylineStyles[b].end_arrow == false){
                 	form.end_arrow.options[0].selected=true;
                 }else{
                 	form.end_arrow.options[1].selected=true;
                 }
-                form.arrows_every.value = Map.PolylineStyles[b].arrows_every;
-                form.text_fgstyle_color.value = Map.PolylineStyles[b].text_fgstyle_color;
-                form.text_fgstyle_weight.value = Map.PolylineStyles[b].text_fgstyle_weight;
-                form.text_fgstyle_opacity.value = Map.PolylineStyles[b].text_fgstyle_opacity;
-                form.text_fgstyle_zindex.value = Map.PolylineStyles[b].text_fgstyle_zindex;
-                form.text_bgstyle_color.value = Map.PolylineStyles[b].text_bgstyle_color;
-                form.text_bgstyle_weight.value = Map.PolylineStyles[b].text_bgstyle_weight;
-                form.text_bgstyle_opacity.value = Map.PolylineStyles[b].text_bgstyle_opacity;
-                form.text_bgstyle_zindex.value = Map.PolylineStyles[b].text_bgstyle_zindex;
+                form.arrows_every.value = this.Map.PolylineStyles[b].arrows_every;
+                form.text_fgstyle_color.value = this.Map.PolylineStyles[b].text_fgstyle_color;
+                form.text_fgstyle_weight.value = this.Map.PolylineStyles[b].text_fgstyle_weight;
+                form.text_fgstyle_opacity.value = this.Map.PolylineStyles[b].text_fgstyle_opacity;
+                form.text_fgstyle_zindex.value = this.Map.PolylineStyles[b].text_fgstyle_zindex;
+                form.text_bgstyle_color.value = this.Map.PolylineStyles[b].text_bgstyle_color;
+                form.text_bgstyle_weight.value = this.Map.PolylineStyles[b].text_bgstyle_weight;
+                form.text_bgstyle_opacity.value = this.Map.PolylineStyles[b].text_bgstyle_opacity;
+                form.text_bgstyle_zindex.value = this.Map.PolylineStyles[b].text_bgstyle_zindex;
     
       			// just for a pretty button - js sucks it!
            		var mytable = $('polylinestyleformdata_'+editPolylineStyleId);
            		var mytablebody = mytable.getElementsByTagName("tbody").item(0);
    				var myrow = mytablebody.getElementsByTagName("tr").item(0);
            		var mycel = myrow.getElementsByTagName("td").item(5);
-					mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storePolylineStyle(document.polylinestyleform_"+editPolylineStyleId+");";
+					mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storePolylineStyle(document.polylinestyleform_"+editPolylineStyleId+");";
       		}
   		}
   	}
 };
 
 
-BitMap.Edit.newPolylineStyle = function(Map){
+BitMap.Edit.prototype.newPolylineStyle = function(){
 		var check = false;
-  	for (var i=0; i<Map.PolylineSets.length; i++){
-  		if ( Map.PolylineSets[i] != null ){
+  	for (var i=0; i<this.Map.PolylineSets.length; i++){
+  		if ( this.Map.PolylineSets[i] != null ){
 				check = true;
   		}
   	}
-  	for (var i=0; i<Map.PolygonSets.length; i++){
-  		if ( Map.PolygonSets[i] != null ){
+  	for (var i=0; i<this.Map.PolygonSets.length; i++){
+  		if ( this.Map.PolygonSets[i] != null ){
 				check = true;
   		}
   	}
@@ -1123,7 +1133,7 @@ BitMap.Edit.newPolylineStyle = function(Map){
 			BitMap.show('editerror');
   		Fat.fade_all();
   		//display new polyline set form
-      BitMap.Edit.newPolylineSet();
+      this.newPolylineSet();
 
 		}else{
       // Display the New Polyline Style Div
@@ -1144,10 +1154,10 @@ BitMap.Edit.newPolylineStyle = function(Map){
  *
  *******************/
 
-BitMap.Edit.newPolygon = function(Map){
+BitMap.Edit.prototype.newPolygon = function(){
 		var check = false;
-  	for (var i=0; i<Map.PolygonSets.length; i++){
-  		if ( Map.PolygonSets[i] != null ){
+  	for (var i=0; i<this.Map.PolygonSets.length; i++){
+  		if ( this.Map.PolygonSets[i] != null ){
 				check = true;
   		}
   	}
@@ -1158,7 +1168,7 @@ BitMap.Edit.newPolygon = function(Map){
 			BitMap.show('editerror');
   		Fat.fade_all();
   		//display new polygon set form
-      BitMap.Edit.newPolygonSet();
+      this.newPolygonSet();
 
 		}else{
       // Display the New Form Div and Cancel Button
@@ -1172,10 +1182,10 @@ BitMap.Edit.newPolygon = function(Map){
   		selectRoot.options.length = 0;
   
   		// add option for each set available
-  		if ( typeof(Map.PolygonSets) != 'undefined' ){
-    			for ( i=0; i<Map.PolygonSets.length; i++ ){
-  						if ( Map.PolygonSets[i] != null ){
-                 	selectRoot.options[selectRoot.options.length] = new Option( Map.PolygonSets[i].name, Map.PolygonSets[i].set_id );
+  		if ( typeof(this.Map.PolygonSets) != 'undefined' ){
+    			for ( i=0; i<this.Map.PolygonSets.length; i++ ){
+  						if ( this.Map.PolygonSets[i] != null ){
+                 	selectRoot.options[selectRoot.options.length] = new Option( this.Map.PolygonSets[i].name, this.Map.PolygonSets[i].set_id );
   						}
     			}
   		}
@@ -1184,7 +1194,7 @@ BitMap.Edit.newPolygon = function(Map){
 
 
 
-BitMap.Edit.newPolygonSet = function(){
+BitMap.Edit.prototype.newPolygonSet = function(){
     // Display the New Form Div
    	BitMap.show('newpolygonsetform');
 		// Reset the Form
@@ -1196,19 +1206,19 @@ BitMap.Edit.newPolygonSet = function(){
 
 
 /* @todo needs to support markers in bSLData as well as Map.Polylines */
-BitMap.Edit.editPolygons = function(Map){
+BitMap.Edit.prototype.editPolygons = function(){
 	BitMap.show('editpolygonmenu');
   BitMap.show('editpolygonform');
 	BitMap.show('editpolygoncancel');
 	
 	//if polygon data exists
-	if ( typeof(Map.Polygons) ) {
+	if ( typeof(this.Map.Polygons) ) {
 
   	// We assume editPolygons has been called before and remove 
   	// any previously existing sets from the UI
-  	for (var a=0; a<Map.PolygonSets.length; a++) {
-  		if (Map.PolygonSets[a]!= null){
-    		var getElem = "polygonset_"+Map.PolygonSets[a].set_id;
+  	for (var a=0; a<this.Map.PolygonSets.length; a++) {
+  		if (this.Map.PolygonSets[a]!= null){
+    		var getElem = "polygonset_"+this.Map.PolygonSets[a].set_id;
     		if ( $(getElem) ) {
         	var extraPolygonForm = $(getElem);
     			$('editpolygonform').removeChild(extraPolygonForm);
@@ -1219,10 +1229,10 @@ BitMap.Edit.editPolygons = function(Map){
   	var newSetId;
   	  	
   	// add a new set UI for each marker set
-  	for (var b=0; b<Map.PolygonSets.length; b++) {
-  	if (Map.PolygonSets[b]!= null){
+  	for (var b=0; b<this.Map.PolygonSets.length; b++) {
+  	if (this.Map.PolygonSets[b]!= null){
 		  	
-  		newSetId = Map.PolygonSets[b].set_id;
+  		newSetId = this.Map.PolygonSets[b].set_id;
 
   		// clone model set UI
 			var newPolygonSet = $('polygonset_n').cloneNode(true);
@@ -1273,40 +1283,40 @@ BitMap.Edit.editPolygons = function(Map){
            	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
    			var myrow = mytablebody.getElementsByTagName("tr").item(0);
            	var mycel = myrow.getElementsByTagName("td").item(0);
-   			mycel.getElementsByTagName("b").item(0).innerHTML = Map.PolygonSets[b].name;
+   			mycel.getElementsByTagName("b").item(0).innerHTML = this.Map.PolygonSets[b].name;
            	mycel = myrow.getElementsByTagName("td").item(5);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storePolygonSet(document.polygonsetform_"+newSetId+");";
-   			mycel.getElementsByTagName("a").item(1).href = "javascript:BitMap.Edit.removePolygonSet(document.polygonsetform_"+newSetId+");";
-   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.Edit.expungePolygonSet(document.polygonsetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storePolygonSet(document.polygonsetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.removePolygonSet(document.polygonsetform_"+newSetId+");";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.EditSession.expungePolygonSet(document.polygonsetform_"+newSetId+");";
 
    			myrow = mytablebody.getElementsByTagName("tr").item(1);
    			mycel = myrow.getElementsByTagName("td").item(0);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.editPolygonSet("+newSetId+");";
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editPolygonSet("+newSetId+");";
   			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
 
 
 				//get form and update values
 				form = $('polygonsetform_'+newSetId);
 				form.set_id.value = newSetId;
-				if (Map.PolygonSets[b].plot_on_load == false){ form.plot_on_load.options[1].selected=true; };
-				if (Map.PolygonSets[b].side_panel == false){ form.side_panel.options[1].selected=true; };
-				if (Map.PolygonSets[b].explode == false){ form.explode.options[1].selected=true };
+				if (this.Map.PolygonSets[b].plot_on_load == false){ form.plot_on_load.options[1].selected=true; };
+				if (this.Map.PolygonSets[b].side_panel == false){ form.side_panel.options[1].selected=true; };
+				if (this.Map.PolygonSets[b].explode == false){ form.explode.options[1].selected=true };
 				form.set_array_n.value = b;
-				if ( (typeof(Map.PolygonStyles) != 'undefined') && (Map.PolygonStyles.length > 0) ){
+				if ( (typeof(this.Map.PolygonStyles) != 'undefined') && (this.Map.PolygonStyles.length > 0) ){
 					var OptionN = form.style_id.options.length;
-  				for (var d=0; d<Map.PolygonStyles.length; d++){
-						if ( Map.PolygonStyles[d] != null ){
-							form.style_id.options[OptionN + d] = new Option( Map.PolygonStyles[d].name, Map.PolygonStyles[d].style_id );
-							if ( Map.PolygonStyles[d].style_id == Map.PolygonSets[b].style_id){
+  				for (var d=0; d<this.Map.PolygonStyles.length; d++){
+						if ( this.Map.PolygonStyles[d] != null ){
+							form.style_id.options[OptionN + d] = new Option( this.Map.PolygonStyles[d].name, this.Map.PolygonStyles[d].style_id );
+							if ( this.Map.PolygonStyles[d].style_id == this.Map.PolygonSets[b].style_id){
 								form.style_id.options[OptionN + d].selected=true;
 							}
   					}
   				}
 					var OptionO = form.polylinestyle_id.options.length;
-  				for (var e=0; e<Map.PolylineStyles.length; e++){
-						if ( Map.PolylineStyles[e] != null ){
-							form.polylinestyle_id.options[OptionO + e] = new Option( Map.PolylineStyles[e].name, Map.PolylineStyles[e].style_id );
-							if ( Map.PolylineStyles[e].style_id == Map.PolygonSets[b].polylinestyle_id){
+  				for (var e=0; e<this.Map.PolylineStyles.length; e++){
+						if ( this.Map.PolylineStyles[e] != null ){
+							form.polylinestyle_id.options[OptionO + e] = new Option( this.Map.PolylineStyles[e].name, this.Map.PolylineStyles[e].style_id );
+							if ( this.Map.PolylineStyles[e].style_id == this.Map.PolygonSets[b].polylinestyle_id){
 								form.polylinestyle_id.options[OptionO + e].selected=true;
 							}
   					}
@@ -1317,11 +1327,11 @@ BitMap.Edit.editPolygons = function(Map){
 
   	//for length of polygons add form to setelement on matching set_id
 		x = 0;
-  	for (g=0; g<Map.Polygons.length; g++) {
-			if (Map.Polygons[g]!= null){
+  	for (g=0; g<this.Map.Polygons.length; g++) {
+			if (this.Map.Polygons[g]!= null){
 				x++;
 				//add polygon form...again a little ugly here
-				var formCont = $("editpolygontable_"+Map.Polygons[g].set_id);
+				var formCont = $("editpolygontable_"+this.Map.Polygons[g].set_id);
 
   			formContKids = formCont.childNodes;
 
@@ -1342,7 +1352,7 @@ BitMap.Edit.editPolygons = function(Map){
     					}
     				}
     							
-        			$('editpolygontable_'+Map.Polygons[g].set_id).appendChild(newPolygonForm);
+        			$('editpolygontable_'+this.Map.Polygons[g].set_id).appendChild(newPolygonForm);
     				BitMap.show('polygonform_'+g);
     			}
     		}
@@ -1350,33 +1360,33 @@ BitMap.Edit.editPolygons = function(Map){
 				// populate set form values
 				form = $('polygonform_'+g);
 
-            form.set_id.value = Map.Polygons[g].set_id;
-            form.polygon_id.value = Map.Polygons[g].polygon_id;
-            form.name.value = Map.Polygons[g].name;
-				if (Map.Polygons[g].circle == false){
+            form.set_id.value = this.Map.Polygons[g].set_id;
+            form.polygon_id.value = this.Map.Polygons[g].polygon_id;
+            form.name.value = this.Map.Polygons[g].name;
+				if (this.Map.Polygons[g].circle == false){
 					form.circle.options[0].selected=true;
 				}else{
 					form.circle.options[1].selected=true;
 				}
-            form.points_data.value = Map.Polygons[g].points_data;
-            form.circle_center.value = Map.Polygons[g].circle_center;
-            form.radius.value = Map.Polygons[g].radius;
-            form.border_text.value = Map.Polygons[g].border_text;
-            form.zindex.value = Map.Polygons[g].zindex;
-            form.polygon_array_n.value = Map.Polygons[g].array_n;
+            form.points_data.value = this.Map.Polygons[g].points_data;
+            form.circle_center.value = this.Map.Polygons[g].circle_center;
+            form.radius.value = this.Map.Polygons[g].radius;
+            form.border_text.value = this.Map.Polygons[g].border_text;
+            form.zindex.value = this.Map.Polygons[g].zindex;
+            form.polygon_array_n.value = this.Map.Polygons[g].array_n;
 				
 				// just for a pretty button - js sucks it!
            	var mytable = $('polygonformdata_'+g);
            	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
    			var myrow = mytablebody.getElementsByTagName("tr").item(0);
            	var mycel = myrow.getElementsByTagName("td").item(2);
-				mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.addAssistant('polygon', "+g+");";
+				mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.addAssistant('polygon', "+g+");";
 
 				mycel = myrow.getElementsByTagName("td").item(7);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storePolygon(document.polygonform_"+g+");";
+   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storePolygon(document.polygonform_"+g+");";
    			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
-   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.Edit.removePolygon(document.polygonform_"+g+");";
-   			mycel.getElementsByTagName("a").item(3).href = "javascript:BitMap.Edit.expungePolygon(document.polygonform_"+g+");";
+   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.EditSession.removePolygon(document.polygonform_"+g+");";
+   			mycel.getElementsByTagName("a").item(3).href = "javascript:BitMap.EditSession.expungePolygon(document.polygonform_"+g+");";
 			}
 		}		
 	}
@@ -1384,33 +1394,33 @@ BitMap.Edit.editPolygons = function(Map){
 
 
 
-BitMap.Edit.editPolygonSet = function(n){
+BitMap.Edit.prototype.editPolygonSet = function(n){
 		BitMap.show('pgsetform_'+n);
 }
 
 
-BitMap.Edit.cancelPolygonEdit = function(){
-		BitMap.Edit.canceledit('editpolygonmenu'); 
-		BitMap.Edit.canceledit('newpolygonform'); 
-		BitMap.Edit.canceledit('editpolygonform'); 
-		BitMap.Edit.canceledit('editpolygoncancel');
-		BitMap.Edit.removeAssistant();
+BitMap.Edit.prototype.cancelPolygonEdit = function(){
+		this.canceledit('editpolygonmenu'); 
+		this.canceledit('newpolygonform'); 
+		this.canceledit('editpolygonform'); 
+		this.canceledit('editpolygoncancel');
+		this.removeAssistant();
 }; 
 
 
-BitMap.Edit.editPolygonStyles = function(Map){
+BitMap.Edit.prototype.editPolygonStyles = function(){
 		BitMap.show('editpolygonstylesmenu');
 		BitMap.show('editpolygonstyleform');
 		BitMap.show('editpolygonstylescancel');
 
   	//if polygonstyles data exists
-  	if ( typeof( Map.PolygonStyles ) ) {
+  	if ( typeof( this.Map.PolygonStyles ) ) {
   
     	// We assume editPolygonStyles has been called before and remove 
     	// any previously existing sets from the UI
-    	for (var a=0; a<Map.PolygonStyles.length; a++) {
-    		if ( Map.PolygonStyles[a]!= null ){
-      			var getElem = "editpolygonstyletable_" + Map.PolygonStyles[a].style_id;
+    	for (var a=0; a<this.Map.PolygonStyles.length; a++) {
+    		if ( this.Map.PolygonStyles[a]!= null ){
+      			var getElem = "editpolygonstyletable_" + this.Map.PolygonStyles[a].style_id;
         		if ( $(getElem) ) {
             		var extraPolygonStyleForm = $(getElem);
         			$('editpolygonstyleform').removeChild(extraPolygonStyleForm);
@@ -1421,10 +1431,10 @@ BitMap.Edit.editPolygonStyles = function(Map){
     	var editPolygonStyleId;
   		var x=0;
     	// for each markerstyle data set clone the form
-    	for (var b=0; b<Map.PolygonStyles.length; b++) {
-        	if ( Map.PolygonStyles[b]!= null ){  						
+    	for (var b=0; b<this.Map.PolygonStyles.length; b++) {
+        	if ( this.Map.PolygonStyles[b]!= null ){  						
 					x++;    
-        		editPolygonStyleId = Map.PolygonStyles[b].style_id;
+        		editPolygonStyleId = this.Map.PolygonStyles[b].style_id;
 
         		// clone the form container
       			var newPolygonStyle = $('editpolygonstyletable_n').cloneNode(true);
@@ -1460,28 +1470,28 @@ BitMap.Edit.editPolygonStyles = function(Map){
       			form = $('polygonstyleform_' + editPolygonStyleId );
     
                 form.style_array_n.value = b;
-                form.style_id.value = Map.PolygonStyles[b].style_id;
-                form.name.value = Map.PolygonStyles[b].name;
-                form.color.value = Map.PolygonStyles[b].color;
-                form.weight.value = Map.PolygonStyles[b].weight;
-                form.opacity.value = Map.PolygonStyles[b].opacity;
+                form.style_id.value = this.Map.PolygonStyles[b].style_id;
+                form.name.value = this.Map.PolygonStyles[b].name;
+                form.color.value = this.Map.PolygonStyles[b].color;
+                form.weight.value = this.Map.PolygonStyles[b].weight;
+                form.opacity.value = this.Map.PolygonStyles[b].opacity;
  
       			// just for a pretty button - js sucks it!
            		var mytable = $('polygonstyleformdata_'+editPolygonStyleId);
            		var mytablebody = mytable.getElementsByTagName("tbody").item(0);
    				var myrow = mytablebody.getElementsByTagName("tr").item(0);
            		var mycel = myrow.getElementsByTagName("td").item(5);
-					mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.Edit.storePolygonStyle(document.polygonstyleform_"+editPolygonStyleId+");";
+					mycel.getElementsByTagName("a").item(0).href = "javascript:this.storePolygonStyle(document.polygonstyleform_"+editPolygonStyleId+");";
       		}
   		}
   	}
 };
 
 
-BitMap.Edit.newPolygonStyle = function(Map){
+BitMap.Edit.prototype.newPolygonStyle = function(){
 		var check = false;
-  	for (var i=0; i<Map.PolygonSets.length; i++){
-  		if ( Map.PolygonSets[i] != null ){
+  	for (var i=0; i<this.Map.PolygonSets.length; i++){
+  		if ( this.Map.PolygonSets[i] != null ){
 				check = true;
   		}
   	}
@@ -1492,7 +1502,7 @@ BitMap.Edit.newPolygonStyle = function(Map){
 			BitMap.show('editerror');
   		Fat.fade_all();
   		//display new polygon set form
-      BitMap.Edit.newPolygonSet();
+      this.newPolygonSet();
 
 		}else{
       // Display the New Polygon Style Div
@@ -1517,226 +1527,226 @@ BitMap.Edit.newPolygonStyle = function(Map){
 
    var http_request = false;
 	 
-	 BitMap.Edit.storeMap = function(f){
+	 BitMap.Edit.prototype.storeMap = function(f){
 			doSimpleXMLHttpRequest("edit.php", f).addCallback(updateMap); 
 	 }
 
-	 BitMap.Edit.storeNewMapType = function(f){
-	 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + bMapID;
+	 BitMap.Edit.prototype.storeNewMapType = function(f){
+	 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
 			doSimpleXMLHttpRequest(str).addCallback( addMapType ); 
 	 }
 
-	 BitMap.Edit.storeMapType = function(f){	 
-			BitMap.Edit.editObjectN = f.array_n.value;
-	 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + bMapID;
+	 BitMap.Edit.prototype.storeMapType = function(f){	 
+			this.editObjectN = f.array_n.value;
+	 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
 			doSimpleXMLHttpRequest(str).addCallback( updateMapType ); 
 	 }
 	 
-	 BitMap.Edit.removeMapType = function(f){
-			BitMap.Edit.editObjectN = f.array_n.value;
-			BitMap.Edit.editSetId = f.maptype_id.value;
-	 		var str = "edit_maptype.php?" + "maptype_id=" + editSetId + "&gmap_id=" + bMapID + "&remove_maptype=true";
+	 BitMap.Edit.prototype.removeMapType = function(f){
+			this.editObjectN = f.array_n.value;
+			this.editSetId = f.maptype_id.value;
+	 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMapType ); 
 	 }
 	 
-	 BitMap.Edit.expungeMapType = function(f){
-			BitMap.Edit.editObjectN = f.array_n.value;
-			BitMap.Edit.editSetId = f.maptype_id.value;
-	 		var str = "edit_maptype.php?" + "maptype_id=" + editSetId + "&expunge_maptype=true";
+	 BitMap.Edit.prototype.expungeMapType = function(f){
+			this.editObjectN = f.array_n.value;
+			this.editSetId = f.maptype_id.value;
+	 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMapType ); 
 	 }
 	 
-	 BitMap.Edit.storeNewMarker = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
+	 BitMap.Edit.prototype.storeNewMarker = function(f){
+			this.editSetId = f.set_id.value;
 	 		var str = "edit_marker.php?" + queryString(f) + "&save_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( addMarker ); 
 	 }
 	 
-	 BitMap.Edit.storeMarker = function(f){
-			BitMap.Edit.editObjectN = f.marker_array_n.value;
+	 BitMap.Edit.prototype.storeMarker = function(f){
+			this.editObjectN = f.marker_array_n.value;
 	 		var str = "edit_marker.php?" + queryString(f) + "&save_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateMarker ); 
 	 }
 	 
-	 BitMap.Edit.removeMarker = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-			BitMap.Edit.editMarkerId = f.marker_id.value;
-	 		var str = "edit_marker.php?set_id=" + editSetId + "&marker_id=" + editMarkerId + "&remove_marker=true";
+	 BitMap.Edit.prototype.removeMarker = function(f){
+			this.editSetId = f.set_id.value;
+			this.editMarkerId = f.marker_id.value;
+	 		var str = "edit_marker.php?set_id=" + this.editSetId + "&marker_id=" + this.editMarkerId + "&remove_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarker ); 
 	 }
 
-	 BitMap.Edit.expungeMarker = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-			BitMap.Edit.editMarkerId = f.marker_id.value;
-	 		var str = "edit_marker.php?marker_id=" + editMarkerId + "&expunge_marker=true";
+	 BitMap.Edit.prototype.expungeMarker = function(f){
+			this.editSetId = f.set_id.value;
+			this.editMarkerId = f.marker_id.value;
+	 		var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarker ); 
 	 }	 
 
-	 BitMap.Edit.storeNewMarkerSet = function(f){
-			BitMap.Edit.canceledit('editerror');
-	 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + bMapID;
+	 BitMap.Edit.prototype.storeNewMarkerSet = function(f){
+			this.canceledit('editerror');
+	 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
 			doSimpleXMLHttpRequest(str).addCallback( addMarkerSet ); 
 	 }
 
-	 BitMap.Edit.storeMarkerSet = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-			BitMap.Edit.editObjectN = f.set_array_n.value;
-	 		var str = "edit_markerset.php?" + queryString(f) + "&gmap_id=" + bMapID + "&save_markerset=true";
+	 BitMap.Edit.prototype.storeMarkerSet = function(f){
+			this.editSetId = f.set_id.value;
+			this.editObjectN = f.set_array_n.value;
+	 		var str = "edit_markerset.php?" + queryString(f) + "&gmap_id=" + this.Map.id + "&save_markerset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateMarkerSet ); 
 	 }
 
-	 BitMap.Edit.removeMarkerSet = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + bMapID + "&remove_markerset=true";
+	 BitMap.Edit.prototype.removeMarkerSet = function(f){
+			this.editSetId = f.set_id.value;
+			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarkerSet ); 
 	 }
 
-	 BitMap.Edit.expungeMarkerSet = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
+	 BitMap.Edit.prototype.expungeMarkerSet = function(f){
+			this.editSetId = f.set_id.value;
 			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarkerSet ); 
 	 }
 	 
-	 BitMap.Edit.storeNewMarkerStyle = function(f){
+	 BitMap.Edit.prototype.storeNewMarkerStyle = function(f){
 	 		var str = "edit_markerstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( addMarkerStyle ); 
 	 }
 
-	 BitMap.Edit.storeMarkerStyle = function(f){
-			BitMap.Edit.editObjectN = f.style_array_n.value;
+	 BitMap.Edit.prototype.storeMarkerStyle = function(f){
+			this.editObjectN = f.style_array_n.value;
 	 		var str = "edit_markerstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( updateMarkerStyle ); 
 	 }
 
-	 BitMap.Edit.storeNewIconStyle = function(f){
+	 BitMap.Edit.prototype.storeNewIconStyle = function(f){
 	 		var str = "edit_iconstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( addIconStyle ); 
 	 }
 
-	 BitMap.Edit.storeIconStyle = function(f){
-			BitMap.Edit.editObjectN = f.style_array_n.value;
+	 BitMap.Edit.prototype.storeIconStyle = function(f){
+			this.editObjectN = f.style_array_n.value;
 	 		var str = "edit_iconstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( updateIconStyle ); 
 	 }
 
-	 BitMap.Edit.storeNewPolyline = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
+	 BitMap.Edit.prototype.storeNewPolyline = function(f){
+			this.editSetId = f.set_id.value;
 	 		var str = "edit_polyline.php?" + queryString(f) + "&save_polyline=true";
 			doSimpleXMLHttpRequest(str).addCallback( addPolyline );
 	 }
 	 
-	 BitMap.Edit.storePolyline = function(f){
-			BitMap.Edit.editObjectN = f.polyline_array_n.value;
+	 BitMap.Edit.prototype.storePolyline = function(f){
+			this.editObjectN = f.polyline_array_n.value;
 			doSimpleXMLHttpRequest("edit_polyline.php", f).addCallback( updatePolyline );
 	 }
 	 
-	 BitMap.Edit.removePolyline = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-			BitMap.Edit.editPolylineId = f.polyline_id.value;
-	 		var str = "edit_polyline.php?set_id=" + editSetId + "&polyline_id=" + f.polyline_id.value + "&remove_polyline=true";
+	 BitMap.Edit.prototype.removePolyline = function(f){
+			this.editSetId = f.set_id.value;
+			this.editPolylineId = f.polyline_id.value;
+	 		var str = "edit_polyline.php?set_id=" + this.editSetId + "&polyline_id=" + f.polyline_id.value + "&remove_polyline=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolyline );
 	 }
 
-	 BitMap.Edit.expungePolyline = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-			BitMap.Edit.editPolylineId = f.polyline_id.value;
+	 BitMap.Edit.prototype.expungePolyline = function(f){
+			this.editSetId = f.set_id.value;
+			this.editPolylineId = f.polyline_id.value;
 	 		var str = "edit_polyline.php?polyline_id=" + f.polyline_id.value + "&expunge_polyline=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolyline );
 	 }	 
 	 
-	 BitMap.Edit.storeNewPolylineSet = function(f){
-			BitMap.Edit.canceledit('editerror');
-	 		var str = "edit_polylineset.php?" + queryString(f) + "&set_type=polylines" + "&gmap_id=" + bMapID;
+	 BitMap.Edit.prototype.storeNewPolylineSet = function(f){
+			this.canceledit('editerror');
+	 		var str = "edit_polylineset.php?" + queryString(f) + "&set_type=polylines" + "&gmap_id=" + this.Map.id;
 			doSimpleXMLHttpRequest(str).addCallback( addPolylineSet );
 	 }
 
-	 BitMap.Edit.storePolylineSet = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-			BitMap.Edit.editObjectN = f.set_array_n.value;
-	 		var str = "edit_polylineset.php?" + queryString(f) + "&gmap_id=" + bMapID + "&save_polylineset=true";
+	 BitMap.Edit.prototype.storePolylineSet = function(f){
+			this.editSetId = f.set_id.value;
+			this.editObjectN = f.set_array_n.value;
+	 		var str = "edit_polylineset.php?" + queryString(f) + "&gmap_id=" + this.Map.id + "&save_polylineset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updatePolylineSet );
 	 }
 
-	 BitMap.Edit.removePolylineSet = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-	 		var str = "edit_polylineset.php?set_id=" + f.set_id.value + "&gmap_id=" + bMapID + "&remove_polylineset=true";
+	 BitMap.Edit.prototype.removePolylineSet = function(f){
+			this.editSetId = f.set_id.value;
+	 		var str = "edit_polylineset.php?set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polylineset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolylineSet );
 	 }
 	 
-	 BitMap.Edit.expungePolylineSet = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
+	 BitMap.Edit.prototype.expungePolylineSet = function(f){
+			this.editSetId = f.set_id.value;
 	 		var str = "edit_polylineset.php?set_id=" + f.set_id.value + "&expunge_polylineset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolylineSet );
 	 }
 
-	 BitMap.Edit.storeNewPolylineStyle = function(f){
+	 BitMap.Edit.prototype.storeNewPolylineStyle = function(f){
 	 		var str = "edit_polylinestyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( addPolylineStyle ); 
 	 }
 
-	 BitMap.Edit.storePolylineStyle = function(f){
-			BitMap.Edit.editObjectN = f.style_array_n.value;
+	 BitMap.Edit.prototype.storePolylineStyle = function(f){
+			this.editObjectN = f.style_array_n.value;
 	 		var str = "edit_polylinestyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( updatePolylineStyle ); 
 	 }
 	 
-	 BitMap.Edit.storeNewPolygon = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
+	 BitMap.Edit.prototype.storeNewPolygon = function(f){
+			this.editSetId = f.set_id.value;
 	 		var str = "edit_polygon.php?" + queryString(f) + "&save_polygon=true";
 			doSimpleXMLHttpRequest(str).addCallback( addPolygon );
 	 }
 	 
-	 BitMap.Edit.storePolygon = function(f){
-			BitMap.Edit.editObjectN = f.polygon_array_n.value;
+	 BitMap.Edit.prototype.storePolygon = function(f){
+			this.editObjectN = f.polygon_array_n.value;
 			doSimpleXMLHttpRequest("edit_polygon.php", f).addCallback( updatePolygon );
 	 }
 	 
-	 BitMap.Edit.removePolygon = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-			BitMap.Edit.editPolygonId = f.polygon_id.value;
-	 		var str = "edit_polygon.php?set_id=" + editSetId + "&polygon_id=" + f.polygon_id.value + "&remove_polygon=true";
+	 BitMap.Edit.prototype.removePolygon = function(f){
+			this.editSetId = f.set_id.value;
+			this.editPolygonId = f.polygon_id.value;
+	 		var str = "edit_polygon.php?set_id=" + this.editSetId + "&polygon_id=" + f.polygon_id.value + "&remove_polygon=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygon );
 	 }
 
-	 BitMap.Edit.expungePolygon = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-			BitMap.Edit.editPolygonId = f.polygon_id.value;
+	 BitMap.Edit.prototype.expungePolygon = function(f){
+			this.editSetId = f.set_id.value;
+			this.editPolygonId = f.polygon_id.value;
 	 		var str = "edit_polygon.php?polygon_id=" + f.polygon_id.value + "&expunge_polygon=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygon );
 	 }	 
 	 
-	 BitMap.Edit.storeNewPolygonSet = function(f){
-			BitMap.Edit.canceledit('editerror');
-	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + bMapID;
+	 BitMap.Edit.prototype.storeNewPolygonSet = function(f){
+			this.canceledit('editerror');
+	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
 			doSimpleXMLHttpRequest(str).addCallback( addPolygonSet );
 	 }
 
-	 BitMap.Edit.storePolygonSet = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-			BitMap.Edit.editObjectN = f.set_array_n.value;
-	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + bMapID + "&save_polygonset=true";
+	 BitMap.Edit.prototype.storePolygonSet = function(f){
+			this.editSetId = f.set_id.value;
+			this.editObjectN = f.set_array_n.value;
+	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + this.Map.id + "&save_polygonset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updatePolygonSet );
 	 }
 
-	 BitMap.Edit.removePolygonSet = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
-	 		var str = "edit_polygonset.php?set_id=" + f.set_id.value + "&gmap_id=" + bMapID + "&remove_polygonset=true";
+	 BitMap.Edit.prototype.removePolygonSet = function(f){
+			this.editSetId = f.set_id.value;
+	 		var str = "edit_polygonset.php?set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polygonset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygonSet );
 	 }
 	 
-	 BitMap.Edit.expungePolygonSet = function(f){
-			BitMap.Edit.editSetId = f.set_id.value;
+	 BitMap.Edit.prototype.expungePolygonSet = function(f){
+			this.editSetId = f.set_id.value;
 	 		var str = "edit_polygonset.php?set_id=" + f.set_id.value + "&expunge_polygonset=true";
 			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygonSet );
 	 }
 
-	 BitMap.Edit.storeNewPolygonStyle = function(f){
+	 BitMap.Edit.prototype.storeNewPolygonStyle = function(f){
 	 		var str = "edit_polygonstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( addPolygonStyle ); 
 	 }
 
-	 BitMap.Edit.storePolygonStyle = function(f){
-			BitMap.Edit.editObjectN = f.style_array_n.value;
+	 BitMap.Edit.prototype.storePolygonStyle = function(f){
+			this.editObjectN = f.style_array_n.value;
 	 		var str = "edit_polygonstyle.php?" + queryString(f);
 			doSimpleXMLHttpRequest(str).addCallback( updatePolygonStyle ); 
 	 }
@@ -1768,266 +1778,254 @@ BitMap.Edit.newPolygonStyle = function(Map){
  *
  *******************/	 
 	 
-	 BitMap.Edit.updateMap = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-	 
+	 BitMap.Edit.prototype.updateMap = function(rslt){
       var xml = rslt.responseXML;
 			
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('gmap_id');
-			Map.id = id[0].firstChild.nodeValue;			
+			this.Map.id = id[0].firstChild.nodeValue;			
  			var t = xml.documentElement.getElementsByTagName('title');
-			Map.title = t[0].firstChild.nodeValue;
+			this.Map.title = t[0].firstChild.nodeValue;
 			var d = xml.documentElement.getElementsByTagName('desc');
-			Map.description = d[0].firstChild.nodeValue;
+			this.Map.description = d[0].firstChild.nodeValue;
 			var dt = xml.documentElement.getElementsByTagName('data');
 			var data = dt[0].firstChild.nodeValue;
-	 		Map.data = data;
+	 		this.Map.data = data;
 			var pdt = xml.documentElement.getElementsByTagName('parsed_data');
 			var parsed_data = pdt[0].firstChild.nodeValue;
-	 		Map.parsed_data = parsed_data;
+	 		this.Map.parsed_data = parsed_data;
 			var w = xml.documentElement.getElementsByTagName('w');
-			Map.width = w[0].firstChild.nodeValue;
+			this.Map.width = w[0].firstChild.nodeValue;
 			var h = xml.documentElement.getElementsByTagName('h');
-			Map.height = h[0].firstChild.nodeValue;			
+			this.Map.height = h[0].firstChild.nodeValue;			
 			var lt = xml.documentElement.getElementsByTagName('lat');
-			Map.lat = parseFloat(lt[0].firstChild.nodeValue);
+			this.Map.lat = parseFloat(lt[0].firstChild.nodeValue);
 			var ln = xml.documentElement.getElementsByTagName('lon');
-			Map.lng = parseFloat(ln[0].firstChild.nodeValue);
+			this.Map.lng = parseFloat(ln[0].firstChild.nodeValue);
 			var z = xml.documentElement.getElementsByTagName('z');
-			Map.zoom = parseInt(z[0].firstChild.nodeValue);
+			this.Map.zoom = parseInt(z[0].firstChild.nodeValue);
 			var ss = xml.documentElement.getElementsByTagName('scale');
-			Map.scale = ss[0].firstChild.nodeValue;
+			this.Map.scale = ss[0].firstChild.nodeValue;
 			var sc = xml.documentElement.getElementsByTagName('cont');
-			Map.zoom_control = sc[0].firstChild.nodeValue;
+			this.Map.zoom_control = sc[0].firstChild.nodeValue;
 			var sm = xml.documentElement.getElementsByTagName('typecon');
-			Map.type_control = sm[0].firstChild.nodeValue;
+			this.Map.type_control = sm[0].firstChild.nodeValue;
 			var oc = xml.documentElement.getElementsByTagName('overviewcont');
-			Map.overview_control = oc[0].firstChild.nodeValue;
+			this.Map.overview_control = oc[0].firstChild.nodeValue;
 			var mt = xml.documentElement.getElementsByTagName('maptype');
-			Map.maptype = Map.Maptypes[mt[0].firstChild.nodeValue];			
+			this.Map.maptype = this.Map.Maptypes[mt[0].firstChild.nodeValue];			
 
 			//replace everything	
       var maptile = $('mymaptitle');
-      if (maptile){maptile.innerHTML=Map.title;}
+      if (maptile){maptile.innerHTML=this.Map.title;}
 
       var mapdesc = $('mymapdesc');
-      if (mapdesc){mapdesc.innerHTML=Map.description;}
+      if (mapdesc){mapdesc.innerHTML=this.Map.description;}
 
-      $('mapcontent').innerHTML = Map.parsed_data;
+      $('mapcontent').innerHTML = this.Map.parsed_data;
 
       var mapdiv = $('map');
-			if (Map.width !== '0' && Map.width !== 0){
-			   var newWidth = Map.width + "px";
+			if (this.Map.width !== '0' && this.Map.width !== 0){
+			   var newWidth = this.Map.width + "px";
 				}else{
 			   var newWidth = 'auto';
 				}
-			if (Map.height !== '0' && Map.height !== 0){
-			   var newHeight = Map.height + "px";
+			if (this.Map.height !== '0' && this.Map.height !== 0){
+			   var newHeight = this.Map.height + "px";
 				}else{
 			   var newHeight = 'auto';
 				}
       if (mapdiv){mapdiv.style.width=newWidth; mapdiv.style.height=newHeight; map.onResize();}
 			
-			Map.map.setMapType(Map.maptype);
+			this.Map.map.setMapType(this.Map.maptype);
 			
       //Add Map TYPE controls - buttons in the upper right corner
-  		if (Map.type_control == 'TRUE'){
-  		Map.map.removeControl(typecontrols);
-  		Map.map.addControl(typecontrols);
+  		if (this.Map.type_control == 'TRUE'){
+  		this.Map.map.removeControl(typecontrols);
+  		this.Map.map.addControl(typecontrols);
   		}else{
-  		Map.map.removeControl(typecontrols);
+  		this.Map.map.removeControl(typecontrols);
   		}
   		
   		//Add Scale controls
-  		if (Map.scale == 'TRUE'){
-  		Map.map.removeControl(scale);
-  		Map.map.addControl(scale);
+  		if (this.Map.scale == 'TRUE'){
+  		this.Map.map.removeControl(scale);
+  		this.Map.map.addControl(scale);
   		}else{
-  		Map.map.removeControl(scale);
+  		this.Map.map.removeControl(scale);
   		}
   		
       //Add Navigation controls - buttons in the upper left corner		
-  		Map.map.removeControl(smallcontrols);
-  		Map.map.removeControl(largecontrols);
-  		Map.map.removeControl(zoomcontrols);
-  		if (Map.zoom_control == 's') {
-  		Map.map.addControl(smallcontrols);
+  		this.Map.map.removeControl(smallcontrols);
+  		this.Map.map.removeControl(largecontrols);
+  		this.Map.map.removeControl(zoomcontrols);
+  		if (this.Map.zoom_control == 's') {
+  		this.Map.map.addControl(smallcontrols);
   		}else if (bMapControl == 'l') {
-  		Map.map.addControl(largecontrols);		
+  		this.Map.map.addControl(largecontrols);		
   		}else if (bMapControl == 'z') {
-  		Map.map.addControl(zoomcontrols);
+  		this.Map.map.addControl(zoomcontrols);
   		}
 			
-			Map.map.setCenter(new GLatLng(Map.lat, Map.lng), Map.zoom);
+			this.Map.map.setCenter(new GLatLng(this.Map.lat, this.Map.lng), this.Map.zoom);
 			
-			BitMap.Edit.editMap();
+			this.editMap();
 	 }
 
 
 
-	 BitMap.Edit.addMapType = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+	 BitMap.Edit.prototype.addMapType = function(rslt){
       var xml = rslt.responseXML;
 
 			// create a spot for a new maptype in the data array
-			var n = Map.Maptypes.length;
-			Map.Maptypes[n] = new Array();
+			var n = this.Map.Maptypes.length;
+			this.Map.Maptypes[n] = new Array();
 			//@todo there are several more values to add, update when updated maptype stuff globally
 			// assign map type values data array
 			
 			var id = xml.documentElement.getElementsByTagName('maptype_id');			
-  		Map.Maptypes[n].maptype_id = parseInt( id[0].firstChild.nodeValue );
+  		this.Map.Maptypes[n].maptype_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
-  		Map.Maptypes[n].name = nm[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].name = nm[0].firstChild.nodeValue;
 			var ds = xml.documentElement.getElementsByTagName('description');			
-  		Map.Maptypes[n].description = ds[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].description = ds[0].firstChild.nodeValue;
 			var cr = xml.documentElement.getElementsByTagName('copyright');			
-  		Map.Maptypes[n].copyright = cr[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].copyright = cr[0].firstChild.nodeValue;
 			var bt = xml.documentElement.getElementsByTagName('basetype');
-  		Map.Maptypes[n].basetype = parseInt( bt[0].firstChild.nodeValue );
+  		this.Map.Maptypes[n].basetype = parseInt( bt[0].firstChild.nodeValue );
 			var at = xml.documentElement.getElementsByTagName('alttype');
-  		Map.Maptypes[n].alttype = parseInt( at[0].firstChild.nodeValue );
+  		this.Map.Maptypes[n].alttype = parseInt( at[0].firstChild.nodeValue );
 			var bd = xml.documentElement.getElementsByTagName('bounds');			
-  		Map.Maptypes[n].bounds = bd[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].bounds = bd[0].firstChild.nodeValue;
 			var mz = xml.documentElement.getElementsByTagName('maxzoom');
-  		Map.Maptypes[n].maxzoom = parseInt( mz[0].firstChild.nodeValue );
+  		this.Map.Maptypes[n].maxzoom = parseInt( mz[0].firstChild.nodeValue );
 			var mt = xml.documentElement.getElementsByTagName('maptiles_url');			
-  		Map.Maptypes[n].maptiles_url = mt[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].maptiles_url = mt[0].firstChild.nodeValue;
 			var lrmt = xml.documentElement.getElementsByTagName('lowresmaptiles_url');			
-  		Map.Maptypes[n].lowresmaptiles_url = lrmt[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].lowresmaptiles_url = lrmt[0].firstChild.nodeValue;
 			var ht = xml.documentElement.getElementsByTagName('hybridtiles_url');			
-  		Map.Maptypes[n].hybridtiles_url = ht[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].hybridtiles_url = ht[0].firstChild.nodeValue;
 			var lrht = xml.documentElement.getElementsByTagName('lowreshybridtiles_url');			
-  		Map.Maptypes[n].lowreshybridtiles_url = lrht[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].lowreshybridtiles_url = lrht[0].firstChild.nodeValue;
 			
-			Map.Maptypes[n].maptype_node = Map.map.mapTypes.length;
+			this.Map.Maptypes[n].maptype_node = this.Map.map.mapTypes.length;
 			
 			// attach the new map type to the map
-			var baseid = Map.Maptypes[n].basetype;
-			var typeid = Map.Maptypes[n].maptype_id;
-			var typename = Map.Maptypes[n].name;
-			var result = copy_obj( Map.map.mapTypes[baseid] );
+			var baseid = this.Map.Maptypes[n].basetype;
+			var typeid = this.Map.Maptypes[n].maptype_id;
+			var typename = this.Map.Maptypes[n].name;
+			var result = copy_obj( this.Map.map.mapTypes[baseid] );
 
 			result.baseUrls = new Array();
-			result.baseUrls[0] = Map.Maptypes[n].maptiles_url;
-			result.typename = Map.Maptypes[n].name;
+			result.baseUrls[0] = this.Map.Maptypes[n].maptiles_url;
+			result.typename = this.Map.Maptypes[n].name;
 			result.getLinkText = function() { return this.typename; };
-			Map.map.mapTypes[Map.map.mapTypes.length] = result;
-			Map.Maptypes[typename] = result;
+			this.Map.map.mapTypes[this.Map.map.mapTypes.length] = result;
+			this.Map.Maptypes[typename] = result;
 			
 			// set the map type to active
-			Map.map.setMapType(Map.Maptypes[typename]);
+			this.Map.map.setMapType(this.Map.Maptypes[typename]);
 
 			// update the controls
-  		Map.map.removeControl(typecontrols);
-  		Map.map.addControl(typecontrols);
+  		this.Map.map.removeControl(typecontrols);
+  		this.Map.map.addControl(typecontrols);
 
 			// clear the form
 			$('maptypeform_new').reset();
 			// update the sets menus
-			BitMap.Edit.editMapTypes();
+			this.editMapTypes();
 	 }
 
 
 
 	 
-	 BitMap.Edit.updateMapType = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-
+	 BitMap.Edit.prototype.updateMapType = function(rslt){
       var xml = rslt.responseXML;
 
-			var n = BitMap.Edit.editObjectN;
+			var n = this.editObjectN;
 
 			//clear maptype in this location from the Map array of Types
-			Map.Maptypes[Map.Maptypes[n].name] = null;
+			this.Map.Maptypes[this.Map.Maptypes[n].name] = null;
 			//@todo there are several more values to add, update when updated maptype stuff globally
 			// assign map type values data array
 			
 			var id = xml.documentElement.getElementsByTagName('maptype_id');			
-  		Map.Maptypes[n].maptype_id = parseInt( id[0].firstChild.nodeValue );
+  		this.Map.Maptypes[n].maptype_id = parseInt( id[0].firstChild.nodeValue );
 			var nm = xml.documentElement.getElementsByTagName('name');			
-  		Map.Maptypes[n].name = nm[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].name = nm[0].firstChild.nodeValue;
 			var ds = xml.documentElement.getElementsByTagName('description');			
-  		Map.Maptypes[n].description = ds[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].description = ds[0].firstChild.nodeValue;
 			var cr = xml.documentElement.getElementsByTagName('copyright');			
-  		Map.Maptypes[n].copyright = cr[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].copyright = cr[0].firstChild.nodeValue;
 			var bt = xml.documentElement.getElementsByTagName('basetype');
-  		Map.Maptypes[n].basetype = parseInt( bt[0].firstChild.nodeValue );
+  		this.Map.Maptypes[n].basetype = parseInt( bt[0].firstChild.nodeValue );
 			var at = xml.documentElement.getElementsByTagName('alttype');
-  		Map.Maptypes[n].alttype = parseInt( at[0].firstChild.nodeValue );
+  		this.Map.Maptypes[n].alttype = parseInt( at[0].firstChild.nodeValue );
 			var bd = xml.documentElement.getElementsByTagName('bounds');			
-  		Map.Maptypes[n].bounds = bd[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].bounds = bd[0].firstChild.nodeValue;
 			var mz = xml.documentElement.getElementsByTagName('maxzoom');
-  		Map.Maptypes[n].maxzoom = parseInt( mz[0].firstChild.nodeValue );
+  		this.Map.Maptypes[n].maxzoom = parseInt( mz[0].firstChild.nodeValue );
 			var mt = xml.documentElement.getElementsByTagName('maptiles_url');			
-  		Map.Maptypes[n].maptiles_url = mt[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].maptiles_url = mt[0].firstChild.nodeValue;
 			var lrmt = xml.documentElement.getElementsByTagName('lowresmaptiles_url');			
-  		Map.Maptypes[n].lowresmaptiles_url = lrmt[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].lowresmaptiles_url = lrmt[0].firstChild.nodeValue;
 			var ht = xml.documentElement.getElementsByTagName('hybridtiles_url');			
-  		Map.Maptypes[n].hybridtiles_url = ht[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].hybridtiles_url = ht[0].firstChild.nodeValue;
 			var lrht = xml.documentElement.getElementsByTagName('lowreshybridtiles_url');			
-  		Map.Maptypes[n].lowreshybridtiles_url = lrht[0].firstChild.nodeValue;
+  		this.Map.Maptypes[n].lowreshybridtiles_url = lrht[0].firstChild.nodeValue;
 						
-			var p = Map.Maptypes[n].maptype_node;
+			var p = this.Map.Maptypes[n].maptype_node;
 
 			// attach the new map type to the map
-			var baseid = Map.Maptypes[n].basetype;
-			var typeid = Map.Maptypes[n].maptype_id;
-			var typename = Map.Maptypes[n].name;
-			var result = copy_obj( Map.map.mapTypes[baseid] );
+			var baseid = this.Map.Maptypes[n].basetype;
+			var typeid = this.Map.Maptypes[n].maptype_id;
+			var typename = this.Map.Maptypes[n].name;
+			var result = copy_obj( this.Map.map.mapTypes[baseid] );
 			result.baseUrls = new Array();
-			result.baseUrls[0] = Map.Maptypes[n].maptiles_url;
-			result.typename = Map.Maptypes[n].name;
+			result.baseUrls[0] = this.Map.Maptypes[n].maptiles_url;
+			result.typename = this.Map.Maptypes[n].name;
 			result.getLinkText = function() { return this.typename; };
-			Map.map.mapTypes[p] = result;
-			Map.Maptypes[typename] = result;
+			this.Map.map.mapTypes[p] = result;
+			this.Map.Maptypes[typename] = result;
 			
 			// set the map type to active
-			Map.map.setMapType( Map.Maptypes[Map.Maptypes[n].name] );
+			this.Map.map.setMapType( this.Map.Maptypes[this.Map.Maptypes[n].name] );
 	 }
 
 
 	 
-	 BitMap.Edit.updateRemoveMapType = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
-			var n = BitMap.Edit.editObjectN;
+	 BitMap.Edit.prototype.updateRemoveMapType = function(rslt){
+			var n = this.editObjectN;
 			
 			// get maptype node value
-			var p = Map.Maptypes[n].maptype_node;
+			var p = this.Map.Maptypes[n].maptype_node;
 			
 			// remove the maptype ref form the map array of types
-			Map.Maptypes[Map.Maptypes[n].name] = null;
+			this.Map.Maptypes[this.Map.Maptypes[n].name] = null;
 			
 			// remove the controls
-  		Map.map.removeControl(typecontrols);
+  		this.Map.map.removeControl(typecontrols);
 			
 			// remove it from the map			
-			Map.map.mapTypes.splice(p, 1);
+			this.Map.map.mapTypes.splice(p, 1);
 			
 			// add the controls
-  		Map.map.addControl(typecontrols);
+  		this.Map.map.addControl(typecontrols);
 			
 			// @todo we should first check if the map is on display, and then if so flip to street
 			// we flip to street mode
-			Map.map.setMapType(Map.map.mapTypes[0]);
+			this.Map.map.setMapType(this.Map.map.mapTypes[0]);
 			
 	 		// remove by id the maptype form
-    		for (var j=0; j<Map.Maptypes.length; j++){
-      			if ( ( Map.Maptypes[j] != null ) && ( Map.Maptypes[j].maptype_id == BitMap.Edit.editSetId ) ){
-          		var getElem = "editmaptypetable_" + Map.Maptypes[j].maptype_id;
+    		for (var j=0; j<this.Map.Maptypes.length; j++){
+      			if ( ( this.Map.Maptypes[j] != null ) && ( this.Map.Maptypes[j].maptype_id == this.editSetId ) ){
+          		var getElem = "editmaptypetable_" + this.Map.Maptypes[j].maptype_id;
           		if ( $(getElem) ) {
               	var extraMapTypeForm = $(getElem);
           			$('editmaptypeform').removeChild(extraMapTypeForm);
           		}
-							Map.Maptypes[n].maptype_id = null;
-      				Map.Maptypes[n] = null;
+							this.Map.Maptypes[n].maptype_id = null;
+      				this.Map.Maptypes[n] = null;
 							
       			}
     		}			
@@ -2044,16 +2042,13 @@ BitMap.Edit.newPolygonStyle = function(Map){
  *
  *******************/	 
 
-BitMap.Edit.addMarker = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+BitMap.Edit.prototype.addMarker = function(rslt){
       var xml = rslt.responseXML;
 
 	 		//the marker data we are changing
-			var n = Map.Markers.length;
-			Map.Markers[n] = new Array();
-			var m = Map.Markers[n];
+			var n = this.Map.Markers.length;
+			this.Map.Markers[n] = new Array();
+			var m = this.Map.Markers[n];
 
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('id');			
@@ -2078,40 +2073,37 @@ BitMap.Edit.addMarker = function(rslt){
 			m.zindex = parseInt(z[0].firstChild.nodeValue);
 
 	 		var s;
-			for(a=0; a<Map.MarkerSets.length; a++){
-				if ( ( Map.MarkerSets[a] != null ) && ( Map.MarkerSets[a].set_id == BitMap.Edit.editSetId ) ){
+			for(a=0; a<this.Map.MarkerSets.length; a++){
+				if ( ( this.Map.MarkerSets[a] != null ) && ( this.Map.MarkerSets[a].set_id == this.editSetId ) ){
 					s = a;
 				}
 			};
 
-			m.set_id = Map.MarkerSets[s].set_id;
-			m.style_id = Map.MarkerSets[s].style_id;
-			m.icon_id = Map.MarkerSets[s].icon_id;
-			m.plot_on_load = Map.MarkerSets[s].plot_on_load;
-			m.side_panel = Map.MarkerSets[s].side_panel;
-			m.explode = Map.MarkerSets[s].explode;
+			m.set_id = this.Map.MarkerSets[s].set_id;
+			m.style_id = this.Map.MarkerSets[s].style_id;
+			m.icon_id = this.Map.MarkerSets[s].icon_id;
+			m.plot_on_load = this.Map.MarkerSets[s].plot_on_load;
+			m.side_panel = this.Map.MarkerSets[s].side_panel;
+			m.explode = this.Map.MarkerSets[s].explode;
 			m.array_n = parseInt(n);
 
         //make the marker
-			Map.attachMarker(n, true);
+			this.Map.attachMarker(n, true);
 			// clear the form
 			$('markerform_new').reset();
-			BitMap.Edit.removeAssistant();
+			this.removeAssistant();
 			// update the sets menus
-			BitMap.Edit.editMarkers();
-			BitMap.Edit.editSet(editSetId);
+			this.editMarkers();
+			this.editSet(editSetId);
 }
 
 	 	 
-BitMap.Edit.updateMarker = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-
+BitMap.Edit.prototype.updateMarker = function(rslt){
       var xml = rslt.responseXML;
 						
 	 		//the marker data we are changing
-			var n = BitMap.Edit.editObjectN;
-			var m = Map.Markers[n];
+			var n = this.editObjectN;
+			var m = this.Map.Markers[n];
 
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('id');			
@@ -2143,26 +2135,23 @@ BitMap.Edit.updateMarker = function(rslt){
 			m.zindex = zindex;
 			
         //unload the marker
-      Map.map.removeOverlay( m.marker );
+      this.Map.map.removeOverlay( m.marker );
         //remake the marker
-			Map.attachMarker(n, true);
+			this.Map.attachMarker(n, true);
 			//remove the assistant
-			BitMap.Edit.removeAssistant();
+			this.removeAssistant();
 }
 
 
 	 
 
-BitMap.Edit.addMarkerSet = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+BitMap.Edit.prototype.addMarkerSet = function(rslt){
       var xml = rslt.responseXML;
 
-			//@todo modify this to handle either Map.Markers or bSMData sets
-			var n = Map.MarkerSets.length;
-			Map.MarkerSets[n] = new Array();
-			var s= Map.MarkerSets[n];
+			//@todo modify this to handle either this.Map.Markers or bSMData sets
+			var n = this.Map.MarkerSets.length;
+			this.Map.MarkerSets[n] = new Array();
+			var s= this.Map.MarkerSets[n];
 						
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('set_id');			
@@ -2188,19 +2177,16 @@ BitMap.Edit.addMarkerSet = function(rslt){
 			// clear the form
 			$('markersetform_new').reset();
 			// update the sets menus
-			if ( $('newmarkerform').style.display == "block" ){ BitMap.Edit.newMarker(); };
-			BitMap.Edit.editMarkers();
+			if ( $('newmarkerform').style.display == "block" ){ this.newMarker(); };
+			this.editMarkers();
 }
 	
 
 
-BitMap.Edit.updateMarkerSet = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+BitMap.Edit.prototype.updateMarkerSet = function(rslt){
       var xml = rslt.responseXML;
 
-			var s = Map.MarkerSets[BitMap.Edit.editObjectN];
+			var s = this.Map.MarkerSets[this.editObjectN];
 			var oldStyle = s.style_id;
 			var oldIcon = s.icon_id;
 
@@ -2225,7 +2211,7 @@ BitMap.Edit.updateMarkerSet = function(rslt){
 			if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
 
 			if ( ( oldStyle != s.style_id ) || ( oldIcon != s.icon_id ) ) {
-				a = Map.Markers;
+				a = this.Map.Markers;
            	//if the length of the array is > 0
            	if (a.length > 0){
              	//loop through the array
@@ -2236,9 +2222,9 @@ BitMap.Edit.updateMarkerSet = function(rslt){
 								a[n].style_id = s.style_id;
 								a[n].icon_id = s.icon_id;
 								//unload the marker
-         				Map.map.removeOverlay( a[n].marker );
+         				this.Map.map.removeOverlay( a[n].marker );
     						//define marker
-								Map.attachMarker(n);
+								this.Map.attachMarker(n);
        					}
        				}
        			}
@@ -2246,59 +2232,56 @@ BitMap.Edit.updateMarkerSet = function(rslt){
 			};
 
 			// update the sets menus
-			BitMap.Edit.editMarkers();
+			this.editMarkers();
 }
 
 
 //this needs special attention
-BitMap.Edit.updateRemoveMarker = function(){
-		for (var n=0; n<Map.Markers.length; n++){
-			if ( ( Map.Markers[n] != null ) && ( Map.Markers[n].marker_id == BitMap.Edit.editMarkerId ) ){
-				Map.map.removeOverlay(Map.Markers[n].marker);
-				Map.Markers[n].marker = null;
-				Map.Markers[n] = null;
+BitMap.Edit.prototype.updateRemoveMarker = function(){
+		for (var n=0; n<this.Map.Markers.length; n++){
+			if ( ( this.Map.Markers[n] != null ) && ( this.Map.Markers[n].marker_id == this.editMarkerId ) ){
+				this.Map.map.removeOverlay(this.Map.Markers[n].marker);
+				this.Map.Markers[n].marker = null;
+				this.Map.Markers[n] = null;
 			}
 		}
-		BitMap.Edit.editMarkers();
-		BitMap.Edit.editSet(editSetId);
+		this.editMarkers();
+		this.editSet(editSetId);
 }
 
 
 
-BitMap.Edit.updateRemoveMarkerSet = function(Map){
-  	for (var n=0; n<Map.Markers.length; n++){
-  		if ( ( Map.Markers[n] != null ) && ( Map.Markers[n].set_id == BitMap.Edit.editSetId ) && ( Map.Markers[n].marker != null ) ){
-				Map.map.removeOverlay(Map.Markers[n].marker); 			
-				Map.Markers[n].marker = null;
-				Map.Markers[n] = null;
+BitMap.Edit.prototype.updateRemoveMarkerSet = function(){
+  	for (var n=0; n<this.Map.Markers.length; n++){
+  		if ( ( this.Map.Markers[n] != null ) && ( this.Map.Markers[n].set_id == this.editSetId ) && ( this.Map.Markers[n].marker != null ) ){
+				this.Map.map.removeOverlay(this.Map.Markers[n].marker); 			
+				this.Map.Markers[n].marker = null;
+				this.Map.Markers[n] = null;
   		}
   	}
-		for (var s=0; s<Map.MarkerSets.length; s++){
-  		if ( ( Map.MarkerSets[s] != null ) && ( Map.MarkerSets[s].set_id == BitMap.Edit.editSetId ) ){
-      		var getElem = "markerset_"+Map.MarkerSets[s].set_id;
+		for (var s=0; s<this.Map.MarkerSets.length; s++){
+  		if ( ( this.Map.MarkerSets[s] != null ) && ( this.Map.MarkerSets[s].set_id == this.editSetId ) ){
+      		var getElem = "markerset_"+this.Map.MarkerSets[s].set_id;
       		if ( $(getElem) ) {
          		var extraMarkerForm = $(getElem);
       			$('editmarkerform').removeChild(extraMarkerForm);
       		}
-				Map.MarkerSets[s].set_id = null;
-  			Map.MarkerSets[s] = null;
+				this.Map.MarkerSets[s].set_id = null;
+  			this.Map.MarkerSets[s] = null;
   		}
 		}
-		BitMap.Edit.editMarkers();
+		this.editMarkers();
 }
 	
 
 
-BitMap.Edit.addMarkerStyle = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+BitMap.Edit.prototype.addMarkerStyle = function(rslt){
       var xml = rslt.responseXML;
 
 			// create a spot for a new markerstyle in the data array
-			var n = Map.MarkerStyles.length;
-			Map.MarkerStyles[n] = new Array();
-			var s = Map.MarkerStyles[n];
+			var n = this.Map.MarkerStyles.length;
+			this.Map.MarkerStyles[n] = new Array();
+			var s = this.Map.MarkerStyles[n];
 
 			// assign markerstyle values data array			
 			var id = xml.documentElement.getElementsByTagName('style_id');			
@@ -2331,20 +2314,17 @@ BitMap.Edit.addMarkerStyle = function(rslt){
 			// clear the form
 			$('markerstyleform_new').reset();
 			// update the styles menus
-			BitMap.Edit.editMarkerStyles();
-			BitMap.Edit.editMarkers();
+			this.editMarkerStyles();
+			this.editMarkers();
 }
 
 
 
-BitMap.Edit.updateMarkerStyle = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+BitMap.Edit.prototype.updateMarkerStyle = function(rslt){
       var xml = rslt.responseXML;
 
 			//get the style we are updating
-			var s = Map.MarkerStyles[editObjectN];
+			var s = this.Map.MarkerStyles[editObjectN];
 			var oldtp = s.marker_style_type;
 
 			// assign markerstyle values data array			
@@ -2377,7 +2357,7 @@ BitMap.Edit.updateMarkerStyle = function(rslt){
 			document.body.appendChild(winStyle);
 
 			//update all markers
-      	var a = Map.Markers;
+      	var a = this.Map.Markers;
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
@@ -2385,30 +2365,27 @@ BitMap.Edit.updateMarkerStyle = function(rslt){
       		//if the array item is not Null
     			if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
 	      			//unload the marker
-  					BitMap.Edit.map.removeOverlay( a[n].marker );
+  					this.map.removeOverlay( a[n].marker );
 	      			//define new marker with new styles
-						BitMap.Edit.attachMarker(n);
+						this.attachMarker(n);
 					}
 				}
 			}
-			BitMap.Edit.editMarkerStyles();
-			BitMap.Edit.editMarkers();
+			this.editMarkerStyles();
+			this.editMarkers();
 }
 
 	
 
 
 
-BitMap.Edit.addIconStyle = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+BitMap.Edit.prototype.addIconStyle = function(rslt){
       var xml = rslt.responseXML;
 
 			// create a spot for a new iconstyle in the data array
-			var n = Map.IconStyles.length;
-			Map.IconStyles[n] = new Array();
-			var i = Map.IconStyles[n];
+			var n = this.Map.IconStyles.length;
+			this.Map.IconStyles[n] = new Array();
+			var i = this.Map.IconStyles[n];
 
 			// assign iconstyle values to data array			
 			var id = xml.documentElement.getElementsByTagName('icon_id');
@@ -2458,26 +2435,23 @@ BitMap.Edit.addIconStyle = function(rslt){
 
 			//make the icon available
   		if (i.icon_style_type == 0) {
-  			Map.defineGIcon(n);
+  			this.Map.defineGIcon(n);
   		}
 
 			// clear the form
 			$('iconstyleform_new').reset();
 			// update the styles menus
-			BitMap.Edit.editMarkers();
-			BitMap.Edit.editIconStyles();
+			this.editMarkers();
+			this.editIconStyles();
 }
 
 
 	
-BitMap.Edit.updateIconStyle = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
-      	var xml = rslt.responseXML;
+BitMap.Edit.prototype.updateIconStyle = function(rslt){
+      var xml = rslt.responseXML;
 
 			//get the style we are updating
-			var i = Map.IconStyles[editObjectN];
+			var i = this.Map.IconStyles[editObjectN];
 
 			// assign iconsstyle values to data array
 			var id = xml.documentElement.getElementsByTagName('icon_id');
@@ -2527,11 +2501,11 @@ BitMap.Edit.updateIconStyle = function(rslt){
 
 			//update the icon
   		if (i.icon_style_type == 0) {
-  			Map.defineGIcon(editObjectN);
+  			this.Map.defineGIcon(editObjectN);
   		}
 
 			//update all markers
-      	var a = Map.Markers;
+      	var a = this.Map.Markers;
     
     	//if the length of the array is > 0
     	if (a.length > 0){
@@ -2540,9 +2514,9 @@ BitMap.Edit.updateIconStyle = function(rslt){
       		//if the array item is not Null
     			if (a[n]!= null && a[n].marker != null && a[n].icon_id == i.icon_id){
 	      			//unload the marker
-  					Map.map.removeOverlay( a[n].marker );
+  					this.Map.map.removeOverlay( a[n].marker );
 						//define the marker
-						BitMap.Edit.attachMarker(n);
+						this.attachMarker(n);
 					}
     		}
 			}
@@ -2563,23 +2537,20 @@ BitMap.Edit.updateIconStyle = function(rslt){
  *
  *******************/	 
 
-BitMap.Edit.addPolyline = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
-      	var xml = rslt.responseXML;
+BitMap.Edit.prototype.addPolyline = function(rslt){
+      var xml = rslt.responseXML;
 	 		var s;
 
 			//this is such a crappy way to get this number
-			for(var a=0; a<Map.PolylineSets.length; a++){
-				if (Map.PolylineSets[a] != null && Map.PolylineSets[a].set_id == BitMap.Edit.editSetId){
+			for(var a=0; a<this.Map.PolylineSets.length; a++){
+				if (this.Map.PolylineSets[a] != null && this.Map.PolylineSets[a].set_id == this.editSetId){
 					s = a;
 				}
 			};
 
-  		var n = Map.Polylines.length;
-  		Map.Polylines[n] = new Array();
-			var p = Map.Polylines[n];
+  		var n = this.Map.Polylines.length;
+  		this.Map.Polylines[n] = new Array();
+			var p = this.Map.Polylines[n];
   		p.array_n = n;
 			
 	 		//shorten var names
@@ -2595,34 +2566,31 @@ BitMap.Edit.addPolyline = function(rslt){
 			var zi = xml.documentElement.getElementsByTagName('zindex');
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 			
-			p.set_id = Map.PolylineSets[s].set_id;
-			p.style_id = Map.PolylineSets[s].style_id;
-			p.plot_on_load = Map.PolylineSets[s].plot_on_load;
-			p.side_panel = Map.PolylineSets[s].side_panel;
-			p.explode = Map.PolylineSets[s].explode;
+			p.set_id = this.Map.PolylineSets[s].set_id;
+			p.style_id = this.Map.PolylineSets[s].style_id;
+			p.plot_on_load = this.Map.PolylineSets[s].plot_on_load;
+			p.side_panel = this.Map.PolylineSets[s].side_panel;
+			p.explode = this.Map.PolylineSets[s].explode;
 			p.array_n = parseInt(n);
 
 			//create polyline
-			Map.attachPolyline(n);
+			this.Map.attachPolyline(n);
 
 			// clear the form
 			$('polylineform_new').reset();
 			// update the sets menus
-			BitMap.Edit.editPolylines();
-			BitMap.Edit.editPolylineSet(BitMap.Edit.editSetId);
-			BitMap.Edit.removeAssistant();
+			this.editPolylines();
+			this.editPolylineSet(this.editSetId);
+			this.removeAssistant();
 }	
 
 
 
 
-BitMap.Edit.updatePolyline = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+BitMap.Edit.prototype.updatePolyline = function(rslt){
 			var xml = rslt.responseXML;
 			var n = editObjectN;
-			var p = Map.Polylines[n];
+			var p = this.Map.Polylines[n];
 			
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('polyline_id');
@@ -2638,25 +2606,22 @@ BitMap.Edit.updatePolyline = function(rslt){
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 			
 			//remove old version
-			Map.map.removeOverlay(p.polyline);
+			this.Map.map.removeOverlay(p.polyline);
 			//create polyline
-			Map.attachPolyline(n);
+			this.Map.attachPolyline(n);
 
-			BitMap.Edit.removeAssistant();
+			this.removeAssistant();
 }
 
 
 	
-	 BitMap.Edit.addPolylineSet = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+	 BitMap.Edit.prototype.addPolylineSet = function(rslt){
       var xml = rslt.responseXML;
 
-			//@todo modify this to handle either Map.Polylines or bSLData sets
-			var n = Map.PolylineSets.length;
-			Map.PolylineSets[n] = new Array();
-			var s = Map.PolylineSets[n];
+			//@todo modify this to handle either this.Map.Polylines or bSLData sets
+			var n = this.Map.PolylineSets.length;
+			this.Map.PolylineSets[n] = new Array();
+			var s = this.Map.PolylineSets[n];
  						
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('set_id');
@@ -2678,20 +2643,17 @@ BitMap.Edit.updatePolyline = function(rslt){
 			// clear the form
 			$('polylinesetform_new').reset();
 			// update the sets menus
-			if ( $('newpolylineform').style.display == "block" ){ BitMap.Edit.newPolyline(); };
-			BitMap.Edit.editPolylines();
+			if ( $('newpolylineform').style.display == "block" ){ this.newPolyline(); };
+			this.editPolylines();
 	 }
 
 
 
 
-	BitMap.Edit.updatePolylineSet = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
-      	var xml = rslt.responseXML;
+	BitMap.Edit.prototype.updatePolylineSet = function(rslt){
+      var xml = rslt.responseXML;
 
-			var s = Map.PolylineSets[editObjectN];
+			var s = this.Map.PolylineSets[editObjectN];
 			var oldStyle = s.style_id;
 
 	 		//shorten var names
@@ -2711,7 +2673,7 @@ BitMap.Edit.updatePolyline = function(rslt){
 			if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
 
 			if ( oldStyle != s.style_id ) {
-				a = Map.Polylines;
+				a = this.Map.Polylines;
            	//if the length of the array is > 0
            	if (a.length > 0){
              	//loop through the array
@@ -2720,31 +2682,28 @@ BitMap.Edit.updatePolyline = function(rslt){
 						if (a[n]!= null && a[n].polyline != null && a[n].set_id == s.set_id){
 							a[n].style_id = s.style_id;
 							//unload the polyline
-         				Map.map.removeOverlay( a[n].polyline );
+         				this.Map.map.removeOverlay( a[n].polyline );
                  		//create polyline
-							BitMap.Edit.attachPolyline(n);
+							this.attachPolyline(n);
        				}
        			}
        		}
 			};
 
 			// update the sets menus
-			BitMap.Edit.editPolylines();
+			this.editPolylines();
 	}
 	
 
 
 
-	 BitMap.Edit.addPolylineStyle = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-	 
+	 BitMap.Edit.prototype.addPolylineStyle = function(rslt){
       var xml = rslt.responseXML;
 
 			// create a spot for a new polylinestyle in the data array
-			var n = Map.PolylineStyles.length;
-			Map.PolylineStyles[n] = new Array();
-			var s = Map.PolylineStyles[n];
+			var n = this.Map.PolylineStyles.length;
+			this.Map.PolylineStyles[n] = new Array();
+			var s = this.Map.PolylineStyles[n];
 
 			// assign polylinestyle values data array			
 			var id = xml.documentElement.getElementsByTagName('style_id');			
@@ -2791,20 +2750,17 @@ BitMap.Edit.updatePolyline = function(rslt){
 			// clear the form
 			$('polylinestyleform_new').reset();
 			// update the styles menus
-			BitMap.Edit.editPolylines();
-			BitMap.Edit.editPolylineStyles();
+			this.editPolylines();
+			this.editPolylineStyles();
 	 }
 
 
 
-	 BitMap.Edit.updatePolylineStyle = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
-      	var xml = rslt.responseXML;
+	 BitMap.Edit.prototype.updatePolylineStyle = function(rslt){
+      var xml = rslt.responseXML;
 
 			//get the style we are updating
-			var s = Map.PolylineStyles[editObjectN];
+			var s = this.Map.PolylineStyles[editObjectN];
 
 			// assign markerstyle values data array			
 			var id = xml.documentElement.getElementsByTagName('style_id');			
@@ -2849,73 +2805,73 @@ BitMap.Edit.updatePolyline = function(rslt){
   		s.text_bgstyle_zindex = parseInt( tbi[0].firstChild.nodeValue );
 
 			//for each polyline
-      	var a = Map.Polylines;
+      	var a = this.Map.Polylines;
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
     		for(n=0; n<a.length; n++){
       		//if the array item is not Null
         		if (a[n]!= null && a[n].polyline != null && a[n].style_id == s.style_id){
-						Map.map.removeOverlay( a[n].polyline );
-        		Map.attachPolyline(n);
+						this.Map.map.removeOverlay( a[n].polyline );
+        		this.Map.attachPolyline(n);
     			}
     		}
     	}
 
 			//for each polygon
-      	var b = Map.Polygons;
+      	var b = this.Map.Polygons;
     	//if the length of the array is > 0
     	if (b.length > 0){
       	//loop through the array
     		for(i=0; i<b.length; i++){
       		//if the array item is not Null
         		if (b[i]!= null && b[i].polygon != null && b[i].style_id == s.style_id){
-						Map.map.removeOverlay( b[i].polygon );
-        			Map.attachPolygon(i);
+						this.Map.map.removeOverlay( b[i].polygon );
+        			this.Map.attachPolygon(i);
     			}
     		}
     	}
 
 			// update the polyline menus
-			BitMap.Edit.editPolylineStyles();
-			BitMap.Edit.editPolylines();
+			this.editPolylineStyles();
+			this.editPolylines();
 	 }
 
 
 
 	
-BitMap.Edit.updateRemovePolyline = function(Map){
-	for (var i=0; i<Map.Polylines.length; i++){
-		if ( Map.Polylines[i] != null && Map.Polylines[n].polyline != null && Map.Polylines[i].polyline_id == BitMap.Edit.editPolylineId ){
-			Map.map.removeOverlay(Map.Polylines[i].polyline);
-			Map.Polylines[i].polyline = null;
-			Map.Polylines[i] = null;
+BitMap.Edit.prototype.updateRemovePolyline = function(){
+	for (var i=0; i<this.Map.Polylines.length; i++){
+		if ( Map.Polylines[i] != null && this.Map.Polylines[n].polyline != null && this.Map.Polylines[i].polyline_id == this.editPolylineId ){
+			this.Map.map.removeOverlay(this.Map.Polylines[i].polyline);
+			this.Map.Polylines[i].polyline = null;
+			this.Map.Polylines[i] = null;
 		}
 	}
-	BitMap.Edit.editPolylines();
-	BitMap.Edit.editPolylineSet(editSetId);
+	this.editPolylines();
+	this.editPolylineSet(editSetId);
 }
 
 
 
 //this needs special attention
-BitMap.Edit.updateRemovePolylineSet = function(Map){
-  	for (var n=0; n<Map.Polylines.length; n++){
-  		if ( ( Map.Polylines[n] != null ) && ( Map.Polylines[n].set_id == BitMap.Edit.editSetId ) && ( Map.Polylines[n].polyline != null ) ){
-  			Map.map.removeOverlay(Map.Polylines[n].polyline);
-				Map.Polylines[n].polyline = null;
-  			Map.Polylines[n] = null;
+BitMap.Edit.prototype.updateRemovePolylineSet = function(){
+  	for (var n=0; n<this.Map.Polylines.length; n++){
+  		if ( ( this.Map.Polylines[n] != null ) && ( this.Map.Polylines[n].set_id == this.editSetId ) && ( this.Map.Polylines[n].polyline != null ) ){
+  			this.Map.map.removeOverlay(Map.Polylines[n].polyline);
+				this.Map.Polylines[n].polyline = null;
+  			this.Map.Polylines[n] = null;
   		}
   	}
 		for (var s=0; s<Map.PolylineSets.length; s++){
-  		if ( ( Map.PolylineSets[s] != null ) && ( Map.PolylineSets[s].set_id == BitMap.Edit.editSetId ) ){
-      		var getElem = "polylineset_"+Map.PolylineSets[s].set_id;
+  		if ( ( this.Map.PolylineSets[s] != null ) && ( this.Map.PolylineSets[s].set_id == this.editSetId ) ){
+      		var getElem = "polylineset_"+this.Map.PolylineSets[s].set_id;
       		if ( $(getElem) ) {
           		var extraPolylineForm = $(getElem);
       			$('editpolylineform').removeChild(extraPolylineForm);
       		}
-				Map.PolylineSets[s].set_id = null;
-  			Map.PolylineSets[s] = null;
+				this.Map.PolylineSets[s].set_id = null;
+  			this.Map.PolylineSets[s] = null;
   		}
 		}
 }
@@ -2931,22 +2887,19 @@ BitMap.Edit.updateRemovePolylineSet = function(Map){
  *
  *******************/	 
 
-BitMap.Edit.addPolygon = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
-      	var xml = rslt.responseXML;
+BitMap.Edit.prototype.addPolygon = function(rslt){
+      var xml = rslt.responseXML;
 	 		var s;
 
-			for(var a=0; a<Map.PolygonSets.length; a++){
-				if ( Map.PolygonSets[a] != null && Map.PolygonSets[a].set_id == BitMap.Edit.editSetId ){
+			for(var a=0; a<this.Map.PolygonSets.length; a++){
+				if ( this.Map.PolygonSets[a] != null && this.Map.PolygonSets[a].set_id == this.editSetId ){
 					s = a;
 				}
 			};
 
-  		var n = Map.Polygons.length;
-  		Map.Polygons[n] = new Array();
-			var p = Map.Polygons[n];
+  		var n = this.Map.Polygons.length;
+  		this.Map.Polygons[n] = new Array();
+			var p = this.Map.Polygons[n];
   		p.array_n = n;
 			
 	 		//shorten var names
@@ -2969,34 +2922,31 @@ BitMap.Edit.addPolygon = function(rslt){
 			var zi = xml.documentElement.getElementsByTagName('zindex');
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 
-			p.set_id = Map.PolygonSets[s].set_id;
-			p.style_id = Map.PolygonSets[s].style_id;
-			p.polylinestyle_id = Map.PolygonSets[s].polylinestyle_id;
-			p.plot_on_load = Map.PolygonSets[s].plot_on_load;
-			p.side_panel = Map.PolygonSets[s].side_panel;
-			p.explode = Map.PolygonSets[s].explode;
+			p.set_id = this.Map.PolygonSets[s].set_id;
+			p.style_id = this.Map.PolygonSets[s].style_id;
+			p.polylinestyle_id = this.Map.PolygonSets[s].polylinestyle_id;
+			p.plot_on_load = this.Map.PolygonSets[s].plot_on_load;
+			p.side_panel = this.Map.PolygonSets[s].side_panel;
+			p.explode = this.Map.PolygonSets[s].explode;
 			p.array_n = parseInt(n);
 
 			//create polygon
-			Map.attachPolygon(n);
+			this.Map.attachPolygon(n);
 
 			// clear the form
 			$('polygonform_new').reset();
 			// update the sets menus
-			BitMap.Edit.editPolygons();
-			BitMap.Edit.editPolygonSet(editSetId);
-			BitMap.Edit.removeAssistant();
+			this.editPolygons();
+			this.editPolygonSet(editSetId);
+			this.removeAssistant();
 }	
 
 
 
-BitMap.Edit.updatePolygon = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+BitMap.Edit.prototype.updatePolygon = function(rslt){
 			var xml = rslt.responseXML;
-			var n = BitMap.Edit.editObjectN;
-			var p = Map.Polygons[n];
+			var n = this.editObjectN;
+			var p = this.Map.Polygons[n];
 			
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('polygon_id');
@@ -3019,26 +2969,23 @@ BitMap.Edit.updatePolygon = function(rslt){
 			p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 			
 			//remove old version
-			Map.map.removeOverlay(p.polygon);
+			this.Map.map.removeOverlay(p.polygon);
 			//create polygon
-			Map.attachPolygon(n);
+			this.Map.attachPolygon(n);
 
-			BitMap.Edit.removeAssistant();
+			this.removeAssistant();
 }
 
 
 
 
-BitMap.Edit.addPolygonSet = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+BitMap.Edit.prototype.addPolygonSet = function(rslt){
       var xml = rslt.responseXML;
 
 			//@todo modify this to handle either Map.Polylines or bSLData sets
-			var n = Map.PolygonSets.length;
-			Map.PolygonSets[n] = new Array();
-			var s = Map.PolygonSets[n];			
+			var n = this.Map.PolygonSets.length;
+			this.Map.PolygonSets[n] = new Array();
+			var s = this.Map.PolygonSets[n];			
 			
 	 		//shorten var names
 			var id = xml.documentElement.getElementsByTagName('set_id');
@@ -3062,20 +3009,17 @@ BitMap.Edit.addPolygonSet = function(rslt){
 			// clear the form
 			$('polygonsetform_new').reset();
 			// update the sets menus
-			if ( $('newpolygonform').style.display == "block" ){ BitMap.Edit.newPolygon(); };
-			BitMap.Edit.editPolygons();
+			if ( $('newpolygonform').style.display == "block" ){ this.newPolygon(); };
+			this.editPolygons();
 }
 
 
 
 
-BitMap.Edit.updatePolygonSet = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
-      	var xml = rslt.responseXML;
+BitMap.Edit.prototype.updatePolygonSet = function(rslt){
+      var xml = rslt.responseXML;
 
-			var s = Map.PolygonSets[BitMap.Edit.editObjectN];
+			var s = this.Map.PolygonSets[this.editObjectN];
 			var oldStyle = s.style_id;
 			var oldLineStyle = s.polylinestyle_id;
 
@@ -3098,7 +3042,7 @@ BitMap.Edit.updatePolygonSet = function(rslt){
 			if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
 
 			if ( oldStyle != s.style_id || oldLineStyle != s.polylinestyle_id) {
-				a = Map.Polygons;
+				a = this.Map.Polygons;
            	//if the length of the array is > 0
            	if (a.length > 0){
              	//loop through the array
@@ -3109,29 +3053,26 @@ BitMap.Edit.updatePolygonSet = function(rslt){
 							a[n].style_id = s.style_id;
 							a[n].polylinestyle_id = s.polylinestyle_id
 							//unload the polygon
-         				Map.map.removeOverlay( a[n].polygon );
+         				this.Map.map.removeOverlay( a[n].polygon );
                  		//create polygon
-							Map.attachPolygon(n);
+							this.Map.attachPolygon(n);
        				}
        			}
        		}
 			};
 			// update the sets menus
-			BitMap.Edit.editPolygons();
+			this.editPolygons();
 }
 
 
 
-BitMap.Edit.addPolygonStyle = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-      
+BitMap.Edit.prototype.addPolygonStyle = function(rslt){
       var xml = rslt.responseXML;
 
 			// create a spot for a new polygonstyle in the data array
-			var n = Map.PolygonStyles.length;
-			Map.PolygonStyles[n] = new Array();
-			var s = Map.PolygonStyles[n];
+			var n = this.Map.PolygonStyles.length;
+			this.Map.PolygonStyles[n] = new Array();
+			var s = this.Map.PolygonStyles[n];
 
 			// assign polygonstyle values data array			
 			var id = xml.documentElement.getElementsByTagName('style_id');			
@@ -3150,20 +3091,17 @@ BitMap.Edit.addPolygonStyle = function(rslt){
 			// clear the form
 			$('polygonstyleform_new').reset();
 			// update the styles menus
-			BitMap.Edit.editPolygonStyles();
-			BitMap.Edit.editPolygons();
+			this.editPolygonStyles();
+			this.editPolygons();
 }
 
 
 
-BitMap.Edit.updatePolygonStyle = function(rslt){
-	    //@todo change this - bad harding coded ref to the map data - not nice
-      var Map = BitMap.MapData[0].Map;
-
-      	var xml = rslt.responseXML;
+BitMap.Edit.prototype.updatePolygonStyle = function(rslt){
+      var xml = rslt.responseXML;
 
 			//get the style we are updating
-			var s = Map.PolygonStyles[editObjectN];
+			var s = this.Map.PolygonStyles[editObjectN];
 
 			// assign markerstyle values data array			
 			var id = xml.documentElement.getElementsByTagName('style_id');			
@@ -3180,56 +3118,56 @@ BitMap.Edit.updatePolygonStyle = function(rslt){
   		s.opacity = op[0].firstChild.nodeValue;
 
 			//update all polygons
-      	var a = Map.Polygons;    
+      	var a = this.Map.Polygons;    
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
     		for(n=0; n<a.length; n++){
       		//if the array item is not Null
     			if (a[n]!= null && a[n].polygon != null && a[n].style_id == s.style_id){
-						Map.map.removeOverlay(a[n].polygon);
-						Map.attachPolygon(n);
+						this.Map.map.removeOverlay(a[n].polygon);
+						this.Map.attachPolygon(n);
     			}
     		}
     	}
 
 			// update the styles menus
-			BitMap.Edit.editPolygonStyles();
-			BitMap.Edit.editPolygons();
+			this.editPolygonStyles();
+			this.editPolygons();
 }
 
 
 
-BitMap.Edit.updateRemovePolygon = function(Map){
-	for (var n=0; n<Map.Polygons.length; n++){
-		if ( Map.Polygons[n] != null && Map.Polygons[n].polygon != null && Map.Polygons[n].polygon_id == BitMap.Edit.editPolygonId ){
-			Map.map.removeOverlay(Map.Polygons[n].polygon);
-			Map.Polygons[n].polygon = null;
-			Map.Polygons[n] = null;
+BitMap.Edit.prototype.updateRemovePolygon = function(){
+	for (var n=0; n<this.Map.Polygons.length; n++){
+		if ( this.Map.Polygons[n] != null && this.Map.Polygons[n].polygon != null && this.Map.Polygons[n].polygon_id == this.editPolygonId ){
+			this.Map.map.removeOverlay(this.Map.Polygons[n].polygon);
+			this.Map.Polygons[n].polygon = null;
+			this.Map.Polygons[n] = null;
 		}
 	}
-	BitMap.Edit.editPolygons();
-	BitMap.Edit.editPolygonSet(BitMap.Edit.editSetId);
+	this.editPolygons();
+	this.editPolygonSet(this.editSetId);
 }
 
 
-BitMap.Edit.updateRemovePolygonSet = function(Map){
-	for (var n=0; n<Map.Polygons.length; n++){
-		if ( Map.Polygons[n] != null && Map.Polygons[n].polygon != null && Map.Polygons[n].set_id == BitMap.Edit.editSetId ){
-			Map.map.removeOverlay(Map.Polygons[n].polygon);
-			Map.Polygons[n].polygon = null;
-			Map.Polygons[n] = null;
+BitMap.Edit.prototype.updateRemovePolygonSet = function(){
+	for (var n=0; n<this.Map.Polygons.length; n++){
+		if ( this.Map.Polygons[n] != null && this.Map.Polygons[n].polygon != null && this.Map.Polygons[n].set_id == this.editSetId ){
+			this.Map.map.removeOverlay(this.Map.Polygons[n].polygon);
+			this.Map.Polygons[n].polygon = null;
+			this.Map.Polygons[n] = null;
 		}
 	}
 	for (var s=0; s<Map.PolygonSets.length; s++){
-		if ( ( Map.PolygonSets[s] != null ) && ( Map.PolygonSets[s].set_id == BitMap.Edit.editSetId ) ){
-			var getElem = "polygonset_"+Map.PolygonSets[s].set_id;
+		if ( ( this.Map.PolygonSets[s] != null ) && ( this.Map.PolygonSets[s].set_id == this.editSetId ) ){
+			var getElem = "polygonset_"+this.Map.PolygonSets[s].set_id;
 			if ( $(getElem) ) {
 				var extraPolygonForm = $(getElem);
 				$('editpolygonform').removeChild(extraPolygonForm);
 			}
-			Map.PolygonSets[s].set_id = null;
-			Map.PolygonSets[s] = null;
+			this.Map.PolygonSets[s].set_id = null;
+			this.Map.PolygonSets[s] = null;
   	}
 	}
 }
@@ -3244,110 +3182,99 @@ BitMap.Edit.updateRemovePolygonSet = function(Map){
  *  Editing Tools
  *
  ******************/
- BitMap.Edit.bLastpoint;
- BitMap.Edit.bAssistant;
- BitMap.Edit.bTempPoints = new Array();	//create point array
- BitMap.Edit.bTP; //temporary polyline
- BitMap.Edit.bModForm;
- BitMap.Edit.bModPData; 
- BitMap.Edit.bModMLat;
- BitMap.Edit.bModMLng;
-	
- BitMap.Edit.addAssistant = function(a, b){
-	//@todo change this - bad harding coded ref to the map data - not nice
-  var Map = BitMap.MapData[0].Map;
-  
- 	BitMap.Edit.removeAssistant();
- 	if (a == 'polyline'){
-		BitMap.Edit.bModForm = $('polylineform_'+b);
- 		BitMap.Edit.bModPData = BitMap.Edit.bModForm.points_data; 
-		alert ('Polyline drawing assistant activated for '+ BitMap.Edit.bModForm.name.value + ' polyline. \n Click to Draw!');
-		
-		BitMap.Edit.bLastpoint = null;
-	  BitMap.Edit.bTempPoints = [];
-  	BitMap.Edit.bTP = new GPolyline(BitMap.Edit.bTempPoints);
-  	Map.map.addOverlay(bTP);		//create polyline object from points and add to map
-  
-  	BitMap.Edit.bAssistant = GEvent.addListener(Map.map, "click", function(overlay,point) {
-                		if(BitMap.Edit.bLastpoint && BitMap.Edit.bLastpoint.x==point.x && BitMap.Edit.bLastpoint.y==point.y) return;
-                		BitMap.Edit.bLastpoint = point;
-                		
-                		BitMap.Edit.bTempPoints.push(point);
-                		Map.map.removeOverlay(bTP);
-                		BitMap.Edit.bTP = new GPolyline(BitMap.Edit.bTempPoints);
-                		Map.map.addOverlay(bTP);
 
-                		for(var i=0; i<BitMap.Edit.bTempPoints.length; i++){
+BitMap.Edit.prototype.addAssistant = function(a, b){
+ 	this.removeAssistant();
+ 	if (a == 'polyline'){
+		this.bModForm = $('polylineform_'+b);
+ 		this.bModPData = this.bModForm.points_data; 
+		alert ('Polyline drawing assistant activated for '+ this.bModForm.name.value + ' polyline. \n Click to Draw!');
+		
+		this.bLastpoint = null;
+	  this.bTempPoints = [];
+  	this.bTP = new GPolyline(this.bTempPoints);
+  	this.Map.map.addOverlay(bTP);		//create polyline object from points and add to map
+  
+  	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay,point) {
+                		if(this.bLastpoint && this.bLastpoint.x==point.x && this.bLastpoint.y==point.y) return;
+                		this.bLastpoint = point;
+                		
+                		this.bTempPoints.push(point);
+                		this.Map.map.removeOverlay(bTP);
+                		this.bTP = new GPolyline(this.bTempPoints);
+                		this.Map.map.addOverlay(bTP);
+
+                		for(var i=0; i<this.bTempPoints.length; i++){
 											if (i == 0){
-												msg = BitMap.Edit.bTempPoints[i].x + ', ' + BitMap.Edit.bTempPoints[i].y;
+												msg = this.bTempPoints[i].x + ', ' + this.bTempPoints[i].y;
 												}else{
-                				msg += ', ' + BitMap.Edit.bTempPoints[i].x + ', ' + BitMap.Edit.bTempPoints[i].y;
+                				msg += ', ' + this.bTempPoints[i].x + ', ' + this.bTempPoints[i].y;
 											}
                 		}
 										
-                		BitMap.Edit.bModPData.value = msg;
+                		this.bModPData.value = msg;
               	});
 	}
 
  	if (a == 'polygon'){
-		BitMap.Edit.bModForm = $('polygonform_'+b);
+		this.bModForm = $('polygonform_'+b);
 
-  	if (BitMap.Edit.bModForm.circle.options[BitMap.Edit.bModForm.circle.selectedIndex].value == 'true'){
-      	BitMap.Edit.bModPData = BitMap.Edit.bModForm.circle_center;
-     	alert ('Circle-Center drawing assistant activated for '+ BitMap.Edit.bModForm.name.value + ' polygon. \n Click to marker the center of your circle!');
+  	if (this.bModForm.circle.options[this.bModForm.circle.selectedIndex].value == 'true'){
+      	this.bModPData = this.bModForm.circle_center;
+     	alert ('Circle-Center drawing assistant activated for '+ this.bModForm.name.value + ' polygon. \n Click to marker the center of your circle!');
      
-       	BitMap.Edit.bAssistant = GEvent.addListener(Map.map, "click", function(overlay, point){
-                         if (point) {
-                     		Map.map.panTo(point);
-                     		BitMap.Edit.bModPData.value = point.lng() + ", " + point.lat();
+       	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
+                      if (point) {
+                     		this.Map.map.panTo(point);
+                     		this.bModPData.value = point.lng() + ", " + point.lat();
                          }
                        });
   	}else{
-   		BitMap.Edit.bModPData = BitMap.Edit.bModForm.points_data; 
-  		alert ('Polygon drawing assistant activated for '+ BitMap.Edit.bModForm.name.value + ' polygon. \n Click to draw the outline. \n\nThe final connection will automatically be \ncompleted for you, so don\'t worry about that.');
-   		BitMap.Edit.bLastpoint = null;
-   	 	BitMap.Edit.bTempPoints = [];
-     	BitMap.Edit.bTP = new GPolyline(BitMap.Edit.bTempPoints);
-     	Map.map.addOverlay(bTP);		//create polyline object from points and add to map
+   		this.bModPData = this.bModForm.points_data; 
+  		alert ('Polygon drawing assistant activated for '+ this.bModForm.name.value + ' polygon. \n Click to draw the outline. \n\nThe final connection will automatically be \ncompleted for you, so don\'t worry about that.');
+   		this.bLastpoint = null;
+   	 	this.bTempPoints = [];
+     	this.bTP = new GPolyline(this.bTempPoints);
+     	this.Map.map.addOverlay(bTP);		//create polyline object from points and add to map
      
-     	BitMap.Edit.bAssistant = GEvent.addListener(Map.map, "click", function(overlay,point) {
-                		if(BitMap.Edit.bLastpoint && BitMap.Edit.bLastpoint.x==point.x && BitMap.Edit.bLastpoint.y==point.y) return;
-                		BitMap.Edit.bLastpoint = point;
+     	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay,point) {
+                		if(this.bLastpoint && this.bLastpoint.x==point.x && this.bLastpoint.y==point.y) return;
+                		this.bLastpoint = point;
                 		
-                		BitMap.Edit.bTempPoints.push(point);
-                		Map.map.removeOverlay(BitMap.Edit.bTP);
-                		BitMap.Edit.bTP = new GPolyline(BitMap.Edit.bTempPoints);
-                		Map.map.addOverlay(BitMap.Edit.bTP);
+                		this.bTempPoints.push(point);
+                		this.Map.map.removeOverlay(this.bTP);
+                		this.bTP = new GPolyline(this.bTempPoints);
+                		this.Map.map.addOverlay(this.bTP);
 
-                		for(var i=0; i<BitMap.Edit.bTempPoints.length; i++){
+                		for(var i=0; i<this.bTempPoints.length; i++){
 								if (i == 0){
-									msg = BitMap.Edit.bTempPoints[i].x + ', ' + BitMap.Edit.bTempPoints[i].y;
+									msg = this.bTempPoints[i].x + ', ' + this.bTempPoints[i].y;
 								}else{
-                				msg += ', ' + BitMap.Edit.bTempPoints[i].x + ', ' + BitMap.Edit.bTempPoints[i].y;
+                				msg += ', ' + this.bTempPoints[i].x + ', ' + this.bTempPoints[i].y;
 								}
                 		}
 										
-                		BitMap.Edit.bModPData.value = msg;
+                		this.bModPData.value = msg;
               	});
 		}
 	}
 	
 	if (a == 'marker'){
-		BitMap.Edit.bModForm = $('markerform_'+b);
- 		BitMap.Edit.bModMLat = BitMap.Edit.bModForm.marker_lat;
- 		BitMap.Edit.bModMLng = BitMap.Edit.bModForm.marker_lng;
-		alert ('Marker ploting assistant activated for '+ BitMap.Edit.bModForm.title.value + ' marker. \n Click to Position!');
+		this.bModForm = $('markerform_'+b);
+ 		this.bModMLat = this.bModForm.marker_lat;
+ 		this.bModMLng = this.bModForm.marker_lng;
+		alert ('Marker ploting assistant activated for '+ this.bModForm.title.value + ' marker. \n Click to Position!');
 	
-  	BitMap.Edit.bAssistant = GEvent.addListener(Map.map, "click", function(overlay, point){
+  	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
       if (point) {
-  		if (BitMap.Edit.bTP != null) {
-        	Map.map.removeOverlay(BitMap.Edit.bTP);
+  		if (this.bTP != null) {
+        	this.Map.map.removeOverlay(this.bTP);
   		}
-  		BitMap.Edit.bTP = new GMarker(point);
-  		Map.map.addOverlay(BitMap.Edit.bTP);
-  		Map.map.panTo(point);
-  		BitMap.Edit.bModMLat.value = point.lat();
-  		BitMap.Edit.bModMLng.value = point.lng();
+  		this.bTP = new GMarker(point);
+  		this.Map.map.addOverlay(this.bTP);
+  		this.Map.map.panTo(point);
+  		this.bModMLat.value = point.lat();
+  		this.bModMLng.value = point.lng();
       }
     });
 	}
@@ -3356,9 +3283,9 @@ BitMap.Edit.updateRemovePolygonSet = function(Map){
 		f = $('mapform');
 		alert ('Map centering assistant activated. \n Click to get center lat and lon values!');
 	
-  	BitMap.Edit.bAssistant = GEvent.addListener(Map.map, "click", function(overlay, point){
+  	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
       if (point) {
-  		Map.map.panTo(point);
+  		this.Map.map.panTo(point);
   		f.map_lng.value = point.lng();
   		f.map_lat.value = point.lat();
       }
@@ -3368,13 +3295,10 @@ BitMap.Edit.updateRemovePolygonSet = function(Map){
 }	
 
 	
- BitMap.Edit.removeAssistant = function(){
-	//@todo change this - bad harding coded ref to the map data - not nice
-  var Map = BitMap.MapData[0].Map;
-  
-   if (BitMap.Edit.bAssistant != null){
-      Map.map.removeOverlay(BitMap.Edit.bTP);
-   		GEvent.removeListener(BitMap.Edit.bAssistant);
-  		BitMap.Edit.bAssistant = null;
+BitMap.Edit.prototype.removeAssistant = function(){
+   if (this.bAssistant != null){
+      this.Map.map.removeOverlay(this.bTP);
+   		GEvent.removeListener(this.bAssistant);
+  		this.bAssistant = null;
 	 }
  } 
