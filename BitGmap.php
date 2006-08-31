@@ -764,7 +764,7 @@ class BitGmap extends LibertyAttachable {
 			$bindvars = array();
 		}
 
-		$query = "SELECT bm.*, tc.`content_id`, lc.`title`, lc.`data`
+		$query = "SELECT bm.*, lc.`content_id`, lc.`title`, lc.`data`
 			FROM `".BIT_DB_PREFIX."gmaps` bm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = bm.`content_id` )
 			".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." lc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'
 			ORDER BY ".$this->mDb->convert_sortmode( $sort_mode );
@@ -2178,7 +2178,7 @@ class BitGmap extends LibertyAttachable {
 function gmap_content_edit() {
 	global $gBitSmarty;
 	global $gBitSystem;
-	$gBitSmarty->assign('geo_edit', TRUE);
+	$gBitSmarty->assign('geo_edit_serv', TRUE);
 	$gBitSystem->mOnload[] = 'BitMap.EditContent();';
 }
 ?>

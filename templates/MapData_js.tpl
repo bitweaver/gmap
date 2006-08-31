@@ -1,10 +1,12 @@
 BitMap.MapData.push({ldelim}
   browser:"{$browserInfo.browser}",
-  id:{if $gContent->mInfo.gmap_id}{$gContent->mInfo.gmap_id}{/if},
+  {if !$geo_edit_serv}
+  id:{if $gContent->mInfo.gmap_id}{$gContent->mInfo.gmap_id}{else}null{/if},
   title:"{$gContent->mInfo.title}",
   description:"{$gContent->mInfo.description}",
   data:"{$gContent->mInfo.data}",
   parsed_data:"{$gContent->mInfo.parsed_data}",
+  {/if}
   mapdiv:'{$smarty.const.ACTIVE_PACKAGE}-map',
   width:'{if $gBitSystem->getConfig("gmap_width_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_width_`$smarty.const.ACTIVE_PACKAGE`")}{else}auto{/if}',
   height:'{if $gBitSystem->getConfig("gmap_height_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_height_`$smarty.const.ACTIVE_PACKAGE`")}{else}300px{/if}',

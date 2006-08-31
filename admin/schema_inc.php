@@ -268,6 +268,13 @@ $gBitInstaller->registerSchemaSequences( GMAP_PKG_NAME, $sequences );
 
 //$gBitInstaller->registerSchemaDefault( GMAP_PKG_NAME, array() );
 
+//
+$gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
+	array('bit_gm_edit_map', 'Can edit maps', 'editors', GMAP_PKG_NAME),
+	array('bit_gm_view_map', 'Can view maps', 'basic', GMAP_PKG_NAME),
+	array('bit_gm_remove_map', 'Can remove maps', 'editors', GMAP_PKG_NAME),
+) );
+
 
 $gBitInstaller->registerPreferences( GMAP_PKG_NAME, array(
 	array( GMAP_PKG_NAME, 'gmap_api_key', 'you must get a key from google'),
@@ -280,7 +287,7 @@ $gBitInstaller->registerPreferences( GMAP_PKG_NAME, array(
 	array( GMAP_PKG_NAME, 'gmap_type_control', 'true'),
 	array( GMAP_PKG_NAME, 'gmap_zoom_control', 's'),
 	array( GMAP_PKG_NAME, 'gmap_overview_control', 's'),
-	array( GMAP_PKG_NAME, 'gmap_map_type', 'Street'),	
+	array( GMAP_PKG_NAME, 'gmap_map_type', 0),
 	)
 );
 

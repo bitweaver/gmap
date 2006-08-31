@@ -1,4 +1,4 @@
-{if $gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap') && ( $smarty.request.view_user || $geo_edit ) }
+{if $gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap') && ( $geo_edit_serv ) }
   {include file="bitpackage:gmap/header_base.tpl"}
 {/if}
 
