@@ -6,6 +6,11 @@ if (typeof(BitMap.MapData) == 'undefined') {
     BitMap.MapData = [];
 }
 
+// for displaying and hiding menu parts
+BitMap.show = function (i){
+	document.getElementById(i).style.display = "block";
+};
+
 BitMap.DisplayList = function(){
   BitMap.Initialize();
   BitMap.MapData[0].Map.addOverlayListener();

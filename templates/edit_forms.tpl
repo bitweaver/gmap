@@ -1,4 +1,3 @@
-
 <div>
   <a id="emap" href="javascript:BitMap.Edit.editMap();">Edit Map</a> | 
 	<a id="emaptype" href="javascript:BitMap.Edit.editMapTypes();">Edit Map Types</a> |
@@ -435,7 +434,7 @@
     		</table>
 			</form>
 		</div>
-		<div id="newmarkerstylecancel" ><input type="button" name="closemarkerstyleform" value="Cancel New Marker Style" onclick="javascript:BitMap.Edit.canceledit('newmarkerstyleform'); canceledit('editerror');"></div>
+		<div id="newmarkerstylecancel" ><input type="button" name="closemarkerstyleform" value="Cancel New Marker Style" onclick="javascript:BitMap.Edit.canceledit('newmarkerstyleform'); BitMap.Edit.canceledit('editerror');"></div>
 </div>
 <!-- end of newmarkerstyleform -->
 
@@ -477,7 +476,7 @@
 		</div>
 </div> <!-- end of editmarkerstylesform -->
 
-<div id="editmarkerstylescancel" style="display:none;"><input type="button" name="closemarkerstylesform" value="Cancel Editing Marker Styles" onclick="javascript:BitMap.Edit.canceledit('editmarkerstylesmenu'); canceledit('newmarkerstyleform'); canceledit('editmarkerstyleform'); canceledit('editmarkerstylescancel');"></div>
+<div id="editmarkerstylescancel" style="display:none;"><input type="button" name="closemarkerstylesform" value="Cancel Editing Marker Styles" onclick="javascript:BitMap.Edit.canceledit('editmarkerstylesmenu'); BitMap.Edit.canceledit('newmarkerstyleform'); BitMap.Edit.canceledit('editmarkerstyleform'); BitMap.Edit.canceledit('editmarkerstylescancel');"></div>
 <!--end marker style editing forms -->
 
 
@@ -595,7 +594,7 @@
 </div> <!-- end of editmarkerform -->
 
 
-<div id="editmarkercancel" style="display:none;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:BitMap.Edit.canceledit('editmarkermenu'); canceledit('newmarkerform'); canceledit('editmarkerform'); canceledit('newmarkersetform'); canceledit('editmarkercancel'); canceledit('editmarkerstylesmenu'); canceledit('newmarkerstyleform'); canceledit('editmarkerstylesform'); canceledit('editmarkerstylescancel'); removeAssistant();  canceledit('editerror');"></div>
+<div id="editmarkercancel" style="display:none;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:BitMap.Edit.canceledit('editmarkermenu'); BitMap.Edit.canceledit('newmarkerform'); BitMap.Edit.canceledit('editmarkerform'); BitMap.Edit.canceledit('newmarkersetform'); BitMap.Edit.canceledit('editmarkercancel'); BitMap.Edit.canceledit('editmarkerstylesmenu'); BitMap.Edit.canceledit('newmarkerstyleform'); BitMap.Edit.canceledit('editmarkerstylesform'); BitMap.Edit.canceledit('editmarkerstylescancel'); BitMap.Edit.removeAssistant(); BitMap.Edit.canceledit('editerror');"></div>
 <!--end marker editing forms -->
 
 
@@ -651,7 +650,7 @@
 				</table>
     	</form>
 		</div>
-		<div id="newpolylinesetcancel" ><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:BitMap.Edit.canceledit('newpolylinesetform'); canceledit('editerror');"></div>
+		<div id="newpolylinesetcancel" ><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:BitMap.Edit.canceledit('newpolylinesetform'); BitMap.Edit.canceledit('editerror');"></div>
 </div>
 <!-- end of newpolylinesetform -->
 
@@ -713,7 +712,7 @@
     		</table>
     	</form>
   	</div>
-		<div id="newpolylinestylecancel" ><input type="button" name="closepolylinestyleform" value="Cancel New Polyline Style" onclick="javascript:BitMap.Edit.canceledit('newpolylinestyleform'); canceledit('editerror');"></div>
+		<div id="newpolylinestylecancel" ><input type="button" name="closepolylinestyleform" value="Cancel New Polyline Style" onclick="javascript:BitMap.Edit.canceledit('newpolylinestyleform'); BitMap.Edit.canceledit('editerror');"></div>
 </div>
 <!-- end of newpolylinestyleform -->
 
@@ -774,7 +773,7 @@
 		</div>
 </div> <!-- end of editpolylinestylesform -->
 
-<div id="editpolylinestylescancel" style="display:none;"><input type="button" name="closepolylinestylesform" value="Cancel Editing Polyline Styles" onclick="javascript:BitMap.Edit.canceledit('editpolylinestylesmenu'); canceledit('newpolylinestyleform'); canceledit('editpolylinestyleform'); canceledit('editpolylinestylescancel');"></div>
+<div id="editpolylinestylescancel" style="display:none;"><input type="button" name="closepolylinestylesform" value="Cancel Editing Polyline Styles" onclick="javascript:BitMap.Edit.canceledit('editpolylinestylesmenu'); BitMap.Edit.canceledit('newpolylinestyleform'); BitMap.Edit.canceledit('editpolylinestyleform'); BitMap.Edit.canceledit('editpolylinestylescancel');"></div>
 <!--end polyline style editing forms -->
 
 
@@ -808,7 +807,7 @@
     		</table>
     	</form>
   	</div>
-		<div id="newpolylinecancel" ><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:BitMap.Edit.canceledit('newpolylineform'); removeAssistant(); canceledit('editerror');"></div>
+		<div id="newpolylinecancel" ><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:BitMap.Edit.canceledit('newpolylineform'); removeAssistant(); BitMap.Edit.canceledit('editerror');"></div>
 </div> <!-- end of newpolylineform -->
 
 
@@ -907,7 +906,7 @@
 		</div> <!-- end of polylineset_n -->
 </div> <!-- end of editpolylineform -->
 
-<div id="editpolylinecancel" style="display:none;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:BitMap.Edit.cancelPolylineEdit(); canceledit('newpolylinesetform'); canceledit('editerror');"></div>
+<div id="editpolylinecancel" style="display:none;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:BitMap.Edit.cancelPolylineEdit(); BitMap.Edit.canceledit('newpolylinesetform'); BitMap.Edit.canceledit('editerror');"></div>
 <!--end polyline editing forms -->
 
 
@@ -967,7 +966,7 @@
     		</table>
     	</form>
 		</div>
-		<div id="newpolygonsetcancel" ><input type="button" name="closepolygonsetform" value="Cancel New Polygon Set" onclick="javascript:BitMap.Edit.canceledit('newpolygonsetform'); canceledit('editerror');"></div>
+		<div id="newpolygonsetcancel" ><input type="button" name="closepolygonsetform" value="Cancel New Polygon Set" onclick="javascript:BitMap.Edit.canceledit('newpolygonsetform'); BitMap.Edit.canceledit('editerror');"></div>
 </div>
 <!-- end of newpolygonsetform -->
 
@@ -1006,7 +1005,7 @@
 				</table>
 			</form>
 		</div>
-		<div id="newpolygonstylecancel" ><input type="button" name="closepolygonstyleform" value="Cancel New Polygon Style" onclick="javascript:BitMap.Edit.canceledit('newpolygonstyleform'); canceledit('editerror');"></div>
+		<div id="newpolygonstylecancel" ><input type="button" name="closepolygonstyleform" value="Cancel New Polygon Style" onclick="javascript:BitMap.Edit.canceledit('newpolygonstyleform'); BitMap.Edit.canceledit('editerror');"></div>
 </div>
 <!-- end of newpolygonstyleform -->
 
@@ -1044,7 +1043,7 @@
 		</div>
 </div> <!-- end of editpolygonstylesform -->
 
-<div id="editpolygonstylescancel" style="display:none;"><input type="button" name="closepolygonstylesform" value="Cancel Editing Polygon Styles" onclick="javascript:BitMap.Edit.canceledit('editpolygonstylesmenu'); canceledit('newpolygonstyleform'); canceledit('editpolygonstyleform'); canceledit('editpolygonstylescancel');"></div>
+<div id="editpolygonstylescancel" style="display:none;"><input type="button" name="closepolygonstylesform" value="Cancel Editing Polygon Styles" onclick="javascript:BitMap.Edit.canceledit('editpolygonstylesmenu'); BitMap.Edit.canceledit('newpolygonstyleform'); BitMap.Edit.canceledit('editpolygonstyleform'); BitMap.Edit.canceledit('editpolygonstylescancel');"></div>
 <!--end polygon style editing forms -->
 
 
@@ -1087,7 +1086,7 @@
 				</table>
 			</form>
 		</div>
-		<div id="newpolygoncancel" ><input type="button" name="closepolygonform" value="Cancel New Polygon" onclick="javascript:BitMap.Edit.canceledit('newpolygonform'); removeAssistant(); canceledit('editerror');"></div>
+		<div id="newpolygoncancel" ><input type="button" name="closepolygonform" value="Cancel New Polygon" onclick="javascript:BitMap.Edit.canceledit('newpolygonform'); removeAssistant(); BitMap.Edit.canceledit('editerror');"></div>
 </div> <!-- end of newpolygonform -->
 
 
@@ -1198,6 +1197,6 @@
 		</div> <!-- end of polygonset_n -->
 </div> <!-- end of editpolygonform -->
 
-<div id="editpolygoncancel" style="display:none;"><input type="button" name="closepolygonform" value="Cancel Editing Polygons" onclick="javascript:BitMap.Edit.cancelPolygonEdit(); canceledit('newpolygonsetform'); canceledit('editerror');"></div>
+<div id="editpolygoncancel" style="display:none;"><input type="button" name="closepolygonform" value="Cancel Editing Polygons" onclick="javascript:BitMap.Edit.cancelPolygonEdit(); BitMap.Edit.canceledit('newpolygonsetform'); BitMap.Edit.canceledit('editerror');"></div>
 <!--end polygon editing forms -->
 

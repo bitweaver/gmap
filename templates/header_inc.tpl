@@ -6,6 +6,10 @@
   {include file="bitpackage:gmap/header_base.tpl"}
 {/if}
 
+{if $gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap') && ( $map_list ) }
+  {include file="bitpackage:gmap/header_base.tpl"}
+{/if}
+
 {if $gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap') && ( $edit_map ) }
   {include file="bitpackage:gmap/header_base.tpl"}
   <script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Base.js" type="text/javascript"></script>
