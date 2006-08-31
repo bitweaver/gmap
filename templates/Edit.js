@@ -14,7 +14,7 @@ if (typeof(BitMap) == 'undefined') {
 }
 
 if (typeof(BitMap.Edit) == 'undefined') {
-    BitMap.Edit = [];
+    BitMap.Edit = {};
 }
 
 BitMap.EditMap = function(){
