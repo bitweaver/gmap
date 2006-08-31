@@ -1,5 +1,5 @@
 //for debugging
-BitMap.dumpProps(obj, parent) {
+BitMap.dumpProps = function(obj, parent) {
    for (var i in obj) {
       if (parent) { var msg = parent + "." + i + "\n" + obj[i]; } else { var msg = i + "\n" + obj[i]; }
       if (!confirm(msg)) { return; }
@@ -35,11 +35,11 @@ BitMap.Edit.editPolylineId;
 BitMap.Edit.editSetType;
 
 // for sorting arrays
-BitMap.Edit.sortOn(a,b){ 
+BitMap.Edit.sortOn = function(a,b){ 
 	return a['set_id']-b['set_id']; 
 } 
 
-BitMap.Edit.sortIt(pParamHash){
+BitMap.Edit.sortIt = function(pParamHash){
 	pParamHash.sort(sortOn); 
 }
 

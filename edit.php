@@ -102,10 +102,10 @@ if (!empty($_REQUEST["save_map"])) {
     $gBitSmarty->assign( 'textarea_id', 'editsample' );
 		$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
 		$gBitSmarty->assign( 'loadMochiKit', TRUE );
-		$gBitSmarty->assign( 'loadEditMethods', TRUE );
+		$gBitSmarty->assign( 'edit_map', TRUE );
 
     //set onload function in body
-    $gBodyOnload[] = 'loadMap();';
+	  $gBitSystem->mOnload[] = 'BitMap.EditMap();';
     
     // Display the template
     $gBitSystem->display( 'bitpackage:gmap/edit_gmap.tpl', tra('Gmap') );    		
