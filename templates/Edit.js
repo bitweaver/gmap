@@ -1796,7 +1796,7 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 
 
 	 
-	 
+	
 	 
 	 
 	 
