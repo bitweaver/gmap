@@ -1528,227 +1528,264 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
    var http_request = false;
 	 
 	 BitMap.Edit.prototype.storeMap = function(f){
-			doSimpleXMLHttpRequest("edit.php", f).addCallback(updateMap); 
+			var ref = this;
+			doSimpleXMLHttpRequest("edit.php", f).addCallback(ref.updateMap); 
 	 }
 
 	 BitMap.Edit.prototype.storeNewMapType = function(f){
+			var ref = this;
 	 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
-			doSimpleXMLHttpRequest(str).addCallback( addMapType ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.addMapType ); 
 	 }
 
 	 BitMap.Edit.prototype.storeMapType = function(f){	 
+			var ref = this;
 			this.editObjectN = f.array_n.value;
 	 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
-			doSimpleXMLHttpRequest(str).addCallback( updateMapType ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateMapType ); 
 	 }
 	 
 	 BitMap.Edit.prototype.removeMapType = function(f){
+			var ref = this;
 			this.editObjectN = f.array_n.value;
 			this.editSetId = f.maptype_id.value;
 	 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMapType ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemoveMapType ); 
 	 }
 	 
 	 BitMap.Edit.prototype.expungeMapType = function(f){
+			var ref = this;
 			this.editObjectN = f.array_n.value;
 			this.editSetId = f.maptype_id.value;
 	 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMapType ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemoveMapType ); 
 	 }
 	 
 	 BitMap.Edit.prototype.storeNewMarker = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 	 		var str = "edit_marker.php?" + queryString(f) + "&save_marker=true";
-			doSimpleXMLHttpRequest(str).addCallback( addMarker ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.addMarker ); 
 	 }
 	 
 	 BitMap.Edit.prototype.storeMarker = function(f){
+			var ref = this;
 			this.editObjectN = f.marker_array_n.value;
 	 		var str = "edit_marker.php?" + queryString(f) + "&save_marker=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateMarker ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateMarker ); 
 	 }
 	 
 	 BitMap.Edit.prototype.removeMarker = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			this.editMarkerId = f.marker_id.value;
 	 		var str = "edit_marker.php?set_id=" + this.editSetId + "&marker_id=" + this.editMarkerId + "&remove_marker=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarker ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemoveMarker ); 
 	 }
 
 	 BitMap.Edit.prototype.expungeMarker = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			this.editMarkerId = f.marker_id.value;
 	 		var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarker ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemoveMarker ); 
 	 }	 
 
 	 BitMap.Edit.prototype.storeNewMarkerSet = function(f){
+			var ref = this;
 			this.canceledit('editerror');
 	 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
-			doSimpleXMLHttpRequest(str).addCallback( addMarkerSet ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.addMarkerSet ); 
 	 }
 
 	 BitMap.Edit.prototype.storeMarkerSet = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			this.editObjectN = f.set_array_n.value;
 	 		var str = "edit_markerset.php?" + queryString(f) + "&gmap_id=" + this.Map.id + "&save_markerset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateMarkerSet ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateMarkerSet ); 
 	 }
 
 	 BitMap.Edit.prototype.removeMarkerSet = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarkerSet ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemoveMarkerSet ); 
 	 }
 
 	 BitMap.Edit.prototype.expungeMarkerSet = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemoveMarkerSet ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemoveMarkerSet ); 
 	 }
 	 
 	 BitMap.Edit.prototype.storeNewMarkerStyle = function(f){
+			var ref = this;
 	 		var str = "edit_markerstyle.php?" + queryString(f);
-			doSimpleXMLHttpRequest(str).addCallback( addMarkerStyle ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.addMarkerStyle ); 
 	 }
 
 	 BitMap.Edit.prototype.storeMarkerStyle = function(f){
+			var ref = this;
 			this.editObjectN = f.style_array_n.value;
 	 		var str = "edit_markerstyle.php?" + queryString(f);
-			doSimpleXMLHttpRequest(str).addCallback( updateMarkerStyle ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateMarkerStyle ); 
 	 }
 
 	 BitMap.Edit.prototype.storeNewIconStyle = function(f){
+			var ref = this;
 	 		var str = "edit_iconstyle.php?" + queryString(f);
-			doSimpleXMLHttpRequest(str).addCallback( addIconStyle ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.addIconStyle ); 
 	 }
 
 	 BitMap.Edit.prototype.storeIconStyle = function(f){
+			var ref = this;
 			this.editObjectN = f.style_array_n.value;
 	 		var str = "edit_iconstyle.php?" + queryString(f);
-			doSimpleXMLHttpRequest(str).addCallback( updateIconStyle ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateIconStyle ); 
 	 }
 
 	 BitMap.Edit.prototype.storeNewPolyline = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 	 		var str = "edit_polyline.php?" + queryString(f) + "&save_polyline=true";
-			doSimpleXMLHttpRequest(str).addCallback( addPolyline );
+			doSimpleXMLHttpRequest(str).addCallback( ref.addPolyline );
 	 }
 	 
 	 BitMap.Edit.prototype.storePolyline = function(f){
+			var ref = this;
 			this.editObjectN = f.polyline_array_n.value;
-			doSimpleXMLHttpRequest("edit_polyline.php", f).addCallback( updatePolyline );
+			doSimpleXMLHttpRequest("edit_polyline.php", f).addCallback( ref.updatePolyline );
 	 }
 	 
 	 BitMap.Edit.prototype.removePolyline = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			this.editPolylineId = f.polyline_id.value;
 	 		var str = "edit_polyline.php?set_id=" + this.editSetId + "&polyline_id=" + f.polyline_id.value + "&remove_polyline=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolyline );
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemovePolyline );
 	 }
 
 	 BitMap.Edit.prototype.expungePolyline = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			this.editPolylineId = f.polyline_id.value;
 	 		var str = "edit_polyline.php?polyline_id=" + f.polyline_id.value + "&expunge_polyline=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolyline );
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemovePolyline );
 	 }	 
 	 
 	 BitMap.Edit.prototype.storeNewPolylineSet = function(f){
+			var ref = this;
 			this.canceledit('editerror');
 	 		var str = "edit_polylineset.php?" + queryString(f) + "&set_type=polylines" + "&gmap_id=" + this.Map.id;
-			doSimpleXMLHttpRequest(str).addCallback( addPolylineSet );
+			doSimpleXMLHttpRequest(str).addCallback( ref.addPolylineSet );
 	 }
 
 	 BitMap.Edit.prototype.storePolylineSet = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			this.editObjectN = f.set_array_n.value;
 	 		var str = "edit_polylineset.php?" + queryString(f) + "&gmap_id=" + this.Map.id + "&save_polylineset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updatePolylineSet );
+			doSimpleXMLHttpRequest(str).addCallback( ref.updatePolylineSet );
 	 }
 
 	 BitMap.Edit.prototype.removePolylineSet = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 	 		var str = "edit_polylineset.php?set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polylineset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolylineSet );
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemovePolylineSet );
 	 }
 	 
 	 BitMap.Edit.prototype.expungePolylineSet = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 	 		var str = "edit_polylineset.php?set_id=" + f.set_id.value + "&expunge_polylineset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolylineSet );
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemovePolylineSet );
 	 }
 
 	 BitMap.Edit.prototype.storeNewPolylineStyle = function(f){
+			var ref = this;
 	 		var str = "edit_polylinestyle.php?" + queryString(f);
-			doSimpleXMLHttpRequest(str).addCallback( addPolylineStyle ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.addPolylineStyle ); 
 	 }
 
 	 BitMap.Edit.prototype.storePolylineStyle = function(f){
+			var ref = this;
 			this.editObjectN = f.style_array_n.value;
 	 		var str = "edit_polylinestyle.php?" + queryString(f);
-			doSimpleXMLHttpRequest(str).addCallback( updatePolylineStyle ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updatePolylineStyle ); 
 	 }
 	 
 	 BitMap.Edit.prototype.storeNewPolygon = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 	 		var str = "edit_polygon.php?" + queryString(f) + "&save_polygon=true";
-			doSimpleXMLHttpRequest(str).addCallback( addPolygon );
+			doSimpleXMLHttpRequest(str).addCallback( ref.addPolygon );
 	 }
 	 
 	 BitMap.Edit.prototype.storePolygon = function(f){
+			var ref = this;
 			this.editObjectN = f.polygon_array_n.value;
-			doSimpleXMLHttpRequest("edit_polygon.php", f).addCallback( updatePolygon );
+			doSimpleXMLHttpRequest("edit_polygon.php", f).addCallback( ref.updatePolygon );
 	 }
 	 
 	 BitMap.Edit.prototype.removePolygon = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			this.editPolygonId = f.polygon_id.value;
 	 		var str = "edit_polygon.php?set_id=" + this.editSetId + "&polygon_id=" + f.polygon_id.value + "&remove_polygon=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygon );
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemovePolygon );
 	 }
 
 	 BitMap.Edit.prototype.expungePolygon = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			this.editPolygonId = f.polygon_id.value;
 	 		var str = "edit_polygon.php?polygon_id=" + f.polygon_id.value + "&expunge_polygon=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygon );
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemovePolygon );
 	 }	 
 	 
 	 BitMap.Edit.prototype.storeNewPolygonSet = function(f){
+			var ref = this;
 			this.canceledit('editerror');
 	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
-			doSimpleXMLHttpRequest(str).addCallback( addPolygonSet );
+			doSimpleXMLHttpRequest(str).addCallback( ref.addPolygonSet );
 	 }
 
 	 BitMap.Edit.prototype.storePolygonSet = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 			this.editObjectN = f.set_array_n.value;
 	 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + this.Map.id + "&save_polygonset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updatePolygonSet );
+			doSimpleXMLHttpRequest(str).addCallback( ref.updatePolygonSet );
 	 }
 
 	 BitMap.Edit.prototype.removePolygonSet = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 	 		var str = "edit_polygonset.php?set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polygonset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygonSet );
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemovePolygonSet );
 	 }
 	 
 	 BitMap.Edit.prototype.expungePolygonSet = function(f){
+			var ref = this;
 			this.editSetId = f.set_id.value;
 	 		var str = "edit_polygonset.php?set_id=" + f.set_id.value + "&expunge_polygonset=true";
-			doSimpleXMLHttpRequest(str).addCallback( updateRemovePolygonSet );
+			doSimpleXMLHttpRequest(str).addCallback( ref.updateRemovePolygonSet );
 	 }
 
 	 BitMap.Edit.prototype.storeNewPolygonStyle = function(f){
+			var ref = this;
 	 		var str = "edit_polygonstyle.php?" + queryString(f);
-			doSimpleXMLHttpRequest(str).addCallback( addPolygonStyle ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.addPolygonStyle ); 
 	 }
 
 	 BitMap.Edit.prototype.storePolygonStyle = function(f){
+			var ref = this;
 			this.editObjectN = f.style_array_n.value;
 	 		var str = "edit_polygonstyle.php?" + queryString(f);
-			doSimpleXMLHttpRequest(str).addCallback( updatePolygonStyle ); 
+			doSimpleXMLHttpRequest(str).addCallback( ref.updatePolygonStyle ); 
 	 }
 
 
