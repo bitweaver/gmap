@@ -41,6 +41,19 @@ BitMap.Edit = function(){
   this.bModPData; 
   this.bModMLat;
   this.bModMLng;
+
+//DELETE THIS SHIT WHEN DONE TESTING
+/*  
+  this.Map.markersets[0]={title:"steve", set_id:1};
+  this.Map.markers[0]={title:"some shit", set_id:1, marker_type:0, marker_id:1, lat: 40.90234, lng:-32.0345345, data:"soma oms da body text", label_data:"my lable", photo_url:"no photo, thanks"};
+  this.Map.markers[1]={title:"other stuff", set_id:1, marker_type:0, marker_id:2, lat: 41.22234, lng:-42.0345345, data:"aslkjd lkj body text", label_data:"my lable", photo_url:"no photo, thanks"};
+  this.Map.markers[2]={title:"bla bla bl", set_id:1, marker_type:1, marker_id:3, lat: 22.90234, lng:-52.0345345, data:"helol helool o asd text", label_data:"my lable", photo_url:"no photo, thanks"};
+
+  this.Map.markersets[1]={title:"chris", set_id:2};
+  this.Map.markers[3]={title:"cookies", set_id:2, marker_type:0, marker_id:4, lat: 68.90234, lng:-35.0345345, data:"some body text", label_data:"my lable", photo_url:"no photo, thanks"};
+  this.Map.markers[4]={title:"milk", set_id:2, marker_type:1, marker_id:5, lat: 44.22234, lng:-46.0345345, data:"milky milky body text", label_data:"my lable", photo_url:"no photo, thanks"};
+  this.Map.markers[5]={title:"napkin", set_id:2, marker_type:0, marker_id:6, lat: 23.90234, lng:-55.0345345, data:"napskin flk asd text", label_data:"my lable", photo_url:"no photo, thanks"};
+*/  
 }
 
 
@@ -249,243 +262,287 @@ BitMap.Edit.prototype.newMapType = function(){
  *
  *******************/
 
-BitMap.Edit.prototype.newMarker = function(){
-		var check = false;
-  	for (var i=0; i<this.Map.markersets.length; i++){
-  		if ( this.Map.markersets[i] != null ){
-				check = true;
-  		}
-  	}
-
-  	if (check == false){
-  		//set warning message, show it, fade it
-  		$('errortext').innerHTML = "To add a marker, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new marker!";
-			BitMap.show('editerror');
-  		Fat.fade_all();
-  		//display new marker set form
-      this.newMarkerSet();
-
-		}else{
-      // Display the New Marker Div and Cancel Button
-     	BitMap.show('newmarkerform');
-
-  		// Reset the Form
-  		$('markerform_new').reset();
-  		
-  		// shortcut to the Select Option we are adding to
-  		var selectRoot = $('set_id');
-  
-  		// we assume we have called this before and reset the options menu
-  		selectRoot.options.length = 0;
-  
-  		// add option for each set available
-  		if ( typeof(this.Map.markersets) != 'undefined' ){
-    			for ( i=0; i<this.Map.markersets.length; i++ ){
-  						if ( this.Map.markersets[i] != null ){
-								selectRoot.options[selectRoot.options.length] = new Option( this.Map.markersets[i].name, this.Map.markersets[i].set_id );
-  						}
-    			}
-  		}
+BitMap.Edit.prototype.editMarkerSets = function(){    
+	BitMap.show('edit-markers-menu');
+  //First check if there are any marker sets
+  if (this.Map.markersets.length > 0){
+    // We assume editMarkers has been called before and remove 
+  	// any previously existing sets from the UI	
+  	for (var n=0; n<this.Map.markersets.length; n++) {
+  		if (this.Map.markersets[n]!= null){
+    		var getElem = "edit-markerset-"+n;
+    		if ( $(getElem) ) {
+    			$('edit-markersets-table').removeChild($(getElem));
+    		}
 		}
-};
+  	}
+    //Add a tool bar for each MarkerSet
+    for (var n=0; n<this.Map.markersets.length; n++) {
+  		var newMarkerSet = $('edit-markerset').cloneNode(true);
+    	newMarkerSet.id = "edit-markerset-"+n;
+   		newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[n].title;
+   		newMarkerSet.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMarkerSetOptions("+n+");";
+   		newMarkerSet.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMarkers("+n+");";
+    	$('edit-markersets-table').appendChild(newMarkerSet);
+    	BitMap.show('edit-markerset-'+n);
+    }
+  }else{
+	//alert you must create a marker set first
+  }
+  BitMap.show('edit-markersets-table');
+  BitMap.show('edit-markersets-cancel');
+}
+
+
+BitMap.Edit.prototype.cancelEditMarkerSets = function(){
+  //rescue our form tables lest we destroy them by accident
+  this.canceledit('edit-markers-table');
+  var elm = $('edit-markers-table');
+  document.body.appendChild(elm);
+  this.canceledit('edit-markerset-options-table');
+  var elm = $('edit-markerset-options-table');
+  document.body.appendChild(elm);
+  
+  this.canceledit('edit-markers-menu');
+  this.canceledit('edit-markersets-table');
+  this.canceledit('edit-markersets-cancel'); 
+/*
+  this.canceledit('newmarkerform');
+  this.canceledit('newmarkersetform'); 
+  this.canceledit('editmarkerstylesmenu'); 
+  this.canceledit('newmarkerstyleform'); 
+  this.canceledit('editmarkerstylesform'); 
+  this.canceledit('editmarkerstylescancel');
+*/
+  this.removeAssistant(); 
+  this.canceledit('editerror');
+}
 
 
 BitMap.Edit.prototype.newMarkerSet = function(){
-    // Display the New Form Div
-   	BitMap.show('newmarkersetform');
-		// Reset the Form
-		$('markersetform_new').reset();
-};
+  if($('edit-markerset-new')){
+    BitMap.show('edit-markerset-new');
+  }else{
+    var newMarkerSet = $('edit-markerset').cloneNode(true);
+    newMarkerSet.id = "edit-markerset-new";
+    newMarkerSet.getElementsByTagName("span").item(0).innerHTML = "New Marker Set";
+    var tdtags = newMarkerSet.getElementsByTagName("td");
+    tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
+    $('edit-markers-menu').appendChild(newMarkerSet);
+    BitMap.show('edit-markerset-new');
 
-
-
-BitMap.Edit.prototype.editMarkers = function(){		
-  // Display the Edit Form Div and Cancel Button
-	BitMap.show('editmarkermenu');
-  BitMap.show('editmarkerform');
-	BitMap.show('editmarkercancel');
-
-	//if marker data exists
-	if ( typeof(this.Map.markers) ) {
-	
-  	// We assume editMarkers has been called before and remove 
-  	// any previously existing sets from the UI
-  	for (var a=0; a<this.Map.markersets.length; a++) {
-  		if (this.Map.markersets[a]!= null){
-    		var getElem = "markerset_"+this.Map.markersets[a].set_id;
-    		if ( $(getElem) ) {
-        	var extraMarkerForm = $(getElem);
-    			$('editmarkerform').removeChild(extraMarkerForm);
-    		}
-			}
+    //add form
+    var optionsTable = $('edit-new-markerset-table');
+    var target = $('edit-markerset-new');  
+    target.insertBefore(optionsTable, target.childNodes[2]);  
+    BitMap.show('edit-new-markerset-table');
+  }
+  
+  //customize the form values
+  var form = $('edit-new-markerset-form');
+  form.reset();
+  if ( this.Map.markerstyles.length > 0 ){
+    var OptionN = form.style_id.options.length;
+    for (var d=0; d<this.Map.markerstyles.length; d++){
+      if ( this.Map.markerstyles[d] != null ){
+	    form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, this.Map.markerstyles[d].style_id );
+	    if ( this.Map.markerstyles[d].style_id == s.style_id){
+	      form.style_id.options[OptionN + d].selected=true;
+	    }
+      }
   	}
+  }
+  if ( this.Map.iconstyles.length > 0 ){
+    var IconN = form.icon_id.options.length;
+  	for (var e=0; e<this.Map.iconstyles.length; e++){
+      if ( this.Map.iconstyles[e] != null ){
+	    form.icon_id.options[IconN+e] = new Option( this.Map.iconstyles[e].name, this.Map.iconstyles[e].icon_id );
+	    if ( this.Map.iconstyles[e].icon_id == s.icon_id){
+	      form.icon_id.options[IconN+e].selected=true;
+	    }
+      }
+  	}
+  }
+}
+
+
+BitMap.Edit.prototype.editMarkerSetOptions = function(i){
+  this.cancelEditMarkers();
+  var s = this.Map.markersets[i];
+  var optionsTable = $('edit-markerset-options-table');
+  var target = $('edit-markerset-'+i);
+  target.insertBefore(optionsTable, target.childNodes[2]);  
+  BitMap.show('edit-markerset-options-table');
   
-  	var newSetId;
-  	  	
-  	// add a new set UI for each marker set
-  	for (var b=0; b<this.Map.markersets.length; b++) {
-    	if (this.Map.markersets[b]!= null){
-  						
-    		newSetId = this.Map.markersets[b].set_id;
-    	
-    		// clone model set UI
-  			var newMarkerSet = $('markerset_n').cloneNode(true);
-    		// give a new id to the new set UI
-    		newMarkerSet.id = "markerset_"+newSetId;
   
-        	// update the new form ids
-        	newMarkerSetKids = newMarkerSet.childNodes;
-				for ( var n = 0; n < newMarkerSetKids.length; n++ ) {
-          		if ( newMarkerSetKids[n].id == "markersetform_n" ) {					
-              		newMarkerSetKids[n].id = "markersetform_" + newSetId;
-                	newMarkerSetKids[n].name = "markersetform_" + newSetId;
-            		var nMSFKids = newMarkerSetKids[n].childNodes;
-            		for (var o=0; o<nMSFKids.length; o++){
-              			if (nMSFKids[o].id == "markersetformdata_n"){
-              				nMSFKids[o].id = "markersetformdata_" + newSetId;
-              			}
-            		}
-					}
+  //customize the form values
+  var form = $('edit_markerset-options-form');
+  form.set_id.value = s.set_id;
+  form.set_array_n.value = i;
+  form.title.value = s.title;
+  if (s.plot_on_load == false){ form.plot_on_load.options[0].selected=true; }else{form.plot_on_load.options[1].selected=true;};
+  if (s.side_panel == false){ form.side_panel.options[0].selected=true; }else{form.side_panel.options[1].selected=true;};
+  if (s.explode == false){ form.explode.options[0].selected=true }else{form.explode.options[1].selected=true};
+  if (s.cluster == false){ form.cluster.options[0].selected=true }else{form.cluster.options[1].selected=true};
+  if ( this.Map.markerstyles.length > 0 ){
+	var OptionN = form.style_id.options.length;
+  	for (var d=0; d<this.Map.markerstyles.length; d++){
+      if ( this.Map.markerstyles[d] != null ){
+	    form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, this.Map.markerstyles[d].style_id );
+	    if ( this.Map.markerstyles[d].style_id == s.style_id){
+	        form.style_id.options[OptionN + d].selected=true;
+	    }
+  	  }
+  	}
+  }
+  if ( this.Map.iconstyles.length > 0 ){
+    var IconN = form.icon_id.options.length;
+  	for (var e=0; e<this.Map.iconstyles.length; e++){
+      if ( this.Map.iconstyles[e] != null ){
+	    form.icon_id.options[IconN+e] = new Option( this.Map.iconstyles[e].name, this.Map.iconstyles[e].icon_id );
+	    if ( this.Map.iconstyles[e].icon_id == s.icon_id){
+	      form.icon_id.options[IconN+e].selected=true;
+	    }
+  	  }
+  	}
+  }
+}
 
-          		if ( newMarkerSetKids[n].id == "setform_n" ) {					
-              		newMarkerSetKids[n].id = "setform_" + newSetId;
-						formKids = newMarkerSetKids[n].childNodes;
-   					for (var p=0; p<formKids.length; p++) {
-   						if (formKids[p].id == "editmarkertable_n"){
-              				formKids[p].id = "editmarkertable_"+newSetId;
-                			if (formKids[p].id == "allavailmarkers_n"){
-                				formKids[p].id = "allavailmarkers_"+newSetId;
-     							allMarkKids = formKids[p].childNodes;
-     							for (var e=0; e<allMarkKids.length; e++) {
-        							if (allMarkKids[e].id == "addmarkertable_n"){
-        								allMarkKids[e].id = "addmarkertable_"+newSetId;
-        							}
-     							}
-                			}
-              			}
-   					}
-					}
-				}
 
-  
-        	// add form container to set table
-    		$('editmarkerform').appendChild(newMarkerSet);
-    		BitMap.show('markerset_'+newSetId);
-				BitMap.show('markersetform_'+newSetId);
+BitMap.Edit.prototype.cancelNewMarkerSet = function(){
+  this.canceledit('edit-markerset-new');
+}
 
-				//get form data div children and update
-           	var mytable = $('markersetformdata_'+newSetId);
-           	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
 
-   			var myrow = mytablebody.getElementsByTagName("tr").item(0);
-           	var mycel = myrow.getElementsByTagName("td").item(0);
-   			mycel.getElementsByTagName("b").item(0).innerHTML = this.Map.markersets[b].name;
-   			mycel = myrow.getElementsByTagName("td").item(7);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storeMarkerSet(document.markersetform_"+newSetId+");";
-   			mycel.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.removeMarkerSet(document.markersetform_"+newSetId+");";
-   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.EditSession.expungeMarkerSet(document.markersetform_"+newSetId+");";
+BitMap.Edit.prototype.cancelEditMarkerSetOptions = function(){
+  this.canceledit('edit-markerset-options-table');
+  this.canceledit('newmarkersetform');
+  this.canceledit('editerror');
+}
 
-   			myrow = mytablebody.getElementsByTagName("tr").item(1);
-   			mycel = myrow.getElementsByTagName("td").item(0);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editSet("+newSetId+");";
-   			mycel.getElementsByTagName("a").item(1).href = "javascript:alert('feature coming soon');";
 
-				//get form and update values
-				form = $('markersetform_'+newSetId);
-				form.set_id.value = newSetId;
-				form.set_array_n.value = b;
-				if (this.Map.markersets[b].plot_on_load == false){ form.plot_on_load.options[1].selected=true; };
-				if (this.Map.markersets[b].side_panel == false){ form.side_panel.options[1].selected=true; };
-				if (this.Map.markersets[b].explode == false){ form.explode.options[1].selected=true };
-				if (this.Map.markersets[b].cluster == false){ form.cluster.options[1].selected=true };
-				if ( (typeof(this.Map.markerstyles) != 'undefined') && (this.Map.markerstyles.length > 0) ){
-					var OptionN = form.style_id.options.length;
-  				for (var d=0; d<this.Map.markerstyles.length; d++){
-						if ( this.Map.markerstyles[d] != null ){
-							form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, this.Map.markerstyles[d].style_id );
-							if ( this.Map.markerstyles[d].style_id == this.Map.markersets[b].style_id){
-							form.style_id.options[OptionN + d].selected=true;
-							}
-  					}
-  				}
-				}
-				if ( (typeof(this.Map.iconstyles) != 'undefined') && (this.Map.iconstyles.length > 0) ){
-					var IconN = form.icon_id.options.length;
-  				for (var e=0; e<this.Map.iconstyles.length; e++){
-						if ( this.Map.iconstyles[e] != null ){
-							form.icon_id.options[IconN+e] = new Option( this.Map.iconstyles[e].name, this.Map.iconstyles[e].icon_id );
-							if ( this.Map.iconstyles[e].icon_id == this.Map.markersets[b].icon_id){
-							form.icon_id.options[IconN+e].selected=true;
-							}
-  					}
-  				}
-				}
-			}
-		}			
-		
-  	//for length of markers add form to setelement on matching set_id
-		var x = 0;
-  	for (g=0; g<this.Map.markers.length; g++) {
-			if (this.Map.markers[g]!= null){
-				x++;
-				//add marker form...again a little ugly here
-				var formCont = $("editmarkertable_"+this.Map.markers[g].set_id);
-  			formContKids = formCont.childNodes;
-
-            for (var n = 0; n < formContKids.length; n++) {
-      			if (formContKids[n].id == "markerform_n"){
-            		var newMarkerForm = formContKids[n].cloneNode(true);
-        			newMarkerForm.id = "markerform_"+g;
-    				newMarkerForm.name = "markerform_"+g;
-            		if (x % 2){
-            			addElementClass( newMarkerForm, 'even');
-            		}else{
-            			addElementClass( newMarkerForm, 'odd');
-            		}
-    				var nMFKids = newMarkerForm.childNodes;
-    				for (var o=0; o<nMFKids.length; o++){
-    					if (nMFKids[o].id == "formdata_n"){
-    						nMFKids[o].id = "formdata_"+g;
-    					}
-    				}
-						$('editmarkertable_'+this.Map.markers[g].set_id).appendChild(newMarkerForm);
-    				BitMap.show('markerform_'+g);
-    			}
-    		}
-				
-				// populate set form values
-				form = $('markerform_'+g);
-            form.set_id.value = this.Map.markers[g].set_id;
-				if ( this.Map.markers[g].marker_type == 1 ){
-					form.marker_type.options[1].selected = true;
+BitMap.Edit.prototype.editMarkers = function(i){
+  this.cancelEditMarkerSetOptions();
+  var set_id = this.Map.markersets[i].set_id;
+  var markerTable = $('edit-markers-table');
+  //Set the markerset toggle tags to closed
+  //Set the markerset toggle tags to open on our selected set
+  //Move Marker Table to New Set
+  $('edit-markerset-'+i).appendChild(markerTable);
+  //set some constants
+  var markerLinksList = markerTable.getElementsByTagName("ul").item(0);
+  var markerLinks = markerTable.getElementsByTagName("li");
+  //Clear all the existing markers listed  
+  //We leave the first, cause it is the model we clone
+  var count = markerLinks.length;
+  for (n=count-1; n>0; n--){
+    markerLinksList.removeChild(markerLinks.item(n));
+  }
+  var newCount = markerTable.getElementsByTagName("li");
+  //For each marker in our new set, add a link
+  var firstselected = false;
+  for (var n=0; n<this.Map.markers.length; n++) {
+    var m = this.Map.markers[n];
+    if (m.set_id == set_id){
+  			var newMarkerli = markerLinks.item(0).cloneNode(true);
+  			var newMarkerLink = newMarkerli.getElementsByTagName("a").item(0);
+        newMarkerLink.href = "javascript:BitMap.EditSession.editMarker("+n+")";
+        newMarkerLink.innerHTML = m.title;
+        markerLinksList.appendChild(newMarkerli);
+  			newMarkerli.style.display = "block";
+  			
+  			if (firstselected != true){
+  			  this.editMarker(n);
+  			  firstselected = true;
   			}
-            form.marker_id.value = this.Map.markers[g].marker_id;
-            form.title.value = this.Map.markers[g].title;
-            form.marker_lat.value = this.Map.markers[g].lat;
-            form.marker_lng.value = this.Map.markers[g].lon;
-            form.edit.value = this.Map.markers[g].data;
-            form.marker_labeltext.value = this.Map.markers[g].label_data;
-            form.photo_url.value = this.Map.markers[g].photo_url;
-            form.marker_zi.value = this.Map.markers[g].zindex;
-            form.marker_array_n.value = this.Map.markers[g].array_n;
-				
-				// just for a pretty button - js sucks it!
-           	var mytable = $('formdata_'+g);
-           	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
-   			var myrow = mytablebody.getElementsByTagName("tr").item(0);
-           	var mycel = myrow.getElementsByTagName("td").item(2);
-				mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.addAssistant('marker', "+g+");";
+        
+  	}
+  }
+  //We assume it is not visible and make it so
+  BitMap.show('edit-markers-table')
+}
 
-				mycel = myrow.getElementsByTagName("td").item(7);
-   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storeMarker(document.markerform_"+g+");";
-   			mycel.getElementsByTagName("a").item(1).href = "javascript:Map.Markers["+Map.Markers[g].array_n+"].marker.openInfoWindowHtml(Map.Markers["+Map.Markers[g].array_n+"].marker.my_html);";
-   			mycel.getElementsByTagName("a").item(2).href = "javascript:BitMap.EditSession.removeMarker(document.markerform_"+g+");";
-   			mycel.getElementsByTagName("a").item(3).href = "javascript:BitMap.EditSession.expungeMarker(document.markerform_"+g+");";
 
-			}
-		}		
-	}
-};
+BitMap.Edit.prototype.newMarker = function(){
+  var check = false;
+  if (this.Map.markersets.length > 0) { check = true; }
+  if (check == false){
+  	//set warning message, show it, fade it
+  	$('errortext').innerHTML = "To add a marker, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new marker!";
+	BitMap.show('editerror');
+  	//display new marker set form
+    this.newMarkerSet();
+  }else{
+    if($('edit-marker-new')){
+      BitMap.show('edit-marker-new');
+    }else{
+      var newMarker = $('edit-markerset').cloneNode(true);
+      newMarker.id = "edit-marker-new";
+      newMarker.getElementsByTagName("span").item(0).innerHTML = "New Marker";
+      var tdtags = newMarker.getElementsByTagName("td");
+      tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
+      $('edit-markers-menu').appendChild(newMarker);
+      BitMap.show('edit-marker-new');
+
+      //add form
+      var optionsTable = $('edit-new-marker-table');
+      var target = $('edit-marker-new');  
+      target.insertBefore(optionsTable, target.childNodes[2]);  
+      BitMap.show('edit-new-marker-table');
+    }
+    var form = $('edit-new-marker-form');
+    form.reset();
+    var count = this.Map.markersets.length;
+    for (var n=0; n<count; n++){
+      var s = this.Map.markersets[n];
+      form.set_id.options[n] = new Option(s.title, s.set_id);
+    }
+    form.set_id.options[0].selected = true;  
+  }
+}
+
+
+BitMap.Edit.prototype.editMarker = function(i){
+  var m = this.Map.markers[i];
+  //change values
+  var form = $('edit-marker-form');
+  //kill all existing set_id options
+  form.set_id.options.length = 0;
+  //loop through markersets array
+  var count = this.Map.markersets.length;
+  for (var n=0; n<count; n++){
+    var s = this.Map.markersets[n];
+    //for each, attach a new option
+    form.set_id.options[n] = new Option(s.title, s.set_id);
+    //if the setid = the marker's setid set selected to true
+    if (m.set_id == s.set_id){
+      form.set_id.options[n].selected = true;
+    }
+  }
+  form.marker_type.options[m.marker_type].selected = true;
+  form.marker_id.value = m.marker_id;
+  form.title.value = m.title;
+  form.marker_lat.value = m.lat;
+  form.marker_lng.value = m.lng;
+  form.edit.value = m.data;
+  form.marker_labeltext.value = m.label_data;
+  form.photo_url.value = m.photo_url;
+  form.marker_array_n.value = i;
+  
+  //update links
+  var formLinks = $('edit-marker-actions').getElementsByTagName("a");
+  formLinks.item(1).href = "javascript:BitMap.MapData[0].Map.markers["+n+"].marker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+n+"].marker.my_html);";
+}
+
+
+BitMap.Edit.prototype.cancelNewMarker = function(){
+  this.canceledit('edit-marker-new');
+}
+
+
+BitMap.Edit.prototype.cancelEditMarkers = function(){
+  this.canceledit('edit-markers-table');
+}
 
 
 
@@ -2252,7 +2309,7 @@ BitMap.Edit.prototype.updateMarkerSet = function(rslt){
            	//if the length of the array is > 0
            	if (a.length > 0){
              	//loop through the array
-           		for(n=0; n<a.length; n++){
+           		for(var n=0; n<a.length; n++){
              		//if the array item is not Null
            			if (a[n]!= null && a[n].plot_on_load == true){
        					if (a[n].set_id == s.set_id){
@@ -2398,7 +2455,7 @@ BitMap.Edit.prototype.updateMarkerStyle = function(rslt){
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
-    		for(n=0; n<a.length; n++){
+    		for(var n=0; n<a.length; n++){
       		//if the array item is not Null
     			if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
 	      			//unload the marker
@@ -2547,7 +2604,7 @@ BitMap.Edit.prototype.updateIconStyle = function(rslt){
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
-    		for(n=0; n<a.length; n++){
+    		for(var n=0; n<a.length; n++){
       		//if the array item is not Null
     			if (a[n]!= null && a[n].marker != null && a[n].icon_id == i.icon_id){
 	      			//unload the marker
@@ -2714,7 +2771,7 @@ BitMap.Edit.prototype.updatePolyline = function(rslt){
            	//if the length of the array is > 0
            	if (a.length > 0){
              	//loop through the array
-           		for(n=0; n<a.length; n++){
+           		for(var n=0; n<a.length; n++){
              		//if the array item is not Null
 						if (a[n]!= null && a[n].polyline != null && a[n].set_id == s.set_id){
 							a[n].style_id = s.style_id;
@@ -2846,7 +2903,7 @@ BitMap.Edit.prototype.updatePolyline = function(rslt){
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
-    		for(n=0; n<a.length; n++){
+    		for(var n=0; n<a.length; n++){
       		//if the array item is not Null
         		if (a[n]!= null && a[n].polyline != null && a[n].style_id == s.style_id){
 						this.Map.map.removeOverlay( a[n].polyline );
@@ -3083,7 +3140,7 @@ BitMap.Edit.prototype.updatePolygonSet = function(rslt){
            	//if the length of the array is > 0
            	if (a.length > 0){
              	//loop through the array
-           		for(n=0; n<a.length; n++){
+           		for(var n=0; n<a.length; n++){
              		//if the array item is not Null
            			if (a[n]!= null && a[n].polygon != null && a[n].set_id == s.set_id){
 							//update the style ids
@@ -3159,7 +3216,7 @@ BitMap.Edit.prototype.updatePolygonStyle = function(rslt){
     	//if the length of the array is > 0
     	if (a.length > 0){
       	//loop through the array
-    		for(n=0; n<a.length; n++){
+    		for(var n=0; n<a.length; n++){
       		//if the array item is not Null
     			if (a[n]!= null && a[n].polygon != null && a[n].style_id == s.style_id){
 						this.Map.map.removeOverlay(a[n].polygon);

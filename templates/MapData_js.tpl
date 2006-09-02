@@ -72,9 +72,6 @@ BitMap.MapData.push({ldelim}
 		parsed_data: '{$gContent->mMapMarkers[marker_n].parsed_data}',
 		label_data: '{$gContent->mMapMarkers[marker_n].label_data}',
 		photo_url: '{$gContent->mMapMarkers[marker_n].photo_url}',
-		{if $gContent->mMapMarkers[marker_n].zindex != NULL}
-			zindex: {$gContent->mMapMarkers[marker_n].zindex},
-		{/if}
 		set_id: {$gContent->mMapMarkers[marker_n].set_id},
 		style_id: {$gContent->mMapMarkers[marker_n].style_id},
 		icon_id: {$gContent->mMapMarkers[marker_n].icon_id},
@@ -89,7 +86,7 @@ BitMap.MapData.push({ldelim}
   MarkerSets:[{if count($gContent->mMapMarkerSets) > 0}{section name=markersetdata loop=$gContent->mMapMarkerSets}
   {ldelim}
 		set_id: {$gContent->mMapMarkerSets[markersetdata].set_id},
-		name: "{$gContent->mMapMarkerSets[markersetdata].name}",
+		title: "{$gContent->mMapMarkerSets[markersetdata].title}",
 		description: "{$gContent->mMapMarkerSets[markersetdata].description}",
 		style_id: {$gContent->mMapMarkerSets[markersetdata].style_id},
 		icon_id: {$gContent->mMapMarkerSets[markersetdata].icon_id},

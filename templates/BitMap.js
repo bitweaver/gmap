@@ -30,6 +30,8 @@ BitMap.Initialize = function(){
     BitMap.MapData[n].Map = new BitMap.Map(
       n,
       BitMap.MapData[n].mapdiv,
+      BitMap.MapData[n].width,
+      BitMap.MapData[n].height,
       {lat: BitMap.MapData[n].lat, lng: BitMap.MapData[n].lng},
       BitMap.MapData[n].zoom,
       BitMap.MapData[n].maptype,
@@ -51,9 +53,11 @@ BitMap.Initialize = function(){
 
 //center is an object containing .lat and .lng
 //controls is an object containing .scale .type_control .zoom_control
-BitMap.Map = function (index, mapdiv, center, zoom, maptype, controls, maptypes, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
+BitMap.Map = function (index, mapdiv, width, height, center, zoom, maptype, controls, maptypes, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
   this.index = index;
   this.mapdiv = mapdiv;
+  this.width = width;
+  this.height = height;
   this.center = center;
   this.zoom = zoom;
   this.maptype = maptype;

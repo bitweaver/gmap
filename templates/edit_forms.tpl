@@ -1,7 +1,7 @@
 <div>
   <a id="emap" href="javascript:BitMap.EditSession.editMap();">Edit Map</a> | 
 	<a id="emaptype" href="javascript:BitMap.EditSession.editMapTypes();">Edit Map Types</a> |
-  <a id="emarker" href="javascript:BitMap.EditSession.editMarkers();">Edit Markers</a> | 
+  <a id="emarker" href="javascript:BitMap.EditSession.editMarkerSets();">Edit Markers</a> | 
   <a id="epolyline" href="javascript:BitMap.EditSession.editPolylines();">Edit Polylines</a> | 
   <a id="epolygon" href="javascript:BitMap.EditSession.editPolygons();">Edit Polygons</a>
 </div>
@@ -175,104 +175,245 @@
 	-  Marker Editing Forms
 	------------------------->
 	
-<!--marker editing forms -->
-<div id="editmarkermenu" style="display:none;">
+<!-- marker editing menu -->
+<div id="edit-markers-menu" style="display:none;">
 		<a href="javascript:BitMap.EditSession.newMarker();">New Marker</a> | 
 		<a href="javascript:BitMap.EditSession.newMarkerSet();">New Marker Set</a> | 
 		<a href="javascript:BitMap.EditSession.editMarkerStyles();">Edit Marker Styles</a> | 
 		<a href="javascript:BitMap.EditSession.editIconStyles();">Edit Marker Icons</a>
 </div>
+<!-- end of marker editing menu -->
 
 
-<div id="newmarkersetform" class="editform" style="display:none;">
-		<h2>Add a New Marker Set</h2>
-    <div class="table" id="editmarkersettable_new">
-    	<form action="javascript:;" name="markersetform_new" id="markersetform_new">
-            <input name="save_markerset" type="hidden" value="true">
-				<input name="style_id" type="hidden" value="0"><!-- Google (standard) -->
-				<input name="icon_id" type="hidden" value="0" ><!-- Google (standard) -->
+<!-- markerset editing menu -->
+<div id="edit-markersets-table" class="edit-table" style="display:none;">
+  <h2>Marker Sets Associated With This Map</h2>
+  <div id="edit-markerset" class="edit-titlebar" style="display:none; background-color:#cdf; margin:.5em 0em;">
+    <table class="bar">
+    	<tr>
+        <td width="200px"><span class="setname">Set Name Here</span></td>
+      <td>
+        <a href="javascript:BitMap.EditSession.editMarkerSetOptions(n);">Edit Set Options</a> | 
+        <a href="javascript:BitMap.EditSession.editMarkers(n);">Edit Markers In This Set</a>
+      </td>
+    </tr>
+    </table>
+  </div>
+</div>
+<!-- end of markerset editing menu -->
+
+
+<!-- new markerset form -->
+<div id="edit-new-markerset-table" class="edit-optionstable" style="display:none;">
+    	<form action="javascript:;" name="edit-new-markerset-form" id="edit-new-markerset-form">
+        <input name="save_markerset" type="hidden" value="true">
     		<table class="data">
 					<tr>
-						<th>Name</th>
-						<th>Description</th>
-						<th width="160px">Map Display Settings</th>
-						<th width="170px">Side Panel Display Settings</th>
-						<th width="80px">ACTIONS</th>
-					</tr>
-					<tr class="gmapeditstrong">
-						<td><input name="name" type="text" style="width:90%" value="a name"></td>
-						<td><textarea name="description" style="width:90%" rows="2"></textarea></td>
-						<td width="160px">Cluster: 
-    									<select name="cluster">
+						<td>
+              Title:<br/>
+              <input size="20" name="title" type="text" value="a title"></td>
+						<td>Marker Style:<br/>
+                <select name="style_id">
+                  					<option value="0">Google (standard)</option>
+                      				</select><br/>
+						    Icon Style:<br/>
+                <select name="icon_id">
+                                      <option value="0">Google (standard)</option>
+                                   	</select>
+						<td>Cluster:<br/>
+                <select name="cluster">
+                      					<option value="false">No</option>
                       					<option value="true">Yes</option>
-                      					<option value="false" selected>No</option>
                           				</select><br/>
-											Plot-On-Load: 
-											<select name="plot_on_load">
-                      					<option value="true">Yes</option>
+						    Plot-On-Load:<br/>
+                <select name="plot_on_load">
                       					<option value="false">No</option>
-                          				</select>
-						<td width="170px">List Set: 
-    									<select name="side_panel">
                       					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select><br/>
-											List Each Marker: 
-											<select name="explode">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
                           				</select></td>
-						<td width="80px"><a name="new_markerset_btn" title="save" href="javascript:BitMap.EditSession.storeNewMarkerSet(document.markersetform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
+						<td>List Set In Side Panel:<br/>
+                <select name="side_panel">
+                      					<option value="false">No</option>
+                      					<option value="true">Yes</option>
+                          				</select><br/>
+						    List Markers In Side Panel:<br/>
+                <select name="explode">
+                      					<option value="false">No</option>
+                      					<option value="true">Yes</option>
+                          				</select></td>
+						<td style="width:200px">Actions:<br/>
+						    <input type="button" name="savenewmarkerset" value="Save" onclick="javascript:BitMap.EditSession.storeNewMarkerSet(edit-new-markerset-form); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');"/>
+						    <input type="button" name="closemarkersetform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelNewMarkerSet()"/></td>
 					</tr>
 				</table>
 			</form>
-		</div>
-		<div id="newmarkersetcancel" ><input type="button" name="closemarkersetform" value="Cancel New Marker Set" onclick="javascript:BitMap.EditSession.canceledit('newmarkersetform'); BitMap.EditSession.canceledit('editerror');"></div>
 </div>
-<!-- end of newmarkersetform -->
+<!-- end of new markerset form -->
 
 
-
-<div id="newmarkerform" class="editform" style="display:none;">
-		<h2>Add a New Marker</h2>
-    <div class="table" id="editmarkertable_new">
-    	<form action="javascript:;" name="markerform_new" id="markerform_new">
-				<input name="new_marker" type="hidden" value="true">
+<!-- markerset options form -->
+<div id="edit-markerset-options-table" class="edit-optionstable" style="display:none;">
+    	<form action="javascript:;" name="edit-markerset-options-form" id="edit_markerset-options-form">
+  			<input name="set_id" type="hidden" value="n">
+        <input name="set_array_n" type="hidden" value="n">
+        <input name="save_markerset" type="hidden" value="true">
     		<table class="data">
-    			<tr>
-    				<th style="width:160px">Title </th>
-    				<th style="width:160px">Type </th>
-    				<th style="width:160px">Latitude/Longitude</th>
-    				<th style="width:160px">Label Text </th>
-    				<th >Window Text </th>
-    				<th style="width:160px">Photo Url </th>
-    				<th style="width:80px">zIndex </th>
-    				<th>Add to Set </th>
-    				<th style="width:80px">ACTIONS </th>
-    			</tr>
-					<tr class="gmapeditstrong">
-						<td width="160px"><input name="title" type="text" style="width:90%" value="a title"></td>
-        			<td width="160px"><select name="marker_type">
+					<tr>
+						<td>
+              Title:<br/>
+              <input size="20" name="title" type="text" value="a title"></td>
+						<td>Marker Style:<br/>
+                <select name="style_id">
+                  					<option value="0">Google (standard)</option>
+                      				</select><br/>
+						    Icon Style:<br/>
+                <select name="icon_id">
+                                      <option value="0">Google (standard)</option>
+                                   	</select>
+						<td>Cluster:<br/>
+                <select name="cluster">
+                      					<option value="false">No</option>
+                      					<option value="true">Yes</option>
+                          				</select><br/>
+						    Plot-On-Load:<br/>
+                <select name="plot_on_load">
+                      					<option value="false">No</option>
+                      					<option value="true">Yes</option>
+                          				</select></td>
+						<td>List Set In Side Panel:<br/>
+                <select name="side_panel">
+                      					<option value="false">No</option>
+                      					<option value="true">Yes</option>
+                          				</select><br/>
+						    List Markers In Side Panel:<br/>
+                <select name="explode">
+                      					<option value="false">No</option>
+                      					<option value="true">Yes</option>
+                          				</select></td>
+						<td style="width:200px">Actions:<br/>
+							<a id="setstore" href="javascript:BitMap.EditSession.storeMarkerSet(edit_markerset-options-form);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
+							<a id="setremove" href="javascript:BitMap.EditSession.removeMarkerSet(edit_markerset-options-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
+							<a id="setdelete" href="javascript:BitMap.EditSession.expungeMarkerSet(edit_markerset-options-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
+							<a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a></td>
+					</tr>
+				</table>
+			</form>
+		<div id="markersetcancel" >
+    <input type="button" name="savenewmarkerset" value="Save" onclick="javascript:BitMap.EditSession.storeNewMarkerSet(edit_markerset-options-form); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');"/>
+    <input type="button" name="closemarkersetform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSetOptions()"/></div>
+</div>
+<!-- end of markerset options form -->
+
+
+<!-- new marker form -->
+<div id="edit-new-marker-table" class="edit-datatable" style="display:none;">
+    <form action="javascript:;" name="edit-new-marker-form" id="edit-new-marker-form" >
+    <input name="save_marker" type="hidden" value="true">
+    <table class="data">
+    	<tr>
+        <td width="200px">Space For Something:<br/>
+          <div>Something can be put here.</div>
+        </td>
+    	<td>
+          <div style="background-color:#fff; margin:1em 0em; padding:2em;">
+            <div>Add To Set <select name="set_id" id="set_id">
+								<option value="n">Set Name</option>
+							</select></div>
+            <div>Type <select name="marker_type">
 											<option value="0" >Normal</option>
 											<option value="1" >Auto-Photo</option>
-											</select></td>
-						<td width="160px"><input name="marker_lat" type="text" style="width:90%" value=""><br/>
-							<input name="marker_lon" type="text" style="width:90%" value=""><br/>
-							<a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a></td>
-						<td width="160px"><textarea name="marker_labeltext" style="width:90%" rows="1"></textarea></td>
-						<td><textarea name="edit" style="width:90%" rows="3"></textarea></td>
-						<td width="160px"><input name="photo_url" type="text" style="width:90%" value=""></td>
-						<td width="80px"><input name="marker_zi" type="text" size="3" value="0"></td>
-						<td><select name="set_id" id="set_id">
-								<option value="n">someset</option>
-							</select></td>
-						<td width="80px"><a name="new_marker_btn" title="save" href="javascript:BitMap.EditSession.storeNewMarker(document.markerform_new);">{biticon ipackage=liberty iname="save" iexplain="save"}</a></td>
-					</tr>
-    		</table>
-    	</form>
-		</div>
-		<div id="newmarkercancel" ><input type="button" name="closemarkerform" value="Cancel New Marker" onclick="javascript:BitMap.EditSession.canceledit('newmarkerform'); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');"></div>
-</div> <!-- end of newmarkerform -->
+											</select></div>
+            <div>Latitutde &nbsp;<input size="50" name="marker_lat" type="text" value=""><br/>
+                 Longitude <input size="50" name="marker_lng" type="text" value=""><br/>
+                 <a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a></div>
+            <div>Title<br/>
+                 <input size="50" name="title" type="text" value="a title"></div>
+            <div>Label Title<br/>
+                 <textarea name="marker_labeltext" rows="1"></textarea></div>
+            <div>Window Text<br/>
+                 <textarea name="edit" rows="10"></textarea></div>
+            <div>Photo URL<br/>
+                 <input size="50" name="photo_url" type="text" value=""></div>
+          </div>
+        </td>
+        <td width="200px">
+          <div>Tips<br/>
+               Put advice here
+          </div>
+          <div id="edit-new-marker-actions">Actions<br/>
+             <input type="button" name="savenewmarker" value="Save" onclick="javascript:BitMap.EditSession.storeNewMarker(document.edit-new-marker-form); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');">
+             <input type="button" name="closemarkerform" value="Cancel" onclick="javascript:BitMap.EditSession.cancelNewMarker()"></br></div>
+        </td>
+     	</tr>
+    </table>
+    </form>
+</div> 
+<!-- edit of new marker form -->
+
+
+<!-- edit markers form -->
+<div id="edit-markers-table" class="edit-datatable" style="display:none;">
+    <form action="javascript:;" name="edit-marker-form" id="edit-marker-form" >
+    <input name="save_marker" type="hidden" value="true">
+    <input name="marker_id" type="hidden" value="">
+    <input name="marker_array_n" type="hidden" value="n">
+    <table class="data">
+    	<tr>
+        <td width="200px">Markers:<br/>
+            <ul>
+            <li style="display:none;"><a href="javascript:BitMap.EditSession.editMarker(n);">Marker Name Here</a></li>
+            </ul>
+        </td>
+    	  <td>
+          <div style="background-color:#fff; margin:1em 0em; padding:2em;">
+            <div style="display:none;">Add To Set <select name="set_id" id="set_id">
+								<option value="n">Set Name</option>
+							</select></div>
+            <div>Type <select name="marker_type">
+											<option value="0" >Normal</option>
+											<option value="1" >Auto-Photo</option>
+											</select></div>
+            <div>Latitutde &nbsp;<input size="50" name="marker_lat" type="text" value=""><br/>
+                 Longitude <input size="50" name="marker_lng" type="text" value=""><br/>
+                 <a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a></div>
+            <div>Title<br/>
+                 <input size="50" name="title" type="text" value="a title"></div>
+            <div>Label Title<br/>
+                 <textarea name="marker_labeltext" rows="1"></textarea></div>
+            <div>Window Text<br/>
+                 <textarea name="edit" rows="10"></textarea></div>
+            <div>Photo URL<br/>
+                 <input size="50" name="photo_url" type="text" value=""></div>
+            <div id="new-marker-actions">
+                <input type="button" name="savenewmarker" value="Save" onclick="javascript:BitMap.EditSession.storeNewMarker(document.edit-marker-form); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');">
+                <input type="button" name="closemarkerform" value="Cancel" onclick="javascript:BitMap.EditSession.cancelEditMarkers()"></br></div>
+          </div>
+        </td>
+        <td width="200px">
+          <div>Tips<br/>
+               Put advice here
+          </div>
+          <div id="edit-marker-actions">Actions<br/>
+            <a name="save_marker_btn" title="save" href="javascript:BitMap.EditSession.storeMarker(document.edit-marker-form);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
+            <a name="locate_marker_btn" title="locate on the map" href="javascript:BitMap.MapData[0].Map.markers[n].marker.openInfoWindowHtml(BitMap.MapData[0].Map.markers[n].marker.my_html);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
+            <a name="remove_marker_btn" title="remove from this set" href="javascript:BitMap.EditSession.removeMarker(document.edit-marker-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+            <a name="expunge_marker_btn" title="delete the marker!" href="javascript:BitMap.EditSession.expungeMarker(document.edit-marker-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
+          </div>
+        </td>
+     	</tr>
+    </table>
+    </form>
+</div> 
+<!-- edit of edit markers form -->
+
+
+<!-- close all marker editing -->
+<div id="edit-markersets-cancel" style="display:none;">
+  <input type="button" name="closemarkerform" value="Close Marker Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSets();" />
+</div>
+
+
+
+
 
 
 
@@ -482,120 +623,6 @@
 
 
 
-<div id="editmarkerform" class="editform" style="display:none;">
-		<h2>Marker Sets Associated With This Map</h2>
-		<table>
-			<tr>
-				<th style="width:160px">Name</th>
-				<th style="width:160px">Style</th>
-				<th style="width:160px">Icon</th>
-				<th style="width:80px">Custer</th>
-				<th style="width:80px">Plot-on-Load</th>
-				<th style="width:80px">List Set</th>
-				<th style="width:80px">List Markers</th>
-				<th style="width:80px">ACTIONS</th>
-			</tr>
-		</table>
-		<div id="markerset_n" style="display:none;">
-			<form action="javascript:;" name="markersetform_n" id="markersetform_n" style="display:none;">
-  			<input name="set_id" type="hidden" value="n">
-            <input name="set_array_n" type="hidden" value="n">
-    		<table class="data" id="markersetformdata_n">
-					<tr class="gmapeditstrong" >
-						<td style="width:160px"><b>Set Name:</b> <!-- <span id="setdesc">Description Here</span> --></td>
-						<td style="width:160px"><select name="style_id">
-                  					<option value="0">Google (standard)</option>
-                      				</select></td>
-						<td style="width:160px"><select name="icon_id">
-                                      <option value="0">Google (standard)</option>
-                                   	</select></td>
-						<td style="width:80px"><select name="cluster">
-                      					<option value="true">Yes</option>
-                      					<option value="false" selected>No</option>
-                          				</select></td>
-						<td style="width:80px"><select name="plot_on_load">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select></td>
-						<td style="width:80px"><select name="side_panel">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select></td>
-						<td style="width:80px"><select name="explode">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select></td>
-						<td style="width:80px">
-							<a id="setstore" href="javascript:BitMap.EditSession.storeMarkerSet(markersetform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a> 
-							<a id="setremove" href="javascript:BitMap.EditSession.removeMarkerSet(markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-							<a id="setdelete" href="javascript:BitMap.EditSession.expungeMarkerSet(markersetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
-					</tr>
-					<tr>
-						<td colspan="5"><a id="seteditmarkers" href="javascript:BitMap.EditSession.editSet('n');">Edit The Markers In This Set</a> | 
-							<a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a></td>
-					</tr>
-				</table>
-			</form>
-			<div id="setform_n" style="display:none;">
-				<h3>Markers In This Set</h3>
-            <table>
-					<tr>
-    				<th style="width:160px">Title </th>
-    				<th style="width:160px">Type </th>
-    				<th style="width:160px">Latitude/Longitude</th>
-    				<th style="width:160px">Label Text </th>
-    				<th >Window Text </th>
-    				<th style="width:160px">Photo Url </th>
-    				<th style="width:80px">zIndex </th>
-    				<th style="width:80px">ACTIONS </th>
-					</tr>
-        	</table>
-				<div class="table" id="editmarkertable_n">
-					<form action="javascript:;" name="markerform_n" id="markerform_n" style="display:none;">
-						<input name="save_marker" type="hidden" value="true">
-						<input name="set_id" type="hidden" size="3" value="n">
-						<input name="marker_id" type="hidden" size="3" value="n">
-						<input name="marker_array_n" type="hidden" value="">
-        			<table class="data" id="formdata_n">
-							<tr>
-								<td style="width:160px"><input name="title" type="text" style="width:90%" value="a title"></td>
-								<td width="160px"><select name="marker_type">
-											<option value="0" >Normal</option>
-											<option value="1" >Auto-Photo</option>
-											</select></td>
-								<td style="width:160px"><input name="marker_lat" type="text" style="width:90%" value=""><br/>
-									<input name="marker_lon" type="text" style="width:90%" value=""><br/>
-									<a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'n');">( Use Locating Assistant )</a></td>
-								<td style="width:160px"><textarea name="marker_labeltext" style="width:90%" rows="3"></textarea></td>
-								<td><textarea name="edit" style="width:90%" rows="3"></textarea></td>
-								<td width="160px"><input name="photo_url" type="text" style="width:90%" value=""></td>
-								<td style="width:80px"><input name="marker_zi" type="text" size="3" value="0"></td>
-								<td style="width:80px">
-                				<a name="save_marker_btn" title="save" href="javascript:BitMap.EditSession.storeMarker(document.markerform_n);">{biticon ipackage=liberty iname="save" iexplain="save"}</a>
-                				<a name="locate_marker_btn" title="locate on the map" href="javascript:bMData[marker_array_n].marker.openInfoWindowHtml(bMData[marker_array_n].marker.my_html);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-                				<a name="remove_marker_btn" title="remove from this set" href="javascript:BitMap.EditSession.removeMarker(document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-                				<a name="expunge_marker_btn" title="delete the marker!" href="javascript:BitMap.EditSession.expungeMarker(document.markerform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
-							</tr>
-						</table>
-        		</form>
-				</div>
-      		<div id="allavailmarkers_n" style="display:none;">
-    			<h3>All Markers Available</h3>
-        		<div class="table" id="addmarkertable_n">
-        			<form action="javascript:;" name="addmarkerform_n" id="addmarkerform_n">
-        			<div class="data">
-						<!-- @todo this is just placeholder stuff as a starting point -->
-        			</div>
-        			</form>	
-    			</div>						
-				</div>
-			</div> <!--end of setform_n -->			
-		</div> <!-- end of markerset_n -->
-</div> <!-- end of editmarkerform -->
-
-
-<div id="editmarkercancel" style="display:none;"><input type="button" name="closemarkerform" value="Cancel Editing Markers" onclick="javascript:BitMap.EditSession.canceledit('editmarkermenu'); BitMap.EditSession.canceledit('newmarkerform'); BitMap.EditSession.canceledit('editmarkerform'); BitMap.EditSession.canceledit('newmarkersetform'); BitMap.EditSession.canceledit('editmarkercancel'); BitMap.EditSession.canceledit('editmarkerstylesmenu'); BitMap.EditSession.canceledit('newmarkerstyleform'); BitMap.EditSession.canceledit('editmarkerstylesform'); BitMap.EditSession.canceledit('editmarkerstylescancel'); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');"></div>
-<!--end marker editing forms -->
 
 
 

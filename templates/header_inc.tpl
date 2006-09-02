@@ -21,6 +21,9 @@
 
 <style type="text/css">
 {literal}
+ .edit-optionstable {background-color:#eef; border-bottom:2px solid #f30;}
+ .edit-datatable {background-color:#fd9; border-bottom:2px solid #f30;}
+  table.data td {padding:.5em;}
 	td {vertical-align:top;}
 	th {text-align:left;}
 	.map-op {margin-right:160px;}
