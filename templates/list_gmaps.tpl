@@ -48,7 +48,7 @@
 
 							<td class="actionicon">
 						{if $gBitUser->hasPermission( 'bit_p_remove_gmap' )}
-								{smartlink ititle="Edit" ifile="edit.php" ibiticon="liberty/edit" gmap_id=$list[changes].gmap_id}
+								{smartlink ititle="Edit" ifile="edit.php" ibiticon="icons/accessories-text-editor" gmap_id=$list[changes].gmap_id}
 								<input type="checkbox" name="checked[]" title="{$list[changes].title}" value="{$list[changes].gmap_id|escape}" />
 						{/if}
 							</td>
