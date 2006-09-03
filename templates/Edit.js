@@ -92,62 +92,62 @@ BitMap.Edit.prototype.toggleIconMenu = function(o, n){
 
 // builds the map editing form
 BitMap.Edit.prototype.editMap = function(){
-				  $('mapform').reset();
-				 	BitMap.show('editmapform');
+	
+  var form = $('edit-map-form');
+	form.reset();
+	BitMap.show('edit-map-table');
 
-    			$('gmap_id').value = this.Map.id;
-    			$('map_title').value = this.Map.title;
-    			$('map_desc').value = this.Map.description;
-    			$('map_w').value = this.Map.width;
-    			$('map_h').value = this.Map.height;
-    			$('map_lat').value = this.Map.lat;
-    			$('map_lng').value = this.Map.lng;
-    			$('map_z').value = this.Map.zoom;
+  form.gmap_id.value = this.Map.id? this.Map.id:"";
+  form.title.value = this.Map.title? this.Map.title:"";
+  form.map_desc.value = this.Map.description?this.Map.description:"";
+  form.map_w.value = this.Map.width;
+  form.map_h.value = this.Map.height;
+  form['geo[lat]'].value = this.Map.center.lat;
+  form['geo[lng]'].value = this.Map.center.lng;
+  form.map_z.value = this.Map.zoom;
+	form.edit.value = this.Map.data;
 
-					form = $('mapform');
-					form.edit.value = this.Map.data;
+  for (var i=0; i < 4; i++) {
+    if (form.map_showcont.options[i].value == this.Map.zoom_control){
+      form.map_showcont.options[i].selected=true;
+    }
+  }
 
-        	for (var i=0; i < 4; i++) {
-             if ($('map_showcont').options[i].value == this.Map.zoom_control){
-                $('map_showcont').options[i].selected=true;
-             }
-          }
-
-        	for (var i=0; i < 2; i++) {
-             if ($('map_showscale').options[i].value == this.Map.scale){
-                $('map_showscale').options[i].selected=true;
-             }
-          }
+  for (var i=0; i < 2; i++) {
+    if (form.map_showscale.options[i].value == this.Map.scale){
+      form.map_showscale.options[i].selected=true;
+    }
+  }
 					
-        	for (var i=0; i < 2; i++) {
-             if ($('map_showtypecont').options[i].value == this.Map.type_control){
-                $('map_showtypecont').options[i].selected=true;
-             }
-          }
+  for (var i=0; i < 2; i++) {
+    if (form.map_showtypecont.options[i].value == this.Map.type_control){
+       form.map_showtypecont.options[i].selected=true;
+    }
+  }
 					
-    			var mapTypeRoot = $('map_type');
+  var mapTypeRoot = form.map_type;
 
-					var mapTypeCount = 2;
-					
-					if (typeof(this.Map.maptypes) != 'undefined'){
-						mapTypeCount += this.Map.maptypes.length;
-						var newMapType = mapTypeRoot.options[0].cloneNode(false);
-  					for (i=0; i<this.Map.maptypes.length; i++){
-     					  mapTypeRoot.appendChild(newMapType);
-      					mapTypeRoot.options[i+3].value = this.Map.maptypes[i].name;
-      					mapTypeRoot.options[i+3].text = this.Map.maptypes[i].name;
-  					}
-					}
+	var mapTypeCount = 2;
+	
+	if (typeof(this.Map.maptypes) != 'undefined'){
+		mapTypeCount += this.Map.maptypes.length;
+		var newMapType = mapTypeRoot.options[0].cloneNode(false);
+		for (i=0; i<this.Map.maptypes.length; i++){
+      mapTypeRoot.appendChild(newMapType);
+      mapTypeRoot.options[i+3].value = this.Map.maptypes[i].name;
+      mapTypeRoot.options[i+3].text = this.Map.maptypes[i].name;
+		}
+	}
 						
-          for (var i=0; i<mapTypeCount; i++) {
-             if ($('map_type').options[i].value == this.Map.maptype){
-                $('map_type').options[i].selected=true;
-             }
-          }
+  for (var i=0; i<mapTypeCount; i++) {
+    if (form.map_type.options[i].value == this.Map.maptype){
+      form.map_type.options[i].selected=true;
+    }
+  }
 									
-    			/*@todo create value for comments
-					  $('map_comm').value = ?; for type="checkbox
-					 */
+  /*@todo create value for comments
+	  form.map_comm.value = ?; for type="checkbox
+	*/
 };
 
 BitMap.Edit.prototype.editMapTypes = function(){

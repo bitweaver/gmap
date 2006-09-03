@@ -12,51 +12,51 @@
 	------------------------->
 
 <!--map editing form -->
-<div id="editmapform" style="display:none;">
+<div id="edit-map-table" style="display:none;">
     <h3>Map Properties</h3>
-    <form action="javascript:;" name="mapform" id="mapform">
+    <form action="javascript:;" name="edit-map-form" id="edit-map-form">
 			<input name="save_map" type="hidden" size="25" value="true">
-		   	<input name="gmap_id" id="gmap_id" type="hidden" size="25" value="">
-			<table class="data" id="mapdata">
+		  <input name="gmap_id" type="hidden" size="25" value="">
+			<table class="data">
         	<tr><td width="180px">Title</td>
-					<td><input name="title" id="map_title" type="text" size="40" value=""></td></tr>
-        	<tr><td>Description</td><td><input name="map_desc" id="map_desc" type="text" size="40" value=""></td></tr>
+					<td><input name="title" type="text" size="40" value=""></td></tr>
+        	<tr><td>Description</td><td><input name="map_desc" type="text" size="40" value=""></td></tr>
         	<tr>
 					<td>Center Latitude</td>
-					<td><input name="geo[lat]" id="map_lat"type="text" size="40" value=""></td>
+					<td><input name="geo[lat]" type="text" size="40" value=""></td>
 				</tr>
         	<tr>
 					<td>Center Longitude</td>
-					<td><input name="geo[lng]" id="map_lng" type="text" size="40" value=""></td>
+					<td><input name="geo[lng]" type="text" size="40" value=""></td>
 				</tr>
 				<tr><td></td><td><a name="map_assist_btn" title="click a center!" href="javascript:BitMap.EditSession.addAssistant('map');">( Use Locating Assistant )</a></td></tr>
-        	<tr><td>Width (use '0' for auto)</td><td><input name="map_w" id="map_w" type="text" size="12" value=""></td></tr>
-        	<tr><td>Height</td><td><input name="map_h" id="map_h" type="text" size="12" value=""></td></tr>
-        	<tr><td>Zoom Level</td><td><input name="map_z" id="map_z" type="text" size="12" value=""></td></tr>
-        	<tr><td>Show Controls</td><td><select name="map_showcont" id="map_showcont">
+        	<tr><td>Width (use '0' for auto)</td><td><input name="map_w" type="text" size="12" value=""></td></tr>
+        	<tr><td>Height</td><td><input name="map_h" type="text" size="12" value=""></td></tr>
+        	<tr><td>Zoom Level</td><td><input name="map_z" type="text" size="12" value=""></td></tr>
+        	<tr><td>Show Controls</td><td><select name="map_showcont">
               <option value="s" >Small</option>
               <option value="l" >Large</option>
               <option value="z" >Zoom Only</option>
               <option value="n" >None</option>
               </select></td></tr>
-        	<tr><td>Show Scale</td><td><select name="map_showscale" id="map_showscale">
+        	<tr><td>Show Scale</td><td><select name="map_showscale">
               <option value="TRUE" >Yes</option>
               <option value="FALSE" >No</option>
               </select></td></tr>
-        	<tr><td>Show Map Type Buttons</td><td><select name="map_showtypecont" id="map_showtypecont">
+        	<tr><td>Show Map Type Buttons</td><td><select name="map_showtypecont">
               <option value="TRUE" >Yes</option>
               <option value="FALSE" >No</option>
               </select></td></tr>
-        	<tr><td>Default Map Type</td><td><select name="map_type" id="map_type">
+        	<tr><td>Default Map Type</td><td><select name="map_type">
               <option value="G_MAP_TYPE" >Street Map</option>
               <option value="G_SATELLITE_TYPE" >Satellite</option>
               <option value="G_HYBRID_TYPE" >Hybrid</option>
        			</select></td></tr>
 				<tr><td>Page Text</td><td><textarea name="edit" style="width:90%;" rows="20">textbox</textarea></td></tr>
 
-              <!-- Allow Comments <input name="map_comm" id="map_comm" type="checkbox" value=""><br/> //-->
-            <tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap(document.mapform);"> 
-						<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit('editmapform');"></td>
+        <!-- Allow Comments <input name="map_comm" type="checkbox" value=""><br/> //-->
+        <tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap(document.edit-map-form);"> 
+				<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit('editmapform');"></td>
 				</tr>
 			</table>
     </form>

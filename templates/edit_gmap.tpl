@@ -8,16 +8,16 @@
 {/if}
 
 <div class="edit gmap">
-	<div class="display">
-	{include file="bitpackage:gmap/gmap_header.tpl"}
-	</div>
-	<div class="body">
-  	<div id="mapsidepanel" class="hide" style="height:{if $gContent->mInfo.height == 0}auto{else}{$gContent->mInfo.height}px{/if};"></div>
-		{include file="bitpackage:gmap/map_inc.tpl"}
-		<div id="editerror" class="fade-000000 warning" style="display:none"><img src="/bw/liberty/icons/warning.png" alt="warning" title="warning" class="icon" /> <span id="errortext">Warning Placeholder</span></div>
-		{include file="bitpackage:gmap/edit_forms.tpl"}
-		<div id="mapcontent" class="content">
-			{$gContent->mInfo.clean_data}
-		</div>
-	</div> <!-- end .body -->
+	<div class="display gmap">
+	  {include file="bitpackage:gmap/gmap_header.tpl"}
+	  <div class="body">
+  	  <div id="mapsidepanel" class="hide" style="height:{if $gContent->mInfo.height == 0}auto{else}{$gContent->mInfo.height}px{/if};"></div>
+		  {include file="bitpackage:gmap/map_inc.tpl"}
+		  <div id="editerror" class="fade-000000 warning" style="display:none"><img src="/bw/liberty/icons/warning.png" alt="warning" title="warning" class="icon" /> <span id="errortext">Warning Placeholder</span></div>
+		  {include file="bitpackage:gmap/edit_forms.tpl"}
+		  <div id="mapcontent" class="content">
+			  {$gContent->mInfo.clean_data}
+		  </div>
+	  </div> <!-- end .body -->
+	</div> <!-- end .display -->
 </div>
