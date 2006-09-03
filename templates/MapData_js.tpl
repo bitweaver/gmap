@@ -8,16 +8,16 @@ BitMap.MapData.push({ldelim}
   parsed_data:"{$gContent->mInfo.parsed_data}",
   {/if}
   mapdiv:'{$smarty.const.ACTIVE_PACKAGE}-map',
-  width:'{if $gBitSystem->getConfig("gmap_width_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_width_`$smarty.const.ACTIVE_PACKAGE`")}{else}auto{/if}',
-  height:'{if $gBitSystem->getConfig("gmap_height_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_height_`$smarty.const.ACTIVE_PACKAGE`")}{else}300px{/if}',
-  lat:{if $gBitSystem->getConfig("gmap_lat_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_lat_`$smarty.const.ACTIVE_PACKAGE`")}{else}40{/if},
-  lng:{if $gBitSystem->getConfig("gmap_lng_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_lng_`$smarty.const.ACTIVE_PACKAGE`")}{else}-97{/if},
-  zoom:{if $gBitSystem->getConfig("gmap_zoom_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_zoom_`$smarty.const.ACTIVE_PACKAGE`")}{else}3{/if},
-  scale:{if $gBitSystem->getConfig("gmap_scale_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_scale_`$smarty.const.ACTIVE_PACKAGE`")}{else}false{/if}, //true,false
-  type_control:{if $gBitSystem->getConfig("gmap_type_control_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_type_control_`$smarty.const.ACTIVE_PACKAGE`")}{else}true{/if}, //true,false
-  zoom_control:'{if $gBitSystem->getConfig("gmap_zoom_control_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_zoom_control_`$smarty.const.ACTIVE_PACKAGE`")}{else}s{/if}', //s,l,z,n
-  overview_control:{if $gBitSystem->getConfig("gmap_overview_control_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_type_control_`$smarty.const.ACTIVE_PACKAGE`")}{else}true{/if}, //true,false 
-  maptype:'{if $gBitSystem->getConfig("gmap_maptype_`$smarty.const.ACTIVE_PACKAGE`")}{$gBitSystem->getConfig("gmap_maptype_`$smarty.const.ACTIVE_PACKAGE`")}{else}0{/if}',
+  width:{if $gContent->mInfo.width}{$gContent->mInfo.width}{elseif $gBitSystem->getConfig("gmap_width")}{$gBitSystem->getConfig("gmap_width")}{else}0{/if},
+  height:{if $gContent->mInfo.height}{$gContent->mInfo.height}{elseif $gBitSystem->getConfig("gmap_height")}{$gBitSystem->getConfig("gmap_height")}{else}400{/if},
+  lat:{if $gContent->mInfo.lat}{$gContent->mInfo.lat}{elseif $gBitSystem->getConfig("gmap_lat")}{$gBitSystem->getConfig("gmap_lat")}{else}0{/if},
+  lng:{if $gContent->mInfo.lng}{$gContent->mInfo.lng}{elseif $gBitSystem->getConfig("gmap_lng")}{$gBitSystem->getConfig("gmap_lng")}{else}0{/if},
+  zoom:{if $gContent->mInfo.zoom}{$gContent->mInfo.zoom}{elseif $gBitSystem->getConfig("gmap_zoom")}{$gBitSystem->getConfig("gmap_zoom")}{else}2{/if},
+  scale:{if $gContent->mInfo.scale}{$gContent->mInfo.scale}{elseif $gBitSystem->getConfig("gmap_scale")}{$gBitSystem->getConfig("gmap_scale")}{else}false{/if}, //true,false
+  maptype:'{if $gContent->mInfo.maptype}{$gContent->mInfo.maptype}{elseif $gBitSystem->getConfig("gmap_maptype")}{$gBitSystem->getConfig("gmap_maptype")}{else}0{/if}',
+  type_control:{if $gContent->mInfo.type_control}{$gContent->mInfo.type_control}{elseif $gBitSystem->getConfig("gmap_type_control")}{$gBitSystem->getConfig("gmap_type_control")}{else}true{/if}, //true,false
+  zoom_control:'{if $gContent->mInfo.zoom_control}{$gContent->mInfo.zoom_control}{elseif $gBitSystem->getConfig("gmap_zoom_control")}{$gBitSystem->getConfig("gmap_zoom_control")}{else}s{/if}', //s,l,z,n
+  overview_control:{if $gContent->mInfo.overview_control}{$gContent->mInfo.overview_control}{elseif $gBitSystem->getConfig("gmap_overview_control")}{$gBitSystem->getConfig("gmap_type_control")}{else}true{/if}, //true,false 
 
   Maptypes:[
   {if count($gContent->mMapTypes) > 0}{section name=maptypes loop=$gContent->mMapTypes}

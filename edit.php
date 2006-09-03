@@ -21,9 +21,10 @@ require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
 
+/*
+//@todo kill - we think we dont need these when we use constants set in schema_inc
 if ( empty($_REQUEST['gmap_id']) && empty($_REQUEST['content_id']) ){
-//If its a new map, we first set some defaults and pass a form template to the browser.
-//Actual saving is done with a second call to edit.php and store is called the same as an update.
+
 		$gContent->mInfo['title'] = '';
 		$gContent->mInfo['description'] = '';
 		$gContent->mInfo['data'] = '';
@@ -39,8 +40,9 @@ if ( empty($_REQUEST['gmap_id']) && empty($_REQUEST['content_id']) ){
 		$gContent->mInfo['overview_control'] = 'TRUE';
 		$gContent->mInfo['scale'] = 'TRUE';
 		$gContent->mInfo['allow_comments'] = 'TRUE';
-}
 
+}
+*/
 
 //Check if this is a update or a new map
 if (!empty($_REQUEST["save_map"])) {
