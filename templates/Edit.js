@@ -105,7 +105,7 @@ BitMap.Edit.prototype.editMap = function(){
   form['geo[lat]'].value = this.Map.center.lat;
   form['geo[lng]'].value = this.Map.center.lng;
   form.map_z.value = this.Map.zoom;
-	form.edit.value = this.Map.data;
+	form.edit.value = this.Map.data?this.Map.data:"";
 
   for (var i=0; i < 4; i++) {
     if (form.map_showcont.options[i].value == this.Map.zoom_control){
@@ -128,13 +128,13 @@ BitMap.Edit.prototype.editMap = function(){
   var mapTypeRoot = form.map_type;
 
 	var mapTypeCount = 2;
-	
+
 	if (typeof(this.Map.maptypes) != 'undefined'){
 		mapTypeCount += this.Map.maptypes.length;
 		var newMapType = mapTypeRoot.options[0].cloneNode(false);
 		for (i=0; i<this.Map.maptypes.length; i++){
       mapTypeRoot.appendChild(newMapType);
-      mapTypeRoot.options[i+3].value = this.Map.maptypes[i].name;
+      mapTypeRoot.options[i+3].value = this.Map.maptypes[i].maptype_id;
       mapTypeRoot.options[i+3].text = this.Map.maptypes[i].name;
 		}
 	}

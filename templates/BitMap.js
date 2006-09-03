@@ -99,9 +99,9 @@ BitMap.Map = function (index, mapdiv, width, height, center, zoom, maptype, cont
   this.polygonsets = polygonsets;
   this.polygonstyles = polygonstyles;
   this.map = new GMap2(document.getElementById(this.mapdiv));
+  this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
   this.SetMapType();
   this.SetControls();
-  this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
   if (this.markers.length > 0){
   	var ref = this;
   	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
