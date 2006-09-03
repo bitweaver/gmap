@@ -112,6 +112,7 @@ class BitGmapMarker extends LibertyAttachable {
 			$pParamHash['marker_store']['marker_type'] = $pParamHash['marker_type'];
 		}
 
+/*
 		if( !empty( $pParamHash['marker_lat'] ) && is_numeric( $pParamHash['marker_lat'] ) ) {
 			$pParamHash['marker_store']['lat'] = $pParamHash['marker_lat'];
 		}
@@ -119,6 +120,7 @@ class BitGmapMarker extends LibertyAttachable {
 		if( !empty( $pParamHash['marker_lon'] ) && is_numeric( $pParamHash['marker_lon'] ) ) {
 			$pParamHash['marker_store']['lon'] = $pParamHash['marker_lon'];
 		}
+*/
 
 		if( !empty( $pParamHash['marker_labeltext'] ) ) {
 			$pParamHash['marker_store']['label_data'] = $pParamHash['marker_labeltext'];

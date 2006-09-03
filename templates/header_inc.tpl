@@ -20,11 +20,8 @@
 {/if}
 
 <style type="text/css">
-{literal}
- .edit-optionstable {background-color:#eef; border-bottom:2px solid #f30;}
- .edit-datatable {background-color:#fd9; border-bottom:2px solid #f30;}
-  table.data td {padding:.5em;}
-	td {vertical-align:top;}
+{literal}  
+	td {vertical-align:top; padding:0px;}
 	th {text-align:left;}
 	.map-op {margin-right:160px;}
 	.gmapeditstrong {background-color:#ddd;}
@@ -33,6 +30,19 @@
 	.gmapsideicon {float:left; margin-right:3px;}
 	.gmapsidedesc {margin:6px 0px;}
 	.gmapsidelist {padding:0px 2px 0px 6px; line-height:1.5em; clear:both;}
+	
+  .edit-optionstable {background-color:#eef; border-bottom:2px solid #f30;}
+  .edit-datatable {background-color:#feb; border-bottom:2px solid #f30;}
+  .edit-datatable ul {margin-left:0em;}
+  .edit-datatable ul li {margin:0; padding:.25em 1em;}
+  .edit-titlebar {background-color:#cdf; margin:.5em 0em;}
+  .edit-selected {background-color:#fc7; border-top:2px solid #f30;}
+  .edit-selected .bar a.list {background-color:#feb}
+  .edit-markersel {background-color:#fff;}
+  .markerform {background-color:#fff; margin:1em 0em; padding:2em; border:none;}
+  table {border-collapse:collapse;}
+  table.data td {padding:.5em;}
+	
 {/literal}
 {if count($gContent->mMapMarkerStyles) > 0}
 	{section name=markerstyledata loop=$gContent->mMapMarkerStyles}

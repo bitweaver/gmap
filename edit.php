@@ -31,7 +31,7 @@ if ( empty($_REQUEST['gmap_id']) && empty($_REQUEST['content_id']) ){
 		$gContent->mInfo['width'] = 0;
 		$gContent->mInfo['height'] = 400;
 		$gContent->mInfo['lat'] = 0;
-		$gContent->mInfo['lon'] = 0;
+		$gContent->mInfo['lng'] = 0;
 		$gContent->mInfo['zoom'] = 16;
 		$gContent->mInfo['maptype'] = 0;
 		$gContent->mInfo['zoom_control'] = 's';
@@ -55,7 +55,7 @@ if (!empty($_REQUEST["save_map"])) {
 					."<w>".$gContent->mInfo['width']."</w>"
 					."<h>".$gContent->mInfo['height']."</h>"
 					."<lat>".$gContent->mInfo['lat']."</lat>"
-					."<lon>".$gContent->mInfo['lon']."</lon>"
+					."<lng>".$gContent->mInfo['lon']."</lng>"
 					."<zoom>".$gContent->mInfo['zoom']."</zoom>"
 					."<maptype>".$gContent->mInfo['maptype']."</maptype>"
 					."<zoom_con>".$gContent->mInfo['zoom_control']."</zoom_con>"

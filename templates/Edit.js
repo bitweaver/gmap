@@ -43,13 +43,13 @@ BitMap.Edit = function(){
   this.bModMLng;
 
 //DELETE THIS SHIT WHEN DONE TESTING
-/*  
-  this.Map.markersets[0]={title:"steve", set_id:1};
+/*
+  this.Map.markersets[0]={name:"steve", set_id:1};
   this.Map.markers[0]={title:"some shit", set_id:1, marker_type:0, marker_id:1, lat: 40.90234, lng:-32.0345345, data:"soma oms da body text", label_data:"my lable", photo_url:"no photo, thanks"};
   this.Map.markers[1]={title:"other stuff", set_id:1, marker_type:0, marker_id:2, lat: 41.22234, lng:-42.0345345, data:"aslkjd lkj body text", label_data:"my lable", photo_url:"no photo, thanks"};
   this.Map.markers[2]={title:"bla bla bl", set_id:1, marker_type:1, marker_id:3, lat: 22.90234, lng:-52.0345345, data:"helol helool o asd text", label_data:"my lable", photo_url:"no photo, thanks"};
 
-  this.Map.markersets[1]={title:"chris", set_id:2};
+  this.Map.markersets[1]={name:"chris", set_id:2};
   this.Map.markers[3]={title:"cookies", set_id:2, marker_type:0, marker_id:4, lat: 68.90234, lng:-35.0345345, data:"some body text", label_data:"my lable", photo_url:"no photo, thanks"};
   this.Map.markers[4]={title:"milk", set_id:2, marker_type:1, marker_id:5, lat: 44.22234, lng:-46.0345345, data:"milky milky body text", label_data:"my lable", photo_url:"no photo, thanks"};
   this.Map.markers[5]={title:"napkin", set_id:2, marker_type:0, marker_id:6, lat: 23.90234, lng:-55.0345345, data:"napskin flk asd text", label_data:"my lable", photo_url:"no photo, thanks"};
@@ -280,7 +280,7 @@ BitMap.Edit.prototype.editMarkerSets = function(){
     for (var n=0; n<this.Map.markersets.length; n++) {
   		var newMarkerSet = $('edit-markerset').cloneNode(true);
     	newMarkerSet.id = "edit-markerset-"+n;
-   		newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[n].title;
+   		newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[n].name;
    		newMarkerSet.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMarkerSetOptions("+n+");";
    		newMarkerSet.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMarkers("+n+");";
     	$('edit-markersets-table').appendChild(newMarkerSet);
@@ -367,6 +367,13 @@ BitMap.Edit.prototype.newMarkerSet = function(){
 
 
 BitMap.Edit.prototype.editMarkerSetOptions = function(i){
+  var a;
+  var count = this.Map.markersets.length;
+  for (n=0; n<count; n++){
+    a = (n==i)?'add':'remove';
+    BitMap.jscss(a, $('edit-markerset-'+n), 'edit-selected');
+  }
+
   this.cancelEditMarkers();
   var s = this.Map.markersets[i];
   var optionsTable = $('edit-markerset-options-table');
@@ -379,7 +386,7 @@ BitMap.Edit.prototype.editMarkerSetOptions = function(i){
   var form = $('edit_markerset-options-form');
   form.set_id.value = s.set_id;
   form.set_array_n.value = i;
-  form.title.value = s.title;
+  form.name.value = s.name;
   if (s.plot_on_load == false){ form.plot_on_load.options[0].selected=true; }else{form.plot_on_load.options[1].selected=true;};
   if (s.side_panel == false){ form.side_panel.options[0].selected=true; }else{form.side_panel.options[1].selected=true;};
   if (s.explode == false){ form.explode.options[0].selected=true }else{form.explode.options[1].selected=true};
@@ -416,12 +423,18 @@ BitMap.Edit.prototype.cancelNewMarkerSet = function(){
 
 BitMap.Edit.prototype.cancelEditMarkerSetOptions = function(){
   this.canceledit('edit-markerset-options-table');
-  this.canceledit('newmarkersetform');
   this.canceledit('editerror');
 }
 
 
 BitMap.Edit.prototype.editMarkers = function(i){
+  var a;
+  var count = this.Map.markersets.length;
+  for (n=0; n<count; n++){
+    a = (n==i)?'add':'remove';
+    BitMap.jscss(a, $('edit-markerset-'+n), 'edit-selected');
+  }
+
   this.cancelEditMarkerSetOptions();
   var set_id = this.Map.markersets[i].set_id;
   var markerTable = $('edit-markers-table');
@@ -444,12 +457,13 @@ BitMap.Edit.prototype.editMarkers = function(i){
   for (var n=0; n<this.Map.markers.length; n++) {
     var m = this.Map.markers[n];
     if (m.set_id == set_id){
-  			var newMarkerli = markerLinks.item(0).cloneNode(true);
-  			var newMarkerLink = newMarkerli.getElementsByTagName("a").item(0);
+  		var newMarkerli = markerLinks.item(0).cloneNode(true);
+        newMarkerli.id = 'edit-markerlink-'+n;
+  		var newMarkerLink = newMarkerli.getElementsByTagName("a").item(0);
         newMarkerLink.href = "javascript:BitMap.EditSession.editMarker("+n+")";
         newMarkerLink.innerHTML = m.title;
         markerLinksList.appendChild(newMarkerli);
-  			newMarkerli.style.display = "block";
+  		newMarkerli.style.display = "block";
   			
   			if (firstselected != true){
   			  this.editMarker(n);
@@ -495,7 +509,7 @@ BitMap.Edit.prototype.newMarker = function(){
     var count = this.Map.markersets.length;
     for (var n=0; n<count; n++){
       var s = this.Map.markersets[n];
-      form.set_id.options[n] = new Option(s.title, s.set_id);
+      form.set_id.options[n] = new Option(s.name, s.set_id);
     }
     form.set_id.options[0].selected = true;  
   }
@@ -503,6 +517,15 @@ BitMap.Edit.prototype.newMarker = function(){
 
 
 BitMap.Edit.prototype.editMarker = function(i){
+  var a;
+  var count = this.Map.markers.length;
+  for (n=0; n<count; n++){
+    if($('edit-markerlink-'+n)){
+    a = (n==i)?'add':'remove';
+    BitMap.jscss(a, $('edit-markerlink-'+n), 'edit-markersel');
+    }
+  }
+
   var m = this.Map.markers[i];
   //change values
   var form = $('edit-marker-form');
@@ -513,7 +536,7 @@ BitMap.Edit.prototype.editMarker = function(i){
   for (var n=0; n<count; n++){
     var s = this.Map.markersets[n];
     //for each, attach a new option
-    form.set_id.options[n] = new Option(s.title, s.set_id);
+    form.set_id.options[n] = new Option(s.name, s.set_id);
     //if the setid = the marker's setid set selected to true
     if (m.set_id == s.set_id){
       form.set_id.options[n].selected = true;
@@ -1894,7 +1917,7 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 			this.Map.height = h[0].firstChild.nodeValue;			
 			var lt = xml.documentElement.getElementsByTagName('lat');
 			this.Map.lat = parseFloat(lt[0].firstChild.nodeValue);
-			var ln = xml.documentElement.getElementsByTagName('lon');
+			var ln = xml.documentElement.getElementsByTagName('lng');
 			this.Map.lng = parseFloat(ln[0].firstChild.nodeValue);
 			var z = xml.documentElement.getElementsByTagName('z');
 			this.Map.zoom = parseInt(z[0].firstChild.nodeValue);
@@ -2153,8 +2176,8 @@ BitMap.Edit.prototype.addMarker = function(rslt){
 			m.title = tl[0].firstChild.nodeValue;
 			var lt = xml.documentElement.getElementsByTagName('lat');
 			m.lat = parseFloat(lt[0].firstChild.nodeValue);
-			var ln = xml.documentElement.getElementsByTagName('lon');
-			m.lon = parseFloat(ln[0].firstChild.nodeValue);
+			var ln = xml.documentElement.getElementsByTagName('lng');
+			m.lng = parseFloat(ln[0].firstChild.nodeValue);
 			var dt = xml.documentElement.getElementsByTagName('data');
 			m.data = dt[0].firstChild.nodeValue;
 			var pdt = xml.documentElement.getElementsByTagName('parsed_data');
@@ -2210,9 +2233,9 @@ BitMap.Edit.prototype.updateMarker = function(rslt){
 			var lt = xml.documentElement.getElementsByTagName('lat');
 			var lat = parseFloat(lt[0].firstChild.nodeValue);
 	 		m.lat = lat;
-			var ln = xml.documentElement.getElementsByTagName('lon');
-			var lon = parseFloat(ln[0].firstChild.nodeValue);
-	 		m.lon = lon;
+			var ln = xml.documentElement.getElementsByTagName('lng');
+			var lng = parseFloat(ln[0].firstChild.nodeValue);
+	 		m.lng = lng;
 			var dt = xml.documentElement.getElementsByTagName('data');
 			var data = dt[0].firstChild.nodeValue;			
 	 		m.data = data;
@@ -3375,7 +3398,7 @@ BitMap.Edit.prototype.addAssistant = function(a, b){
 
 	if (a == 'map'){
 		f = $('mapform');
-		alert ('Map centering assistant activated. \n Click to get center lat and lon values!');
+		alert ('Map centering assistant activated. \n Click to get center lat and lng values!');
 	
   	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
       if (point) {

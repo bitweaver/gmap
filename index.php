@@ -49,14 +49,15 @@ if (!isset($_REQUEST['gmap_id'] ) ) {
     $gBitSystem->display('bitpackage:gmap/list_gmaps.tpl', tra('Gmap') );
 }else{
 
-		require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
-    
-		$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
+	require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
+
+	$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
     
     //set onload function in body
-    $gBodyOnload[] = 'loadMap();';
+	$gBitSmarty->assign('view_map', TRUE);
+	$gBitSystem->mOnload[] = 'BitMap.Display();';
 
-	  $gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Gmap') );
+	$gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Gmap') );
 
 }
 

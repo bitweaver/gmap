@@ -23,11 +23,11 @@
         	<tr><td>Description</td><td><input name="map_desc" id="map_desc" type="text" size="40" value=""></td></tr>
         	<tr>
 					<td>Center Latitude</td>
-					<td><input name="map_lat" id="map_lat"type="text" size="40" value=""></td>
+					<td><input name="geo[lat]" id="map_lat"type="text" size="40" value=""></td>
 				</tr>
         	<tr>
 					<td>Center Longitude</td>
-					<td><input name="map_lng" id="map_lng" type="text" size="40" value=""></td>
+					<td><input name="geo[lng]" id="map_lng" type="text" size="40" value=""></td>
 				</tr>
 				<tr><td></td><td><a name="map_assist_btn" title="click a center!" href="javascript:BitMap.EditSession.addAssistant('map');">( Use Locating Assistant )</a></td></tr>
         	<tr><td>Width (use '0' for auto)</td><td><input name="map_w" id="map_w" type="text" size="12" value=""></td></tr>
@@ -188,13 +188,13 @@
 <!-- markerset editing menu -->
 <div id="edit-markersets-table" class="edit-table" style="display:none;">
   <h2>Marker Sets Associated With This Map</h2>
-  <div id="edit-markerset" class="edit-titlebar" style="display:none; background-color:#cdf; margin:.5em 0em;">
+  <div id="edit-markerset" class="edit-titlebar" style="display:none;">
     <table class="bar">
     	<tr>
         <td width="200px"><span class="setname">Set Name Here</span></td>
       <td>
-        <a href="javascript:BitMap.EditSession.editMarkerSetOptions(n);">Edit Set Options</a> | 
-        <a href="javascript:BitMap.EditSession.editMarkers(n);">Edit Markers In This Set</a>
+        <a class="opts" href="javascript:BitMap.EditSession.editMarkerSetOptions(n);">Edit Set Options</a> | 
+        <a class="list" href="javascript:BitMap.EditSession.editMarkers(n);">Edit Markers In This Set</a>
       </td>
     </tr>
     </table>
@@ -210,8 +210,8 @@
     		<table class="data">
 					<tr>
 						<td>
-              Title:<br/>
-              <input size="20" name="title" type="text" value="a title"></td>
+              Name:<br/>
+              <input size="20" name="name" type="text" value="a name"></td>
 						<td>Marker Style:<br/>
                 <select name="style_id">
                   					<option value="0">Google (standard)</option>
@@ -253,14 +253,14 @@
 <!-- markerset options form -->
 <div id="edit-markerset-options-table" class="edit-optionstable" style="display:none;">
     	<form action="javascript:;" name="edit-markerset-options-form" id="edit_markerset-options-form">
-  			<input name="set_id" type="hidden" value="n">
+  		<input name="set_id" type="hidden" value="n">
         <input name="set_array_n" type="hidden" value="n">
         <input name="save_markerset" type="hidden" value="true">
     		<table class="data">
 					<tr>
 						<td>
-              Title:<br/>
-              <input size="20" name="title" type="text" value="a title"></td>
+              Name:<br/>
+              <input size="20" name="name" type="text" value="a name"></td>
 						<td>Marker Style:<br/>
                 <select name="style_id">
                   					<option value="0">Google (standard)</option>
@@ -322,8 +322,8 @@
 											<option value="0" >Normal</option>
 											<option value="1" >Auto-Photo</option>
 											</select></div>
-            <div>Latitutde &nbsp;<input size="50" name="marker_lat" type="text" value=""><br/>
-                 Longitude <input size="50" name="marker_lng" type="text" value=""><br/>
+            <div>Latitutde &nbsp;<input size="50" name="geo[lat]" type="text" value=""><br/>
+                 Longitude <input size="50" name="geo[lng]" type="text" value=""><br/>
                  <a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a></div>
             <div>Title<br/>
                  <input size="50" name="title" type="text" value="a title"></div>
@@ -356,7 +356,7 @@
     <input name="save_marker" type="hidden" value="true">
     <input name="marker_id" type="hidden" value="">
     <input name="marker_array_n" type="hidden" value="n">
-    <table class="data">
+    <table>
     	<tr>
         <td width="200px">Markers:<br/>
             <ul>
@@ -364,7 +364,7 @@
             </ul>
         </td>
     	  <td>
-          <div style="background-color:#fff; margin:1em 0em; padding:2em;">
+          <div class="markerform">
             <div style="display:none;">Add To Set <select name="set_id" id="set_id">
 								<option value="n">Set Name</option>
 							</select></div>
@@ -372,8 +372,8 @@
 											<option value="0" >Normal</option>
 											<option value="1" >Auto-Photo</option>
 											</select></div>
-            <div>Latitutde &nbsp;<input size="50" name="marker_lat" type="text" value=""><br/>
-                 Longitude <input size="50" name="marker_lng" type="text" value=""><br/>
+            <div>Latitutde &nbsp;<input size="50" name="geo[lat]" type="text" value=""><br/>
+                 Longitude <input size="50" name="geo[lng]" type="text" value=""><br/>
                  <a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a></div>
             <div>Title<br/>
                  <input size="50" name="title" type="text" value="a title"></div>

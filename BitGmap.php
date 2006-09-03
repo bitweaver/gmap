@@ -803,6 +803,7 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['gmap_store']['height'] = $pParamHash['map_h'];
 		}
 
+/*
 		//@todo lat/lng values now stored via GeoPackage - should these values be part of this hash?
 		if( isset( $pParamHash['map_lat'] ) && is_numeric( $pParamHash['map_lat'] ) ) {
 			$pParamHash['gmap_store']['lat'] = $pParamHash['map_lat'];
@@ -814,6 +815,7 @@ class BitGmap extends LibertyAttachable {
 		} else {
 			$this->mError['map_lng'] = tra( 'You must enter a longitude.' );
 		}
+*/
 
 		if( isset( $pParamHash['map_z'] ) && is_numeric( $pParamHash['map_z'] ) ) {
 			$pParamHash['gmap_store']['zoom'] = $pParamHash['map_z'];
@@ -848,7 +850,8 @@ class BitGmap extends LibertyAttachable {
 					$this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps", $pParamHash['gmap_store'], array( "name" => "gmap_id", "value" => $pParamHash['gmap_id'] ) );
 				} else {
 					$pParamHash['gmap_store']['content_id'] = $this->mContentId;
-					$this->mDb->associateInsert( BIT_DB_PREFIX."gmaps", $pParamHash['gmap_store'] );
+					$pParamHash['gmap_store']['gmap_id'] = $this->mDb->GenID( 'gmaps_gmap_id_seq' );
+					$this->mDb->associateInsert( BIT_DB_PREFIX."gmaps", $pParamHash['gmap_store'] );					
 				}
 				$this->mDb->CompleteTrans();
 
