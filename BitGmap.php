@@ -30,15 +30,16 @@ class BitGmap extends LibertyAttachable {
 	**/
 	function load( $pFullLoad = TRUE ) {
 		if( !empty( $this->mGmapId ) || !empty( $this->mContentId ) ) {
-			// LibertyContent::load()assumes you have joined already, and will not execute any sql!
-			// This is a significant performance optimization
 			$lookupColumn = !empty( $this->mGmapId )? 'gmap_id' : 'content_id';
-			$lookupId = !empty( $this->mGmapId )? $this->mGmapId : $this->mContentId;
 
-			$query = "SELECT *
-					  FROM `".BIT_DB_PREFIX."gmaps` bm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bm.`content_id`=lc.`content_id` )
-					  WHERE bm.`$lookupColumn`=?";
-			$result = $this->mDb->query( $query, array( $lookupId ) );
+			$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+			array_push( $bindVars,  $lookupId = @BitBase::verifyId( $this->mGmapId )? $this->mGmapId : $this->mContentId );
+			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+			
+			$query = "SELECT * $selectSql
+					  FROM `".BIT_DB_PREFIX."gmaps` bm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bm.`content_id`=lc.`content_id` )  $joinSql
+					  WHERE bm.`$lookupColumn`=? $whereSql";
+			$result = $this->mDb->query( $query, $bindVars );
 
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;

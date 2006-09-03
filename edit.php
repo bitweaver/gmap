@@ -45,7 +45,7 @@ if ( empty($_REQUEST['gmap_id']) && empty($_REQUEST['content_id']) ){
 //Check if this is a update or a new map
 if (!empty($_REQUEST["save_map"])) {
     if( $gContent->store( $_REQUEST ) ) {
-				//if store is successful we return XML
+				//if store is successful we return XML				
 				$mRet = "<map>"
 					."<gmap_id>".$gContent->mInfo['gmap_id']."</gmap_id>"
 					."<title>".$gContent->getTitle()."</title>"
@@ -55,13 +55,13 @@ if (!empty($_REQUEST["save_map"])) {
 					."<w>".$gContent->mInfo['width']."</w>"
 					."<h>".$gContent->mInfo['height']."</h>"
 					."<lat>".$gContent->mInfo['lat']."</lat>"
-					."<lng>".$gContent->mInfo['lon']."</lng>"
+					."<lng>".$gContent->mInfo['lng']."</lng>"
 					."<zoom>".$gContent->mInfo['zoom']."</zoom>"
 					."<maptype>".$gContent->mInfo['maptype']."</maptype>"
 					."<zoom_con>".$gContent->mInfo['zoom_control']."</zoom_con>"
 					."<type_con>".$gContent->mInfo['maptype_control']."</type_con>"
 					."<overview_con>".$gContent->mInfo['overview_control']."</overview_con>"
-					."<scale>".$gContent->mInfo['show_scale']."</scale>"
+					."<scale>".$gContent->mInfo['scale']."</scale>"
 					."</map>";
 					
       	//since we are returning xml we must report so in the header
