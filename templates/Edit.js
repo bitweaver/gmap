@@ -3358,14 +3358,14 @@ BitMap.Edit.prototype.addAssistant = function(a, b){
 	}
 
 	if (a == 'map'){
-		f = $('mapform');
+		f = $('edit-map-form');
 		alert ('Map centering assistant activated. \n Click to get center lat and lng values!');
 	
   	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
       if (point) {
-  		this.Map.map.panTo(point);
-  		f.map_lng.value = point.lng();
-  		f.map_lat.value = point.lat();
+  		this.panTo(point);
+  		f['geo[lng]'].value = point.lng();
+  		f['geo[lat]'].value = point.lat();
       }
     });
 	}

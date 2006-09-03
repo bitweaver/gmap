@@ -56,7 +56,7 @@
 
         <!-- Allow Comments <input name="map_comm" type="checkbox" value=""><br/> //-->
         <tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap(document.edit-map-form);"> 
-				<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit('editmapform');"></td>
+				<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit('edit-map-table');"></td>
 				</tr>
 			</table>
     </form>
