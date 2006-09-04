@@ -11,6 +11,10 @@ BitMap.show = function (i){
 	document.getElementById(i).style.display = "block";
 };
 
+BitMap.hide = function (i){
+	document.getElementById(i).style.display = "none";
+};
+
 //for changing elm class properties
 //(action,domelm,class1,class2)
 BitMap.jscss = function (a,o,c1,c2){

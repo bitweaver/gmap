@@ -43,7 +43,7 @@ BitMap.Edit = function(){
   this.bModMLng;
 
 //DELETE THIS SHIT WHEN DONE TESTING
-/*
+
   this.Map.markersets[0]={name:"steve", set_id:1};
   this.Map.markers[0]={title:"some shit", set_id:1, marker_type:0, marker_id:1, lat: 40.90234, lng:-32.0345345, data:"soma oms da body text", label_data:"my lable", photo_url:"no photo, thanks"};
   this.Map.markers[1]={title:"other stuff", set_id:1, marker_type:0, marker_id:2, lat: 41.22234, lng:-42.0345345, data:"aslkjd lkj body text", label_data:"my lable", photo_url:"no photo, thanks"};
@@ -53,7 +53,7 @@ BitMap.Edit = function(){
   this.Map.markers[3]={title:"cookies", set_id:2, marker_type:0, marker_id:4, lat: 68.90234, lng:-35.0345345, data:"some body text", label_data:"my lable", photo_url:"no photo, thanks"};
   this.Map.markers[4]={title:"milk", set_id:2, marker_type:1, marker_id:5, lat: 44.22234, lng:-46.0345345, data:"milky milky body text", label_data:"my lable", photo_url:"no photo, thanks"};
   this.Map.markers[5]={title:"napkin", set_id:2, marker_type:0, marker_id:6, lat: 23.90234, lng:-55.0345345, data:"napskin flk asd text", label_data:"my lable", photo_url:"no photo, thanks"};
-*/  
+  
 }
 
 
@@ -150,10 +150,8 @@ BitMap.Edit.prototype.editMap = function(){
 	*/
 };
 
-BitMap.Edit.prototype.editMapTypes = function(){
-	BitMap.show('editmaptypemenu');
-	BitMap.show('editmaptypeform');
-	BitMap.show('editmaptypecancel');
+BitMap.Edit.prototype.editMaptypes = function(){
+	BitMap.show('edit-maptypes-table');
 
 	//if maptype data exists
 	if ( typeof( this.Map.maptypes ) ) {
@@ -162,10 +160,10 @@ BitMap.Edit.prototype.editMapTypes = function(){
   	// any previously existing sets from the UI
   	for (var a=0; a<this.Map.maptypes.length; a++) {
   		if ( this.Map.maptypes[a]!= null ){
-    		var getElem = "editmaptypetable_" + this.Map.maptypes[a].maptype_id;
+    		var getElem = "edit-maptypes-table_" + this.Map.maptypes[a].maptype_id;
     		if ( $(getElem) ) {
         	var extraMapTypeForm = $(getElem);
-    			$('editmaptypeform').removeChild(extraMapTypeForm);
+    			$('edit-maptype-form').removeChild(extraMapTypeForm);
     		}
 			}
   	}
@@ -247,10 +245,10 @@ BitMap.Edit.prototype.editMapTypes = function(){
 
 BitMap.Edit.prototype.newMapType = function(){
     // Display the New Marker Div and Cancel Button
-   	BitMap.show('newmaptypeform');
+   	BitMap.show('edit-maptypes-table');
 
 		// Reset the Form
-		$('maptypeform_new').reset();
+		$('edit-maptype-form').reset();
 };
 
 
@@ -305,9 +303,8 @@ BitMap.Edit.prototype.cancelEditMarkerSets = function(){
   
   this.canceledit('edit-markers-menu');
   this.canceledit('edit-markersets-table');
-  this.canceledit('edit-markersets-cancel'); 
+  this.canceledit('edit-markersets-cancel');
 /*
-  this.canceledit('newmarkerform');
   this.canceledit('newmarkersetform'); 
   this.canceledit('editmarkerstylesmenu'); 
   this.canceledit('newmarkerstyleform'); 
@@ -436,7 +433,7 @@ BitMap.Edit.prototype.editMarkers = function(i){
   }
 
   this.cancelEditMarkerSetOptions();
-  var set_id = this.Map.markersets[i].set_id;
+  var set_id = this.Map.markersets[i].set_id;    
   var markerTable = $('edit-markers-table');
   //Set the markerset toggle tags to closed
   //Set the markerset toggle tags to open on our selected set
@@ -446,23 +443,24 @@ BitMap.Edit.prototype.editMarkers = function(i){
   var markerLinksList = markerTable.getElementsByTagName("ul").item(0);
   var markerLinks = markerTable.getElementsByTagName("li");
   //Clear all the existing markers listed  
-  //We leave the first, cause it is the model we clone
+  //We leave the first two, the first is the model we clone, the second if for a new marker
   var count = markerLinks.length;
-  for (n=count-1; n>0; n--){
+  for (n=count-1; n>1; n--){
     markerLinksList.removeChild(markerLinks.item(n));
   }
-  var newCount = markerTable.getElementsByTagName("li");
+  
+  $('edit-markerlink-new-a').href = "javascript:BitMap.EditSession.newMarker("+i+");";
   //For each marker in our new set, add a link
   var firstselected = false;
   for (var n=0; n<this.Map.markers.length; n++) {
     var m = this.Map.markers[n];
     if (m.set_id == set_id){
   		var newMarkerli = markerLinks.item(0).cloneNode(true);
-        newMarkerli.id = 'edit-markerlink-'+n;
+      newMarkerli.id = 'edit-markerlink-'+n;
   		var newMarkerLink = newMarkerli.getElementsByTagName("a").item(0);
-        newMarkerLink.href = "javascript:BitMap.EditSession.editMarker("+n+")";
-        newMarkerLink.innerHTML = m.title;
-        markerLinksList.appendChild(newMarkerli);
+      newMarkerLink.href = "javascript:BitMap.EditSession.editMarker("+n+")";
+      newMarkerLink.innerHTML = m.title;
+      markerLinksList.appendChild(newMarkerli);
   		newMarkerli.style.display = "block";
   			
   			if (firstselected != true){
@@ -477,46 +475,26 @@ BitMap.Edit.prototype.editMarkers = function(i){
 }
 
 
-BitMap.Edit.prototype.newMarker = function(){
-  var check = false;
-  if (this.Map.markersets.length > 0) { check = true; }
-  if (check == false){
-  	//set warning message, show it, fade it
-  	$('errortext').innerHTML = "To add a marker, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new marker!";
-	BitMap.show('editerror');
-  	//display new marker set form
-    this.newMarkerSet();
-  }else{
-    if($('edit-marker-new')){
-      BitMap.show('edit-marker-new');
-    }else{
-      var newMarker = $('edit-markerset').cloneNode(true);
-      newMarker.id = "edit-marker-new";
-      newMarker.getElementsByTagName("span").item(0).innerHTML = "New Marker";
-      var tdtags = newMarker.getElementsByTagName("td");
-      tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
-      $('edit-markers-menu').appendChild(newMarker);
-      BitMap.show('edit-marker-new');
-
-      //add form
-      var optionsTable = $('edit-new-marker-table');
-      var target = $('edit-marker-new');  
-      target.insertBefore(optionsTable, target.childNodes[2]);  
-      BitMap.show('edit-new-marker-table');
+BitMap.Edit.prototype.newMarker = function(i){
+  //i is the set_index
+  var count = this.Map.markers.length;
+  for (n=0; n<count; n++){
+    if($('edit-markerlink-'+n)){
+    BitMap.jscss('remove', $('edit-markerlink-'+n), 'edit-markersel');
     }
-    var form = $('edit-new-marker-form');
-    form.reset();
-    var count = this.Map.markersets.length;
-    for (var n=0; n<count; n++){
-      var s = this.Map.markersets[n];
-      form.set_id.options[n] = new Option(s.name, s.set_id);
-    }
-    form.set_id.options[0].selected = true;  
   }
+  BitMap.jscss('add', $('edit-markerlink-new'), 'edit-markersel');
+  var form = $('edit-marker-form');
+  form.marker_id.value = null;
+  form.marker_array_n.value = null;
+  form.set_id.value = this.Map.markersets[i].set_id;
+  form.reset();
+  BitMap.hide('edit-marker-actions');  
 }
 
 
 BitMap.Edit.prototype.editMarker = function(i){
+  BitMap.jscss('remove', $('edit-markerlink-new'), 'edit-markersel');
   var a;
   var count = this.Map.markers.length;
   for (n=0; n<count; n++){
@@ -525,36 +503,26 @@ BitMap.Edit.prototype.editMarker = function(i){
     BitMap.jscss(a, $('edit-markerlink-'+n), 'edit-markersel');
     }
   }
-
+  
   var m = this.Map.markers[i];
   //change values
   var form = $('edit-marker-form');
-  //kill all existing set_id options
-  form.set_id.options.length = 0;
-  //loop through markersets array
-  var count = this.Map.markersets.length;
-  for (var n=0; n<count; n++){
-    var s = this.Map.markersets[n];
-    //for each, attach a new option
-    form.set_id.options[n] = new Option(s.name, s.set_id);
-    //if the setid = the marker's setid set selected to true
-    if (m.set_id == s.set_id){
-      form.set_id.options[n].selected = true;
-    }
-  }
-  form.marker_type.options[m.marker_type].selected = true;
   form.marker_id.value = m.marker_id;
+  form.marker_array_n.value = i;
+  form.set_id.value = m.set_id;
+  form.marker_type.options[m.marker_type].selected = true;
   form.title.value = m.title;
-  form.marker_lat.value = m.lat;
-  form.marker_lng.value = m.lng;
+  form['geo[lat]'].value = m.lat;
+  form['geo[lng]'].value = m.lng;
   form.edit.value = m.data;
   form.marker_labeltext.value = m.label_data;
   form.photo_url.value = m.photo_url;
-  form.marker_array_n.value = i;
   
   //update links
   var formLinks = $('edit-marker-actions').getElementsByTagName("a");
-  formLinks.item(1).href = "javascript:BitMap.MapData[0].Map.markers["+n+"].marker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+n+"].marker.my_html);";
+  formLinks.item(1).href = "javascript:BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html);";
+  
+  BitMap.show('edit-marker-actions');
 }
 
 
@@ -1635,17 +1603,19 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 	 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMapType, this) ); 
 	 }
-	 
+/*  
 	 BitMap.Edit.prototype.storeNewMarker = function(f){
 			this.editSetId = f.set_id.value;
 	 		var str = "edit_marker.php?" + queryString(f) + "&save_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.addMarker, this) ); 
 	 }
-	 
+*/	 
 	 BitMap.Edit.prototype.storeMarker = function(f){
+	 		var str = "edit_marker.php?" + queryString(f);
+			this.editSetId = f.set_id.value;
 			this.editObjectN = f.marker_array_n.value;
-	 		var str = "edit_marker.php?" + queryString(f) + "&save_marker=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMarker, this) ); 
+			var callback = (f.marker_id.value != "")?this.updateMarker:this.addMarker;
+		  doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 	 }
 	 
 	 BitMap.Edit.prototype.removeMarker = function(f){

@@ -62,12 +62,15 @@ class BitGmapMarker extends LibertyAttachable {
 			// LibertyContent::load()assumes you have joined already, and will not execute any sql!
 			// This is a significant performance optimization
 			$lookupColumn = !empty( $this->mGmarkerId )? 'marker_id' : 'content_id';
-			$lookupId = !empty( $this->mGmarkerId )? $this->mGmarkerId : $this->mContentId;
 
-			$query = "SELECT *
-					  FROM `".BIT_DB_PREFIX."gmaps_markers` bmm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` )
-					  WHERE bmm.`$lookupColumn`=?";
-			$result = $this->mDb->query( $query, array( $lookupId ) );
+			$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+			array_push( $bindVars,  $lookupId = @BitBase::verifyId( $this->mGmarkerId )? $this->mGmarkerId : $this->mContentId );
+			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+
+			$query = "SELECT * $selectSql
+					  FROM `".BIT_DB_PREFIX."gmaps_markers` bmm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
+					  WHERE bmm.`$lookupColumn`=? $whereSql";
+			$result = $this->mDb->query( $query, $bindVars );
 
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;

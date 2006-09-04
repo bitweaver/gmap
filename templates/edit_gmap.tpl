@@ -8,7 +8,6 @@
 {/if}
 
 <div class="edit gmap">
-	<div class="display gmap">
 	  {include file="bitpackage:gmap/gmap_header.tpl"}
 	  <div class="body">
   	  <div id="mapsidepanel" class="hide" style="height:{if $gContent->mInfo.height == 0}auto{else}{$gContent->mInfo.height}px{/if};"></div>
@@ -19,5 +18,4 @@
 			  {$gContent->mInfo.clean_data}
 		  </div>
 	  </div> <!-- end .body -->
-	</div> <!-- end .display -->
 </div>

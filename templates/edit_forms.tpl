@@ -1,6 +1,6 @@
 <div>
   <a id="emap" href="javascript:BitMap.EditSession.editMap();">Edit Map</a> | 
-	<a id="emaptype" href="javascript:BitMap.EditSession.editMapTypes();">Edit Map Types</a> |
+	<a id="emaptype" href="javascript:BitMap.EditSession.editMaptypes();">Edit Maptypes</a> |
   <a id="emarker" href="javascript:BitMap.EditSession.editMarkerSets();">Edit Markers</a> | 
   <a id="epolyline" href="javascript:BitMap.EditSession.editPolylines();">Edit Polylines</a> | 
   <a id="epolygon" href="javascript:BitMap.EditSession.editPolygons();">Edit Polygons</a>
@@ -55,7 +55,7 @@
 				<tr><td>Page Text</td><td><textarea name="edit" style="width:90%;" rows="20">textbox</textarea></td></tr>
 
         <!-- Allow Comments <input name="map_comm" type="checkbox" value=""><br/> //-->
-        <tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap(document.edit-map-form);"> 
+        <tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap(document['edit-map-form']);"> 
 				<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit('edit-map-table');"></td>
 				</tr>
 			</table>
@@ -63,110 +63,76 @@
 </div>	
 <!--end map editing form -->
 
-<div id="editmaptypemenu" style="display:none;">
-		<a href="javascript:BitMap.EditSession.newMapType();">Add New Map Type</a>
-</div>
 
-<div id="newmaptypeform" class="editform" style="display:none;">
-		<h2>Add A New Map Type</h2>
-    <div class="table" id="editmaptypetable_new">
-    	<form action="javascript:;" name="maptypeform_new" id="maptypeform_new">
-				<input name="save_maptype" type="hidden" value="true">
-    		<table class="data" id="maptypeformdata_new">
-  				<tr>
-						<td>Name<br/>
-							<input name="name" type="text" size="25" value="a name"><br/>
-							Description<br/>
-							<input name="description" type="text" size="25" value="a description"></td>
-  					<td>Base Map Type<br/>
-							<select name="basetype">
-								<option value="0" >Street Map</option>
-								<option value="1" >Satellite</option>
-								<option value="2" >Hybrid</option>
-							</select><br/>
-							Alt Map Type<br/>
-							<select name="alttype">
-								<option value="0" >Street Map</option>
-								<option value="1" >Satellite</option>
-								<option value="2" >Hybrid</option>
-							</select></td>
-						<td>Map Tiles URL<br/>
-							<input name="maptiles_url" type="text" size="25" value=""><br/>
-							Low Res Map Tiles URL<br/>
-							<input name="lowtiles_url" type="text" size="25" value="google"></td>
-						<td>Hybrid Tiles URL<br/>
-							<input name="hybridtiles_url" type="text" size="25" value="none"><br/>
-							Low Res Hybrid Tiles URL<br/>
-							<input name="lowhybridtiles_url" type="text" size="25" value="google"></td>
-						<td>Copyright<br/>
-							<input name="copyright" type="text" size="10" value=""><br/>
-							Max Zoom<br/>
-							<input name="maxzoom" type="text" size="3" value="0"></td>
-						<td>Bounds<br/>
-							<textarea name="bounds" style="width:120px" rows="3"></textarea></td>
-						<td>ACTIONS<br/>
-							<a name="save_maptype_btn" title="save" href="javascript:BitMap.EditSession.storeNewMapType(document.maptypeform_new);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
-					</tr>
-    		</table>
-    	</form>
-  	</div>
-		<div id="newmaptypecancel" ><input type="button" name="closenewmaptypeform" value="Cancel Adding A New Map Type" onclick="javascript:BitMap.EditSession.canceledit('newmaptypeform');"></div>
+
+
+<!-- maptypes editing -->
+<div id="edit-maptypes-table" class="edit-table" style="display:none;">
+  <div id="edit-marptypes" class="edit-titlebar">
+    <table class="bar">
+    	<tr>
+        <td width="200px">
+			    <span class="setname">Maptypes Associated With This Map</span>
+        </td>
+		</tr>
+    </table>
+  </div>
+	<div id="edit-maptype-table" class="edit-optionstable">
+	  <form action="javascript:;" name="edit-maptype-form" id="edit-maptype-form">
+		<input name="array_n" type="hidden" value="">
+		<input name="save_maptype" type="hidden" value="true">
+		<input name="maptype_id" type="hidden" size="3" value="">
+		<table class="data">
+		  <tr>
+			<td width="200px">Maptypes:<br/>
+				<ul>
+				<li style="display:none;"><a href="javascript:BitMap.EditSession.editMaptype(n);">Maptype Name Here</a></li>
+				<li><a href="javascript:BitMap.EditSession.newMaptype();">Add New Maptype</a></li>
+				</ul>
+			</td>
+			<td>Name<br/>
+			   <input name="name" type="text" size="25" value="a name"><br/>
+			   Description<br/>
+			   <input name="description" type="text" size="25" value="a description"></td>
+			<td>Base Map Type<br/>
+			   <select name="basetype">
+				 <option value="0" >Street Map</option>
+				 <option value="1" >Satellite</option>
+				 <option value="2" >Hybrid</option>
+			   </select><br/>
+			   Alt Map Type<br/>
+			   <select name="alttype">
+				 <option value="0" >Street Map</option>
+				 <option value="1" >Satellite</option>
+				 <option value="2" >Hybrid</option>
+			   /select></td>
+			<td>Map Tiles URL<br/>
+			   <input name="maptiles_url" type="text" size="25" value=""><br/>
+			   Low Res Map Tiles URL<br/>
+			   <input name="lowtiles_url" type="text" size="25" value="google"></td>
+			<td>Hybrid Tiles URL<br/>
+			   <input name="hybridtiles_url" type="text" size="25" value="none"><br/>
+			   Low Res Hybrid Tiles URL<br/>
+			   <input name="lowhybridtiles_url" type="text" size="25" value="google"></td>
+			<td>Copyright<br/>
+			   <input name="copyright" type="text" size="10" value=""><br/>
+			   Max Zoom<br/>
+			   <input name="maxzoom" type="text" size="3" value="0"></td>
+			<td>Bounds<br/>
+			   <textarea name="bounds" style="width:120px" rows="3"></textarea></td>
+			<td>ACTIONS<br/>
+			   <a name="save_maptype_btn" title="save" href="javascript:BitMap.EditSession.storeNewMapType(document.edit-maptype-form);">{biticon ipackage="icons" iname="save" iexplain="save"}</a><br/>
+			   <a name="save_maptype_btn" title="save" href="javascript:BitMap.EditSession.storeMapType(document.edit-maptype-form);">{biticon ipackage="icons" iname="save" iexplain="save"}</a>
+			   <a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
+			   <a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMapType(document.edit-maptype-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+			   <a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMapType(document..edit-maptype-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+				<div id="editmaptypecancel" style="display:none;"><input type="button" name="closemaptypeform" value="Cancel Editing Map Types" onclick="javascript:BitMap.EditSession.canceledit('edit-maptypes-menu'); BitMap.EditSession.canceledit('edit-maptypes-table');"></div>
+				<!--end maptype editing forms -->
+		  </tr>
+		</table>
+	  </form>
+	</div>
 </div> <!-- end of editmaptypeform -->
-
-
-<div id="editmaptypeform" class="editform" style="display:none;">
-		<h2>Map Types Associated With This Map</h2>		
-		<div class="table" id="editmaptypetable_n" style="display:none;">
-			<form action="javascript:;" name="maptypeform_n" id="maptypeform_n" style="display:none;">
-				<input name="array_n" type="hidden" value="n">
-				<input name="save_maptype" type="hidden" value="true">
-				<input name="maptype_id" type="hidden" size="3" value="n">
-    		<table class="data" id="maptypeformdata_n">
-  				<tr>
-						<td>Name<br/>
-							<input name="name" type="text" size="25" value="a name"><br/>
-							Description<br/>
-							<input name="description" type="text" size="25" value="a description"></td>
-  					<td>Base Map Type<br/>
-							<select name="basetype">
-								<option value="0" >Street Map</option>
-								<option value="1" >Satellite</option>
-								<option value="2" >Hybrid</option>
-							</select><br/>
-							Alt Map Type<br/>
-							<select name="alttype">
-								<option value="0" >Street Map</option>
-								<option value="1" >Satellite</option>
-								<option value="2" >Hybrid</option>
-							</select></td>
-						<td>Map Tiles URL<br/>
-							<input name="maptiles_url" type="text" size="25" value=""><br/>
-							Low Res Map Tiles URL<br/>
-							<input name="lowtiles_url" type="text" size="25" value="google"></td>
-						<td>Hybrid Tiles URL<br/>
-							<input name="hybridtiles_url" type="text" size="25" value="none"><br/>
-							Low Res Hybrid Tiles URL<br/>
-							<input name="lowhybridtiles_url" type="text" size="25" value="google"></td>
-						<td>Copyright<br/>
-							<input name="copyright" type="text" size="10" value=""><br/>
-							Max Zoom<br/>
-							<input name="maxzoom" type="text" size="3" value="0"></td>
-						<td>Bounds<br/>
-							<textarea name="bounds" style="width:120px" rows="3"></textarea></td>
-						<td>ACTIONS<br/>
-							<a name="save_maptype_btn" title="save" href="javascript:BitMap.EditSession.storeMapType(document.maptypeform_n);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a>
-							<a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-							<a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMapType(document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-							<a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMapType(document.maptypeform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
-					</tr>
-    		</table>
-    			</form>
-  		  </div>
-</div> <!-- end of editmaptypeform -->
-
-<div id="editmaptypecancel" style="display:none;"><input type="button" name="closemaptypeform" value="Cancel Editing Map Types" onclick="javascript:BitMap.EditSession.canceledit('editmaptypemenu'); BitMap.EditSession.canceledit('editmaptypeform'); BitMap.EditSession.canceledit('editmaptypecancel'); BitMap.EditSession.canceledit('newmaptypeform')"></div>
-<!--end maptype editing forms -->
-
 
 
 
@@ -177,7 +143,6 @@
 	
 <!-- marker editing menu -->
 <div id="edit-markers-menu" style="display:none;">
-		<a href="javascript:BitMap.EditSession.newMarker();">New Marker</a> | 
 		<a href="javascript:BitMap.EditSession.newMarkerSet();">New Marker Set</a> | 
 		<a href="javascript:BitMap.EditSession.editMarkerStyles();">Edit Marker Styles</a> | 
 		<a href="javascript:BitMap.EditSession.editIconStyles();">Edit Marker Icons</a>
@@ -290,7 +255,7 @@
                       					<option value="true">Yes</option>
                           				</select></td>
 						<td style="width:200px">Actions:<br/>
-							<a id="setstore" href="javascript:BitMap.EditSession.storeMarkerSet(edit_markerset-options-form);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a> 
+							<a id="setstore" href="javascript:BitMap.EditSession.storeMarkerSet(edit_markerset-options-form);">{biticon ipackage="icons" iname="save" iexplain="save"}</a> 
 							<a id="setremove" href="javascript:BitMap.EditSession.removeMarkerSet(edit_markerset-options-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
 							<a id="setdelete" href="javascript:BitMap.EditSession.expungeMarkerSet(edit_markerset-options-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
 							<a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a></td>
@@ -304,70 +269,23 @@
 <!-- end of markerset options form -->
 
 
-<!-- new marker form -->
-<div id="edit-new-marker-table" class="edit-datatable" style="display:none;">
-    <form action="javascript:;" name="edit-new-marker-form" id="edit-new-marker-form" >
-    <input name="save_marker" type="hidden" value="true">
-    <table class="data">
-    	<tr>
-        <td width="200px">Space For Something:<br/>
-          <div>Something can be put here.</div>
-        </td>
-    	<td>
-          <div style="background-color:#fff; margin:1em 0em; padding:2em;">
-            <div>Add To Set <select name="set_id" id="set_id">
-								<option value="n">Set Name</option>
-							</select></div>
-            <div>Type <select name="marker_type">
-											<option value="0" >Normal</option>
-											<option value="1" >Auto-Photo</option>
-											</select></div>
-            <div>Latitutde &nbsp;<input size="50" name="geo[lat]" type="text" value=""><br/>
-                 Longitude <input size="50" name="geo[lng]" type="text" value=""><br/>
-                 <a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a></div>
-            <div>Title<br/>
-                 <input size="50" name="title" type="text" value="a title"></div>
-            <div>Label Title<br/>
-                 <textarea name="marker_labeltext" rows="1"></textarea></div>
-            <div>Window Text<br/>
-                 <textarea name="edit" rows="10"></textarea></div>
-            <div>Photo URL<br/>
-                 <input size="50" name="photo_url" type="text" value=""></div>
-          </div>
-        </td>
-        <td width="200px">
-          <div>Tips<br/>
-               Put advice here
-          </div>
-          <div id="edit-new-marker-actions">Actions<br/>
-             <input type="button" name="savenewmarker" value="Save" onclick="javascript:BitMap.EditSession.storeNewMarker(document.edit-new-marker-form); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');">
-             <input type="button" name="closemarkerform" value="Cancel" onclick="javascript:BitMap.EditSession.cancelNewMarker()"></br></div>
-        </td>
-     	</tr>
-    </table>
-    </form>
-</div> 
-<!-- edit of new marker form -->
-
-
 <!-- edit markers form -->
 <div id="edit-markers-table" class="edit-datatable" style="display:none;">
     <form action="javascript:;" name="edit-marker-form" id="edit-marker-form" >
     <input name="save_marker" type="hidden" value="true">
-    <input name="marker_id" type="hidden" value="">
+    <input name="marker_id" type="hidden" value="marker_id">
     <input name="marker_array_n" type="hidden" value="n">
+    <input name="set_id" type="hidden" value="set_id">
     <table>
     	<tr>
         <td width="200px">Markers:<br/>
             <ul>
             <li style="display:none;"><a href="javascript:BitMap.EditSession.editMarker(n);">Marker Name Here</a></li>
+            <li id="edit-markerlink-new"><b><a id="edit-markerlink-new-a" href="javascript:BitMap.EditSession.newMarker(setindex);">Add A New Marker</a></b></li>
             </ul>
         </td>
     	  <td>
           <div class="markerform">
-            <div style="display:none;">Add To Set <select name="set_id" id="set_id">
-								<option value="n">Set Name</option>
-							</select></div>
             <div>Type <select name="marker_type">
 											<option value="0" >Normal</option>
 											<option value="1" >Auto-Photo</option>
@@ -384,16 +302,14 @@
             <div>Photo URL<br/>
                  <input size="50" name="photo_url" type="text" value=""></div>
             <div id="new-marker-actions">
-                <input type="button" name="savenewmarker" value="Save" onclick="javascript:BitMap.EditSession.storeNewMarker(document.edit-marker-form); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');">
-                <input type="button" name="closemarkerform" value="Cancel" onclick="javascript:BitMap.EditSession.cancelEditMarkers()"></br></div>
+                <input type="button" name="save_marker_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarker(document['edit-marker-form']);">
           </div>
         </td>
         <td width="200px">
-          <div>Tips<br/>
+          <div id="edit-marker-tips">Tips<br/>
                Put advice here
           </div>
-          <div id="edit-marker-actions">Actions<br/>
-            <a name="save_marker_btn" title="save" href="javascript:BitMap.EditSession.storeMarker(document.edit-marker-form);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a>
+          <div id="edit-marker-actions">Edit Marker Actions<br/>
             <a name="locate_marker_btn" title="locate on the map" href="javascript:BitMap.MapData[0].Map.markers[n].marker.openInfoWindowHtml(BitMap.MapData[0].Map.markers[n].marker.my_html);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
             <a name="remove_marker_btn" title="remove from this set" href="javascript:BitMap.EditSession.removeMarker(document.edit-marker-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
             <a name="expunge_marker_btn" title="delete the marker!" href="javascript:BitMap.EditSession.expungeMarker(document.edit-marker-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
@@ -401,6 +317,7 @@
         </td>
      	</tr>
     </table>
+    <input type="button" name="closemarkerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditMarkers()"></br></div>
     </form>
 </div> 
 <!-- edit of edit markers form -->
@@ -439,7 +356,7 @@
                 		<td>Window Anchor Y<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"></td>
 							<td></td>
 							<td></td>
-                		<td>ACTIONS<br/><a name="new_iconstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewIconStyle(document.iconstyleform_new);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+                		<td>ACTIONS<br/><a name="new_iconstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewIconStyle(document.iconstyleform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
 						</tr>
                 	<tr id="gicon_style_head_new">
                 		<th colspan="7">GIcon Styles</th>
@@ -497,7 +414,7 @@
                 	<td>Window Anchor Y<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"></td>
 						<td></td>
 						<td></td>
-                	<td>ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_iconstyle_btn" title="save" href="javascript:BitMap.EditSession.storeIconStyle(document.iconstyleform_n);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+                	<td>ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_iconstyle_btn" title="save" href="javascript:BitMap.EditSession.storeIconStyle(document.iconstyleform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
 					</tr>
                 <tr id="gicon_style_head_new">
                 	<th colspan="7">GIcon Styles</th>
@@ -570,7 +487,7 @@
   					<td width="120px"><input name="label_opacity" type="text" size="5" value="100"></td>
   					<td><textarea name="label_hover_styles" style="width:90%" rows="3"></textarea></td>
   					<td><textarea name="window_styles" style="width:90%" rows="3"></textarea></td>
-  					<td width="80px"><a name="new_markerstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewMarkerStyle(document.markerstyleform_new);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+  					<td width="80px"><a name="new_markerstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewMarkerStyle(document.markerstyleform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
 					</tr>
     		</table>
 			</form>
@@ -610,7 +527,7 @@
   					<td width="120px"><input name="label_opacity" type="text" size="5" value="100"></td>
   					<td><textarea name="label_hover_styles" style="width:90%" rows="3"></textarea></td>
   					<td><textarea name="window_styles" style="width:90%" rows="3"></textarea></td>
-  					<td width="80px"><a name="save_markerstyle_btn" title="save" href="javascript:BitMap.EditSession.storeMarkerStyle(document.markerstyleform_n);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+  					<td width="80px"><a name="save_markerstyle_btn" title="save" href="javascript:BitMap.EditSession.storeMarkerStyle(document.markerstyleform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
 					</tr>
     		</table>
 			</form>
@@ -672,7 +589,7 @@
                       					<option value="true">Yes</option>
                       					<option value="false">No</option>
                           				</select></td>
-						<td style="width:80px"><a name="new_polylineset_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolylineSet(document.polylinesetform_new);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+						<td style="width:80px"><a name="new_polylineset_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolylineSet(document.polylinesetform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
 					</tr>
 				</table>
     	</form>
@@ -734,7 +651,7 @@
                     	Text BG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
                     	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
 						</td>
-                	<td>ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolylineStyle(document.polylinestyleform_new);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+                	<td>ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolylineStyle(document.polylinestyleform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
 						</tr>
     		</table>
     	</form>
@@ -792,7 +709,7 @@
                     	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
 						</td>
 						<td>
-							ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:BitMap.EditSession.storePolylineStyle(document.polylinestyleform_n);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a>
+							ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:BitMap.EditSession.storePolylineStyle(document.polylinestyleform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a>
       				</td>
 					</tr>
 				</table>
@@ -829,7 +746,7 @@
 						<td><select name="set_id" id="polylineset_id">
 								<option value="n" >someset</option>
 								</select></td>
-						<td style="width:80px"><a name="new_polyline_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolyline(document.polylineform_new);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+						<td style="width:80px"><a name="new_polyline_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolyline(document.polylineform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
 					</tr>
     		</table>
     	</form>
@@ -876,7 +793,7 @@
                   				<option value="false">No</option>
                       			</select></td>
     				<td style="width:80px">
-							<a id="plsetstore" href="javascript:BitMap.EditSession.storePolylineSet(document.polylinesetform_n);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a> 
+							<a id="plsetstore" href="javascript:BitMap.EditSession.storePolylineSet(document.polylinesetform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a> 
   						<a id="plsetremove" href="javascript:BitMap.EditSession.removePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
   						<a id="plsetdelete" href="javascript:BitMap.EditSession.expungePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
 					</tr>
@@ -911,7 +828,7 @@
 								<td><input name="border_text" type="text" style="width:90%" value=""></td>
 								<td style="width:80px"><input name="zindex" type="text" size="3" value="0"></td>
 								<td style="width:80px">
-									<a name="save_polyline_btn" title="save" href="javascript:BitMap.EditSession.storePolyline(document.polylineform_n);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a>
+									<a name="save_polyline_btn" title="save" href="javascript:BitMap.EditSession.storePolyline(document.polylineform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a>
 									<a name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
 									<a name="remove_polyline_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
 									<a name="expunge_polyline_btn" title="delete the polyline!" href="javascript:BitMap.EditSession.expungePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
@@ -988,7 +905,7 @@
                       					<option value="true">Yes</option>
                       					<option value="false">No</option>
                           				</select></td>
-						<td style="width:80px"><a name="new_polygonset_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygonSet(document.polygonsetform_new);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+						<td style="width:80px"><a name="new_polygonset_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygonSet(document.polygonsetform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
 					</tr>
     		</table>
     	</form>
@@ -1027,7 +944,7 @@
 						<td><input name="color" type="text" size="15" value="ff3300"></td>
 						<td><input name="weight" type="text" size="15" value="2"></td>
 						<td><input name="opacity" type="text" size="15" value=".75"></td>
-						<td style="width:80px"><a name="new_polygonstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygonStyle(document.polygonstyleform_new);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+						<td style="width:80px"><a name="new_polygonstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygonStyle(document.polygonstyleform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
 					</tr>
 				</table>
 			</form>
@@ -1063,7 +980,7 @@
 						<td style="width:120px"><input name="color" type="text" size="15" value="ff3300"></td>
 						<td style="width:120px"><input name="weight" type="text" size="15" value="2"></td>
 						<td style="width:120px"><input name="opacity" type="text" size="15" value=".75"></td>
-						<td style="width:80px"><a style="float:left; padding:0 .4em;" name="save_polygonstyle_btn" title="save" href="javascript:BitMap.EditSession.storePolygonStyle(document.polygonstyleform_n);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+						<td style="width:80px"><a style="float:left; padding:0 .4em;" name="save_polygonstyle_btn" title="save" href="javascript:BitMap.EditSession.storePolygonStyle(document.polygonstyleform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
       			</tr>
 				</table>
 			</form>
@@ -1108,7 +1025,7 @@
 						<td><select name="set_id" id="polygonset_id">
 								<option value="n" >someset</option>
 								</select></td>
-						<td style="width:80px"><a name="new_polygon_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygon(document.polygonform_new);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a></td>
+						<td style="width:80px"><a name="new_polygon_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygon(document.polygonform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
 					</tr>
 				</table>
 			</form>
@@ -1158,7 +1075,7 @@
                   				<option value="false">No</option>
                       			</select></td>
 						<td style="width:80px">
-							<a id="pgsetstore" href="javascript:BitMap.EditSession.storePolygonSet(document.polygonsetform_n);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a> 
+							<a id="pgsetstore" href="javascript:BitMap.EditSession.storePolygonSet(document.polygonsetform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a> 
 							<a id="pgsetremove" href="javascript:BitMap.EditSession.removePolygonSet(document.polygonsetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
 							<a id="pgsetdelete" href="javascript:BitMap.EditSession.expungePolygonSet(document.polygonsetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
 					</tr>
@@ -1202,7 +1119,7 @@
 								<td><input name="border_text" type="text" style="width:90%" value=""></td>
 								<td style="width:80px"><input name="zindex" type="text" size="3" value="0"></td>
 								<td style="width:80px">
-									<a name="save_polygon_btn" title="save" href="javascript:BitMap.EditSession.storePolygon(document.polygonform_n);">{biticon ipackage="icons" iname="document-save" iexplain="save"}</a>
+									<a name="save_polygon_btn" title="save" href="javascript:BitMap.EditSession.storePolygon(document.polygonform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a>
 									<a name="locate_polygon_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
 									<a name="remove_polygon_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolygon(document.polygonform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
 									<a name="expunge_polygon_btn" title="delete the polygon!" href="javascript:BitMap.EditSession.expungePolygon(document.polygonform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
