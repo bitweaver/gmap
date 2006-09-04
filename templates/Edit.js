@@ -1582,12 +1582,7 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 	 BitMap.Edit.prototype.storeMap = function(f){
 			doSimpleXMLHttpRequest("edit.php", f).addCallback( bind(this.updateMap, this) ); 
 	 }
-/*
-	 BitMap.Edit.prototype.storeNewMaptype = function(f){
-	 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.addMaptype, this) ); 
-	 }
-*/
+
 	 BitMap.Edit.prototype.storeMaptype = function(f){
 			this.editObjectN = f.array_n.value;
 	 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
@@ -1608,13 +1603,7 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 	 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
 	 }
-/*  
-	 BitMap.Edit.prototype.storeNewMarker = function(f){
-			this.editSetId = f.set_id.value;
-	 		var str = "edit_marker.php?" + queryString(f) + "&save_marker=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.addMarker, this) ); 
-	 }
-*/	 
+
 	 BitMap.Edit.prototype.storeMarker = function(f){
 	 		var str = "edit_marker.php?" + queryString(f);
 			this.editSetId = f.set_id.value;
@@ -1644,10 +1633,12 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 	 }
 
 	 BitMap.Edit.prototype.storeMarkerSet = function(f){
+	 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
+			this.canceledit('editerror');			
 			this.editSetId = f.set_id.value;
 			this.editObjectN = f.set_array_n.value;
-	 		var str = "edit_markerset.php?" + queryString(f) + "&gmap_id=" + this.Map.id + "&save_markerset=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMarkerSet, this) ); 
+			var callback = (f.set_id.value != "")?this.updateMarkerSet:this.addMarkerSet;
+			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 	 }
 
 	 BitMap.Edit.prototype.removeMarkerSet = function(f){
