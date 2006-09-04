@@ -13,7 +13,15 @@
 
 <!--map editing form -->
 <div id="edit-map-table" style="display:none;">
-    <h3>Map Properties</h3>
+  <div class="edit-titlebar">
+    <table class="bar">
+    	<tr>
+        <td>
+			    <span class="setname">Map Properties</span>
+        </td>
+		</tr>
+    </table>
+  </div>
     <form action="javascript:;" name="edit-map-form" id="edit-map-form">
 			<input name="save_map" type="hidden" size="25" value="true">
 		  <input name="gmap_id" type="hidden" size="25" value="">
@@ -68,7 +76,7 @@
 
 <!-- maptypes editing -->
 <div id="edit-maptypes-table" class="edit-table" style="display:none;">
-  <div id="edit-marptypes" class="edit-titlebar">
+  <div id="edit-marptypes" class="edit-titlebar edit-selected">
     <table class="bar">
     	<tr>
         <td width="200px">
@@ -76,61 +84,84 @@
         </td>
 		</tr>
     </table>
-  </div>
-	<div id="edit-maptype-table" class="edit-optionstable">
+	<div id="edit-maptype-table" class="edit-datatable">
 	  <form action="javascript:;" name="edit-maptype-form" id="edit-maptype-form">
 		<input name="array_n" type="hidden" value="">
 		<input name="save_maptype" type="hidden" value="true">
-		<input name="maptype_id" type="hidden" size="3" value="">
-		<table class="data">
+		<input name="maptype_id" type="hidden" size="3" value="maptype_id">
+		<table>
 		  <tr>
 			<td width="200px">Maptypes:<br/>
 				<ul>
 				<li style="display:none;"><a href="javascript:BitMap.EditSession.editMaptype(n);">Maptype Name Here</a></li>
-				<li><a href="javascript:BitMap.EditSession.newMaptype();">Add New Maptype</a></li>
+        <li id="edit-maptypelink-new"><b><a id="edit-maptypelink-new-a" href="javascript:BitMap.EditSession.newMaptype();">Add New Maptype</a></li>
 				</ul>
 			</td>
-			<td>Name<br/>
-			   <input name="name" type="text" size="25" value="a name"><br/>
-			   Description<br/>
-			   <input name="description" type="text" size="25" value="a description"></td>
-			<td>Base Map Type<br/>
-			   <select name="basetype">
-				 <option value="0" >Street Map</option>
-				 <option value="1" >Satellite</option>
-				 <option value="2" >Hybrid</option>
-			   </select><br/>
-			   Alt Map Type<br/>
-			   <select name="alttype">
-				 <option value="0" >Street Map</option>
-				 <option value="1" >Satellite</option>
-				 <option value="2" >Hybrid</option>
-			   /select></td>
-			<td>Map Tiles URL<br/>
-			   <input name="maptiles_url" type="text" size="25" value=""><br/>
-			   Low Res Map Tiles URL<br/>
-			   <input name="lowtiles_url" type="text" size="25" value="google"></td>
-			<td>Hybrid Tiles URL<br/>
-			   <input name="hybridtiles_url" type="text" size="25" value="none"><br/>
-			   Low Res Hybrid Tiles URL<br/>
-			   <input name="lowhybridtiles_url" type="text" size="25" value="google"></td>
-			<td>Copyright<br/>
-			   <input name="copyright" type="text" size="10" value=""><br/>
-			   Max Zoom<br/>
-			   <input name="maxzoom" type="text" size="3" value="0"></td>
-			<td>Bounds<br/>
-			   <textarea name="bounds" style="width:120px" rows="3"></textarea></td>
-			<td>ACTIONS<br/>
-			   <a name="save_maptype_btn" title="save" href="javascript:BitMap.EditSession.storeNewMapType(document.edit-maptype-form);">{biticon ipackage="icons" iname="save" iexplain="save"}</a><br/>
-			   <a name="save_maptype_btn" title="save" href="javascript:BitMap.EditSession.storeMapType(document.edit-maptype-form);">{biticon ipackage="icons" iname="save" iexplain="save"}</a>
-			   <a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-			   <a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMapType(document.edit-maptype-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-			   <a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMapType(document..edit-maptype-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
-				<div id="editmaptypecancel" style="display:none;"><input type="button" name="closemaptypeform" value="Cancel Editing Map Types" onclick="javascript:BitMap.EditSession.canceledit('edit-maptypes-menu'); BitMap.EditSession.canceledit('edit-maptypes-table');"></div>
-				<!--end maptype editing forms -->
+			<td>
+			  <div class="tplform">
+          <div>
+            Name<br/>
+            <input name="name" type="text" size="50" value="a name"><br/>
+			      Description<br/>
+			      <input name="description" type="text" size="50" value="a description">
+          </div>
+			    <div>
+            Base Map Type<br/>
+			      <select name="basetype">
+				      <option value="0" >Street Map</option>
+				      <option value="1" >Satellite</option>
+				      <option value="2" >Hybrid</option>
+			      </select><br/>
+			      Alt Map Type<br/>
+			      <select name="alttype">
+				      <option value="0" >Street Map</option>
+				      <option value="1" >Satellite</option>
+				      <option value="2" >Hybrid</option>
+			      </select></div>
+			    <div>
+            Map Tiles URL<br/>
+			      <input name="maptiles_url" type="text" size="50" value=""><br/>
+			        Low Res Map Tiles URL<br/>
+			      <input name="lowtiles_url" type="text" size="50" value="google">
+          </div>
+			    <div>
+            Hybrid Tiles URL<br/>
+			      <input name="hybridtiles_url" type="text" size="50" value="none"><br/>
+			      Low Res Hybrid Tiles URL<br/>
+			      <input name="lowhybridtiles_url" type="text" size="50" value="google">
+          </div>
+			    <div>
+            Copyright<br/>
+			      <input name="copyright" type="text" size="50" value=""><br/>
+			      Min Zoom<br/>
+			      <input name="minzoom" type="text" size="3" value="0">
+			      Max Zoom<br/>
+			      <input name="maxzoom" type="text" size="3" value="16">
+          </div>
+			    <div>
+            Bounds<br/>
+			      <textarea name="bounds" rows="3"></textarea>
+          </div>
+			    <div>
+            <input type="button" name="save_maptype_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMaptype(document['edit-maptype-form']);">
+          </div>
+        </div>
+      </td>
+      <td width="200px">
+        <div id="edit-maptype-tips">Tips<br/>
+             Put advice here
+        </div>
+        <div id="edit-maptype-actions">Edit Marker Actions<br/>
+			    <a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
+			    <a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMaptype(document['edit-maptype-form']);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
+			    <a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMaptype(document['edit-maptype-form']);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
+        </div>
+      </td>
 		  </tr>
-		</table>
+	  </table>
+	  <input type="button" name="closemaptypeform" value="Cancel Editing Maptypes" onclick="javascript:BitMap.EditSession.canceledit('edit-maptypes-table');">
 	  </form>
+	</div>
 	</div>
 </div> <!-- end of editmaptypeform -->
 
@@ -285,7 +316,7 @@
             </ul>
         </td>
     	  <td>
-          <div class="markerform">
+          <div class="tplform">
             <div>Type <select name="marker_type">
 											<option value="0" >Normal</option>
 											<option value="1" >Auto-Photo</option>
@@ -301,7 +332,7 @@
                  <textarea name="edit" rows="10"></textarea></div>
             <div>Photo URL<br/>
                  <input size="50" name="photo_url" type="text" value=""></div>
-            <div id="new-marker-actions">
+            <div>
                 <input type="button" name="save_marker_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarker(document['edit-marker-form']);">
           </div>
         </td>

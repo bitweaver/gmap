@@ -38,8 +38,8 @@
   .edit-titlebar {background-color:#cdf; margin:.5em 0em;}
   .edit-selected {background-color:#fc7; border-top:2px solid #f30;}
   .edit-selected .bar a.list {background-color:#feb}
-  .edit-markersel {background-color:#fff;}
-  .markerform {background-color:#fff; margin:1em 0em; padding:2em; border:none;}
+  .edit-select {background-color:#fff;}
+  .tplform {background-color:#fff; margin:1em 0em; padding:2em; border:none;}
   table {border-collapse:collapse;}
   table.data td {padding:.5em;}
 	
