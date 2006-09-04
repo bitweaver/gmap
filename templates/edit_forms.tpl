@@ -8,7 +8,7 @@
 
 
 <!-------------------------
-	-   Map Editing Forms
+	-   Map Editing Form
 	------------------------->
 
 <!--map editing form -->
@@ -73,6 +73,9 @@
 
 
 
+<!-------------------------
+	-   Maptype Editing Form
+	------------------------->
 
 <!-- maptypes editing -->
 <div id="edit-maptypes-table" class="edit-table" style="display:none;">
@@ -152,9 +155,9 @@
              Put advice here
         </div>
         <div id="edit-maptype-actions">Edit Marker Actions<br/>
-			    <a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-			    <a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMaptype(document['edit-maptype-form']);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-			    <a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMaptype(document['edit-maptype-form']);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a>
+			    <a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');">show</a>
+			    <a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMaptype(document['edit-maptype-form']);">remove</a>
+			    <a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMaptype(document['edit-maptype-form']);">delete</a>
         </div>
       </td>
 		  </tr>
@@ -199,60 +202,13 @@
 <!-- end of markerset editing menu -->
 
 
-<!-- new markerset form -->
-<div id="edit-new-markerset-table" class="edit-optionstable" style="display:none;">
-    	<form action="javascript:;" name="edit-new-markerset-form" id="edit-new-markerset-form">
-        <input name="save_markerset" type="hidden" value="true">
-    		<table class="data">
-					<tr>
-						<td>
-              Name:<br/>
-              <input size="20" name="name" type="text" value="a name"></td>
-						<td>Marker Style:<br/>
-                <select name="style_id">
-                  					<option value="0">Google (standard)</option>
-                      				</select><br/>
-						    Icon Style:<br/>
-                <select name="icon_id">
-                                      <option value="0">Google (standard)</option>
-                                   	</select>
-						<td>Cluster:<br/>
-                <select name="cluster">
-                      					<option value="false">No</option>
-                      					<option value="true">Yes</option>
-                          				</select><br/>
-						    Plot-On-Load:<br/>
-                <select name="plot_on_load">
-                      					<option value="false">No</option>
-                      					<option value="true">Yes</option>
-                          				</select></td>
-						<td>List Set In Side Panel:<br/>
-                <select name="side_panel">
-                      					<option value="false">No</option>
-                      					<option value="true">Yes</option>
-                          				</select><br/>
-						    List Markers In Side Panel:<br/>
-                <select name="explode">
-                      					<option value="false">No</option>
-                      					<option value="true">Yes</option>
-                          				</select></td>
-						<td style="width:200px">Actions:<br/>
-						    <input type="button" name="savenewmarkerset" value="Save" onclick="javascript:BitMap.EditSession.storeNewMarkerSet(edit-new-markerset-form); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');"/>
-						    <input type="button" name="closemarkersetform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelNewMarkerSet()"/></td>
-					</tr>
-				</table>
-			</form>
-</div>
-<!-- end of new markerset form -->
-
-
 <!-- markerset options form -->
-<div id="edit-markerset-options-table" class="edit-optionstable" style="display:none;">
-    	<form action="javascript:;" name="edit-markerset-options-form" id="edit_markerset-options-form">
-  		<input name="set_id" type="hidden" value="n">
-        <input name="set_array_n" type="hidden" value="n">
-        <input name="save_markerset" type="hidden" value="true">
-    		<table class="data">
+<div id="edit-markerset-options-table" class="edit-datatable" style="display:none;">
+  <form action="javascript:;" name="edit-markerset-options-form" id="edit-markerset-options-form">
+  	<input name="set_id" type="hidden" value="n">
+    <input name="set_array_n" type="hidden" value="n">
+    <input name="save_markerset" type="hidden" value="true">
+    <table class="data">
 					<tr>
 						<td>
               Name:<br/>
@@ -285,17 +241,21 @@
                       					<option value="false">No</option>
                       					<option value="true">Yes</option>
                           				</select></td>
-						<td style="width:200px">Actions:<br/>
-							<a id="setstore" href="javascript:BitMap.EditSession.storeMarkerSet(edit_markerset-options-form);">{biticon ipackage="icons" iname="save" iexplain="save"}</a> 
-							<a id="setremove" href="javascript:BitMap.EditSession.removeMarkerSet(edit_markerset-options-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-							<a id="setdelete" href="javascript:BitMap.EditSession.expungeMarkerSet(edit_markerset-options-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
-							<a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a></td>
+            <td width="200px">
+              <div id="edit-markerset-options-tips">Tips<br/>
+                Put advice here
+              </div>
+              <div id="edit-markerset-options-actions">Edit Marker Actions<br/>
+							  <a id="setremove" href="javascript:BitMap.EditSession.removeMarkerSet(document.['edit-markerset-options-form']);">remove</a> 
+							  <a id="setdelete" href="javascript:BitMap.EditSession.expungeMarkerSet(document.['edit-markerset-options-form']);">delete</a><br/><br/>
+							  <a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a>
+							<div>
+            </td>
 					</tr>
 				</table>
+        <input type="button" name="savenewmarkerset" value="Save" onclick="javascript:BitMap.EditSession.storeMarkerSet(document.['edit-markerset-options-form']);"/>
+        <input type="button" name="closemarkersetform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSetOptions()"/>
 			</form>
-		<div id="markersetcancel" >
-    <input type="button" name="savenewmarkerset" value="Save" onclick="javascript:BitMap.EditSession.storeNewMarkerSet(edit_markerset-options-form); BitMap.EditSession.removeAssistant(); BitMap.EditSession.canceledit('editerror');"/>
-    <input type="button" name="closemarkersetform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSetOptions()"/></div>
 </div>
 <!-- end of markerset options form -->
 
@@ -341,9 +301,9 @@
                Put advice here
           </div>
           <div id="edit-marker-actions">Edit Marker Actions<br/>
-            <a name="locate_marker_btn" title="locate on the map" href="javascript:BitMap.MapData[0].Map.markers[n].marker.openInfoWindowHtml(BitMap.MapData[0].Map.markers[n].marker.my_html);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-            <a name="remove_marker_btn" title="remove from this set" href="javascript:BitMap.EditSession.removeMarker(document.edit-marker-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-            <a name="expunge_marker_btn" title="delete the marker!" href="javascript:BitMap.EditSession.expungeMarker(document.edit-marker-form);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a><br/>
+            <a name="locate_marker_btn" title="locate on the map" href="javascript:BitMap.MapData[0].Map.markers[n].marker.openInfoWindowHtml(BitMap.MapData[0].Map.markers[n].marker.my_html);">show</a>
+            <a name="remove_marker_btn" title="remove from this set" href="javascript:BitMap.EditSession.removeMarker(document.edit-marker-form);">remove</a>
+            <a name="expunge_marker_btn" title="delete the marker!" href="javascript:BitMap.EditSession.expungeMarker(document.edit-marker-form);">delete</a><br/>
           </div>
         </td>
      	</tr>
@@ -825,8 +785,8 @@
                       			</select></td>
     				<td style="width:80px">
 							<a id="plsetstore" href="javascript:BitMap.EditSession.storePolylineSet(document.polylinesetform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a> 
-  						<a id="plsetremove" href="javascript:BitMap.EditSession.removePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-  						<a id="plsetdelete" href="javascript:BitMap.EditSession.expungePolylineSet(document.polylinesetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+  						<a id="plsetremove" href="javascript:BitMap.EditSession.removePolylineSet(document.polylinesetform_n);">remove</a> 
+  						<a id="plsetdelete" href="javascript:BitMap.EditSession.expungePolylineSet(document.polylinesetform_n);">delete</a></td>
 					</tr>
 					<tr>
   					<td colspan="5"><a id="plsetedit" href="javascript:BitMap.EditSession.editPolylineSet('n');">Edit These Polylines</a> | 
@@ -860,9 +820,9 @@
 								<td style="width:80px"><input name="zindex" type="text" size="3" value="0"></td>
 								<td style="width:80px">
 									<a name="save_polyline_btn" title="save" href="javascript:BitMap.EditSession.storePolyline(document.polylineform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a>
-									<a name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-									<a name="remove_polyline_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-									<a name="expunge_polyline_btn" title="delete the polyline!" href="javascript:BitMap.EditSession.expungePolyline(document.polylineform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+									<a name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');">show</a>
+									<a name="remove_polyline_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolyline(document.polylineform_n);">remove</a>
+									<a name="expunge_polyline_btn" title="delete the polyline!" href="javascript:BitMap.EditSession.expungePolyline(document.polylineform_n);">delete</a></td>
 							</tr>
         			</table>
     			</form>
@@ -1107,8 +1067,8 @@
                       			</select></td>
 						<td style="width:80px">
 							<a id="pgsetstore" href="javascript:BitMap.EditSession.storePolygonSet(document.polygonsetform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a> 
-							<a id="pgsetremove" href="javascript:BitMap.EditSession.removePolygonSet(document.polygonsetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a> 
-							<a id="pgsetdelete" href="javascript:BitMap.EditSession.expungePolygonSet(document.polygonsetform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+							<a id="pgsetremove" href="javascript:BitMap.EditSession.removePolygonSet(document.polygonsetform_n);">remove</a> 
+							<a id="pgsetdelete" href="javascript:BitMap.EditSession.expungePolygonSet(document.polygonsetform_n);">delete</a></td>
 					</tr>
 					<tr>
 						<td colspan="5"><a id="pgsetedit" href="javascript:BitMap.EditSession.editPolygonSet('n');">Edit These Polygons</a> | 
@@ -1151,9 +1111,9 @@
 								<td style="width:80px"><input name="zindex" type="text" size="3" value="0"></td>
 								<td style="width:80px">
 									<a name="save_polygon_btn" title="save" href="javascript:BitMap.EditSession.storePolygon(document.polygonform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a>
-									<a name="locate_polygon_btn" title="locate on the map" href="javascript:alert('feature coming soon');"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/find.png" alt="find" class="icon" /></a>
-									<a name="remove_polygon_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolygon(document.polygonform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/detach.png" alt="find" class="icon" /></a>
-									<a name="expunge_polygon_btn" title="delete the polygon!" href="javascript:BitMap.EditSession.expungePolygon(document.polygonform_n);"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/delete.png" alt="find" class="icon" /></a></td>
+									<a name="locate_polygon_btn" title="locate on the map" href="javascript:alert('feature coming soon');">show</a>
+									<a name="remove_polygon_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolygon(document.polygonform_n);">remove</a>
+									<a name="expunge_polygon_btn" title="delete the polygon!" href="javascript:BitMap.EditSession.expungePolygon(document.polygonform_n);">delete</a></td>
 							</tr>
         			</table>
     			</form>
