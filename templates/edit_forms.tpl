@@ -48,12 +48,12 @@
               <option value="n" >None</option>
               </select></td></tr>
         	<tr><td>Show Scale</td><td><select name="map_showscale">
-              <option value="true" >Yes</option>
               <option value="false" >No</option>
+              <option value="true" >Yes</option>
               </select></td></tr>
         	<tr><td>Show Map Type Buttons</td><td><select name="map_showtypecont">
-              <option value="true" >Yes</option>
               <option value="false" >No</option>
+              <option value="true" >Yes</option>
               </select></td></tr>
         	<tr><td>Default Map Type</td><td><select name="maptype">
               <option value="0" >Street Map</option>

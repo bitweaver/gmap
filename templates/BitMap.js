@@ -69,7 +69,7 @@ BitMap.Initialize = function(){
       {lat: BitMap.MapData[n].lat, lng: BitMap.MapData[n].lng},
       BitMap.MapData[n].zoom,
       BitMap.MapData[n].maptype,
-      {scale: BitMap.MapData[n].scale, type_control:BitMap.MapData[n].type_control, zoom_control: BitMap.MapData[n].zoom_control, overview_control: BitMap.MapData[n].overview_control},
+      {scale: BitMap.MapData[n].scale, maptype_control:BitMap.MapData[n].maptype_control, zoom_control: BitMap.MapData[n].zoom_control, overview_control: BitMap.MapData[n].overview_control},
       BitMap.MapData[n].Maptypes,
       BitMap.MapData[n].Markers,
       BitMap.MapData[n].MarkerSets,
@@ -158,7 +158,7 @@ BitMap.Map.prototype.SetControls = function(){
       break;
     default:;
   }
-  if (this.controls.type_control == true){
+  if (this.controls.maptype_control == true){
     this.map.addControl(new GMapTypeControl());  
   }
   if (this.controls.overview_control == true){

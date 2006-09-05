@@ -61,7 +61,7 @@ if (!empty($_REQUEST["save_map"])) {
 					."<zoom>".$gContent->mInfo['zoom']."</zoom>"
 					."<maptype>".$gContent->mInfo['maptype']."</maptype>"
 					."<zoom_control>".$gContent->mInfo['zoom_control']."</zoom_control>"
-					."<type_control>".$gContent->mInfo['maptype_control']."</type_control>"
+					."<maptype_control>".$gContent->mInfo['maptype_control']."</maptype_control>"
 					."<overview_control>".$gContent->mInfo['overview_control']."</overview_control>"
 					."<scale>".$gContent->mInfo['scale']."</scale>"
 					."</map>";

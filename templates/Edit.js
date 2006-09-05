@@ -107,23 +107,19 @@ BitMap.Edit.prototype.editMap = function(){
   form.map_z.value = this.Map.zoom;
 	form.edit.value = this.Map.data?this.Map.data:"";
 
-  for (var i=0; i < 4; i++) {
+  var i;
+  for (i=0; i < 4; i++) {
     if (form.map_showcont.options[i].value == this.Map.controls.zoom_control){
       form.map_showcont.options[i].selected=true;
     }
   }
 
-  for (var i=0; i < 2; i++) {
-    if (form.map_showscale.options[i].value == this.Map.controls.scale){
-      form.map_showscale.options[i].selected=true;
-    }
-  }
-					
-  for (var i=0; i < 2; i++) {
-    if (form.map_showtypecont.options[i].value == this.Map.controls.type_control){
-       form.map_showtypecont.options[i].selected=true;
-    }
-  }
+  i=this.Map.controls.scale?1:0;
+  form.map_showscale.options[i].selected=true;
+		
+  i=this.Map.controls.maptype_control?1:0;
+  form.map_showtypecont.options[i].selected=true;
+
 					
   var mapTypeRoot = form.maptype;
 
@@ -1846,8 +1842,8 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 //			this.Map.maptype = this.Map.maptypes[mt[0].firstChild.nodeValue];			
 			var sc = xml.documentElement.getElementsByTagName('zoom_control');
 			this.Map.controls.zoom_control = sc[0].firstChild.nodeValue;
-			var sm = xml.documentElement.getElementsByTagName('type_control');
-			this.Map.controls.type_control = sm[0].firstChild.nodeValue;
+			var sm = xml.documentElement.getElementsByTagName('maptype_control');
+			this.Map.controls.maptype_control = sm[0].firstChild.nodeValue;
 			var oc = xml.documentElement.getElementsByTagName('overview_control');
 			this.Map.controls.overview_control = oc[0].firstChild.nodeValue;
 			var ss = xml.documentElement.getElementsByTagName('scale');
@@ -1878,7 +1874,7 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 //			this.Map.map.setMaptype(this.Map.maptype);
 			
       //Add Map TYPE controls - buttons in the upper right corner
-  		if (this.Map.controls.type_control == 'true'){
+  		if (this.Map.controls.maptype_control == 'true'){
   		this.Map.map.removeControl(typecontrols);
   		this.Map.map.addControl(typecontrols);
   		}else{
