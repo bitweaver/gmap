@@ -48,12 +48,12 @@
               <option value="n" >None</option>
               </select></td></tr>
         	<tr><td>Show Scale</td><td><select name="map_showscale">
-              <option value="TRUE" >Yes</option>
-              <option value="FALSE" >No</option>
+              <option value="true" >Yes</option>
+              <option value="false" >No</option>
               </select></td></tr>
         	<tr><td>Show Map Type Buttons</td><td><select name="map_showtypecont">
-              <option value="TRUE" >Yes</option>
-              <option value="FALSE" >No</option>
+              <option value="true" >Yes</option>
+              <option value="false" >No</option>
               </select></td></tr>
         	<tr><td>Default Map Type</td><td><select name="map_type">
               <option value="G_MAP_TYPE" >Street Map</option>
@@ -318,17 +318,6 @@
 <div id="edit-markersets-cancel" style="display:none;">
   <input type="button" name="closemarkerform" value="Close Marker Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSets();" />
 </div>
-
-
-
-
-
-
-
-
-//-----------------------------------------------------------------------------------------------------------------------------------------------
-// *      *      *      *      *      *      *      *      *      *      *      *      *      *      *      *      *      *      *      *      *
-//-----------------------------------------------------------------------------------------------------------------------------------------------
 
 
 

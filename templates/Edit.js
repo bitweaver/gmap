@@ -98,7 +98,7 @@ BitMap.Edit.prototype.editMap = function(){
 	BitMap.show('edit-map-table');
 
   form.gmap_id.value = this.Map.id? this.Map.id:"";
-  form.title.value = this.Map.title? this.Map.title:"";
+  form.title.value = this.Map.title?this.Map.title:"";
   form.map_desc.value = this.Map.description?this.Map.description:"";
   form.map_w.value = this.Map.width;
   form.map_h.value = this.Map.height;
@@ -1625,12 +1625,6 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 	 		var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
 	 }	 
-
-	 BitMap.Edit.prototype.storeNewMarkerSet = function(f){
-			this.canceledit('editerror');
-	 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.addMarkerSet, this) ); 
-	 }
 
 	 BitMap.Edit.prototype.storeMarkerSet = function(f){
 	 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
