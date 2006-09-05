@@ -157,7 +157,7 @@ class BitGmapMarker extends LibertyAttachable {
 			if( parent::store( $pParamHash ) ) {
 				if( $this->mGmarkerId ) {
 					// store the posted changes
-					$this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_markers", $pParamHash['marker_store'], array( "name" => "marker_id", "value" => $pParamHash['marker_id'] ) );
+					$this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_markers", $pParamHash['marker_store'], array( "marker_id" => $pParamHash['marker_id'] ) );
 				} else {
 					$pParamHash['marker_store']['content_id'] = $this->mContentId;
 					$pParamHash['marker_store']['marker_id'] = $this->mDb->GenID( 'gmaps_markers_marker_id_seq' );

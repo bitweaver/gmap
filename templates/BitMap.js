@@ -59,6 +59,7 @@ BitMap.Initialize = function(){
     BitMap.MapData[n].Map = new BitMap.Map(
       n,
       BitMap.MapData[n].mapdiv,
+      BitMap.MapData[n].id,
       BitMap.MapData[n].title,
       BitMap.MapData[n].description,      
       BitMap.MapData[n].data,
@@ -86,9 +87,10 @@ BitMap.Initialize = function(){
 
 //center is an object containing .lat and .lng
 //controls is an object containing .scale .type_control .zoom_control
-BitMap.Map = function (index, mapdiv, title, desc, data, parsed_data, width, height, center, zoom, maptype, controls, maptypes, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
+BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width, height, center, zoom, maptype, controls, maptypes, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
   this.index = index;
   this.mapdiv = mapdiv;
+  this.id = id;
   this.title = title;
   this.description = desc;
   this.data = data;
@@ -146,7 +148,7 @@ BitMap.Map.prototype.loopOver = function(arr, fnc){
 BitMap.Map.prototype.SetControls = function(){
   if(this.controls.scale == true){
     this.map.addControl(new GScaleControl());
-  }  
+  }
   switch (this.controls.zoom_control){
     case 's': this.map.addControl(new GSmallMapControl());
       break;

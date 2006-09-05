@@ -1837,21 +1837,21 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 			var h = xml.documentElement.getElementsByTagName('height');
 			this.Map.height = h[0].firstChild.nodeValue;			
 			var lt = xml.documentElement.getElementsByTagName('lat');
-			this.Map.lat = parseFloat(lt[0].firstChild.nodeValue);
+			this.Map.center.lat = parseFloat(lt[0].firstChild.nodeValue);
 			var ln = xml.documentElement.getElementsByTagName('lng');
-			this.Map.lng = parseFloat(ln[0].firstChild.nodeValue);
+			this.Map.center.lng = parseFloat(ln[0].firstChild.nodeValue);
 			var z = xml.documentElement.getElementsByTagName('zoom');
 			this.Map.zoom = parseInt(z[0].firstChild.nodeValue);
 //			var mt = xml.documentElement.getElementsByTagName('maptype');
 //			this.Map.maptype = this.Map.maptypes[mt[0].firstChild.nodeValue];			
 			var sc = xml.documentElement.getElementsByTagName('zoom_control');
-			this.Map.zoom_control = sc[0].firstChild.nodeValue;
+			this.Map.controls.zoom_control = sc[0].firstChild.nodeValue;
 			var sm = xml.documentElement.getElementsByTagName('type_control');
-			this.Map.type_control = sm[0].firstChild.nodeValue;
+			this.Map.controls.type_control = sm[0].firstChild.nodeValue;
 			var oc = xml.documentElement.getElementsByTagName('overview_control');
-			this.Map.overview_control = oc[0].firstChild.nodeValue;
+			this.Map.controls.overview_control = oc[0].firstChild.nodeValue;
 			var ss = xml.documentElement.getElementsByTagName('scale');
-			this.Map.scale = ss[0].firstChild.nodeValue;
+			this.Map.controls.scale = ss[0].firstChild.nodeValue;
 
 			//replace everything	
       var maptile = $('mymaptitle');
@@ -1878,7 +1878,7 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 //			this.Map.map.setMaptype(this.Map.maptype);
 			
       //Add Map TYPE controls - buttons in the upper right corner
-  		if (this.Map.type_control == 'TRUE'){
+  		if (this.Map.controls.type_control == 'true'){
   		this.Map.map.removeControl(typecontrols);
   		this.Map.map.addControl(typecontrols);
   		}else{
@@ -1886,7 +1886,7 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
   		}
   		
   		//Add Scale controls
-  		if (this.Map.scale == 'TRUE'){
+  		if (this.Map.controls.scale == 'true'){
   		this.Map.map.removeControl(scale);
   		this.Map.map.addControl(scale);
   		}else{
@@ -1897,11 +1897,11 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
   		this.Map.map.removeControl(smallcontrols);
   		this.Map.map.removeControl(largecontrols);
   		this.Map.map.removeControl(zoomcontrols);
-  		if (this.Map.zoom_control == 's') {
+  		if (this.Map.controls.zoom_control == 's') {
   		this.Map.map.addControl(smallcontrols);
-  		}else if (bMapControl == 'l') {
+  		}else if (this.Map.controls.zoom_control == 'l') {
   		this.Map.map.addControl(largecontrols);		
-  		}else if (bMapControl == 'z') {
+  		}else if (this.Map.controls.zoom_control == 'z') {
   		this.Map.map.addControl(zoomcontrols);
   		}
 			

@@ -848,7 +848,7 @@ class BitGmap extends LibertyAttachable {
 			if( parent::store( $pParamHash ) ) {
 				if( $this->mGmapId ) {
 					// store the posted changes
-					$this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps", $pParamHash['gmap_store'], array( "name" => "gmap_id", "value" => $pParamHash['gmap_id'] ) );
+					$this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps", $pParamHash['gmap_store'], array( "gmap_id" => $this->mGmapId ) );
 				} else {
 					$pParamHash['gmap_store']['content_id'] = $this->mContentId;
 					$pParamHash['gmap_store']['gmap_id'] = $this->mDb->GenID( 'gmaps_gmap_id_seq' );
@@ -935,8 +935,8 @@ class BitGmap extends LibertyAttachable {
 		if( $this->verifyMapType( $pParamHash ) ) {
 			$this->mDb->StartTrans();
 			// store the posted changes
-			if ( !empty( $pParamHash['maptype_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_maptypes", $pParamHash['maptype_store'], array( "name" => "maptype_id", "value" => $pParamHash['maptype_id'] ) );
+			if ( !empty( $pParamHash['maptype_id'] ) ) {			
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_maptypes", $pParamHash['maptype_store'], array( "maptype_id" => $pParamHash['maptype_id'] ) );
 			}else{
 				 $pParamHash['maptype_id'] = $this->mDb->GenID( 'gmaps_maptypes_maptype_id_seq' );
 				 $pParamHash['maptype_store']['maptype_id'] = $pParamHash['maptype_id'];
@@ -999,7 +999,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			// store the posted changes
 			if ( !empty( $pParamHash['polyline_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polylines", $pParamHash['polyline_store'], array( "name" => "polyline_id", "value" => $pParamHash['polyline_id'] ) );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polylines", $pParamHash['polyline_store'], array( "polyline_id" => $pParamHash['polyline_id'] ) );
 			}else{
 				 $pParamHash['polyline_id'] = $this->mDb->GenID( 'gmaps_polylines_polyline_id_seq' );
 				 $pParamHash['polyline_store']['polyline_id'] = $pParamHash['polyline_id'];
@@ -1068,7 +1068,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			// store the posted changes
 			if ( !empty( $pParamHash['polygon_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygons", $pParamHash['polygon_store'], array( "name" => "polygon_id", "value" => $pParamHash['polygon_id'] ) );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygons", $pParamHash['polygon_store'], array( "polygon_id" => $pParamHash['polygon_id'] ) );
 			}else{
 				 $pParamHash['polygon_id'] = $this->mDb->GenID( 'gmaps_polygons_polygon_id_seq' );
 				 $pParamHash['polygon_store']['polygon_id'] = $pParamHash['polygon_id'];
@@ -1164,7 +1164,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			// store the posted changes
 			if ( !empty( $pParamHash['set_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_marker_sets", $pParamHash['markerset_store'], array( "name" => "set_id", "value" => $pParamHash['set_id'] ) );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_marker_sets", $pParamHash['markerset_store'], array( "set_id" => $pParamHash['set_id'] ) );
 				 // and we update the set keychain on map_id.
 				 $pParamHash['keychain_ids']['set_id'] = $pParamHash['set_id'];
 				 $this->mDb->associateUpdateKeys( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
@@ -1255,7 +1255,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			// store the posted changes
 			if ( !empty( $pParamHash['set_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polyline_sets", $pParamHash['polylineset_store'], array( "name" => "set_id", "value" => $pParamHash['set_id'] ) );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polyline_sets", $pParamHash['polylineset_store'], array( "set_id" => $pParamHash['set_id'] ) );
 				 // and we update the set keychain on map_id.
 				 $pParamHash['keychain_ids']['set_id'] = $pParamHash['set_id'];
 				 $this->mDb->associateUpdateKeys( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
@@ -1349,7 +1349,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			// store the posted changes
 			if ( !empty( $pParamHash['set_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygon_sets", $pParamHash['polygonset_store'], array( "name" => "set_id", "value" => $pParamHash['set_id'] ) );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygon_sets", $pParamHash['polygonset_store'], array( "set_id" => $pParamHash['set_id'] ) );
 				 // and we update the set keychain on map_id.
 				 $pParamHash['keychain_ids']['set_id'] = $pParamHash['set_id'];
 				 $this->mDb->associateUpdateKeys( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
@@ -1409,7 +1409,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			// store the posted changes
 			if ( !empty( $pParamHash['style_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_marker_styles", $pParamHash['markerstyle_store'], array( "name" => "style_id", "value" => $pParamHash['style_id'] ) );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_marker_styles", $pParamHash['markerstyle_store'], array( "style_id" => $pParamHash['style_id'] ) );
 			}else{
 				 $pParamHash['style_id'] = $this->mDb->GenID( 'gmaps_marker_styles_style_id_seq' );
 				 $pParamHash['markerstyle_store']['style_id'] = $pParamHash['style_id'];
@@ -1523,7 +1523,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			// store the posted changes
 			if ( !empty( $pParamHash['icon_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_icon_styles", $pParamHash['iconstyle_store'], array( "name" => "icon_id", "value" => $pParamHash['icon_id'] ) );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_icon_styles", $pParamHash['iconstyle_store'], array( "icon_id" => $pParamHash['icon_id'] ) );
 			}else{
 				 $pParamHash['icon_id'] = $this->mDb->GenID( 'gmaps_icon_styles_icon_id_seq' );
 				 $pParamHash['iconstyle_store']['icon_id'] = $pParamHash['icon_id'];
@@ -1633,7 +1633,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			// store the posted changes
 			if ( !empty( $pParamHash['style_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polyline_styles", $pParamHash['polylinestyle_store'], array( "name" => "style_id", "value" => $pParamHash['style_id'] ) );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polyline_styles", $pParamHash['polylinestyle_store'], array( "style_id" => $pParamHash['style_id'] ) );
 			}else{
 				 $pParamHash['style_id'] = $this->mDb->GenID( 'gmaps_polyline_styles_style_id_seq' );
 				 $pParamHash['polylinestyle_store']['style_id'] = $pParamHash['style_id'];
@@ -1684,7 +1684,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			// store the posted changes
 			if ( !empty( $pParamHash['style_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygon_styles", $pParamHash['polygonstyle_store'], array( "name" => "style_id", "value" => $pParamHash['style_id'] ) );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygon_styles", $pParamHash['polygonstyle_store'], array( "style_id" => $pParamHash['style_id'] ) );
 			}else{
 				 $pParamHash['style_id'] = $this->mDb->GenID( 'gmaps_polygon_styles_style_id_seq' );
 				 $pParamHash['polygonstyle_store']['style_id'] = $pParamHash['style_id'];
