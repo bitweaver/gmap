@@ -108,28 +108,28 @@ BitMap.Edit.prototype.editMap = function(){
 	form.edit.value = this.Map.data?this.Map.data:"";
 
   for (var i=0; i < 4; i++) {
-    if (form.map_showcont.options[i].value == this.Map.zoom_control){
+    if (form.map_showcont.options[i].value == this.Map.controls.zoom_control){
       form.map_showcont.options[i].selected=true;
     }
   }
 
   for (var i=0; i < 2; i++) {
-    if (form.map_showscale.options[i].value == this.Map.scale){
+    if (form.map_showscale.options[i].value == this.Map.controls.scale){
       form.map_showscale.options[i].selected=true;
     }
   }
 					
   for (var i=0; i < 2; i++) {
-    if (form.map_showtypecont.options[i].value == this.Map.type_control){
+    if (form.map_showtypecont.options[i].value == this.Map.controls.type_control){
        form.map_showtypecont.options[i].selected=true;
     }
   }
 					
-  var mapTypeRoot = form.map_type;
+  var mapTypeRoot = form.maptype;
 
-	var mapTypeCount = 2;
+	var mapTypeCount = 3;
 
-	if (typeof(this.Map.maptypes) != 'undefined'){
+	if (this.Map.maptypes > 0){
 		mapTypeCount += this.Map.maptypes.length;
 		var newMaptype = mapTypeRoot.options[0].cloneNode(false);
 		for (i=0; i<this.Map.maptypes.length; i++){
@@ -140,8 +140,8 @@ BitMap.Edit.prototype.editMap = function(){
 	}
 						
   for (var i=0; i<mapTypeCount; i++) {
-    if (form.map_type.options[i].value == this.Map.maptype){
-      form.map_type.options[i].selected=true;
+    if (form.maptype.options[i].value == this.Map.maptype){
+      form.maptype.options[i].selected=true;
     }
   }
 									
@@ -1905,7 +1905,7 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
   		this.Map.map.addControl(zoomcontrols);
   		}
 			
-			this.Map.map.setCenter(new GLatLng(this.Map.lat, this.Map.lng), this.Map.zoom);
+			this.Map.map.setCenter(new GLatLng(this.Map.center.lat, this.Map.center.lng), this.Map.zoom);
 			
 			this.editMap();
 	 }

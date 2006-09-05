@@ -821,7 +821,7 @@ class BitGmap extends LibertyAttachable {
 		if( isset( $pParamHash['map_z'] ) && is_numeric( $pParamHash['map_z'] ) ) {
 			$pParamHash['gmap_store']['zoom'] = $pParamHash['map_z'];
 		}
-		if( !empty( $pParamHash['maptype'] ) ) {
+		if( isset( $pParamHash['maptype'] ) && is_numeric( $pParamHash['maptype'] ) ) {
 			$pParamHash['gmap_store']['maptype'] = $pParamHash['maptype'];
 		}
 		if( !empty( $pParamHash['map_showcont'] ) ) {
@@ -847,6 +847,8 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			if( parent::store( $pParamHash ) ) {
 				if( $this->mGmapId ) {
+//				vd($pParamHash['gmap_store']);
+//				die;
 					// store the posted changes
 					$this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps", $pParamHash['gmap_store'], array( "gmap_id" => $this->mGmapId ) );
 				} else {

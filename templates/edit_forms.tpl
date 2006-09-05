@@ -55,7 +55,7 @@
               <option value="true" >Yes</option>
               <option value="false" >No</option>
               </select></td></tr>
-        	<tr><td>Default Map Type</td><td><select name="map_type">
+        	<tr><td>Default Map Type</td><td><select name="maptype">
               <option value="0" >Street Map</option>
               <option value="1" >Satellite</option>
               <option value="2" >Hybrid</option>
