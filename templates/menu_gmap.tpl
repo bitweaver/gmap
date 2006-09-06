@@ -1,7 +1,7 @@
 {strip}
 <ul>
 	{if $gBitUser->hasPermission( 'bit_gm_view_map' )}
-		<li><a class="item" href="{$smarty.const.GMAP_PKG_URL}index.php">{biticon ipackage="icons" iname="go-home" iexplain="Gmap Home" iforce="icon"} {tr}Gmap Home{/tr}</a></li>
+		<li><a class="item" href="{$smarty.const.GMAP_PKG_URL}map_content.php">{biticon ipackage="icons" iname="applications-internet" iexplain="Shows Geo-Located Site Content on a Map" iforce="icon"} {tr}Map Site Content{/tr}</a></li>
 	{/if}	
 	{if $gBitUser->hasPermission( 'bit_gm_view_map' )}
 		<li><a class="item" href="{$smarty.const.GMAP_PKG_URL}list_gmaps.php">{biticon ipackage="icons" iname="format-justify-fill" iexplain="List Maps" iforce="icon"} {tr}List Maps{/tr}</a></li>

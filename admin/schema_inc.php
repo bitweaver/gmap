@@ -286,7 +286,7 @@ $gBitInstaller->registerPreferences( GMAP_PKG_NAME, array(
 	array( GMAP_PKG_NAME, 'gmap_scale', 'false'),
 	array( GMAP_PKG_NAME, 'gmap_maptype_control', 'true'),
 	array( GMAP_PKG_NAME, 'gmap_zoom_control', 's'),
-	array( GMAP_PKG_NAME, 'gmap_overview_control', 's'),
+	array( GMAP_PKG_NAME, 'gmap_overview_control', 'true'),
 	array( GMAP_PKG_NAME, 'gmap_map_type', 0),
 	)
 );
