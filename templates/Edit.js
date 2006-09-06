@@ -41,19 +41,6 @@ BitMap.Edit = function(){
   this.bModPData; 
   this.bModMLat;
   this.bModMLng;
-
-//DELETE THIS SHIT WHEN DONE TESTING
-
-  this.Map.markersets[0]={name:"steve", set_id:1};
-  this.Map.markers[0]={title:"some shit", set_id:1, marker_type:0, marker_id:1, lat: 40.90234, lng:-32.0345345, data:"soma oms da body text", label_data:"my lable", photo_url:"no photo, thanks"};
-  this.Map.markers[1]={title:"other stuff", set_id:1, marker_type:0, marker_id:2, lat: 41.22234, lng:-42.0345345, data:"aslkjd lkj body text", label_data:"my lable", photo_url:"no photo, thanks"};
-  this.Map.markers[2]={title:"bla bla bl", set_id:1, marker_type:1, marker_id:3, lat: 22.90234, lng:-52.0345345, data:"helol helool o asd text", label_data:"my lable", photo_url:"no photo, thanks"};
-
-  this.Map.markersets[1]={name:"chris", set_id:2};
-  this.Map.markers[3]={title:"cookies", set_id:2, marker_type:0, marker_id:4, lat: 68.90234, lng:-35.0345345, data:"some body text", label_data:"my lable", photo_url:"no photo, thanks"};
-  this.Map.markers[4]={title:"milk", set_id:2, marker_type:1, marker_id:5, lat: 44.22234, lng:-46.0345345, data:"milky milky body text", label_data:"my lable", photo_url:"no photo, thanks"};
-  this.Map.markers[5]={title:"napkin", set_id:2, marker_type:0, marker_id:6, lat: 23.90234, lng:-55.0345345, data:"napskin flk asd text", label_data:"my lable", photo_url:"no photo, thanks"};
-  
 }
 
 
