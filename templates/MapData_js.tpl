@@ -13,11 +13,11 @@ BitMap.MapData.push({ldelim}
   lat:{if $gContent->mInfo.lat}{$gContent->mInfo.lat}{elseif $gBitSystem->getConfig("gmap_lat")}{$gBitSystem->getConfig("gmap_lat")}{else}0{/if},
   lng:{if $gContent->mInfo.lng}{$gContent->mInfo.lng}{elseif $gBitSystem->getConfig("gmap_lng")}{$gBitSystem->getConfig("gmap_lng")}{else}0{/if},
   zoom:{if $gContent->mInfo.zoom}{$gContent->mInfo.zoom}{elseif $gBitSystem->getConfig("gmap_zoom")}{$gBitSystem->getConfig("gmap_zoom")}{else}2{/if},
-  scale:{if $gContent->mInfo.scale}{$gContent->mInfo.scale}{elseif $gBitSystem->getConfig("gmap_scale")}{$gBitSystem->getConfig("gmap_scale")}{else}false{/if}, //true,false
+  scale:{if $gContent->mInfo.scale}{$gContent->mInfo.scale}{elseif $gBitSystem->getConfig("gmap_scale")}{$gBitSystem->getConfig("gmap_scale")}{else}false{/if}, /*true,false*/
   maptype:{if $gContent->mInfo.maptype}{$gContent->mInfo.maptype}{elseif $gBitSystem->getConfig("gmap_maptype")}{$gBitSystem->getConfig("gmap_maptype")}{else}0{/if},
-  maptype_control:{if $gContent->mInfo.maptype_control}{$gContent->mInfo.maptype_control}{elseif $gBitSystem->getConfig("gmap_maptype_control")}{$gBitSystem->getConfig("gmap_maptype_control")}{else}true{/if}, //true,false
-  zoom_control:'{if $gContent->mInfo.zoom_control}{$gContent->mInfo.zoom_control}{elseif $gBitSystem->getConfig("gmap_zoom_control")}{$gBitSystem->getConfig("gmap_zoom_control")}{else}s{/if}', //s,l,z,n
-  overview_control:{if $gContent->mInfo.overview_control}{$gContent->mInfo.overview_control}{elseif $gBitSystem->getConfig("gmap_overview_control")}{$gBitSystem->getConfig("gmap_type_control")}{else}true{/if}, //true,false 
+  maptype_control:{if $gContent->mInfo.maptype_control}{$gContent->mInfo.maptype_control}{elseif $gBitSystem->getConfig("gmap_maptype_control")}{$gBitSystem->getConfig("gmap_maptype_control")}{else}true{/if}, /*true,false*/
+  zoom_control:'{if $gContent->mInfo.zoom_control}{$gContent->mInfo.zoom_control}{elseif $gBitSystem->getConfig("gmap_zoom_control")}{$gBitSystem->getConfig("gmap_zoom_control")}{else}s{/if}', /*s,l,z,n*/
+  overview_control:{if $gContent->mInfo.overview_control}{$gContent->mInfo.overview_control}{elseif $gBitSystem->getConfig("gmap_overview_control")}{$gBitSystem->getConfig("gmap_type_control")}{else}true{/if}, /*true,false*/
 
   Maptypes:[
   {if count($gContent->mMapTypes) > 0}{section name=maptypes loop=$gContent->mMapTypes}
@@ -54,7 +54,9 @@ BitMap.MapData.push({ldelim}
 		title:'{$listcontent[listcontent_n].title}',
 {*	description:'{$listcontent[listcontent_n].description}',*}
 		creator_real_name:'{$listcontent[listcontent_n].creator_real_name}',
-		display_url:'{$listcontent[listcontent_n].display_url}'
+		display_url:'{$listcontent[listcontent_n].display_url}',
+		plot_on_load:true,
+		style_id:0
 		{rdelim},
 	{/if}{/section}{elseif $serviceHash && $serviceHash.lat != NULL}
   {ldelim}

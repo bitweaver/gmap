@@ -1624,11 +1624,13 @@ BitMap.Edit.prototype.newPolygonStyle = function(){
 
 	 BitMap.Edit.prototype.storeMarkerSet = function(f){
 	 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
-			this.canceledit('editerror');			
+	 		BitMap.show('editerror');
+	 		$('editerror').innerHTML = str;
+//			this.canceledit('editerror');			
 			this.editSetId = f.set_id.value;
 			this.editObjectN = f.set_array_n.value;
 			var callback = (f.set_id.value != "")?this.updateMarkerSet:this.addMarkerSet;
-			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+//			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 	 }
 
 	 BitMap.Edit.prototype.removeMarkerSet = function(f){

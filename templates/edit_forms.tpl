@@ -246,14 +246,14 @@
                 Put advice here
               </div>
               <div id="edit-markerset-options-actions">Edit Marker Actions<br/>
-							  <a id="setremove" href="javascript:BitMap.EditSession.removeMarkerSet(document.['edit-markerset-options-form']);">remove</a> 
-							  <a id="setdelete" href="javascript:BitMap.EditSession.expungeMarkerSet(document.['edit-markerset-options-form']);">delete</a><br/><br/>
+							  <a id="setremove" href="javascript:BitMap.EditSession.removeMarkerSet(document['edit-markerset-options-form']);">remove</a> 
+							  <a id="setdelete" href="javascript:BitMap.EditSession.expungeMarkerSet(document['edit-markerset-options-form']);">delete</a><br/><br/>
 							  <a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a>
 							<div>
             </td>
 					</tr>
 				</table>
-        <input type="button" name="savenewmarkerset" value="Save" onclick="javascript:BitMap.EditSession.storeMarkerSet(document.['edit-markerset-options-form']);"/>
+        <input type="button" name="savenewmarkerset" value="Save" onclick="javascript:BitMap.EditSession.storeMarkerSet(document['edit-markerset-options-form']);"/>
         <input type="button" name="closemarkersetform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSetOptions()"/>
 			</form>
 </div>
@@ -1133,4 +1133,3 @@
 
 <div id="editpolygoncancel" style="display:none;"><input type="button" name="closepolygonform" value="Cancel Editing Polygons" onclick="javascript:BitMap.EditSession.cancelPolygonEdit(); BitMap.EditSession.canceledit('newpolygonsetform'); BitMap.EditSession.canceledit('editerror');"></div>
 <!--end polygon editing forms -->
-

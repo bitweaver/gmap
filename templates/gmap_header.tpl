@@ -1,3 +1,4 @@
+{strip}
 {if $view_map}
   {if $gBitUser->hasPermission( 'bit_gm_edit_map' )}
 	 <div class="floaticon">
@@ -11,3 +12,4 @@
 	<h2 id="mymapdesc">{$gContent->mInfo.description}</h2>
 	{if $view_map}{include file="bitpackage:gmap/gmap_date_bar.tpl"}{/if}
 </div><!-- end .header -->
+{/strip}

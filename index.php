@@ -41,7 +41,6 @@ if (!isset($_REQUEST['gmap_id'] ) ) {
 	  $gmap = new BitGmap();
     $listgmaps = $gmap->getList( $_REQUEST );
     
-    
     $gBitSmarty->assign_by_ref('control', $_REQUEST["control"]);
     $gBitSmarty->assign_by_ref('list', $listgmaps["data"]);
     

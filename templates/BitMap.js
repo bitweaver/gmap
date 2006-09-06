@@ -295,11 +295,7 @@ BitMap.Map.prototype.defineGIcon = function(i){
 };
 
 
-/*@todo 
- *
- * reconcile with addMarkers below
- *  
- */ 
+
 BitMap.Map.prototype.addMarker = function(i){
 	if (this.markers[i]!= null && this.markers[i].plot_on_load == true){
     var Marker = this.markers[i];
@@ -309,6 +305,11 @@ BitMap.Map.prototype.addMarker = function(i){
       Marker.gmarker.my_html = Marker.title;
       this.map.addOverlay(Marker.gmarker);
     }
+    
+    //a variable that we can use to set a marker to open on initialization
+    //not implemented! but script will break if removed
+    /*
+    var o = false;
     
     var icon = null;
     if (Marker.icon_id != 0){
@@ -342,7 +343,8 @@ BitMap.Map.prototype.addMarker = function(i){
 			};
   	 }
 	 }
-  }   
+  */
+  }
 };
 
 
@@ -673,7 +675,7 @@ BitMap.Map.prototype.attachSideMarkers = function(){
 /*@todo Merge this function with the one above
  */ 
 //make side panel of markers
-BitMap.Map.prototype.attachSideMarkers = function(){
+BitMap.Map.prototype.attachSideMarkersOld = function(){
 
 	//add tracking var to get count of side sets
 	var x = 0;
