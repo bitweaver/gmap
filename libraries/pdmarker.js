@@ -11,34 +11,300 @@
  Contact www.pixeldevelopment.com for your custom Google Map needs
 */
 
-/*
- Notes: This is a limited version of the PdMarker code
-        some methods have been trimmed for the Bitweaver Gmap Package
-*/
-
-
-var pdMarkerOpenList = [];
-
-function PdMarkerAddDetailWinOpen(marker) {
-	pdMarkerOpenList.push(marker);
+function getPdMarkerRevisionInfo() {
+var cr = "<br/>";
+var s =
+"1.99e 05/05/06 - fixed zoomed tooltip positioning &amp; non-centered marker graphics." + cr +
+"1.99d 05/01/06 - fixed display &amp; blink when defining .transparent." + cr +
+"1.99c 04/25/06 - added display and blink." + cr +
+"1.99b 04/21/06 - added 'Powered By' version &amp; marker count display." + cr +
+"1.99a 04/18/06 - revised for Google Maps API Version 2, GMap2 required." + cr +
+"0.99c 01/30/06 - added setDetailWinClass and resetDetailWinClass." + cr +
+"0.99a 10/12/05 - now handles maps in containers with undefined widths" + cr +
+"define a div with id 'pdmarkerwork' to reduce flicker" + cr +
+"0.99  10/03/05 - added setImageEnabled, allowLeftTooltips (global)" + cr +
+"0.98  09/30/05 - fixed zoomToMarkers" + cr +
+"0.97  09/24/05 - added setHoverImage, setShowDetailOnClick, setDetailWinHTML, showDetailWin, closeDetailWin" + cr +
+"0.96  09/22/05 - added setTooltipHiding, getTooltipHiding" + cr +
+"0.95  09/20/05 - handle zoom for lingering tooltips mouseOutEnabled(false) " +
+		   "disables setImage and restoreImage" + cr +
+"0.94  09/20/05 - added setTooltipClass and resetTooltipClass" + cr +
+"0.93  09/19/05 - added slopPercentage [optional] parameter to zoomToMarkers" + cr +
+"0.92  09/18/05 - added getMouseOutEnabled, setMouseOutEnabled" + cr +
+"0.91  09/17/05 - fixed setOpacity";
+return s;
 }
 
-function PdMarkerClose(id) {
-	for (var i=0; i<pdMarkerOpenList.length; i++)
-		if (pdMarkerOpenList[i].internalId == id)
+function getPdMarkerVersion() {
+	return getPdMarkerRevisionInfo().substring(0,15);
+}
+
+function getPdMarkerShortVersion() {
+	return getPdMarkerRevisionInfo().substring(0,5);
+}
+
+var APIkey = "";
+
+function getGoogleMapsVersion() {
+	var i, a, b, c;
+	var v = "unknown";
+
+	if (document.getElementsByTagName)
+		for(i=0; (a = document.getElementsByTagName("script")[i]); i++)
+			if(a.getAttribute("src"))
 			{
-				pdMarkerOpenList[i].closeDetailWin();
-				pdMarkerOpenList.slice(i,i);
+				b = a.getAttribute("src");
+				c = b.indexOf("/mapfiles/maps");
+				d = b.indexOf("http://maps.google.com/maps?file=api");
+				e = b.indexOf("key=");
+				if (c > 0)
+					v = parseFloat(b.substring(c+14));
+				if (d >= 0)
+					if (e > 0)
+						APIkey = b.substring(e+4);
 			}
+	return v;
 }
 
 function latLongToPixel(map,coord,zoom) {
-	var bmCoord = map.spec.getBitmapCoordinate(coord.y,coord.x,zoom);
-	return map.getDivCoordinate(bmCoord.x,bmCoord.y);
+	var topLeft = map.getCurrentMapType().getProjection().fromLatLngToPixel(map.fromDivPixelToLatLng(new GLatLng(0,0),true),map.getZoom());
+	var point = map.getCurrentMapType().getProjection().fromLatLngToPixel(coord,map.getZoom());
+	return new GPoint(point.x - topLeft.x, point.y - topLeft.y);
+}
+
+var pdMarkerExtList = [];
+
+function PdMarkerAddToExtList(marker) {
+	pdMarkerExtList.push(marker);
+}
+
+function PdMarkerRemoveFromExtList(id) {
+	for (var i=0; i<pdMarkerExtList.length; i++)
+		if (pdMarkerExtList[i].internalId == id)
+			pdMarkerExtList.splice(i,1);
+}
+
+function PdMarkerFindInExtList(id) {
+	for (var i=0; i<pdMarkerExtList.length; i++)
+		if (pdMarkerExtList[i].internalId == id)
+			return pdMarkerExtList[i];
+}
+
+function PdMarkerClose(id) {
+	for (var i=0; i<pdMarkerExtList.length; i++)
+		if (pdMarkerExtList[i].internalId == id)
+			{
+				pdMarkerExtList[i].closeDetailWin();
+				pdMarkerExtList.splice(i,1);
+			}
+}
+
+function PdMarkerBlinkOnOff(id) {
+	var marker = PdMarkerFindInExtList(id);
+	if (marker)
+	{
+		if (!marker.blinking) return;
+		marker.blinkOn = !marker.blinkOn;
+		marker.display(marker.blinkOn);
+		setTimeout("PdMarkerBlinkOnOff(" + marker.getId() + ");", marker.blinkSpeed);
+	}
+}
+
+// GMap extension for walking through PdMarker list
+// Note: some overlays are not markers, some may not be PdMarkers
+
+function isPdMarker(a) {
+	if (a.isMarker)
+		return true;		
+	return false;
+}
+
+function getPdMarkerCount(a) {
+	if (a.pdMarkers)
+		return a.pdMarkers.length;
+	return 0;
+}
+
+GMap2.prototype.getMarkerById = function(id) {
+	var count = getPdMarkerCount(this);
+	for (var i = 0; i < count; i++)
+		if (isPdMarker(this.pdMarkers[i]))
+			if (this.pdMarkers[i].internalId == id)
+			{
+				this.cursor = i;
+				return this.pdMarkers[i];
+			}
+	return null;
+}
+
+GMap2.prototype.getFirstMarker = function() {
+	var count = getPdMarkerCount(this);
+	for (var i = 0; i < count; i++)
+		if (isPdMarker(this.pdMarkers[i]))
+		{
+			this.cursor = i;
+			return this.pdMarkers[i];
+		}
+	return null;
+}
+
+GMap2.prototype.getNextMarker = function() {
+	var count = getPdMarkerCount(this);
+	if (count > 0)
+		if (this.cursor >= 0)
+			for (var i = this.cursor+1; i < count; i++)
+				if (isPdMarker(this.pdMarkers[i]))
+				{
+					this.cursor = i;
+					return this.pdMarkers[i];
+				}
+	return null;
+}
+
+GMap2.prototype.getNthMarker = function(nTh) {
+	var count = getPdMarkerCount(this);
+	for (var i = 0; i < count; i++)
+		if (isPdMarker(this.pdMarkers[i]))
+		{
+			nTh--;
+			if (nTh == 0)
+			{
+				this.cursor = i;
+				return this.pdMarkers[i];
+			}
+		}
+	return null;
+}
+
+GMap2.prototype.getMarkerCount = function() {
+	return getPdMarkerCount(this);
+}
+
+GMap2.prototype.boxMap = function(center, span) {
+	var spec = this.spec;
+	var zoom = spec.getLowestZoomLevel(center, span, this.viewSize);
+	this.centerAndZoom(new GPoint(center.x, center.y), zoom);
+}
+
+GMap2.prototype.zoomToMarkers = function(slopPercentage, heightOffsetPct) {
+	var count = 0;
+	var thePoint, x, y, minX, maxX, minY, maxY, span;
+	var marker = this.getFirstMarker();
+	while (marker != null)
+	{
+		thePoint = marker.getPoint();
+		// x = thePoint.x; y = thePoint.y;
+		x = thePoint.lat(); y = thePoint.lng();
+		if (count == 0)
+		{
+			minX = x; maxX = x; minY = y; maxY = y;
+		}
+		else
+		{
+			if (x < minX) minX = x;
+			if (x > maxX) maxX = x;
+			if (y < minY) minY = y;
+			if (y > maxY) maxY = y;
+		}
+		marker = this.getNextMarker();
+		count++;
+	}
+	if (count == 1)
+		this.setCenter(new GLatLng(x,y), this.getZoom());
+	else if (count > 1)
+	{
+		var center = new GLatLng((minX + maxX) / 2, (minY + maxY) / 2)
+		span = new GSize(Math.abs(maxX - minX), Math.abs(maxY - minY));
+		slopWid = 0;
+		slopHgt = 0;
+		if (typeof slopPercentage != "undefined")
+		{
+			slopWid = span.width * slopPercentage / 200;
+			slopHgt = span.height * slopPercentage / 200;
+			span.width  *= 1 + slopPercentage / 100;
+			span.height *= 1 + slopPercentage / 100;
+		}
+		deltaHgt = 0;
+		if (typeof heightOffsetPct != "undefined")
+		{
+			deltaHgt = span.height * heightOffsetPct / 100;
+			center = new GLatLng(center.lat() + deltaHgt, center.lng());
+		}
+		// needs slop
+		var bounds = new GLatLngBounds(new GLatLng(minX-slopHgt, minY-slopWid), new GLatLng(maxX+slopHgt, maxY+slopWid)); // sw, ne
+		var zoom = this.getBoundsZoomLevel(bounds);
+		this.setCenter(center, zoom);
+	}
+}
+
+function shorten(x) {
+	var factor = 1000000
+	return Math.round(x * factor) / factor;
+}
+
+function poweredByClick(map) {
+	var center = map.getCenter();
+	var span = map.getBounds().toSpan();
+	var zoom = map.getZoom();
+	var url = "http://maps.google.com/maps?ll=" + center.lat() + "," + center.lng() + "&spn=" + shorten(span.lat()) + "," + shorten(span.lng()) + "&z=" + zoom + "&key=" + APIkey;
+	document.location = url;
+}
+
+function poweredByMouseover(map) {
+	var marker = map.getFirstMarker();
+	var bounds = map.getBounds();
+	var visibleCount = 0;
+	var totalCount = 0;
+	while (marker != null) {
+		var point = marker.getPoint();
+		if (bounds.contains(point))
+			visibleCount++;
+		totalCount = totalCount + 1;
+		marker = map.getNextMarker();
+	}
+	var title = map.poweredByTitle + " (" + visibleCount + " markers of " + totalCount + " visible)"
+	map.poweredByObj.setAttribute("title",title);
+	map.poweredByObj.setAttribute("alt",title);
+}
+
+function getPoweredBy(map) {
+	try {
+		var tooltip = "GMap " + getGoogleMapsVersion() + " & PdMarker " + getPdMarkerShortVersion();
+		map.poweredByTitle = tooltip;
+		var b = document.createElement("img");
+		b.setAttribute("src","http://www.google.com/intl/en_ALL/mapfiles/transparent.gif");
+		b.setAttribute("width",62);
+		b.setAttribute("alt",tooltip);
+		b.setAttribute("title",tooltip);
+		b.setAttribute("height",30);
+		b.style.display = "block";
+		b.style.position = "absolute";
+		b.style.left    = "2px";
+		b.style.bottom  = "0px";
+		b.style.width   = "62px";
+		b.style.height  = "30px";
+		b.style.cursor  = "pointer";
+		b.style.zIndex  = 600001;
+		b.onclick = function() { poweredByClick(map); };
+		b.onmouseover = function() { poweredByMouseover(map); };
+	      map.getPane(G_MAP_FLOAT_PANE).parentNode.parentNode.appendChild(b);
+		return b;
+	}
+	catch (e) {
+	}
+	return true;
+}
+
+function setPoweredBy(map) {
+	getGoogleMapsVersion();
+	if (!map.poweredByObj)
+		map.poweredByObj = getPoweredBy(map);
 }
 
 
 // PdMarker code
+
+
 function PdMarkerNamespace() {
 
 var userAgent = navigator.userAgent.toLowerCase();
@@ -52,10 +318,21 @@ var msie  = (userAgent.indexOf("msie") != -1) && (userAgent.indexOf("opera") == 
 var nextMarkerId = 10;
 var permitLeft = true;
 
+icon = new GIcon();
+icon.shadow = "http://www.google.com/mapfiles/shadow50.png";
+icon.iconSize = new GSize(20, 34);
+icon.shadowSize = new GSize(37, 34);
+icon.iconAnchor = new GPoint(9, 34);
+icon.infoWindowAnchor = new GPoint(9, 2);
+icon.infoShadowAnchor = new GPoint(18, 25);
+icon.image = "http://www.google.com/mapfiles/marker.png";
+
 // Globals - careful of multiple maps
 
 function PdMarker(a, b, tooltip) {
 	this.inheritFrom = GMarker;
+	if (typeof b == "undefined") // pmj oct 23, 2005
+		b = icon;
 	this.inheritFrom(a,b);
 	if (typeof tooltip != "undefined")
 		this.pendingTitle = tooltip;
@@ -72,11 +349,41 @@ function PdMarker(a, b, tooltip) {
 	this.hidingEnabled = true;
 	this.showDetailOnClick = true;
 	this.detailOpen = false;
+	this.userData = "";
 }
 
-PdMarker.prototype = new GMarker;
+// PdMarker.prototype = new GMarker;
+PdMarker.prototype = new GMarker(new GLatLng(1, 1));
+
+
+function addMarkerToMapList(map,marker) {
+	try {
+		if (map.pdMarkers.length) ;
+	}
+	catch(e) {
+		map.pdMarkers = new Array();
+	}
+	// add to list
+	map.pdMarkers.push(marker);
+}
+
+function removeMarkerFromMapList(map,marker) {
+	var id = marker.internalId;
+	for (var i=0; i<map.pdMarkers.length; i++)
+		if (map.pdMarkers[i].internalId == id)
+		{
+			map.pdMarkers.splice(i,1);
+			return;
+		}
+}
 
 PdMarker.prototype.initialize = function(a) {
+	if (typeof a == "GMap")
+	{
+		GLog.write("PdMarker requires GMap2");
+		return;
+	}
+	addMarkerToMapList(a,this);
 	try
 	{
 		GMarker.prototype.initialize.call(this, a);
@@ -86,19 +393,17 @@ PdMarker.prototype.initialize = function(a) {
 		if (this.pendingCursor.length > 0)
 			this.setCursor(this.pendingCursor);
 
-		var c = this.iconImage;
-		if (n6 && this.icon.imageMap && !safari)
-			c = this.imageMap;
-		else if (this.transparentIcon && typeof this.transparentIcon != "undefined")
-			c = this.transparentIcon;
-		// c = this.images[2]; // pmj debug firefox maps.23, but explorer no change, err on click
+		this.map = a;
+		setPoweredBy(a);
 
-		GEvent.bindDom(c, "mouseover", this, this.onMouseOver);
-		GEvent.bindDom(c, "mouseout",  this, this.onMouseOut);
-		GEvent.bindDom(c, "click",  this, this.onClick);
-		GEvent.bind(this.map, "zoom", this, this.reZoom);
+		GEvent.bindDom(this, "mouseover", this, this.onMouseOver);
+		GEvent.bindDom(this, "mouseout",  this, this.onMouseOut);
+		GEvent.bindDom(this, "click",  this, this.onClick);
+		GEvent.bind(this.map, "zoomend", this, this.reZoom);
 	}
-	catch(e) {}
+	catch(e) {
+		alert("PdMarker initialize error: " + e);
+	}
 }
 
 PdMarker.prototype.allowLeftTooltips = function(a){
@@ -149,7 +454,8 @@ PdMarker.prototype.getUserData = function() {
 	if (this.userData)
 		return this.userData;
 	else
-		return null;
+//		return null;
+		return "";
 }
 
 PdMarker.prototype.setUserData2 = function(a) {
@@ -160,36 +466,46 @@ PdMarker.prototype.getUserData2 = function() {
 	if (this.userData2)
 		return this.userData2;
 	else
-		return null;
-}
-
-
-PdMarker.prototype.setPoint = function(newPoint) {
-	this.display(false);
-	this.point.y = newPoint.y;
-	this.point.x = newPoint.x;
-	this.redraw(true);
-	this.display(true);
-}
-
-PdMarker.prototype.getPoint = function() {
-	return this.point;
+		return "";
 }
 
 PdMarker.prototype.setImageEnabled = function(a) {
 	this.setImageOn = a;
 }
 
+var PdMIN = "";
+var PdMIA = "";
+
+function PdCompPdMIN(marker) {
+	if (PdMIN.length == 0)
+		for (var i in marker)
+			if (eval("typeof marker." + i) == "object")
+				try {
+					if (eval("typeof marker." + i + "[0].src") != "undefined")
+					{
+						PdMIA = "this." + i;
+						PdMIN = PdMIA + "[0]";
+					}
+				}
+				catch (e) {}
+}
+
+
+
 PdMarker.prototype.setImage = function(a) {
+	var msFilter = 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src="' + a + '")';
 	if (this.mouseOutEnabled && this.setImageOn)
 	{
-		if (this.oldImagePath.length == 0)
-			this.oldImagePath = this.images[0].src;
-		if (msie)
-			this.images[0].style.filter = 
-				'progid:DXImageTransform.Microsoft.AlphaImageLoader(src="' + a + '")';
-		else
-			this.images[0].src = a;
+		PdCompPdMIN(this);
+		try {
+			if (this.oldImagePath.length == 0)
+				eval("this.oldImagePath = " + PdMIN + ".src");
+			if (msie)
+				eval(PdMIN + ".style.filter = msFilter");
+			else
+				eval(PdMIN + ".src = a");
+		}
+		catch (e) {}
 	}
 }
 
@@ -199,6 +515,46 @@ PdMarker.prototype.restoreImage = function() {
 		var a = this.oldImagePath;
 		this.setImage(a);
 		this.oldImagePath = "";
+	}
+}
+
+PdMarker.prototype.display = function(a) {
+	PdCompPdMIN(this);
+	var b = "";
+	if (!a)
+	{
+		this.hideTooltip();
+		this.closeDetailWin();
+		b = "none";
+	}
+	try {
+		// for (i = 0; i < eval(PdMIA + ".length"); i++) // draggable X is also here, skip
+		var count = 2;
+		if (this.getIcon().transparent)
+			count = 3;
+		for (i = 0; i < count; i++)
+			eval(PdMIA + "[" + i + "].style.display = b;");
+	}
+	catch (e) {}
+}
+
+PdMarker.prototype.blink = function(a,b) {
+	if (a)
+	{
+		this.blinkOn = true;
+		marker.blinkSpeed = b;
+		if (!this.blinking)
+		{
+			this.blinking = a;
+			PdMarkerAddToExtList(this);
+			PdMarkerBlinkOnOff(this.getId());
+		}
+	}
+	else
+	{
+		this.blinking = a;
+		this.display(true);
+		PdMarkerRemoveFromExtList(this);
 	}
 }
 
@@ -213,9 +569,9 @@ PdMarker.prototype.setMarkerZIndex = function(a) {
 	if (!this.zIndexSaved)
 	{
 		this.zIndexSaved = true;
-		this.oldZIndex = this.images[0].style.zIndex;
+		this.oldZIndex = eval(PdMIN + ".style.zIndex");
 	}
-	this.images[0].style.zIndex = a;
+	eval(PdMIN + ".style.zIndex = a")
 	this.redraw(true);
 }
 
@@ -227,7 +583,7 @@ PdMarker.prototype.restoreMarkerZIndex = function() {
 	if (this.zIndexSaved)
 	{
 		this.zIndexSaved = false;
-		this.images[0].style.zIndex = this.oldZIndex;
+		eval(PdMIN + ".style.zIndex = this.oldZIndex")
 		this.redraw(true);
 	}
 }
@@ -241,25 +597,29 @@ PdMarker.prototype.setHoverImage = function(a) {
 	this.hoverImage = a;
 }
 
+var inMouseOver = false;
+
+// problem.  if we use new method of changing image (re-init, etc), then we keep getting mouse-over events.
+// which truly blows.
+// maybe force things to 2.45 and use images array, assuming a name of 'eb'
+
 PdMarker.prototype.onMouseOver = function() {
+	if (inMouseOver)
+		return;
+	inMouseOver = true;
 	if (this.hoverImage)
 		this.setImage(this.hoverImage);
 	if (!this.detailOpen)
-	{
-		GEvent.trigger(this, "mouseover");
 		this.showTooltip();
-	}
+	inMouseOver = false;
 }
 
 PdMarker.prototype.onMouseOut = function() {
 	if (this.hoverImage)
 		this.restoreImage();
 	if (!this.detailOpen)
-	{
 		if (this.mouseOutEnabled)
 			this.hideTooltip();
-		GEvent.trigger(this, "mouseout");
-	}
 }
 
 PdMarker.prototype.setMouseOutEnabled = function(a) {
@@ -280,28 +640,29 @@ PdMarker.prototype.getTooltipHiding = function() {
 
 PdMarker.prototype.setTitle = function(a) {
 	this.tooltipText = "";
-	if (this.images)
-		this.images[0].title = a;
-	else
+	PdCompPdMIN(this);
+	try {
+		eval(PdMIN + ".title = a");
+	}
+	catch (e) {
 		this.pendingTitle = a;
+	}
 }
 
 PdMarker.prototype.setCursor = function(a) {
-	if (this.images)
-		this.images[0].style.cursor = a;
-	else
+	PdCompPdMIN(this);
+	try {
+		eval(PdMIN + ".style.cursor = a");
+	}
+	catch (e) {
 		this.pendingCursor = a;
+	}
 }
 
 PdMarker.prototype.setTooltipClass = function(a) {
 	this.pendingClassName = a;
 	if (this.tooltipObject)
 	{
-/*
-		if (this.tooltipRaw)
-			this.setTooltipNoResize(this.tooltipRaw);
-*/
-
 		var showing = (this.tooltipObject.style.display != "none");
 		this.deleteObjects();
 		if (this.tooltipRaw)
@@ -317,6 +678,16 @@ PdMarker.prototype.setTooltipClass = function(a) {
 
 PdMarker.prototype.resetTooltipClass = function() {
 	this.setTooltipClass("markerTooltip");
+}
+
+PdMarker.prototype.getTooltip = function() {
+	try {
+		return this.tooltipRaw;
+	}
+	catch (e)
+	{
+		return "";
+	}
 }
 
 PdMarker.prototype.setTooltipNoResize = function(a) {
@@ -364,9 +735,18 @@ PdMarker.prototype.setDetailWinHTML = function(a) {
 	this.detailWinHTML = a;
 }
 
+
+
+
 PdMarker.prototype.setDetailWinClass = function(a) {
-	this.pendingWinClassName = a;
+	this.pendingDetailClassName = a;
 }
+
+PdMarker.prototype.resetDetailWinClass = function() {
+	this.setDetailWinClass("markerDetail");
+}
+
+
 
 PdMarker.prototype.showDetailWin = function() {
 	if (this.detailOpen)
@@ -374,31 +754,24 @@ PdMarker.prototype.showDetailWin = function() {
 		this.closeDetailWin();
 		return;
 	}
-
 	this.hideTooltip();
 	this.setMouseOutEnabled(false);
 
 	var winClass = "markerDetail";
 	if (this.pendingWinClassName)
-	{
 		winClass = this.pendingWinClassName;
-	}
 
 	var html = "<table><tr><td>" + this.detailWinHTML + "<\/td><td valign='top'><a class='markerDetailClose' href='javascript:PdMarkerClose(" + this.internalId + ")'><img src='http://www.google.com/mapfiles/close.gif' width='14' height='13'><\/a><\/td><\/tr><\/table>";
 	html = "<div class='" + winClass + "'>" + html + "</div>";
-
 	this.detailOpen = true;
-
 	if (!this.tooltipText)
 	{
 		this.ttWidth = 150;
 		this.ttHeight = 30;
 		setTTPosition(this); // compute ttTop, ttLeft
 	}
-
 	initDetailWin(this, this.ttTop, this.ttLeft, html);
-
-	PdMarkerAddDetailWinOpen(this);
+	PdMarkerAddToExtList(this);
 }
 
 
@@ -407,29 +780,29 @@ PdMarker.prototype.closeDetailWin = function() {
 	if (this.detailObject)
 	{
 		this.setMouseOutEnabled(true);
-
 		this.onMouseOut();
 		// GEvent.trigger(this, "mouseout");
-		this.map.div.removeChild(this.detailObject);
+	      this.map.getPane(G_MAP_FLOAT_PANE).removeChild(this.detailObject);
 		this.detailObject = null;
 	}
 }
 
-
 PdMarker.prototype.deleteObjects = function() {
 	if (this.tooltipObject)
 	{
-		this.map.div.removeChild(this.tooltipObject);
+	      this.map.getPane(G_MAP_FLOAT_PANE).removeChild(this.tooltipObject);
 		this.tooltipObject = null;
 	}
 	if (this.detailObject)
 	{
-		this.map.div.removeChild(this.detailObject);
+		this.map.getPane(G_MAP_FLOAT_PANE).removeChild(this.detailObject);
 		this.detailObject = null;
 	}
 }
 
 PdMarker.prototype.remove = function(a) {
+	removeMarkerFromMapList(this.map, this);
+	PdMarkerRemoveFromExtList(this.getId());
 	GMarker.prototype.remove.call(this);
 	this.deleteObjects();
 }
@@ -482,7 +855,7 @@ function initTooltip(theObj) {
 	theObj.objId = idToElemId(theObj.internalId);
 	theObj.anchorLatLng = theObj.point;
 
-	var b = theObj.map.ownerDocument.createElement('span');
+	var b = document.createElement('span');
 	theObj.tooltipObject = b;
 	b.setAttribute('id',theObj.objId);
 	b.innerHTML = theObj.tooltipText;
@@ -493,7 +866,6 @@ function initTooltip(theObj) {
 	if (d)
 		c = d;
 	c.appendChild(b);
-	// theObj.map.div.appendChild(b);
 	b.style.position = "absolute";
 	b.style.bottom = "5px";
 	b.style.left = "5px";
@@ -508,12 +880,13 @@ function initTooltip(theObj) {
 	b.style.zIndex = 600000;
 	b.style.bottom = "";
 	b.style.left = "";
-	theObj.map.div.appendChild(b);
+	// theObj.map.div.appendChild(b);
+	theObj.map.getPane(G_MAP_FLOAT_PANE).appendChild(b);
 }
 
 function initDetailWin(theObj, top, left, html) {
 	theObj.detailId = "detail" + theObj.internalId;
-	var b = theObj.map.ownerDocument.createElement('span');
+	var b = document.createElement('span');
 	theObj.detailObject = b;
 	b.setAttribute('id',theObj.detailId);
 	b.innerHTML = html;
@@ -522,31 +895,39 @@ function initDetailWin(theObj, top, left, html) {
 	b.style.top  = top + "px";
 	b.style.left = left + "px";
 	b.style.zIndex = 600001;
-	theObj.map.div.appendChild(b);
+	map = theObj.map;
+	map.getPane(G_MAP_FLOAT_PANE).appendChild(b);
 }
 
 function setTTPosition(theObj) {
-	var ttPos = latLongToPixel(theObj.map,theObj.point,theObj.map.getZoomLevel());
-	ttPos.x += Math.floor(theObj.icon.iconAnchor.x/2);
-	ttPos.y -= Math.floor(theObj.icon.iconAnchor.y/2);
+	var gap = 5;
+	var map = theObj.map;
+	var pt  = theObj.getPoint();
+	var ttPos = latLongToPixel(map, pt, map.getZoom());
+	var theIcon = theObj.getIcon();
+	
+//	ttPos.x += Math.floor(theIcon.iconAnchor.x/2);
+	ttPos.y -= Math.floor(theIcon.iconAnchor.y/2);
 
 	var rightSide = true;
-	var bounds	= theObj.map.getBoundsLatLng();
-	var longSpan = bounds.maxX - bounds.minX;
-	// var mapWidth = parseInt(theObj.map.container.style.width);
-	var mapWidth = theObj.map.container.offsetWidth;
-	var tooltipWidthInDeg = (theObj.ttWidth + theObj.icon.iconSize.width + 6) / mapWidth * longSpan;
-	if (theObj.point.x + tooltipWidthInDeg > bounds.maxX && permitLeft)
+	var bounds = map.getBounds();
+	var boundsSpan	= bounds.toSpan();
+	var longSpan = boundsSpan.lng();
+	var mapWidth = map.getSize().width;
+
+	var tooltipWidthInDeg = (theObj.ttWidth + theIcon.iconSize.width + 6) / mapWidth * longSpan;
+	if (pt.lng() + tooltipWidthInDeg > bounds.getNorthEast().lng() && permitLeft)
 		rightSide = false;
 	if (rightSide)
 	{
 		ttPos.y -= Math.floor(theObj.ttHeight/2);
-		ttPos.x += theObj.icon.iconSize.width;
+		ttPos.x += (theIcon.iconSize.width - theIcon.iconAnchor.x) + gap;
+
 	}
 	else
 	{
 		ttPos.y -= Math.floor(theObj.ttHeight/2);
-		ttPos.x -= (theObj.icon.iconSize.width + theObj.ttWidth);
+		ttPos.x -= (theIcon.iconAnchor.x + theObj.ttWidth) + gap;
 	}
 	theObj.ttLeft = ttPos.x;
 	theObj.ttTop  = ttPos.y;
@@ -557,15 +938,6 @@ function setTTPosition(theObj) {
 	}
 }
 
-function getClientWidth()
-{
-	if (self.innerWidth)
-		return self.innerWidth;
-	else if (document.documentElement && document.documentElement.clientWidth)
-		return document.documentElement.clientWidth;
-	else if (document.body)
-		return document.body.clientWidth;
-}
 
 function makeInterface(a) {
 	var b = a || window;
