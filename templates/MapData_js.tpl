@@ -45,18 +45,29 @@ BitMap.MapData.push({ldelim}
 		{rdelim},
 	{/section}{/if}],
 		
-  Markers:[{if count($listcontent) > 0}{section name=listcontent_n loop=$listcontent}{if $listcontent[listcontent_n].lat != NULL}
-  {ldelim}
-		content_id:{$listcontent[listcontent_n].content_id},
-		content_type_guid:'{$listcontent[listcontent_n].format_guid}',
-		lat:{$listcontent[listcontent_n].lat},
-		lng:{$listcontent[listcontent_n].lng},
-		title:'{$listcontent[listcontent_n].title}',
-{*	description:'{$listcontent[listcontent_n].description}',*}
-		creator_real_name:'{$listcontent[listcontent_n].creator_real_name}',
-		display_url:'{$listcontent[listcontent_n].display_url}',
-		plot_on_load:true,
-		style_id:0
+  Markers:[{if count($listcontent) > 0}{section name=n loop=$listcontent}{if $listcontent[n].lat != NULL}
+  {ldelim}		
+		content_id:{$listcontent[n].content_id},
+		content_type_guid:'{$listcontent[n].content_type_guid}',
+		content_description:'{$listcontent[n].content_description}',
+		lat:{$listcontent[n].lat},
+		lng:{$listcontent[n].lng},
+		title:'{$listcontent[n].title}',
+{*	description:'{$listcontent[n].description}',  *}
+		created:{$listcontent[n].created},
+		last_modified:{$listcontent[n].last_modified},
+		modifier_real_name:'{$listcontent[n].modifier_real_name}',
+		modifier_user_id:{$listcontent[n].modifier_user_id},
+		creator_real_name:'{$listcontent[n].creator_real_name}',
+		creator_user_id:{$listcontent[n].creator_user_id},
+		display_url:'{$listcontent[n].display_url}',
+		hits:{if $listcontent[n].hits}{$listcontent[n].hits}{else}null{/if},
+		stars_rating_count:{if $listcontent[n].stars_rating_count}{$listcontent[n].stars_rating_count}{else}null{/if},
+		stars_rating:{if $listcontent[n].stars_rating}{$listcontent[n].stars_rating}{else}null{/if},
+		stars_pixels:{if $listcontent[n].stars_pixels}{$listcontent[n].stars_pixels}{else}null{/if},
+		stars_user_rating:{if $listcontent[n].stars_user_rating}{$listcontent[n].stars_user_rating}{else}null{/if},
+		stars_user_pixels:{if $listcontent[n].stars_user_pixels}{$listcontent[n].stars_user_pixels}{else}null{/if},
+		plot_on_load:true
 		{rdelim},
 	{/if}{/section}{elseif $serviceHash && $serviceHash.lat != NULL}
   {ldelim}

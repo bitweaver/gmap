@@ -179,6 +179,12 @@ BitMap.Map.prototype.SetMapType = function(){
     }
   }else{
     //insert check for maptype name in maptype array and set map to that
+    var count = this.maptypes.length;
+    for (n=0; n<count; n++){
+     if (this.maptypes[n].maptype_id == this.maptype){
+      this.map.setMapType(this.maptypes[n].name);
+     }
+    }
   }
 };
 
@@ -316,15 +322,15 @@ BitMap.Map.prototype.addMarker = function(i){
 	if (M.style_id == 0 || typeof( M.style_id ) == 'undefined' || M.style_id == null){
 	  this.defineGMarker(i, icon);
 	  if (o == true) {M.gmarker.openInfoWindowHtml( M.gmarker.my_html );};
-    }else{
+  }else{
   	 var s;
   	 var MarkerStyles = this.markerstyles; 
       for (var c=0; c<MarkerStyles.length; c++){
     	 if ( MarkerStyles[c].style_id == M.style_id ){
     		s = c;
     	 }
-  	  }
-  	 if ( MarkerStyles[s].marker_style_type == 0){
+     }
+     if ( MarkerStyles[s].marker_style_type == 0){
   		this.defineGxMarker(n, icon, s);
 			if (o == true) {M.gmarker.openInfoWindowHtml(M.gmarker.my_html);};
   	 }else if ( MarkerStyles[s].marker_style_type == 1){
@@ -354,50 +360,54 @@ BitMap.Map.prototype.defineGMarker = function(i, n){
   }
 	  	
   M.gmarker = new GMarker(p, {icon: myicon, title:mytitle});
-  
-  //@todo why is this here?
-  //M.gmarker.style_id = 0;
- 
-  var imgLink ="";
+
+  var mytitle = ["<h1 class='marker-title'>", M.title, "</h1>"].join("");
+  var desc = (M.content_description != '')?M.content_description+" ":'';
+  var stars = '';
+  if (typeof(document.getElementById('iwindow-stars')) != 'undefined' && M.stars_pixels != null){
+    var starsElm = document.getElementById('iwindow-stars').cloneNode(true);
+    var divs = starsElm.getElementsByTagName('div');
+    divs.item(0).id = null;
+    divs.item(1).style.width = M.stars_pixels + "px";
+    stars = starsElm.innerHTML;
+  }
+  var image = '';
   if (M.marker_type == 1){
 		var urlSrc = Marker.photo_url;
 		var pos = urlSrc.lastIndexOf('.');
 		var str_1 = urlSrc.substring(0, pos);
-		var str_2 = urlSrc.substring(pos, urlSrc.length); 
+		var str_2 = urlSrc.substring(pos, urlSrc.length);
 		var medUrl = str_1 + "_medium" + str_2;
-		//@todo add some better form of pathing to image
-		var imgLink = ["<p><a onClick=\"javascript: window.open('", urlSrc, "','", /*//@todo: PathToRoot here*/ "')\"><img src='", medUrl, "'></a></p>"].join("");
+		image = ["<p><a onClick=\"javascript: window.open('", urlSrc, "','", /* @todo: PathToRoot here */ "')\"><img src='", medUrl, "'></a></p>"].join("");
   }
+  var d = (new Date(M.created * 1000)).toString();  
+	var di = d.lastIndexOf('GMT');
+	var ds = d.substring(0, di-10);  
+  var creator = (M.creator_real_name != '')?["<div>", desc, "created by:", M.creator_real_name, " on:", ds, "</div>"].join(""):'';
+  var link = (M.display_url != '')?["<div><a href='", M.display_url, "'/>Permalink</a></div>"].join(""):'';
+  var data = ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';    
+  M.gmarker.my_html = ["<div style='white-space: nowrap;'>", mytitle, creator, link, stars, image, data, "</div>"].join("");
 
-  //@todo this needs to be better
-  var creator = (M.creator_real_name != '')?["Created by: ", M.creator_real_name].join(""):'';
-  var url = (M.display_url != '')?["<p>", "<a href='", M.display_url, "'/>view item</a>", "</p>"].join(""):'';
-  var data = [creator, url].join("");
-  if ( typeof(M.parsed_data)!='undefined' ){
-    data = [data, "<p>", M.parsed_data, "</p>"].join("");
-  }  
-  M.gmarker.my_html = ["<div style='white-space: nowrap;'><h1 class='markertitle'>", M.title, "</h1>", imgLink, data, "</div>"].join("");
- 
   this.map.addOverlay(M.gmarker);
 }
 
 
 
 BitMap.Map.prototype.defineGxMarker = function(n, i, s){
-	var a = this.markers;
+	var M = this.markers[n];
 
-	var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
+  var point = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
 	var icon = null;
 	if (i != null){
 		icon = this.iconstyles[i].icon;
 	}
-	var mytip = "<div class='tip-"+this.markerstyles[s].name + "'>" + a[n].label_data + "</div>";
-  a[n].gmarker = new GxMarker(point, icon, mytip);
-  a[n].gmarker.marker_style_type = 0;
+	var mytip = "<div class='tip-"+this.markerstyles[s].name + "'>" + M.label_data + "</div>";
+  M.gmarker = new GxMarker(point, icon, mytip);
+  M.gmarker.marker_style_type = 0;
 
 	var imgLink ='';
-	if (a[n].marker_type == 1){
-		var urlSrc = a[n].photo_url;
+	if (M.marker_type == 1){
+		var urlSrc = M.photo_url;
 		var pos = urlSrc.lastIndexOf('.');
 		var str_1 = urlSrc.substring(0, pos);
 		var str_2 = urlSrc.substring(pos, urlSrc.length); 
@@ -405,30 +415,30 @@ BitMap.Map.prototype.defineGxMarker = function(n, i, s){
 		var imgLink = "<p><img src='"+medUrl+"'></p>"
 	}
 
-  a[n].gmarker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
-  this.map.addOverlay(a[n].gmarker);
+  M.gmarker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+M.title+"</h1>" + imgLink + "<p>"+M.parsed_data+"</p></div>";
+  this.map.addOverlay(M.gmarker);
 }
 
 
 
 BitMap.Map.prototype.definePdMarker = function(n, i, s){
-	var a = this.markers;
+	var M = this.markers[n];
 
 	//PdMarker Style
-  var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
+  var point = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
 	var icon = null;
 	if (i != null){
 		icon = this.iconstyles[i].icon;
 	}
-  a[n].gmarker = new PdMarker(point, icon);
-  a[n].gmarker.marker_style_type = 1;
-  a[n].gmarker.setTooltipClass( "tip-"+this.markerstyles[s].name );
-  a[n].gmarker.setDetailWinClass( "win-"+this.markerstyles[s].name );
-  a[n].gmarker.setTooltip( "<div>" + a[n].label_data + "</div>");
+  M.gmarker = new PdMarker(point, icon);
+  M.gmarker.marker_style_type = 1;
+  M.gmarker.setTooltipClass( "tip-"+this.markerstyles[s].name );
+  M.gmarker.setDetailWinClass( "win-"+this.markerstyles[s].name );
+  M.gmarker.setTooltip( "<div>" + M.label_data + "</div>");
 
 	var imgLink ='';
-	if (a[n].marker_type == 1){
-		var urlSrc = a[n].photo_url;
+	if (M.marker_type == 1){
+		var urlSrc = M.photo_url;
 		var pos = urlSrc.lastIndexOf('.');
 		var str_1 = urlSrc.substring(0, pos);
 		var str_2 = urlSrc.substring(pos, urlSrc.length); 
@@ -436,10 +446,10 @@ BitMap.Map.prototype.definePdMarker = function(n, i, s){
 		var imgLink = "<p><img src='"+medUrl+"'></p>"
 	}
 
-  a[n].gmarker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
-  a[n].gmarker.setDetailWinHTML( a[n].marker.my_html );
-  //rollover-icon: a[n].marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
-  this.map.addOverlay(a[n].gmarker);
+  M.gmarker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+M.title+"</h1>" + imgLink + "<p>"+M.parsed_data+"</p></div>";
+  M.gmarker.setDetailWinHTML( M.marker.my_html );
+  //rollover-icon: M.marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
+  this.map.addOverlay(M.gmarker);
 }
 
 

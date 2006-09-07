@@ -15,7 +15,7 @@ class BitGmap extends LibertyAttachable {
 		$this->mContentTypeGuid = BITGMAP_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGMAP_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGMAP_CONTENT_TYPE_GUID,
-			'content_description' => 'gmap package with bare essentials',
+			'content_description' => 'Google Map',
 			'handler_class' => 'BitGmap',
 			'handler_package' => 'gmap',
 			'handler_file' => 'BitGmap.php',
