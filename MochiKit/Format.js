@@ -1,6 +1,6 @@
 /***
 
-MochiKit.Format 1.1
+MochiKit.Format 1.3.1
 
 See <http://mochikit.com/> for documentation, downloads, license, etc.
 
@@ -21,7 +21,7 @@ if (typeof(MochiKit.Format) == 'undefined') {
 }
 
 MochiKit.Format.NAME = "MochiKit.Format";
-MochiKit.Format.VERSION = "1.1";
+MochiKit.Format.VERSION = "1.3.1";
 MochiKit.Format.__repr__ = function () {
     return "[" + this.NAME + " " + this.VERSION + "]";
 };
@@ -32,7 +32,7 @@ MochiKit.Format.toString = function () {
 MochiKit.Format._numberFormatter = function (placeholder, header, footer, locale, isPercent, precision, leadingZeros, separatorAt, trailingZeros) {
     return function (num) {
         num = parseFloat(num);
-        if (typeof(num) == "undefined" || num == null || isNaN(num)) {
+        if (typeof(num) == "undefined" || num === null || isNaN(num)) {
             return placeholder;
         }
         var curheader = header;
@@ -110,14 +110,28 @@ MochiKit.Format.numberFormatter = function (pattern, placeholder/* = "" */, loca
     var leadingZeros = whole.length - whole.replace(/0/g, "").length;
     var trailingZeros = frac.length - frac.replace(/0/g, "").length;
     var precision = frac.length;
-    return MochiKit.Format._numberFormatter(
+    var rval = MochiKit.Format._numberFormatter(
         placeholder, header, footer, locale, isPercent, precision,
         leadingZeros, separatorAt, trailingZeros
     );
+    var m = MochiKit.Base;
+    if (m) {
+        var fn = arguments.callee;
+        var args = m.concat(arguments);
+        rval.repr = function () {
+            return [
+                self.NAME,
+                "(",
+                map(m.repr, args).join(", "),
+                ")"
+            ].join("");
+        };
+    }
+    return rval;
 };
 
 MochiKit.Format.formatLocale = function (locale) {
-    if (typeof(locale) == "undefined" || locale == null) {
+    if (typeof(locale) == "undefined" || locale === null) {
         locale = "default";
     }
     if (typeof(locale) == "string") {
@@ -133,14 +147,6 @@ MochiKit.Format.formatLocale = function (locale) {
 };
 
 MochiKit.Format.twoDigitAverage = function (numerator, denominator) {
-    /***
-
-        Calculate an average from a numerator and a denominator and return
-        it as a string with two digits of precision (e.g. "1.23").
-
-        If the denominator is 0, "0" will be returned instead of NaN.
-
-    ***/
     if (denominator) {
         var res = numerator / denominator;
         if (!isNaN(res)) {
@@ -151,11 +157,6 @@ MochiKit.Format.twoDigitAverage = function (numerator, denominator) {
 };
 
 MochiKit.Format.twoDigitFloat = function (someFloat) {
-    /***
-    
-        Roughly equivalent to: sprintf("%.2f", someFloat)
-
-    ***/
     var sign = (someFloat < 0 ? '-' : '');
     var s = Math.floor(Math.abs(someFloat) * 100).toString();
     if (s == '0') {
@@ -224,11 +225,6 @@ MochiKit.Format.roundToFixed = function (aNumber, precision) {
 };
 
 MochiKit.Format.percentFormat = function (someFloat) {
-    /***
-
-        Roughly equivalent to: sprintf("%.2f%%", someFloat * 100)
-
-    ***/
     return MochiKit.Format.twoDigitFloat(100 * someFloat) + '%';
 };
 
@@ -246,9 +242,9 @@ MochiKit.Format.EXPORT = [
 ];
 
 MochiKit.Format.LOCALE = {
-    "en_US": {"separator": ",", "decimal": ".", "percent": "%"},
-    "de_DE": {"separator": ".", "decimal": ",", "percent": "%"},
-    "fr_FR": {"separator": " ", "decimal": ",", "percent": "%"},
+    en_US: {separator: ",", decimal: ".", percent: "%"},
+    de_DE: {separator: ".", decimal: ",", percent: "%"},
+    fr_FR: {separator: " ", decimal: ",", percent: "%"},
     "default": "en_US"
 };
 
@@ -261,8 +257,16 @@ MochiKit.Format.EXPORT_TAGS = {
 MochiKit.Format.__new__ = function () {
     // MochiKit.Base.nameFunctions(this);
     var base = this.NAME + ".";
-    for (var k in this) {
-        var o = this[k];
+    var k, v, o;
+    for (k in this.LOCALE) {
+        o = this.LOCALE[k];
+        if (typeof(o) == "object") {
+            o.repr = function () { return this.NAME; };
+            o.NAME = base + "LOCALE." + k;
+        }
+    }
+    for (k in this) {
+        o = this[k];
         if (typeof(o) == 'function' && typeof(o.NAME) == 'undefined') {
             try {
                 o.NAME = base + k;
@@ -275,13 +279,16 @@ MochiKit.Format.__new__ = function () {
 
 MochiKit.Format.__new__();
 
-//MochiKit.Base._exportSymbols(this, MochiKit.Format);
-(function (globals, module) {
-    if ((typeof(JSAN) == 'undefined' && typeof(dojo) == 'undefined')
-        || (typeof(MochiKit.__compat__) == 'boolean' && MochiKit.__compat__)) {
-        var all = module.EXPORT_TAGS[":all"];
-        for (var i = 0; i < all.length; i++) {
-            globals[all[i]] = module[all[i]]; 
-        }
-    }   
-})(this, MochiKit.Format);  
+if (typeof(MochiKit.Base) != "undefined") {
+    MochiKit.Base._exportSymbols(this, MochiKit.Format);
+} else {
+    (function (globals, module) {
+        if ((typeof(JSAN) == 'undefined' && typeof(dojo) == 'undefined')
+            || (typeof(MochiKit.__compat__) == 'boolean' && MochiKit.__compat__)) {
+            var all = module.EXPORT_TAGS[":all"];
+            for (var i = 0; i < all.length; i++) {
+                globals[all[i]] = module[all[i]]; 
+            }
+        }   
+    })(this, MochiKit.Format);  
+}
