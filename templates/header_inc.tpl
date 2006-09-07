@@ -1,26 +1,21 @@
 {if $gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap') }
- {if $geo_edit_serv  }
+ {if $geo_edit_serv || $view_map || $map_list || $edit_map }
 		{include file="bitpackage:gmap/header_base.tpl"}
  {/if}
  {if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
 	{if $view_map }
-		{include file="bitpackage:gmap/header_base.tpl"}
-	{/if}
-
-	{if $map_list }
-		{include file="bitpackage:gmap/header_base.tpl"}
+		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}
 
 	{if $edit_map }
-		{include file="bitpackage:gmap/header_base.tpl"}
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Base.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Iter.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Async.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DOM.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Edit.js" type="text/javascript"></script>
 
-	  <style type="text/css">
-     {literal}
+	<style type="text/css">
+       {literal}
 		  td {vertical-align:top; padding:0px;}
 		  th {text-align:left;}
 		  .map-op {margin-right:160px;}
@@ -43,16 +38,16 @@
   		table {border-collapse:collapse;}
 	  	table.data td {padding:.5em;}
 	   {/literal}
-	  </style>
-	{/if}
+   </style>
+   {/if}
 
-	<style type="text/css">
+   <style type="text/css">
 	  {if count($gContent->mMapMarkerStyles) > 0}
 		  {section name=markerstyledata loop=$gContent->mMapMarkerStyles}
 			  .tip-{$gContent->mMapMarkerStyles[markerstyledata].name} {ldelim}{$gContent->mMapMarkerStyles[markerstyledata].label_hover_styles}{rdelim}
 			  .win-{$gContent->mMapMarkerStyles[markerstyledata].name} {ldelim}{$gContent->mMapMarkerStyles[markerstyledata].window_styles}{rdelim}
 		  {/section}
 	  {/if}
-	</style>
+   </style>
  {/if}
 {/if}

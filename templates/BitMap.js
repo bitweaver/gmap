@@ -297,88 +297,88 @@ BitMap.Map.prototype.defineGIcon = function(i){
 
 
 BitMap.Map.prototype.addMarker = function(i){
-	if (this.markers[i]!= null && this.markers[i].plot_on_load == true){
-    var Marker = this.markers[i];
-    if (Marker.icon_id == null){
-      var p = new GLatLng(parseFloat(Marker.lat), parseFloat(Marker.lng));
-      Marker.gmarker = new GMarker(p);
-      Marker.gmarker.my_html = Marker.title;
-      this.map.addOverlay(Marker.gmarker);
-    }
+  if (this.markers[i]!= null && this.markers[i].plot_on_load == true){
+    var M = this.markers[i];
     
-    //a variable that we can use to set a marker to open on initialization
-    //not implemented! but script will break if removed
-    /*
+    //a variable to set a marker to open on initialization
+    //not implemented! script will break if removed    
     var o = false;
     
     var icon = null;
-    if (Marker.icon_id != 0){
-	   var IconStyles = this.iconstyles;
-		  for (var b=0; b<IconStyles.length; b++){
-			 if ( IconStyles[b].icon_id == Marker.icon_id ){
+    if (M.icon_id != 0 && M.icon_id != null){
+	   var is = this.iconstyles;
+		  for (var b=0; b<is.length; b++){
+			 if ( is[b].icon_id == M.icon_id ){
 			   icon = b;
 			 }
 		  }
     }
-	  if (Marker.style_id == 0){
-		  this.defineGMarker(n, icon);
-		  if (o == true) {Marker.gmarker.openInfoWindowHtml( Marker.gmarker.my_html );};
+	if (M.style_id == 0 || typeof( M.style_id ) == 'undefined' || M.style_id == null){
+	  this.defineGMarker(i, icon);
+	  if (o == true) {M.gmarker.openInfoWindowHtml( M.gmarker.my_html );};
     }else{
   	 var s;
   	 var MarkerStyles = this.markerstyles; 
       for (var c=0; c<MarkerStyles.length; c++){
-    	 if ( MarkerStyles[c].style_id == Marker.style_id ){
+    	 if ( MarkerStyles[c].style_id == M.style_id ){
     		s = c;
     	 }
   	  }
   	 if ( MarkerStyles[s].marker_style_type == 0){
   		this.defineGxMarker(n, icon, s);
-			if (o == true) {Marker.gmarker.openInfoWindowHtml(Marker.gmarker.my_html);};
+			if (o == true) {M.gmarker.openInfoWindowHtml(M.gmarker.my_html);};
   	 }else if ( MarkerStyles[s].marker_style_type == 1){
   		this.definePdMarker(n, icon, s);
 			if (o == true) {
-        	Marker.gmarker.showTooltip();
-        	Marker.gmarker.hideTooltip();
-				  Marker.gmarker.showDetailWin();
+        	M.gmarker.showTooltip();
+        	M.gmarker.hideTooltip();
+			  M.gmarker.showDetailWin();
 			};
   	 }
 	 }
-  */
   }
 };
 
 
 
-BitMap.Map.prototype.defineGMarker = function(n, i){
-	var a = this.markers;
-
-  var point = new GPoint(parseFloat(a[n].lon), parseFloat(a[n].lat));
-	var icon = null;
-	if (i != null){
-		icon = this.iconstyles[i].icon;
-	}
-  a[n].marker = new GMarker(point, icon);
-  a[n].marker.style_id = 0;
-
-	var imgLink ='';
-	if (a[n].marker_type == 1){
-		var urlSrc = a[n].photo_url;
+BitMap.Map.prototype.defineGMarker = function(i, n){
+  var M = this.markers[i];
+  var p = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
+  var myicon = (n != null)?this.iconstyles[n].icon:null;
+  var mytitle;
+  //add marker roll over
+  if (typeof(M.label_data) != 'undefined' && M.label_date != null){
+    mytitle = M.label_data;
+  }else if (typeof(M.title) != 'undefined' && M.title != null){
+    mytitle = M.title;
+  }
+	  	
+  M.gmarker = new GMarker(p, {icon: myicon, title:mytitle});
+  
+  //@todo why is this here?
+  //M.gmarker.style_id = 0;
+ 
+  var imgLink ="";
+  if (M.marker_type == 1){
+		var urlSrc = Marker.photo_url;
 		var pos = urlSrc.lastIndexOf('.');
 		var str_1 = urlSrc.substring(0, pos);
 		var str_2 = urlSrc.substring(pos, urlSrc.length); 
 		var medUrl = str_1 + "_medium" + str_2;
-		var imgLink = "<p><a onClick=\"javascript: window.open('"+urlSrc+"','TodoADDROOTHERE')\"><img src='"+medUrl+"'></a></p>"
-	}
-
-  a[n].marker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+a[n].title+"</h1>" + imgLink + "<p>"+a[n].parsed_data+"</p></div>";
-  this.map.addOverlay(a[n].marker);
-  //add the marker label if it exists
-  if (typeof(a[n].label_data) != 'undefined'){
-  	var topElement = a[n].marker.iconImage;
-    if (a[n].marker.transparentIcon) {topElement = a[n].marker.transparentIcon;}
-    if (a[n].marker.imageMap) {topElement = a[n].marker.imageMap;}
-    topElement.setAttribute( "title" , a[n].label_data );
+		//@todo add some better form of pathing to image
+		var imgLink = ["<p><a onClick=\"javascript: window.open('", urlSrc, "','", /*//@todo: PathToRoot here*/ "')\"><img src='", medUrl, "'></a></p>"].join("");
   }
+
+  //@todo this needs to be better
+  var creator = (M.creator_real_name != '')?["Created by: ", M.creator_real_name].join(""):'';
+  var url = (M.display_url != '')?["<p>", "<a href='", M.display_url, "'/>view item</a>", "</p>"].join(""):'';
+  var data = [creator, url].join("");
+  if ( typeof(M.parsed_data)!='undefined' ){
+    data = [data, "<p>", M.parsed_data, "</p>"].join("");
+  }  
+  M.gmarker.my_html = ["<div style='white-space: nowrap;'><h1 class='markertitle'>", M.title, "</h1>", imgLink, data, "</div>"].join("");
+ 
+  this.map.addOverlay(M.gmarker);
 }
 
 
