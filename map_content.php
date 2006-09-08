@@ -11,8 +11,11 @@ require_once( LIBERTY_PKG_PATH.'LibertyContent.php' );
 global $gLibertySystem;
 
 if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap')){
+  //forces return of $contentList from get_content_list_inc.php
   $_REQUEST['output'] = 'raw';
-  include_once( LIBERTY_PKG_PATH.'get_content_list_inc.php' );
+  //forces only geo located data
+  $_REQUEST['geonotnull'] = true;
+  include_once( LIBERTY_PKG_PATH.'list_content.php' );
   $gBitSmarty->assign_by_ref('listcontent', $contentList["data"]);
 
   //php is annoying, so 0 would be interpretted as null and not trigger the tpl this relates too.  
