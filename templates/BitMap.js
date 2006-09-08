@@ -227,17 +227,19 @@ BitMap.Map.prototype.RequestContent = function(f){
 BitMap.Map.prototype.ReceiveContent = function(rslt){
   //@todo need a way to update marker list, or clear it, or whatever depending on results requested
   if (rslt.Status.code == 200){
+    this.map.clearOverlays();
     this.markers = rslt.Content;
     //annoying hack
   	for (n=0; n<this.markers.length; n++){this.markers[n].plot_on_load = true};
   	var ref = this;
   	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
   }
+  this.clearSidepanel();
   this.attachSideMarkers();
 };
 
 BitMap.Map.prototype.RequestFailure = function(err){
- alert(err)
+ alert(err);
   //add something here
 }
 
@@ -389,6 +391,11 @@ BitMap.Map.prototype.defineGMarker = function(i, n){
 	var di = d.lastIndexOf('GMT');
 	var ds = d.substring(0, di-10);  
   var creator = (M.creator_real_name != '')?["<div>", desc, "created by:", M.creator_real_name, " on:", ds, "</div>"].join(""):'';
+  M.created_date = ds;
+  var u = (new Date(M.last_modified * 1000)).toString();  
+	var ui = d.lastIndexOf('GMT');
+	var us = d.substring(0, di-10);  
+  M.modified_date = us;
   var link = (M.display_url != '')?["<div><a href='", M.display_url, "'/>Permalink</a></div>"].join(""):'';
   var data = ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';    
   M.gmarker.my_html = ["<div style='white-space: nowrap;'>", mytitle, creator, link, stars, image, data, "</div>"].join("");
@@ -672,7 +679,7 @@ BitMap.Map.prototype.attachSideMarkers = function(){
 	var s = document.getElementById('gmap-sidepanel');
 	//go through all markers and add marker to side list
 	var count = this.markers.length;
-	if (count > 1){
+	if (count > 0){
    document.getElementById('gmap-map').style.marginRight = '200px';
 	 BitMap.show('gmap-sidepanel');
   }
@@ -680,15 +687,29 @@ BitMap.Map.prototype.attachSideMarkers = function(){
 		//make the link
 		var theNewLink = document.createElement('a');
 		theNewLink.href = "javascript: BitMap.MapData[0].Map.markers["+i+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+i+"].gmarker.my_html);";
-		theNewLink.innerHTML = this.markers[i].title;		
+		theNewLink.innerHTML = this.markers[i].title;
+		
+		var theNewText = document.createElement('span');
+		theNewText.innerHTML =  (this.markers[i].modified_date != null)?this.markers[i].modified_date:" no date avialable";
+		theNewText.innerHTML += (this.markers[i].stars_rating != null)?[" rating: ", this.markers[i].stars_rating].join(""):" not rated";
+		
 		//make a br
 		var BR = document.createElement('br');
 		//add link and space to container
 		s.appendChild(theNewLink);
+		s.appendChild(theNewText);
 		s.appendChild(BR);
 	}
 };
 
+
+BitMap.Map.prototype.clearSidepanel = function(){
+	var s = document.getElementById('gmap-sidepanel');
+	var count = s.childNodes.length;
+	for (n=count; n>1; n--){
+	 s.removeChild(s.childNodes[n-1]);
+  }
+}
 
 /*@todo Merge this function with the one above
  */ 

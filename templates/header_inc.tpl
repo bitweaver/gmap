@@ -46,7 +46,7 @@
 
    <style type="text/css">
     {literal}
-      #gmap-sidepanel {float:right; overflow:auto;}
+      #gmap-sidepanel {float:right; background-color:#ccf; /*this is causing problems: overflow:auto;*/}
       .hide {display:none;}
     {/literal}
 	  {if count($gContent->mMapMarkerStyles) > 0}
