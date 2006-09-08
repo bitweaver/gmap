@@ -217,24 +217,29 @@ BitMap.Map.prototype.addLatLngCapture = function(){
 };
 
 
-BitMap.Map.prototype.RequestContent = function(){
-  //parse form
-  //make ajax request
-  //initiate loading graphic
-  //set callback ReceiveFaves
-  //else report error
-  //clear loading graphic
+BitMap.Map.prototype.RequestContent = function(f){
+  var str = BitMap.BIT_ROOT_URL + "liberty/list_content.php?" + queryString(f);
+  var d = loadJSONDoc(str);
+  d.addCallbacks(bind(this.ReceiveContent, this), bind(this.RequestFailure, this));
 };
 
 
-BitMap.Map.prototype.ReceiveContent = function(){
-  //add data to marker array
-  //create markers
-    //add to map
-    //call UpdateMarkerList
-  //display favorites list
+BitMap.Map.prototype.ReceiveContent = function(rslt){
+  //@todo need a way to update marker list, or clear it, or whatever depending on results requested
+  if (rslt.Status.code == 200){
+    this.markers = rslt.Content;
+    //annoying hack
+  	for (n=0; n<this.markers.length; n++){this.markers[n].plot_on_load = true};
+  	var ref = this;
+  	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
+  }
+  this.attachSideMarkers();
 };
 
+BitMap.Map.prototype.RequestFailure = function(err){
+ alert(err)
+  //add something here
+}
 
 BitMap.Map.prototype.UpdateMarkerList = function(){
   //add to general side panel list
@@ -664,20 +669,23 @@ BitMap.Map.prototype.defineXPolygon = function(n, s, p){
 //make side panel of markers
 //works only with one map on a page
 BitMap.Map.prototype.attachSideMarkers = function(){
-	//unhide side list
-	document.getElementById('mapsidepanel').className = 'mapsidepanel';
+	var s = document.getElementById('gmap-sidepanel');
 	//go through all markers and add marker to side list
-	for ( var i=0; i<this.markers.length; i++ ){
+	var count = this.markers.length;
+	if (count > 1){
+   document.getElementById('gmap-map').style.marginRight = '200px';
+	 BitMap.show('gmap-sidepanel');
+  }
+	for ( var i=0; i<count; i++ ){
 		//make the link
 		var theNewLink = document.createElement('a');
 		theNewLink.href = "javascript: BitMap.MapData[0].Map.markers["+i+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+i+"].gmarker.my_html);";
-		theNewLink.innerHTML = this.markers[i].title;
-		
+		theNewLink.innerHTML = this.markers[i].title;		
 		//make a br
 		var BR = document.createElement('br');
 		//add link and space to container
-		document.getElementById('mapsidepanel').appendChild(theNewLink);
-		document.getElementById('mapsidepanel').appendChild(BR);
+		s.appendChild(theNewLink);
+		s.appendChild(BR);
 	}
 };
 

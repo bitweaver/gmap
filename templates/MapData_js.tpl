@@ -1,3 +1,5 @@
+BitMap.BIT_ROOT_URL = '{$smarty.const.BIT_ROOT_URL}';
+
 BitMap.MapData.push({ldelim}
   browser:"{$browserInfo.browser}",
   {if !$geo_edit_serv}
