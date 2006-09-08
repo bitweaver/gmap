@@ -218,8 +218,14 @@ BitMap.Map.prototype.addLatLngCapture = function(){
 
 
 BitMap.Map.prototype.RequestContent = function(f){
-  var str = BitMap.BIT_ROOT_URL + "liberty/list_content.php?" + queryString(f);
+ var up_lat = this.map.getBounds().getNorthEast().lat();
+ var right_lng = this.map.getBounds().getNorthEast().lng();
+ var down_lat = this.map.getBounds().getSouthWest().lat();
+ var left_lng = this.map.getBounds().getSouthWest().lng();
+
+  var str = [BitMap.BIT_ROOT_URL, "liberty/list_content.php?", queryString(f), "&up_lat=",up_lat,"&right_lng=",right_lng,"&down_lat=",down_lat,"&left_lng=",left_lng].join("");
   var d = loadJSONDoc(str);
+  
   d.addCallbacks(bind(this.ReceiveContent, this), bind(this.RequestFailure, this));
 };
 
@@ -233,9 +239,12 @@ BitMap.Map.prototype.ReceiveContent = function(rslt){
   	for (n=0; n<this.markers.length; n++){this.markers[n].plot_on_load = true};
   	var ref = this;
   	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
+    this.clearSidepanel();
+    this.attachSideMarkers();
   }
-  this.clearSidepanel();
-  this.attachSideMarkers();
+  if (rslt.Status.code == 204){
+   alert("sorry we couldn't find anything matching that criteria");
+  }
 };
 
 BitMap.Map.prototype.RequestFailure = function(err){
