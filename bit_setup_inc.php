@@ -5,6 +5,7 @@ $registerHash = array(
 	'package_name' => 'gmap',
 	'package_path' => dirname( __FILE__ ).'/',
 	'service' => LIBERTY_SERVICE_MAPS,	
+	'homeable' => TRUE,
 );
 $gBitSystem->registerPackage( $registerHash );
 
