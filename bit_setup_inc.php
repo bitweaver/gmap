@@ -12,7 +12,12 @@ $gBitSystem->registerPackage( $registerHash );
 if( $gBitSystem->isPackageActive( 'gmap' ) ) {
 	require_once( GMAP_PKG_PATH.'BitGmap.php' );
 
-	$gBitSystem->registerAppMenu( GMAP_PKG_NAME, ucfirst( GMAP_PKG_DIR ), GMAP_PKG_URL.'index.php', 'bitpackage:gmap/menu_gmap.tpl', GMAP_PKG_NAME );
+	$menuHash = array(
+		'package_name'  => GMAP_PKG_NAME,
+		'index_url'     => GMAP_PKG_URL.'index.php',
+		'menu_template' => 'bitpackage:gmap/menu_gmap.tpl',
+	);
+	$gBitSystem->registerAppMenu( $menuHash );
 
 	$gLibertySystem->registerService( LIBERTY_SERVICE_MAPS, GMAP_PKG_NAME, array(
 		'content_edit_function'  => 'gmap_content_edit',
