@@ -795,29 +795,12 @@ class BitGmap extends LibertyAttachable {
 		if( !empty( $pParamHash['map_desc'] ) ) {
 			$pParamHash['gmap_store']['description'] = $pParamHash['map_desc'];
 		}
-		
 		if( isset( $pParamHash['map_w'] ) && is_numeric( $pParamHash['map_w'] ) ) {
 			$pParamHash['gmap_store']['width'] = $pParamHash['map_w'];
 		}
-
 		if( !empty( $pParamHash['map_h'] ) && is_numeric( $pParamHash['map_h'] ) ) {
 			$pParamHash['gmap_store']['height'] = $pParamHash['map_h'];
-		}
-
-/*
-		//@todo lat/lng values now stored via GeoPackage - should these values be part of this hash?
-		if( isset( $pParamHash['map_lat'] ) && is_numeric( $pParamHash['map_lat'] ) ) {
-			$pParamHash['gmap_store']['lat'] = $pParamHash['map_lat'];
-		} else {
-			$this->mError['map_lat'] = tra( 'You must enter a latitude.' );
-		}
-		if( isset( $pParamHash['map_lng'] ) && is_numeric( $pParamHash['map_lng'] ) ) {
-			$pParamHash['gmap_store']['lng'] = $pParamHash['map_lng'];
-		} else {
-			$this->mError['map_lng'] = tra( 'You must enter a longitude.' );
-		}
-*/
-
+		}		
 		if( isset( $pParamHash['map_z'] ) && is_numeric( $pParamHash['map_z'] ) ) {
 			$pParamHash['gmap_store']['zoom'] = $pParamHash['map_z'];
 		}

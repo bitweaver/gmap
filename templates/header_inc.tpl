@@ -4,23 +4,33 @@
  {/if}
  {if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
 	{if $view_map }
+		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}
 	{if $map_list }
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Base.js" type="text/javascript"></script>
-  	<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Iter.js" type="text/javascript"></script>
+  		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Iter.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Async.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DOM.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DateTime.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}templates/List.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}
 	{if $edit_map }
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Base.js" type="text/javascript"></script>
-  	<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Iter.js" type="text/javascript"></script>
+  	    <script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Iter.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Async.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DOM.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Edit.js" type="text/javascript"></script>
 
 	<style type="text/css">
-       {literal}
+		{if $map_list }
+		{literal}
+		.gmap-tooltip {background:pink; padding:4px 6px; white-space: nowrap; border:#333 solid 1px;}
+		{/literal}
+		{/if}
+    {literal}
 		  td {vertical-align:top; padding:0px;}
 		  th {text-align:left;}
 		  .map-op {margin-right:160px;}
@@ -46,7 +56,7 @@
 
    <style type="text/css">
     {literal}
-      #gmap-sidepanel {float:right; background-color:#ccf; /*this is causing problems: overflow:auto;*/}
+      #gmap-sidepanel {float:right; background-color:#ccf; width:300px; /*this is causing problems: overflow:auto;*/}
       .hide {display:none;}
     {/literal}
 	  {if count($gContent->mMapMarkerStyles) > 0}

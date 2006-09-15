@@ -1,28 +1,29 @@
 /*
- GxMarker version 1.2
+ GxMarker version 2.0
 
  SYNOPSIS
-    This version is compatible with Google Maps API Version 2
+    This version is compatible only with Google Maps API Version 2
 
-    A more full-featured marker that supports tooltips and hover events.  The
-    first iteration just supports triggering of mouse over events, and tooltips.
+    GxMarker is merely an extended marker that allows styled tooltip events.
    
     To setup a tooltip, pass in a third parameter (after the icon) to the
     GxMarker class:
-        var marker = new GxMarker( new GPoint(lat,lng), icon, "My Tooltip" );
+        var marker = new GxMarker(new GPoint(lat,lng),icon,"My Tooltip",?opts?);
         map.addOverlay(marker);
-
     Or:
         var marker = new GxMarker( new GPoint(lat,lng) );
-        marker.setTooltip("My Tooltip");
+        marker.setTooltip("My Tooltip", ?opts?);
         map.addOverlay(marker);
 
-    As of 1.1, changes to setTooltip() should work after the initial invocation
+    The opts should be a hash (var opts = { "field1": "value" }) that contains
+    the configuration for the marker.  This allows a user to specify the
+    offset, a "isStatic" boolean flag, and an alternative className to use
+    intead of the default "markerTooltip"
 
-    Please refer to http://code.toeat.com/package/gxmarker for additional
-    documentation.
-    
+    (This is a complete, 100% rewrite of GxMarker Version 1)
+
     TESTED PLATFORMS:
+        Google Maps API V2 with:
         Linux: Firefox
         Windows: Firefox, IE6
         Mac OS X (Panther): Safari
@@ -31,160 +32,147 @@
     and it does not work for you, I recommend you submit a patch.  This software
     is licensed under the GNU Lesser General Public License (LGPL):
     the full text at: http://opensource.org/licenses/lgpl-license.php
-	
-	Update: 04/07/06 - modified to load with API v2.44+ of the Google Maps API
-	Modified by Robert Aspinall - raspinall (AT) gmail (dot) com
 */
 
-function GxMarkerNamespace() {
+var __singleLabel;
+var __singleLabelRefCount = 0;
 
-var n4=(document.layers);
-var n6=(document.getElementById&&!document.all);
-var ie=(document.all);
-var o6=(navigator.appName.indexOf("Opera") != -1);
-var safari=(navigator.userAgent.indexOf("Safari") != -1);
-var currentSpan = new GBounds();
+function GxLabel( content, opts ) {
+    if ( typeof opts != "object" ) throw "Invalid GxLabel configuration";
 
-function setCursor( container, cursor ) {
-    try {
-        container.style.cursor = cursor;
-    }
-    catch ( c ) {
-        if ( cursor == "pointer" )
-            setCursor("hand");
-    }
-};
+    this.content = content;
 
-function GxMarker( a, b, tooltip ) {
-    this.inheritFrom = GMarker;
-    this.inheritFrom(a,b);
-    if ( !currentSpan.minX || a.x < currentSpan.minX ) currentSpan.minX = a.x;
-    if ( !currentSpan.maxX || a.x > currentSpan.maxX ) currentSpan.maxX = a.x;
-    if ( !currentSpan.minY || a.y < currentSpan.minY ) currentSpan.minY = a.y;
-    if ( !currentSpan.maxY || a.y > currentSpan.maxY ) currentSpan.maxY = a.y;
-    if ( typeof tooltip != "undefined" ) {
-        this.setTooltip( tooltip );
+    if ( opts.offset && typeof opts.offset.x != "undefined" ) 
+        this.offset = opts.offset
+    else
+        this.offset = new GSize(0,0);
+
+    this.className = opts.className || "markerTooltip";
+    if ( opts.marker && typeof opts.marker.getPoint != "undefined" ) {
+        this.marker = opts.marker;
+        this.anchor = opts.marker.getPoint();
+        if ( opts.isStatic ) {
+            this.isStatic = true;
+        } else {
+            __singleLabelRefCount++;
+
+            GEvent.addListener(this.marker, "mouseover",
+                this.createSingletonClosure(this.show, this.marker, this.offset, this.content));
+            GEvent.addListener(this.marker, "mouseout",
+                this.createSingletonClosure(this.hide, this.marker, this.offset, this.content));
+            if ( !__singleLabel )
+                __singleLabel = this;
+            return __singleLabel;
+        }
     }
+    else if ( opts.anchor && typeof opts.anchor.lat != "undefined" ) {
+        this.anchor = opts.anchor
+    }
+
+    if ( opts.pane ) this.pane = opts.pane;
+    if ( !this.anchor ) throw "Invalid label configuration: no anchor point";
 }
 
-GxMarker.prototype = new GMarker(new GLatLng(1, 1));
+GxLabel.prototype = new GOverlay();
 
-GxMarker.prototype.setTooltip = function( string ) {
-    this.removeTooltip();
-    this.tooltip = new Object();
-    this.tooltip.opacity  = 70;
-    this.tooltip.contents = string;
-};
+GxLabel.prototype.initialize = function(map) {
+    var t = this;
+    if ( __singleLabel && !this.isStatic )
+        t = __singleLabel;
+    t.map = map;
+    t.pane = map.getPane(t.pane || G_MAP_FLOAT_SHADOW_PANE) ||
+        map.getPane(G_MAP_FLOAT_SHADOW_PANE);
+    if ( !t.container ) {
+        t.container = document.createElement("div");
+        t.container.className = t.className;
+        t.container.style.position = "absolute";
+        t.setContent(t.content);
 
-GxMarker.prototype.initialize = function( a ) {
-    try {
-        GMarker.prototype.initialize.call(this, a);
-        // Setup the mouse over/out events
-		GEvent.bind(this, "mouseover", this, this.onMouseOver);
-		GEvent.bind(this, "mouseout", this, this.onMouseOut);
-    } catch(e) {
-		alert(e);
-    }
-}
-
-GxMarker.prototype.setCursor = function( cursor ) {
-    var c = this.iconImage;
-    // Use the image map for Firefox/Mozilla browsers
-    if ( n6 && this.icon.imageMap && !safari) {
-        c = this.imageMap;
-    }
-    // If we have a transparent icon, use that instead of the main image
-    else if ( this.transparentIcon && typeof this.transparentIcon != "undefined" ) {
-        c = this.transparentIcon;
+        t.pane.appendChild(t.container);
     }
 }
 
-GxMarker.prototype.remove = function( a ) {
-    GMarker.prototype.remove.call(this);
-    this.removeTooltip();
-}
-
-GxMarker.prototype.removeTooltip = function() {
-    if ( this.tooltipObject ) {
-        this.map.div.removeChild(this.tooltipObject);
-        this.tooltipObject = null;
+GxLabel.prototype.setContent = function(content) {
+    var t = this;
+    if ( __singleLabel && !this.isStatic )
+        t = __singleLabel;
+    if ( content ) {
+        t.content = content;
+        if ( t.container )
+            t.container.innerHTML = t.content;
     }
 }
 
-GxMarker.prototype.onInfoWindowOpen = function() {
-    this.hideTooltip();
-    GMarker.prototype.onInfoWindowOpen.call(this);
+GxLabel.prototype.setAnchor = function(anchor) {
+
 }
 
-GxMarker.prototype.onMouseOver = function() {
-    this.showTooltip();
-    GEvent.trigger(this, "mouseover");
-};
+GxLabel.prototype.remove = function() {
+    if ( this.isStatic || --__singleLabelRefCount <= 0 )
+        this.container.parentNode.removeChild(this.container);
+}
 
-GxMarker.prototype.onMouseOut = function() {
-    this.hideTooltip();
-    GEvent.trigger(this, "mouseout");
-};
+GxLabel.prototype.copy = function() {
+}
 
-GxMarker.prototype.showTooltip = function() {
-    if ( this.tooltip ) {
-        if ( !this.tooltipObject ) {
-            var opacity = this.tooltip.opacity / 100;
-            this.tooltipObject = document.createElement("div");
-            this.tooltipObject.style.display    = "none";
-            this.tooltipObject.style.position   = "absolute";
-            this.tooltipObject.style.background = "#fff";
-            this.tooltipObject.style.padding    = "0";
-            this.tooltipObject.style.margin     = "0";
-            this.tooltipObject.style.MozOpacity = opacity;
-            this.tooltipObject.style.filter     = "alpha(opacity=" + this.tooltip.opacity + ")";
-            this.tooltipObject.style.opacity    = opacity;
-            this.tooltipObject.style.zIndex     = 50000;
-            this.tooltipObject.innerHTML        = "<div class=\"markerTooltip\">" + this.tooltip.contents + "</div>";
-            map.getPane(G_MAP_MARKER_PANE).appendChild(this.tooltipObject);
-		}
+GxLabel.prototype.redraw = function(force) {
+    var t = this;
+    if ( __singleLabel && !this.isStatic )
+        t = __singleLabel;
+    var p = t.anchor;
+    var o = t.offset || new GSize(0,0);
+    var pix = t.map.fromLatLngToDivPixel(t.anchor);
+    t.container.style.left = ( pix.x + o.width ) + "px";
+    t.container.style.top  = ( pix.y + o.height ) + "px";
+}
 
-        var c = map.fromLatLngToDivPixel(new GLatLng(this.getPoint().y, this.getPoint().x));
-		try {
-        	this.tooltipObject.style.top  = c.y - ( this.getIcon().iconAnchor.y + 5 ) + "px";
-        	this.tooltipObject.style.left = c.x + ( this.getIcon().iconSize.width - this.getIcon().iconAnchor.x + 5 ) + "px";
-        	this.tooltipObject.style.display = "block";
-		} catch(e) {
-			alert(e);
-		}
+GxLabel.prototype.createSingletonClosure = function(fn, m, o, c) {
+    var _t = this; var obj = fn;
+    var _m = m; var _o = o; var _c = c;
+    m = null; fn = null; o = null; c = null;
+    return function() {
+        _t.setContent(_c);
+        obj.apply(_t, [ _m.getPoint(), _o ] );
+    };
+}
+
+GxLabel.prototype.show = function(point, offset) {
+try {
+    var t = this;
+    if ( __singleLabel && !this.isStatic )
+        t = __singleLabel;
+    var p = point || t.anchor;
+    var o = offset || t.offset || new GSize(0,0);
+    if ( p && p.lat ) {
+        t.anchor = p; t.offset = o;
+        var pix = t.map.fromLatLngToDivPixel(p);
+        t.container.style.left = ( pix.x + o.width ) + "px";
+        t.container.style.top  = ( pix.y + o.height ) + "px";
+        t.container.style.display = "";
     }
+  } catch(e) { alert('error:GxLabel.show'); }
 }
 
-GxMarker.prototype.hideTooltip = function() {
-    if ( this.tooltipObject ) {
-        this.tooltipObject.style.display = "none";
+/* Pointless Params! */
+GxLabel.prototype.hide = function(point, offset) {
+    var t = this;
+    if ( __singleLabel && !this.isStatic )
+        t = __singleLabel;
+    t.container.style.display = "none";
+}
+
+function GxMarker(point, icon, tooltip, opts) {
+    if ( tooltip ) {  
+		var offset = ( typeof(opts) != 'undefined' && typeof(opts.offset) != 'undefined' )?opts.offset:new GSize(22,0);
+		var l = new GxLabel(tooltip, { "marker": this, "offset": offset });
+        var oldInit  = this.initialize;
+        var _t = this;
+        this.initialize = function(map) {
+            map.addOverlay(l);
+            oldInit.apply(_t, [ map ]);
+        }
     }
+    GMarker.apply(this, [ point, icon ]);
 }
 
-GMap.prototype.flushOverlays = function() {
-    currentSpan = new GBounds();
-    this.clearOverlays();
-}
-
-GMap.prototype.zoomToMarkers = function() {
-    var span = new GSize( currentSpan.maxX - currentSpan.minX, currentSpan.maxY - currentSpan.minY );
-    for ( var zoom = 0; zoom < this.spec.numZoomLevels; zoom++ ) {
-        var ppd = this.spec.getPixelsPerDegree(zoom);
-        var pixelSpan = new GSize(
-            Math.round(span.width * ppd.x), Math.round(span.height * ppd.y));
-        if ( pixelSpan.width  <= this.viewSize.width &&
-             pixelSpan.height <= this.viewSize.height )
-        { break; }
-    }
-    this.centerAndZoom( new GPoint( currentSpan.minX + (span.width/2), currentSpan.minY + (span.height/2) ), zoom);
-}
-
-function makeInterface(a) {
-    var b = a || window;
-    b.GxMarker = GxMarker;
-}
-
-makeInterface();
-}
-
-GxMarkerNamespace();
+GxMarker.prototype = new GMarker(new GLatLng(1,1));
