@@ -5,13 +5,13 @@ BitMap.MakeCalendar = function(){
 }
 
 BitMap.ShowCalendar = function(){
-	var pos = MochiKit.DOM.elementPosition('CalLink');
-	MochiKit.DOM.showElement('gmap-cal-container');
-	MochiKit.DOM.setElementPosition('gmap-cal-container', {'x':pos.x, 'y':pos.y+$('CalLink').offsetHeight+1} ); 
+	var pos = MochiKit.Style.getElementPosition('CalLink');
+	MochiKit.Style.showElement('gmap-cal-container');
+	MochiKit.Style.setElementPosition('gmap-cal-container', {'x':pos.x, 'y':pos.y+$('CalLink').offsetHeight+1} ); 
 }
 
 BitMap.HideCalendar = function(){
-	MochiKit.DOM.hideElement('gmap-cal-container');
+	MochiKit.Style.hideElement('gmap-cal-container');
 }
 
 BitMap.DateChanged = function(){
@@ -20,7 +20,7 @@ BitMap.DateChanged = function(){
 	var selectedDate = new Date(calendar.getSelectedDates()[0]);
 	f.from_date.value = Math.floor(selectedDate.getTime()/1000);
 	f.hr_date.value = MochiKit.DateTime.toPaddedAmericanDate(selectedDate);
-	MochiKit.DOM.showElement('gmap-date-range');
+	MochiKit.Style.showElement('gmap-date-range');
 	BitMap.SelectDateRange(f.date_range);
 }
 
@@ -30,7 +30,7 @@ BitMap.EvalDate = function(){
 	if (f.hr_date.value != '' && date != 'Invalid Date'){
 			f.from_date.value = Math.floor( date.getTime()/1000);
 			BitMap.SelectDateRange(f.date_range);
-			MochiKit.DOM.showElement('gmap-date-range');
+			MochiKit.Style.showElement('gmap-date-range');
 			BitMap.Cal.select(date);
 			BitMap.Cal.setMonth(date.getMonth());
 			BitMap.Cal.setYear(date.getFullYear());
@@ -39,7 +39,7 @@ BitMap.EvalDate = function(){
 		f.hr_date.value = (date == 'Invalid Date')?'enter a valid date':'';
 		f.from_date.value = null;
 		f.until_date.value = null;
-		MochiKit.DOM.hideElement('gmap-date-range');
+		MochiKit.Style.hideElement('gmap-date-range');
 		BitMap.Cal.reset();
 	}
 }
