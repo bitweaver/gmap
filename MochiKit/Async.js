@@ -1,6 +1,6 @@
 /***
 
-MochiKit.Async 1.3.1
+MochiKit.Async 1.4
 
 See <http://mochikit.com/> for documentation, downloads, license, etc.
 
@@ -29,7 +29,7 @@ if (typeof(MochiKit.Async) == 'undefined') {
 }
 
 MochiKit.Async.NAME = "MochiKit.Async";
-MochiKit.Async.VERSION = "1.3.1";
+MochiKit.Async.VERSION = "1.4";
 MochiKit.Async.__repr__ = function () {
     return "[" + this.NAME + " " + this.VERSION + "]";
 };
@@ -37,6 +37,7 @@ MochiKit.Async.toString = function () {
     return this.__repr__();
 };
 
+/** @id MochiKit.Async.Deferred */
 MochiKit.Async.Deferred = function (/* optional */ canceller) {
     this.chain = [];
     this.id = this._nextId();
@@ -49,6 +50,7 @@ MochiKit.Async.Deferred = function (/* optional */ canceller) {
 };
 
 MochiKit.Async.Deferred.prototype = {
+    /** @id MochiKit.Async.Deferred.prototype.repr */
     repr: function () {
         var state;
         if (this.fired == -1) {
@@ -65,6 +67,7 @@ MochiKit.Async.Deferred.prototype = {
 
     _nextId: MochiKit.Base.counter(),
 
+    /** @id MochiKit.Async.Deferred.prototype.cancel */
     cancel: function () {
         var self = MochiKit.Async;
         if (this.fired == -1) {
@@ -81,39 +84,6 @@ MochiKit.Async.Deferred.prototype = {
         }
     },
             
-
-    _pause: function () {
-        /***
-
-        Used internally to signal that it's waiting on another Deferred
-
-        ***/
-        this.paused++;
-    },
-
-    _unpause: function () {
-        /***
-
-        Used internally to signal that it's no longer waiting on another
-        Deferred.
-
-        ***/
-        this.paused--;
-        if ((this.paused === 0) && (this.fired >= 0)) {
-            this._fire();
-        }
-    },
-
-    _continue: function (res) {
-        /***
-
-        Used internally when a dependent deferred fires.
-
-        ***/
-        this._resback(res);
-        this._unpause();
-    },
-
     _resback: function (res) {
         /***
 
@@ -135,6 +105,7 @@ MochiKit.Async.Deferred.prototype = {
         }
     },
 
+    /** @id MochiKit.Async.Deferred.prototype.callback */
     callback: function (res) {
         this._check();
         if (res instanceof MochiKit.Async.Deferred) {
@@ -143,6 +114,7 @@ MochiKit.Async.Deferred.prototype = {
         this._resback(res);
     },
 
+    /** @id MochiKit.Async.Deferred.prototype.errback */
     errback: function (res) {
         this._check();
         var self = MochiKit.Async;
@@ -155,6 +127,7 @@ MochiKit.Async.Deferred.prototype = {
         this._resback(res);
     },
 
+    /** @id MochiKit.Async.Deferred.prototype.addBoth */
     addBoth: function (fn) {
         if (arguments.length > 1) {
             fn = MochiKit.Base.partial.apply(null, arguments);
@@ -162,6 +135,7 @@ MochiKit.Async.Deferred.prototype = {
         return this.addCallbacks(fn, fn);
     },
 
+    /** @id MochiKit.Async.Deferred.prototype.addCallback */
     addCallback: function (fn) {
         if (arguments.length > 1) {
             fn = MochiKit.Base.partial.apply(null, arguments);
@@ -169,6 +143,7 @@ MochiKit.Async.Deferred.prototype = {
         return this.addCallbacks(fn, null);
     },
 
+    /** @id MochiKit.Async.Deferred.prototype.addErrback */
     addErrback: function (fn) {
         if (arguments.length > 1) {
             fn = MochiKit.Base.partial.apply(null, arguments);
@@ -176,6 +151,7 @@ MochiKit.Async.Deferred.prototype = {
         return this.addCallbacks(null, fn);
     },
 
+    /** @id MochiKit.Async.Deferred.prototype.addCallbacks */
     addCallbacks: function (cb, eb) {
         if (this.chained) {
             throw new Error("Chained Deferreds can not be re-used");
@@ -211,9 +187,13 @@ MochiKit.Async.Deferred.prototype = {
                 fired = ((res instanceof Error) ? 1 : 0);
                 if (res instanceof MochiKit.Async.Deferred) {
                     cb = function (res) {
-                        self._continue(res);
+                        self._resback(res);
+                        self.paused--;
+                        if ((self.paused === 0) && (self.fired >= 0)) {
+                            self._fire();
+                        }
                     };
-                    this._pause();
+                    this.paused++;
                 }
             } catch (err) {
                 fired = 1;
@@ -235,22 +215,26 @@ MochiKit.Async.Deferred.prototype = {
 };
 
 MochiKit.Base.update(MochiKit.Async, {
+    /** @id MochiKit.Async.evalJSONRequest */
     evalJSONRequest: function (/* req */) {
         return eval('(' + arguments[0].responseText + ')');
     },
 
+    /** @id MochiKit.Async.succeed */
     succeed: function (/* optional */result) {
         var d = new MochiKit.Async.Deferred();
         d.callback.apply(d, arguments);
         return d;
     },
 
+    /** @id MochiKit.Async.fail */
     fail: function (/* optional */result) {
         var d = new MochiKit.Async.Deferred();
         d.errback.apply(d, arguments);
         return d;
     },
 
+    /** @id MochiKit.Async.getXMLHttpRequest */
     getXMLHttpRequest: function () {
         var self = arguments.callee;
         if (!self.XMLHttpRequest) {
@@ -276,24 +260,23 @@ MochiKit.Base.update(MochiKit.Async, {
         return self.XMLHttpRequest();
     },
 
-    _nothing: function () {},
-
     _xhr_onreadystatechange: function (d) {
         // MochiKit.Logging.logDebug('this.readyState', this.readyState);
+        var m = MochiKit.Base;
         if (this.readyState == 4) {
             // IE SUCKS
             try {
                 this.onreadystatechange = null;
             } catch (e) {
                 try {
-                    this.onreadystatechange = MochiKit.Async._nothing;
+                    this.onreadystatechange = m.noop;
                 } catch (e) {
                 }
             }
             var status = null;
             try {
                 status = this.status;
-                if (!status && MochiKit.Base.isNotEmpty(this.responseText)) {
+                if (!status && m.isNotEmpty(this.responseText)) {
                     // 0 or undefined seems to mean cached or local
                     status = 304;
                 }
@@ -323,7 +306,7 @@ MochiKit.Base.update(MochiKit.Async, {
             req.onreadystatechange = null;
         } catch (e) {
             try {
-                req.onreadystatechange = MochiKit.Async._nothing;
+                req.onreadystatechange = MochiKit.Base.noop;
             } catch (e) {
             }
         }
@@ -331,6 +314,7 @@ MochiKit.Base.update(MochiKit.Async, {
     },
 
     
+    /** @id MochiKit.Async.sendXMLHttpRequest */
     sendXMLHttpRequest: function (req, /* optional */ sendContent) {
         if (typeof(sendContent) == "undefined" || sendContent === null) {
             sendContent = "";
@@ -357,6 +341,7 @@ MochiKit.Base.update(MochiKit.Async, {
 
     },
 
+    /** @id MochiKit.Async.doSimpleXMLHttpRequest */
     doSimpleXMLHttpRequest: function (url/*, ...*/) {
         var self = MochiKit.Async;
         var req = self.getXMLHttpRequest();
@@ -371,6 +356,7 @@ MochiKit.Base.update(MochiKit.Async, {
         return self.sendXMLHttpRequest(req);
     },
 
+    /** @id MochiKit.Async.loadJSONDoc */
     loadJSONDoc: function (url) {
         var self = MochiKit.Async;
         var d = self.doSimpleXMLHttpRequest.apply(self, arguments);
@@ -378,6 +364,7 @@ MochiKit.Base.update(MochiKit.Async, {
         return d;
     },
 
+    /** @id MochiKit.Async.wait */
     wait: function (seconds, /* optional */value) {
         var d = new MochiKit.Async.Deferred();
         var m = MochiKit.Base;
@@ -397,6 +384,7 @@ MochiKit.Base.update(MochiKit.Async, {
         return d;
     },
 
+    /** @id MochiKit.Async.callLater */
     callLater: function (seconds, func) {
         var m = MochiKit.Base;
         var pfunc = m.partial.apply(m, m.extend(null, arguments, 1));
@@ -407,6 +395,7 @@ MochiKit.Base.update(MochiKit.Async, {
 });
 
 
+/** @id MochiKit.Async.DeferredLock */
 MochiKit.Async.DeferredLock = function () {
     this.waiting = [];
     this.locked = false;
@@ -415,8 +404,9 @@ MochiKit.Async.DeferredLock = function () {
 
 MochiKit.Async.DeferredLock.prototype = {
     __class__: MochiKit.Async.DeferredLock,
+    /** @id MochiKit.Async.DeferredLock.prototype.acquire */
     acquire: function () {
-        d = new MochiKit.Async.Deferred();
+        var d = new MochiKit.Async.Deferred();
         if (this.locked) {
             this.waiting.push(d);
         } else {
@@ -425,6 +415,7 @@ MochiKit.Async.DeferredLock.prototype = {
         }
         return d;
     },
+    /** @id MochiKit.Async.DeferredLock.prototype.release */
     release: function () {
         if (!this.locked) {
             throw TypeError("Tried to release an unlocked DeferredLock");
@@ -449,59 +440,56 @@ MochiKit.Async.DeferredLock.prototype = {
 
 };
 
+/** @id MochiKit.Async.DeferredList */
 MochiKit.Async.DeferredList = function (list, /* optional */fireOnOneCallback, fireOnOneErrback, consumeErrors, canceller) {
-    this.list = list;
-    this.resultList = new Array(this.list.length);
 
-    // Deferred init
-    this.chain = [];
-    this.id = this._nextId();
-    this.fired = -1;
-    this.paused = 0;
-    this.results = [null, null];
-    this.canceller = canceller;
-    this.silentlyCancelled = false;
+    // call parent constructor
+    MochiKit.Async.Deferred.apply(this, [canceller]);
     
-    if (this.list.length === 0 && !fireOnOneCallback) {
-        this.callback(this.resultList);
-    }
-    
+    this.list = list;
+    var resultList = [];
+    this.resultList = resultList;
+
     this.finishedCount = 0;
     this.fireOnOneCallback = fireOnOneCallback;
     this.fireOnOneErrback = fireOnOneErrback;
     this.consumeErrors = consumeErrors;
 
-    var index = 0;
-    MochiKit.Base.map(MochiKit.Base.bind(function (d) {
-        d.addCallback(MochiKit.Base.bind(this._cbDeferred, this), index, true);
-        d.addErrback(MochiKit.Base.bind(this._cbDeferred, this), index, false);
-        index += 1;
-    }, this), this.list);
+    var cb = MochiKit.Base.bind(this._cbDeferred, this);
+    for (var i = 0; i < list.length; i++) {
+        var d = list[i];
+        resultList.push(undefined);
+        d.addCallback(cb, i, true);
+        d.addErrback(cb, i, false);
+    }
+
+    if (list.length === 0 && !fireOnOneCallback) {
+        this.callback(this.resultList);
+    }
+    
 };
 
-MochiKit.Base.update(MochiKit.Async.DeferredList.prototype,
-                     MochiKit.Async.Deferred.prototype);
+MochiKit.Async.DeferredList.prototype = new MochiKit.Async.Deferred();
 
-MochiKit.Base.update(MochiKit.Async.DeferredList.prototype, {
-    _cbDeferred: function (index, succeeded, result) {
-        this.resultList[index] = [succeeded, result];
-        this.finishedCount += 1;
-        if (this.fired !== 0) {
-            if (succeeded && this.fireOnOneCallback) {
-                this.callback([index, result]);
-            } else if (!succeeded && this.fireOnOneErrback) {
-                this.errback(result);
-            } else if (this.finishedCount == this.list.length) {
-                this.callback(this.resultList);
-            }
+MochiKit.Async.DeferredList.prototype._cbDeferred = function (index, succeeded, result) {
+    this.resultList[index] = [succeeded, result];
+    this.finishedCount += 1;
+    if (this.fired == -1) {
+        if (succeeded && this.fireOnOneCallback) {
+            this.callback([index, result]);
+        } else if (!succeeded && this.fireOnOneErrback) {
+            this.errback(result);
+        } else if (this.finishedCount == this.list.length) {
+            this.callback(this.resultList);
         }
-        if (!succeeded && this.consumeErrors) {
-            result = null;
-        }
-        return result;
     }
-});
+    if (!succeeded && this.consumeErrors) {
+        result = null;
+    }
+    return result;
+};
 
+/** @id MochiKit.Async.gatherResults */
 MochiKit.Async.gatherResults = function (deferredList) {
     var d = new MochiKit.Async.DeferredList(deferredList, false, true, false);
     d.addCallback(function (results) {
@@ -514,6 +502,7 @@ MochiKit.Async.gatherResults = function (deferredList) {
     return d;
 };
 
+/** @id MochiKit.Async.maybeDeferred */
 MochiKit.Async.maybeDeferred = function (func) {
     var self = MochiKit.Async;
     var result;
@@ -561,7 +550,9 @@ MochiKit.Async.EXPORT_OK = [
 MochiKit.Async.__new__ = function () {
     var m = MochiKit.Base;
     var ne = m.partial(m._newNamedError, this);
+    
     ne("AlreadyCalledError", 
+        /** @id MochiKit.Async.AlreadyCalledError */
         function (deferred) {
             /***
 
@@ -574,6 +565,7 @@ MochiKit.Async.__new__ = function () {
     );
 
     ne("CancelledError",
+        /** @id MochiKit.Async.CancelledError */
         function (deferred) {
             /***
 
@@ -585,6 +577,7 @@ MochiKit.Async.__new__ = function () {
     );
 
     ne("BrowserComplianceError",
+        /** @id MochiKit.Async.BrowserComplianceError */
         function (msg) {
             /***
 
@@ -599,12 +592,14 @@ MochiKit.Async.__new__ = function () {
     );
 
     ne("GenericError", 
+        /** @id MochiKit.Async.GenericError */
         function (msg) {
             this.message = msg;
         }
     );
 
     ne("XMLHttpRequestError",
+        /** @id MochiKit.Async.XMLHttpRequestError */
         function (req, msg) {
             /***
 

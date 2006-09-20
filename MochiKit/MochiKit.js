@@ -1,6 +1,6 @@
 /***
 
-MochiKit.MochiKit 1.3.1
+MochiKit.MochiKit 1.4
 
 See <http://mochikit.com/> for documentation, downloads, license, etc.
 
@@ -13,19 +13,22 @@ if (typeof(MochiKit) == 'undefined') {
 }
 
 if (typeof(MochiKit.MochiKit) == 'undefined') {
+    /** @id MochiKit.MochiKit */
     MochiKit.MochiKit = {};
 }
 
 MochiKit.MochiKit.NAME = "MochiKit.MochiKit";
-MochiKit.MochiKit.VERSION = "1.3.1";
+MochiKit.MochiKit.VERSION = "1.4";
 MochiKit.MochiKit.__repr__ = function () {
     return "[" + this.NAME + " " + this.VERSION + "]";
 };
 
+/** @id MochiKit.MochiKit.toString */
 MochiKit.MochiKit.toString = function () {
     return this.__repr__();
 };
 
+/** @id MochiKit.MochiKit.SUBMODULES */
 MochiKit.MochiKit.SUBMODULES = [
     "Base",
     "Iter",
@@ -34,6 +37,7 @@ MochiKit.MochiKit.SUBMODULES = [
     "Format",
     "Async",
     "DOM",
+    "Style",
     "LoggingPane",
     "Color",
     "Signal",
@@ -46,18 +50,11 @@ if (typeof(JSAN) != 'undefined' || typeof(dojo) != 'undefined') {
         dojo.require("MochiKit.*");
     }
     if (typeof(JSAN) != 'undefined') {
-        // hopefully this makes it easier for static analysis?
-        JSAN.use("MochiKit.Base", []);
-        JSAN.use("MochiKit.Iter", []);
-        JSAN.use("MochiKit.Logging", []);
-        JSAN.use("MochiKit.DateTime", []);
-        JSAN.use("MochiKit.Format", []);
-        JSAN.use("MochiKit.Async", []);
-        JSAN.use("MochiKit.DOM", []);
-        JSAN.use("MochiKit.LoggingPane", []);
-        JSAN.use("MochiKit.Color", []);
-        JSAN.use("MochiKit.Signal", []);
-        JSAN.use("MochiKit.Visual", []);
+        (function (lst) {
+            for (var i = 0; i < lst.length; i++) {
+                JSAN.use("MochiKit." + lst[i], []);
+            }
+        })(MochiKit.MochiKit.SUBMODULES);
     }
     (function () {
         var extend = MochiKit.Base.extend;
@@ -94,6 +91,9 @@ if (typeof(JSAN) != 'undefined' || typeof(dojo) != 'undefined') {
         MochiKit.__compat__ = true;
     }
     (function () {
+        if (typeof(document) == "undefined") {
+            return;
+        }
         var scripts = document.getElementsByTagName("script");
         var kXULNSURI = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
         var base = null;

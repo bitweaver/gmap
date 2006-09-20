@@ -1,6 +1,6 @@
 /***
 
-MochiKit.Signal 1.3.1
+MochiKit.Signal 1.4
 
 See <http://mochikit.com/> for documentation, downloads, license, etc.
 
@@ -12,6 +12,7 @@ if (typeof(dojo) != 'undefined') {
     dojo.provide('MochiKit.Signal');
     dojo.require('MochiKit.Base');
     dojo.require('MochiKit.DOM');
+    dojo.require('MochiKit.Style');
 }
 if (typeof(JSAN) != 'undefined') {
     JSAN.use('MochiKit.Base', []);
@@ -34,15 +35,24 @@ try {
     throw 'MochiKit.Signal depends on MochiKit.DOM!';
 }
 
+try {
+    if (typeof(MochiKit.Style) == 'undefined') {
+        throw '';
+    }
+} catch (e) {
+    throw 'MochiKit.Signal depends on MochiKit.Style!';
+}
+
 if (typeof(MochiKit.Signal) == 'undefined') {
     MochiKit.Signal = {};
 }
 
 MochiKit.Signal.NAME = 'MochiKit.Signal';
-MochiKit.Signal.VERSION = '1.3.1';
+MochiKit.Signal.VERSION = '1.4';
 
 MochiKit.Signal._observers = [];
 
+/** @id MochiKit.Signal.Event */
 MochiKit.Signal.Event = function (src, e) {
     this._event = e || window.event;
     this._src = src;
@@ -90,108 +100,135 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
         return str;
     },
 
+     /** @id MochiKit.Signal.Event.prototype.toString */
     toString: function () {
         return this.__repr__();
     },
 
+    /** @id MochiKit.Signal.Event.prototype.src */
     src: function () {
         return this._src;
     },
 
+    /** @id MochiKit.Signal.Event.prototype.event  */
     event: function () {
         return this._event;
     },
 
+    /** @id MochiKit.Signal.Event.prototype.type */
     type: function () {
         return this._event.type || undefined;
     },
 
+    /** @id MochiKit.Signal.Event.prototype.target */
     target: function () {
         return this._event.target || this._event.srcElement;
     },
 
+    _relatedTarget: null,
+    /** @id MochiKit.Signal.Event.prototype.relatedTarget */
     relatedTarget: function () {
+        if (this._relatedTarget !== null) {
+            return this._relatedTarget;
+        }
+
+        var elem = null;
         if (this.type() == 'mouseover') {
-            return (this._event.relatedTarget ||
+            elem = (this._event.relatedTarget ||
                 this._event.fromElement);
         } else if (this.type() == 'mouseout') {
-            return (this._event.relatedTarget ||
+            elem = (this._event.relatedTarget ||
                 this._event.toElement);
         }
-        // throw new Error("relatedTarget only available for 'mouseover' and 'mouseout'");
+        if (elem !== null) {
+            this._relatedTarget = elem;
+            return elem;
+        }
+        
         return undefined;
     },
 
+    _modifier: null,
+    /** @id MochiKit.Signal.Event.prototype.modifier */
     modifier: function () {
+        if (this._modifier !== null) {
+            return this._modifier;
+        }
         var m = {};
         m.alt = this._event.altKey;
         m.ctrl = this._event.ctrlKey;
         m.meta = this._event.metaKey || false; // IE and Opera punt here
         m.shift = this._event.shiftKey;
         m.any = m.alt || m.ctrl || m.shift || m.meta;
+        this._modifier = m;
         return m;
     },
 
+    _key: null,
+    /** @id MochiKit.Signal.Event.prototype.key */
     key: function () {
+        if (this._key !== null) {
+            return this._key;
+        }        
         var k = {};
         if (this.type() && this.type().indexOf('key') === 0) {
 
             /*
 
-    			If you're looking for a special key, look for it in keydown or
+                If you're looking for a special key, look for it in keydown or
                 keyup, but never keypress. If you're looking for a Unicode
                 chracter, look for it with keypress, but never keyup or
                 keydown.
-	
-    			Notes:
-	
-    			FF key event behavior:
-    			key     event   charCode    keyCode
-    			DOWN    ku,kd   0           40
-    			DOWN    kp      0           40
-    			ESC     ku,kd   0           27
-    			ESC     kp      0           27
-    			a       ku,kd   0           65
-    			a       kp      97          0
-    			shift+a ku,kd   0           65
-    			shift+a kp      65          0
-    			1       ku,kd   0           49
-    			1       kp      49          0
-    			shift+1 ku,kd   0           0
-    			shift+1 kp      33          0
-	
-    			IE key event behavior:
-    			(IE doesn't fire keypress events for special keys.)
-    			key     event   keyCode
-    			DOWN    ku,kd   40
-    			DOWN    kp      undefined
-    			ESC     ku,kd   27
-    			ESC     kp      27
-    			a       ku,kd   65
-    			a       kp      97
-    			shift+a ku,kd   65
-    			shift+a kp      65
-    			1       ku,kd   49
-    			1       kp      49
-    			shift+1 ku,kd   49
-    			shift+1 kp      33
+    
+                Notes:
+    
+                FF key event behavior:
+                key     event   charCode    keyCode
+                DOWN    ku,kd   0           40
+                DOWN    kp      0           40
+                ESC     ku,kd   0           27
+                ESC     kp      0           27
+                a       ku,kd   0           65
+                a       kp      97          0
+                shift+a ku,kd   0           65
+                shift+a kp      65          0
+                1       ku,kd   0           49
+                1       kp      49          0
+                shift+1 ku,kd   0           0
+                shift+1 kp      33          0
+    
+                IE key event behavior:
+                (IE doesn't fire keypress events for special keys.)
+                key     event   keyCode
+                DOWN    ku,kd   40
+                DOWN    kp      undefined
+                ESC     ku,kd   27
+                ESC     kp      27
+                a       ku,kd   65
+                a       kp      97
+                shift+a ku,kd   65
+                shift+a kp      65
+                1       ku,kd   49
+                1       kp      49
+                shift+1 ku,kd   49
+                shift+1 kp      33
 
-    			Safari key event behavior:
-    			(Safari sets charCode and keyCode to something crazy for
-    			special keys.)
-    			key     event   charCode    keyCode
-    			DOWN    ku,kd   63233       40
-    			DOWN    kp      63233       63233
-    			ESC     ku,kd   27          27
-    			ESC     kp      27          27
-    			a       ku,kd   97          65
-    			a       kp      97          97
-    			shift+a ku,kd   65          65
-    			shift+a kp      65          65
-    			1       ku,kd   49          49
-    			1       kp      49          49
-    			shift+1 ku,kd   33          49
-    			shift+1 kp      33          33
+                Safari key event behavior:
+                (Safari sets charCode and keyCode to something crazy for
+                special keys.)
+                key     event   charCode    keyCode
+                DOWN    ku,kd   63233       40
+                DOWN    kp      63233       63233
+                ESC     ku,kd   27          27
+                ESC     kp      27          27
+                a       ku,kd   97          65
+                a       kp      97          97
+                shift+a ku,kd   65          65
+                shift+a kp      65          65
+                1       ku,kd   49          49
+                1       kp      49          49
+                shift+1 ku,kd   33          49
+                shift+1 kp      33          33
 
             */
 
@@ -200,6 +237,7 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
                 k.code = this._event.keyCode;
                 k.string = (MochiKit.Signal._specialKeys[k.code] ||
                     'KEY_UNKNOWN');
+                this._key = k;
                 return k;
         
             /* look for characters here */
@@ -228,15 +266,21 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
                     k.code = this._event.keyCode;
                     k.string = String.fromCharCode(k.code);
                 }
-            
+                
+                this._key = k;
                 return k;
             }
         }
-        // throw new Error('This is not a key event');
         return undefined;
     },
 
+    _mouse: null,
+    /** @id MochiKit.Signal.Event.prototype.mouse */
     mouse: function () {
+        if (this._mouse !== null) {
+            return this._mouse;
+        }
+        
         var m = {};
         var e = this._event;
         
@@ -245,45 +289,36 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
             this.type().indexOf('click') != -1 ||
             this.type() == 'contextmenu')) {
             
-            m.client = new MochiKit.DOM.Coordinates(0, 0);
+            m.client = new MochiKit.Style.Coordinates(0, 0);
             if (e.clientX || e.clientY) {
                 m.client.x = (!e.clientX || e.clientX < 0) ? 0 : e.clientX;
                 m.client.y = (!e.clientY || e.clientY < 0) ? 0 : e.clientY;
             }
 
-            m.page = new MochiKit.DOM.Coordinates(0, 0);
+            m.page = new MochiKit.Style.Coordinates(0, 0);
             if (e.pageX || e.pageY) {
                 m.page.x = (!e.pageX || e.pageX < 0) ? 0 : e.pageX;
                 m.page.y = (!e.pageY || e.pageY < 0) ? 0 : e.pageY;
             } else {
                 /*
-            
-    				IE keeps the document offset in:
-        				document.documentElement.clientTop ||
-        				document.body.clientTop
-				
-    				and:
-        				document.documentElement.clientLeft ||
-        				document.body.clientLeft
 
-                    see:
-    				http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/getboundingclientrect.asp
+                    The IE shortcut can be off by two. We fix it. See:
+                    http://msdn.microsoft.com/workshop/author/dhtml/reference/methods/getboundingclientrect.asp
+                    
+                    This is similar to the method used in 
+                    MochiKit.Style.getElementPosition().
 
-    				The offset is (2,2) in standards mode and (0,0) in quirks 
-    				mode.
-				
                 */
-            
                 var de = MochiKit.DOM._document.documentElement;
                 var b = MochiKit.DOM._document.body;
             
                 m.page.x = e.clientX +
                     (de.scrollLeft || b.scrollLeft) - 
-                    (de.clientLeft || b.clientLeft);
-            
+                    (de.clientLeft || 0);
+                
                 m.page.y = e.clientY +
                     (de.scrollTop || b.scrollTop) - 
-                    (de.clientTop || b.clientTop);
+                    (de.clientTop || 0);
             
             }
             if (this.type() != 'mousemove') {
@@ -300,19 +335,19 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
 
                     /*
                 
-    					Mac browsers and right click:
-					
-    						- Safari doesn't fire any click events on a right
-    						  click:
-    						  http://bugzilla.opendarwin.org/show_bug.cgi?id=6595
-						  
-    						- Firefox fires the event, and sets ctrlKey = true
-						  
-    						- Opera fires the event, and sets metaKey = true
-					
-    					oncontextmenu is fired on right clicks between 
-    					browsers and across platforms.
-					
+                        Mac browsers and right click:
+                    
+                            - Safari doesn't fire any click events on a right
+                              click:
+                              http://bugzilla.opendarwin.org/show_bug.cgi?id=6595
+                          
+                            - Firefox fires the event, and sets ctrlKey = true
+                          
+                            - Opera fires the event, and sets metaKey = true
+                    
+                        oncontextmenu is fired on right clicks between 
+                        browsers and across platforms.
+                    
                     */
                 
                 } else {
@@ -321,17 +356,19 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
                     m.button.middle = !!(e.button & 4);
                 }
             }
+            this._mouse = m;
             return m;
         }
-        // throw new Error('This is not a mouse event');
         return undefined;
     },
 
+    /** @id MochiKit.Signal.Event.prototype.stop */
     stop: function () {
         this.stopPropagation();
         this.preventDefault();
     },
 
+    /** @id MochiKit.Signal.Event.prototype.stopPropagation */
     stopPropagation: function () {
         if (this._event.stopPropagation) {
             this._event.stopPropagation();
@@ -340,14 +377,24 @@ MochiKit.Base.update(MochiKit.Signal.Event.prototype, {
         }
     },
 
+    /** @id MochiKit.Signal.Event.prototype.preventDefault */
     preventDefault: function () {
         if (this._event.preventDefault) {
             this._event.preventDefault();
-        } else {
+        } else if (this._confirmUnload === null) {
             this._event.returnValue = false;
         }
+    },
+    
+    _confirmUnload: null,
+    
+    /** @id MochiKit.Signal.Event.prototype.confirmUnload */
+    confirmUnload: function (msg) {
+        if (this.type() == 'beforeunload') {
+            this._confirmUnload = msg;
+            this._event.returnValue = msg;
+        }
     }
-
 });
 
 /* Safari sets keyCode to these special values onkeypress. */
@@ -490,6 +537,38 @@ MochiKit.Base.update(MochiKit.Signal, {
         }
     },
     
+    _browserAlreadyHasMouseEnterAndLeave: function () {
+        return /MSIE/.test(navigator.userAgent);
+    },
+
+    _mouseEnterListener: function (src, sig, func, obj) {
+        var E = MochiKit.Signal.Event;
+        return function (nativeEvent) {
+            var e = new E(src, nativeEvent);
+            try {
+                e.relatedTarget().nodeName;
+            } catch (err) {
+                /* probably hit a permission denied error; possibly one of
+                 * firefox's screwy anonymous DIVs inside an input element.
+                 * Allow this event to propogate up.
+                 */
+                return;
+            }
+            e.stop();
+            if (MochiKit.DOM.isChildNode(e.relatedTarget(), src)) {
+                /* We've moved between our node and a child. Ignore. */
+                return;
+            }
+            e.type = function () { return sig; };
+            if (typeof(func) == "string") {
+                return obj[func].apply(obj, [e]);
+            } else {
+                return func.apply(obj, [e]);
+            }
+        };
+    },
+
+    /** @id MochiKit.Signal.connect */
     connect: function (src, sig, objOrFunc/* optional */, funcOrStr) {
         src = MochiKit.DOM.getElement(src);
         var self = MochiKit.Signal;
@@ -520,7 +599,17 @@ MochiKit.Base.update(MochiKit.Signal, {
         }
         
         var isDOM = !!(src.addEventListener || src.attachEvent);
-        var listener = self._listener(src, func, obj, isDOM);
+        if (isDOM && (sig === "onmouseenter" || sig === "onmouseleave")
+                  && !self._browserAlreadyHasMouseEnterAndLeave()) {
+            var listener = self._mouseEnterListener(src, sig.substr(2), func, obj);
+            if (sig === "onmouseenter") {
+                sig = "onmouseover";
+            } else {
+                sig = "onmouseout";
+            }
+        } else {
+            var listener = self._listener(src, func, obj, isDOM);
+        }
         
         if (src.addEventListener) {
             src.addEventListener(sig.substr(2), listener, false);
@@ -550,6 +639,7 @@ MochiKit.Base.update(MochiKit.Signal, {
         }
     },
     
+     /** @id MochiKit.Signal.disconnect */
     disconnect: function (ident) {
         var self = MochiKit.Signal;
         var observers = self._observers;
@@ -579,6 +669,7 @@ MochiKit.Base.update(MochiKit.Signal, {
         return false;
     },
     
+    /** @id MochiKit.Signal.disconnectAll */
     disconnectAll: function(src/* optional */, sig) {
         src = MochiKit.DOM.getElement(src);
         var m = MochiKit.Base;
@@ -611,6 +702,7 @@ MochiKit.Base.update(MochiKit.Signal, {
         
     },
 
+    /** @id MochiKit.Signal.signal */
     signal: function (src, sig) {
         var observers = MochiKit.Signal._observers;
         src = MochiKit.DOM.getElement(src);
@@ -670,7 +762,7 @@ MochiKit.Signal.__new__(this);
 //
 // XXX: Internet Explorer blows
 //
-if (!MochiKit.__compat__) {
+if (MochiKit.__export__) {
     connect = MochiKit.Signal.connect;
     disconnect = MochiKit.Signal.disconnect;
     disconnectAll = MochiKit.Signal.disconnectAll;
