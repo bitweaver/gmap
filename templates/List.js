@@ -1,3 +1,59 @@
+BitMap.MakeCalendar = function(){
+	BitMap.Cal = new YAHOO.widget.Calendar('BitMap.Cal', 'gmap-cal');
+	BitMap.Cal.render();
+	BitMap.Cal.onSelect = BitMap.DateChanged;
+}
+
+BitMap.ShowCalendar = function(){
+	var pos = MochiKit.DOM.elementPosition('CalLink');
+	MochiKit.DOM.showElement('gmap-cal-container');
+	MochiKit.DOM.setElementPosition('gmap-cal-container', {'x':pos.x, 'y':pos.y+$('CalLink').offsetHeight+1} ); 
+}
+
+BitMap.HideCalendar = function(){
+	MochiKit.DOM.hideElement('gmap-cal-container');
+}
+
+BitMap.DateChanged = function(){
+	var f = document['list-query-form'];
+	var calendar = BitMap.Cal;
+	var selectedDate = new Date(calendar.getSelectedDates()[0]);
+	f.from_date.value = Math.floor(selectedDate.getTime()/1000);
+	f.hr_date.value = MochiKit.DateTime.toPaddedAmericanDate(selectedDate);
+	MochiKit.DOM.showElement('gmap-date-range');
+	BitMap.SelectDateRange(f.date_range);
+}
+
+BitMap.EvalDate = function(){
+	var f = document['list-query-form'];
+	var date = MochiKit.DateTime.americanDate(f.hr_date.value);	
+	if (f.hr_date.value != '' && date != 'Invalid Date'){
+			f.from_date.value = Math.floor( date.getTime()/1000);
+			BitMap.SelectDateRange(f.date_range);
+			MochiKit.DOM.showElement('gmap-date-range');
+			BitMap.Cal.select(date);
+			BitMap.Cal.setMonth(date.getMonth());
+			BitMap.Cal.setYear(date.getFullYear());
+			BitMap.Cal.render();
+	}else{
+		f.hr_date.value = (date == 'Invalid Date')?'enter a valid date':'';
+		f.from_date.value = null;
+		f.until_date.value = null;
+		MochiKit.DOM.hideElement('gmap-date-range');
+		BitMap.Cal.reset();
+	}
+}
+
+BitMap.SelectDateRange = function(sel){
+	var f = document['list-query-form'];
+	if(sel.options.selectedIndex == 0){
+		f.until_date.value = parseInt(f.from_date.value) + 86399;
+	}
+	else{
+		f.until_date.value = null;
+	}
+}
+
 /* these are all methods required 
  * for displaying a list of content 
  * on a map as called from map_content.php 
@@ -11,7 +67,13 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		var right_lng = this.map.getBounds().getNorthEast().lng();
 		var down_lat = this.map.getBounds().getSouthWest().lat();
 		var left_lng = this.map.getBounds().getSouthWest().lng();
-		var str = [BitMap.BIT_ROOT_URL, "liberty/list_content.php?", queryString(f), "&up_lat=",up_lat,"&right_lng=",right_lng,"&down_lat=",down_lat,"&left_lng=",left_lng].join("");
+		var str = [BitMap.BIT_ROOT_URL, "liberty/list_content.php?", MochiKit.Base.queryString(f), "&up_lat=",up_lat,"&right_lng=",right_lng,"&down_lat=",down_lat,"&left_lng=",left_lng].join("");
+		
+		//account for bug in queryString
+		str = str.replace(/liberty_categories%5B%5D=Any/,"");
+		str = str.replace(/content_type_guid%5B%5D=Any/,"");
+
+		$('error').innerHTML = str;
 		var d = loadJSONDoc(str);
 		d.addCallbacks(bind(this.ReceiveContent, this), bind(this.RequestFailure, this));
 	},
@@ -49,7 +111,17 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		/* In the future we would like to set the image onerror property something like this, but it needs to be supported by google.
 				img.onerror = function () { this.src = "default.jpg"; };
 		 */
-		var myicon = (M.content_type_guid != null)?new GIcon(G_DEFAULT_ICON, "icons/c_type_pins/" + M.content_type_guid + ".png" ):null;
+var myicon = new GIcon();
+myicon = new GIcon();
+myicon.image = "icons/c_type_pins/" + M.content_type_guid + ".png";
+myicon.shadow = "http://www.google.com/mapfiles/shadow50.png";
+myicon.iconSize = new GSize(21, 24);
+myicon.shadowSize = new GSize(32, 24);
+myicon.iconAnchor = new GPoint(9, 24);
+myicon.infoWindowAnchor = new GPoint(9, 2);
+myicon.infoShadowAnchor = new GPoint(18, 25);
+		 
+//		var myicon = (M.content_type_guid != null)?new GIcon(G_DEFAULT_ICON, "icons/c_type_pins/" + M.content_type_guid + ".png" ):null;
 		var mytip = ["<div class='tip-content'>", M.title, "</div>"].join("");
 		M.gmarker = new GxMarker(p, myicon, mytip, {'className':'gmap-tooltip'});
 		
@@ -93,10 +165,10 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	//make side panel of markers
 	"attachSideMarkers": function(){
 		var center = this.map.getCenter();
-		var s = document.getElementById('gmap-sidepanel');
+		var s = $('gmap-sidepanel');
 		var count = this.markers.length;
 		if (count > 0){
-			document.getElementById('gmap-map').style.marginRight = '300px';
+			$('gmap-map').style.marginRight = '300px';
 			BitMap.show('gmap-sidepanel');
 			// @TODO sort the markers on content_type_guid and break into sub arrays/obj			
 			
@@ -110,7 +182,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			    return TR(null, map(partial(TD, null), row));
 			}
 		
-			var newTable = TABLE({'class': 'marker-table'},
+			var newTable = TABLE({"class":"data"},
 			    THEAD(null,
 			        row_display(["title", "date", "rating"])),
 			    TBODY(null,
@@ -118,12 +190,12 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		
 			s.appendChild(newTable);
 		}
-//		this.map.checkResize();
+		this.map.checkResize();
 		this.map.setCenter(center);
 	},
 
 	"clearSidepanel": function(){
-		var s = document.getElementById('gmap-sidepanel');
+		var s = $('gmap-sidepanel');
 		var count = s.childNodes.length;
 		for (n=count; n>1; n--){
 		 s.removeChild(s.childNodes[n-1]);

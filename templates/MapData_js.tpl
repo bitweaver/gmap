@@ -102,7 +102,7 @@ BitMap.MapData.push({ldelim}
   MarkerSets:[{if count($gContent->mMapMarkerSets) > 0}{section name=markersetdata loop=$gContent->mMapMarkerSets}
   {ldelim}
 		set_id: {$gContent->mMapMarkerSets[markersetdata].set_id},
-		title: "{$gContent->mMapMarkerSets[markersetdata].title}",
+		name: "{$gContent->mMapMarkerSets[markersetdata].name}",
 		description: "{$gContent->mMapMarkerSets[markersetdata].description}",
 		style_id: {$gContent->mMapMarkerSets[markersetdata].style_id},
 		icon_id: {$gContent->mMapMarkerSets[markersetdata].icon_id},

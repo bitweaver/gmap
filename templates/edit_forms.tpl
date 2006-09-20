@@ -212,7 +212,9 @@
 					<tr>
 						<td>
               Name:<br/>
-              <input size="20" name="name" type="text" value="a name"></td>
+              <input size="40" name="name" type="text" value="a name"><br/>
+              Description:<br/>
+              <input size="40" name="description" type="text" value="a description"></td>
 						<td>Marker Style:<br/>
                 <select name="style_id">
                   					<option value="0">Google (standard)</option>

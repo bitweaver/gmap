@@ -18,4 +18,5 @@
 			  {$gContent->mInfo.clean_data}
 		  </div>
 	  </div> <!-- end .body -->
+	  <div id="error"></div>
 </div>

@@ -42,6 +42,7 @@ BitMap.Display = function(){
 };
 
 BitMap.DisplayList = function(){
+  BitMap.MakeCalendar();
   BitMap.Initialize();
   BitMap.MapData[0].Map.addOverlayListener();
   BitMap.MapData[0].Map.attachSideMarkers();
@@ -112,10 +113,10 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
   this.polygons = polygons;
   this.polygonsets = polygonsets;
   this.polygonstyles = polygonstyles;
-  this.map = new GMap2(document.getElementById(this.mapdiv));	
+  this.map = new GMap2(document.getElementById(this.mapdiv));  
+  this.SetControls();
   this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
   this.SetMapType();
-  this.SetControls();
   if (this.markers.length > 0){
   	var ref = this;
   	this.loopOver(ref.markers, function(i){ref.addMarker(i);});

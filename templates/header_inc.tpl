@@ -1,9 +1,10 @@
 {if $gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap') }
- {if $geo_edit_serv || $view_map || $map_list || $edit_map }
+ {if $geo_edit_serv || $view_map || $map_list || $edit_map}
 		{include file="bitpackage:gmap/header_base.tpl"}
  {/if}
  {if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
 	{if $view_map }
+		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Base.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}
@@ -15,6 +16,11 @@
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DateTime.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/List.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/yahoo.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/dom.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/event.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/calendar.js" type="text/javascript"></script>
+		<link type="text/css" rel="stylesheet" href="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/calendar.css">
 	{/if}
 	{if $edit_map }
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Base.js" type="text/javascript"></script>
@@ -22,7 +28,7 @@
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Async.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DOM.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
-		<script src="{$smarty.const.GMAP_PKG_URL}templates/Edit.js" type="text/javascript"></script>
+		<script rel="stylesheet" href="{$smarty.const.GMAP_PKG_URL}templates/Edit.js" type="text/javascript"></script>
 
 	<style type="text/css">
 		{if $map_list }
