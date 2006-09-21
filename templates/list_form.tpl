@@ -21,6 +21,8 @@
 						</select><br/>
 			</div>
 			<div>
+			
+				{if $pigeonList}
 				<div style="float:left; margin-right:10px;">
 					<span>Categories: </span><br/>
 				    <select multiple size=5 name="liberty_categories[]">
@@ -32,6 +34,7 @@
 						{/foreach}
 				    </select><br/>
 				</div>
+				{/if}
 				    <div>
 				    Date: <br/><input name="hr_date" type="text" size="25px" value="" onchange="BitMap.EvalDate()">
 							<a href="javascript:void(null)" onclick="BitMap.ShowCalendar()" title="select date from calendar"><img id="CalLink" src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/pdate.gif" style="vertical-align:top;"></a>
