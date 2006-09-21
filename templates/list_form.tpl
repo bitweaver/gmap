@@ -7,7 +7,7 @@
 			{* stars_rating_count - is this supported? *}    
 			<input name="output" type="hidden" value="json">
 			<input name="max_records" type="hidden" value="-1">
-			<input name="sort_mode" type="hidden" value="content_type_guid_desc">
+			<input name="sort_mode" type="hidden" value="content_type_guid_asc">
 
 			<div style="float:left; margin-right:10px;">
 						<span>Content Types: </span><br/>

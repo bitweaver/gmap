@@ -165,39 +165,45 @@ myicon.infoShadowAnchor = new GPoint(18, 25);
 	//make side panel of markers
 	"attachSideMarkers": function(){
 		var center = this.map.getCenter();
-		var s = $('gmap-sidepanel');
-		var count = this.markers.length;
+		var count = this.markers.length;		
 		if (count > 0){
+			var s = $('gmap-sidepanel-table');
 			$('gmap-map').style.marginRight = '300px';
 			BitMap.show('gmap-sidepanel');
-			// @TODO sort the markers on content_type_guid and break into sub arrays/obj			
+			var markerssorted = MochiKit.Iter.groupby_as_array(this.markers, MochiKit.Base.itemgetter("content_type_guid"));
+			forEach(markerssorted, function(leData){
+				var rows = map(function(row) {
+					return  [ A({"href":"javascript: BitMap.MapData[0].Map.markers["+row.n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+row.n+"].gmarker.my_html);"}, row.title), 
+							  row.short_date, 
+							  row.stars_rating];
+				} ,leData[1]);
+		
+				row_display = function (row) {
+				    return TR(null, map(partial(TD, null), row));
+				}
 			
-			var rows = map(function(row) {
-				return  [ A({"href":"javascript: BitMap.MapData[0].Map.markers["+row.n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+row.n+"].gmarker.my_html);"}, row.title), 
-						  row.short_date, 
-						  row.stars_rating];
-			} ,this.markers);
-	
-			row_display = function (row) {
-			    return TR(null, map(partial(TD, null), row));
-			}
-		
-			var newTable = TABLE({"class":"data"},
-			    THEAD(null,
-			        row_display(["title", "date", "rating"])),
-			    TBODY(null,
-			        map(row_display, rows)));
-		
-			s.appendChild(newTable);
+				var newTable = TABLE({"class":"data"},
+				    THEAD(null, TR(null, 
+				    	TD({"class":"data-title"},"title"),
+				    	TD({"class":"data-date"},"date"),
+				    	TD({"class":"data-rating"},"rating")
+						)),
+				    TBODY(null, map(row_display, rows))
+				    );
+			
+				var header = DIV({"class":"data-header"}, leData[1][0].content_description + "s");
+				s.appendChild(header);
+				s.appendChild(newTable);
+			});
 		}
 		this.map.checkResize();
 		this.map.setCenter(center);
 	},
 
 	"clearSidepanel": function(){
-		var s = $('gmap-sidepanel');
+		var s = $('gmap-sidepanel-table');
 		var count = s.childNodes.length;
-		for (n=count; n>1; n--){
+		for (n=count; n>0; n--){
 		 s.removeChild(s.childNodes[n-1]);
 		}
 	}

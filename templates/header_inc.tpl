@@ -35,10 +35,18 @@
 	<style type="text/css">
 		{if $map_list }
 		{literal}
+		#gmap-sidepanel {float:right; margin:0; padding:0; width:300px; overflow:auto;}
+		#gmap-sidepanel-table {margin:0; padding:0;}
 		.gmap-tooltip {background:white; font-weight:bold; padding:2px 4px; white-space:nowrap; border:#999 solid 1px;}
 		#gmap-cal-container {background:#fff;padding:6px;border:#333 solid 1px;}
+  		table.data {border-collapse:collapse; background-color:white}
+  		table.data td{border-top:#eee solid 1px;padding:1px 3px;}
+		div.data-header {background-color:#eee; font-weight:bold; font-size:1.1em; padding:1px 3px;}
+		.data-date {width:36%; text-align:center}
+		.data-rating {width:14%; text-align:center}
 		{/literal}
 		{/if}
+		
 		{if $edit_map }
     	{literal}
 		  td {vertical-align:top; padding:0px;}
@@ -62,8 +70,8 @@
 	  	table.data td {padding:.5em;}
 	   {/literal}
 	   {/if}
+	   
     {literal}
-      #gmap-sidepanel {float:right; background-color:#ccf; width:300px; /*this is causing problems: overflow:auto;*/}
       .hide {display:none;}
     {/literal}
 	  {if count($gContent->mMapMarkerStyles) > 0}
