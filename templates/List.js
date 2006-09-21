@@ -7,7 +7,7 @@ BitMap.MakeCalendar = function(){
 BitMap.ShowCalendar = function(){
 	var pos = MochiKit.Style.getElementPosition('CalLink');
 	MochiKit.Style.showElement('gmap-cal-container');
-	MochiKit.Style.setElementPosition('gmap-cal-container', {'x':pos.x, 'y':pos.y+$('CalLink').offsetHeight+1} ); 
+	MochiKit.Style.setElementPosition('gmap-cal-container', {'x':pos.x-80, 'y':pos.y+$('CalLink').offsetHeight+1} ); 
 }
 
 BitMap.HideCalendar = function(){
@@ -73,7 +73,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		str = str.replace(/liberty_categories%5B%5D=Any/,"");
 		str = str.replace(/content_type_guid%5B%5D=Any/,"");
 
-		$('error').innerHTML = str;
+		//$('error').innerHTML = str;
 		var d = loadJSONDoc(str);
 		d.addCallbacks(bind(this.ReceiveContent, this), bind(this.RequestFailure, this));
 	},

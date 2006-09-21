@@ -164,7 +164,8 @@ GxLabel.prototype.hide = function(point, offset) {
 function GxMarker(point, icon, tooltip, opts) {
     if ( tooltip ) {  
 		var offset = ( typeof(opts) != 'undefined' && typeof(opts.offset) != 'undefined' )?opts.offset:new GSize(22,0);
-		var l = new GxLabel(tooltip, { "marker": this, "offset": offset });
+		var className = ( typeof(opts) != 'undefined' && typeof(opts.className) != 'undefined' )?opts.className:null;
+		var l = new GxLabel(tooltip, { "marker": this, "offset": offset, "className":className });
         var oldInit  = this.initialize;
         var _t = this;
         this.initialize = function(map) {

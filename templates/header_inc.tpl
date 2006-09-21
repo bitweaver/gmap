@@ -14,6 +14,7 @@
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Async.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DOM.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DateTime.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Style.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/List.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/yahoo.js" type="text/javascript"></script>
@@ -29,14 +30,17 @@
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DOM.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
 		<script rel="stylesheet" href="{$smarty.const.GMAP_PKG_URL}templates/Edit.js" type="text/javascript"></script>
+	{/if}
 
 	<style type="text/css">
 		{if $map_list }
 		{literal}
-		.gmap-tooltip {background:pink; padding:4px 6px; white-space: nowrap; border:#333 solid 1px;}
+		.gmap-tooltip {background:white; font-weight:bold; padding:2px 4px; white-space:nowrap; border:#999 solid 1px;}
+		#gmap-cal-container {background:#fff;padding:6px;border:#333 solid 1px;}
 		{/literal}
 		{/if}
-    {literal}
+		{if $edit_map }
+    	{literal}
 		  td {vertical-align:top; padding:0px;}
 		  th {text-align:left;}
 		  .map-op {margin-right:160px;}
@@ -57,10 +61,7 @@
   		table {border-collapse:collapse;}
 	  	table.data td {padding:.5em;}
 	   {/literal}
-   </style>
-   {/if}
-
-   <style type="text/css">
+	   {/if}
     {literal}
       #gmap-sidepanel {float:right; background-color:#ccf; width:300px; /*this is causing problems: overflow:auto;*/}
       .hide {display:none;}
