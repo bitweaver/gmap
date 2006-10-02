@@ -39,7 +39,7 @@
 		#gmap-sidepanel-table {margin:0; padding:0;}
 		.gmap-tooltip {background:white; font-weight:bold; padding:2px 4px; white-space:nowrap; border:#999 solid 1px;}
 		#gmap-cal-container {background:#fff;padding:6px;border:#333 solid 1px;}
-  		table.data {border-collapse:collapse; background-color:white}
+  		table.data {border-collapse:collapse;}
   		table.data td{border-top:#eee solid 1px;padding:1px 3px;}
 		div.data-header {background-color:#eee; font-weight:bold; font-size:1.1em; padding:1px 3px;}
 		.data-date {width:36%; text-align:center}
