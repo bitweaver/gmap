@@ -152,7 +152,7 @@ class BitGmap extends LibertyAttachable {
 
 		 	$bindVars = array((int)$gmap_id);
 			$query = "SELECT bmm.*, lc.*, bms.*, bsk.*
-                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."gmaps_markers` bmm, `".BIT_DB_PREFIX."gmaps_marker_sets` bms
+                FROM ( `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."gmaps_markers` bmm, `".BIT_DB_PREFIX."gmaps_marker_sets` bms )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` )
                 WHERE bsk.`gmap_id` = ?
                 AND bsk.`set_type` = 'markers'
