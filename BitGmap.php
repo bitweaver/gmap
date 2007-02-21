@@ -1152,7 +1152,7 @@ class BitGmap extends LibertyAttachable {
 				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_marker_sets", $pParamHash['markerset_store'], array( "set_id" => $pParamHash['set_id'] ) );
 				 // and we update the set keychain on map_id.
 				 $pParamHash['keychain_ids']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateUpdateKeys( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
 			}else{
 				 // if its a new markerset we get a new set_id and store the data
 				 $pParamHash['set_id'] = $this->mDb->GenID( 'gmaps_marker_sets_set_id_seq' );
@@ -1243,7 +1243,7 @@ class BitGmap extends LibertyAttachable {
 				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polyline_sets", $pParamHash['polylineset_store'], array( "set_id" => $pParamHash['set_id'] ) );
 				 // and we update the set keychain on map_id.
 				 $pParamHash['keychain_ids']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateUpdateKeys( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
 			}else{
 				 $pParamHash['set_id'] = $this->mDb->GenID( 'gmaps_polyline_sets_set_id_seq' );
 				 $pParamHash['polylineset_store']['set_id'] = $pParamHash['set_id'];
@@ -1337,7 +1337,7 @@ class BitGmap extends LibertyAttachable {
 				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygon_sets", $pParamHash['polygonset_store'], array( "set_id" => $pParamHash['set_id'] ) );
 				 // and we update the set keychain on map_id.
 				 $pParamHash['keychain_ids']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateUpdateKeys( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
 			}else{
 				 $pParamHash['set_id'] = $this->mDb->GenID( 'gmaps_polygon_sets_set_id_seq' );
 				 $pParamHash['polygonset_store']['set_id'] = $pParamHash['set_id'];
