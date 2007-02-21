@@ -353,6 +353,7 @@ BitMap.Edit.prototype = {
 	"editMarkerSetOptions": function(i){
 	  var a;
 	  var count = this.Map.markersets.length;
+	  //hilights the right set, unselects the others
 	  for (n=0; n<count; n++){
 	    a = (n==i)?'add':'remove';
 	    BitMap.jscss(a, $('edit-markerset-'+n), 'edit-selected');
@@ -1611,11 +1612,14 @@ BitMap.Edit.prototype = {
 	
 		 "storeMarkerSet": function(f){
 		 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
-		 		BitMap.show('editerror');
 				this.editSetId = f.set_id.value;
 				this.editObjectN = f.set_array_n.value;
 				var callback = (f.set_id.value != "")?this.updateMarkerSet:this.addMarkerSet;
-//				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+				/*
+				BitMap.show('editerror');
+				$('editerror').innerHTML = str;
+				*/
+				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 	
 		 "removeMarkerSet": function(f){
@@ -1850,18 +1854,18 @@ BitMap.Edit.prototype = {
 				
 	      //Add Map TYPE controls - buttons in the upper right corner
 	  		if (this.Map.controls.maptype_control == 'true'){
-	  		this.Map.map.removeControl(typecontrols);
-	  		this.Map.map.addControl(typecontrols);
+	  		    this.Map.map.removeControl(typecontrols);
+	  		    this.Map.map.addControl(typecontrols);
 	  		}else{
-	  		this.Map.map.removeControl(typecontrols);
+	  		    this.Map.map.removeControl(typecontrols);
 	  		}
 	  		
 	  		//Add Scale controls
 	  		if (this.Map.controls.scale == 'true'){
-	  		this.Map.map.removeControl(scale);
-	  		this.Map.map.addControl(scale);
+	  		    this.Map.map.removeControl(scale);
+	  		    this.Map.map.addControl(scale);
 	  		}else{
-	  		this.Map.map.removeControl(scale);
+	  		    this.Map.map.removeControl(scale);
 	  		}
 	  		
 	      //Add Navigation controls - buttons in the upper left corner		
@@ -1869,11 +1873,11 @@ BitMap.Edit.prototype = {
 	  		this.Map.map.removeControl(largecontrols);
 	  		this.Map.map.removeControl(zoomcontrols);
 	  		if (this.Map.controls.zoom_control == 's') {
-	  		this.Map.map.addControl(smallcontrols);
+	  		    this.Map.map.addControl(smallcontrols);
 	  		}else if (this.Map.controls.zoom_control == 'l') {
-	  		this.Map.map.addControl(largecontrols);		
+	  		    this.Map.map.addControl(largecontrols);		
 	  		}else if (this.Map.controls.zoom_control == 'z') {
-	  		this.Map.map.addControl(zoomcontrols);
+	  		    this.Map.map.addControl(zoomcontrols);
 	  		}
 				
 				this.Map.map.setCenter(new GLatLng(this.Map.center.lat, this.Map.center.lng), this.Map.zoom);
@@ -2181,13 +2185,14 @@ BitMap.Edit.prototype = {
 				if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
 				var cl = xml.documentElement.getElementsByTagName('cluster');
 				if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
-	  		s.set_type = 'markers';
+	  			s.set_type = 'markers';
 	
-				// clear the form
-				$('markersetform_new').reset();
+				// clear the form				
+				 BitMap.hide('edit-markerset-new');
+				
 				// update the sets menus
-				if ( $('newmarkerform').style.display == "block" ){ this.newMarker(); };
-				this.editMarkers();
+				this.editMarkerSets();
+				this.editMarkers(n);
 	},
 		
 	

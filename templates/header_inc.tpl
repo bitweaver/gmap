@@ -29,7 +29,7 @@
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Async.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DOM.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
-		<script rel="stylesheet" href="{$smarty.const.GMAP_PKG_URL}templates/Edit.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}templates/Edit.js" type="text/javascript"></script>
 	{/if}
 
 	<style type="text/css">
