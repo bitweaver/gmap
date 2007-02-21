@@ -3199,6 +3199,7 @@ BitMap.Edit.prototype = {
 	
 	"addAssistant": function(a, b){
 	 	this.removeAssistant();
+	 	//polyline assistant
 	 	if (a == 'polyline'){
 			this.bModForm = $('polylineform_'+b);
 	 		this.bModPData = this.bModForm.points_data; 
@@ -3230,28 +3231,29 @@ BitMap.Edit.prototype = {
 	              	});
 		}
 	
+	 	//polygon assistant
 	 	if (a == 'polygon'){
 			this.bModForm = $('polygonform_'+b);
 	
-	  	if (this.bModForm.circle.options[this.bModForm.circle.selectedIndex].value == 'true'){
-	      	this.bModPData = this.bModForm.circle_center;
-	     	alert ('Circle-Center drawing assistant activated for '+ this.bModForm.name.value + ' polygon. \n Click to marker the center of your circle!');
-	     
-	       	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
+			if (this.bModForm.circle.options[this.bModForm.circle.selectedIndex].value == 'true'){
+				this.bModPData = this.bModForm.circle_center;
+				alert ('Circle-Center drawing assistant activated for '+ this.bModForm.name.value + ' polygon. \n Click to marker the center of your circle!');
+			 
+				this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
 	                      if (point) {
 	                     		this.Map.map.panTo(point);
 	                     		this.bModPData.value = point.lng() + ", " + point.lat();
 	                         }
 	                       });
-	  	}else{
-	   		this.bModPData = this.bModForm.points_data; 
-	  		alert ('Polygon drawing assistant activated for '+ this.bModForm.name.value + ' polygon. \n Click to draw the outline. \n\nThe final connection will automatically be \ncompleted for you, so don\'t worry about that.');
-	   		this.bLastpoint = null;
-	   	 	this.bTempPoints = [];
-	     	this.bTP = new GPolyline(this.bTempPoints);
-	     	this.Map.map.addOverlay(bTP);		//create polyline object from points and add to map
-	     
-	     	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay,point) {
+			}else{
+				this.bModPData = this.bModForm.points_data; 
+				alert ('Polygon drawing assistant activated for '+ this.bModForm.name.value + ' polygon. \n Click to draw the outline. \n\nThe final connection will automatically be \ncompleted for you, so don\'t worry about that.');
+				this.bLastpoint = null;
+				this.bTempPoints = [];
+				this.bTP = new GPolyline(this.bTempPoints);
+				this.Map.map.addOverlay(bTP);		//create polyline object from points and add to map
+			 
+				this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay,point) {
 	                		if(this.bLastpoint && this.bLastpoint.x==point.x && this.bLastpoint.y==point.y) return;
 	                		this.bLastpoint = point;
 	                		
@@ -3272,38 +3274,37 @@ BitMap.Edit.prototype = {
 	              	});
 			}
 		}
-		
+
+	 	//marker assistant		
 		if (a == 'marker'){
-			this.bModForm = $('markerform_'+b);
-	 		this.bModMLat = this.bModForm.marker_lat;
-	 		this.bModMLng = this.bModForm.marker_lng;
-			alert ('Marker ploting assistant activated for '+ this.bModForm.title.value + ' marker. \n Click to Position!');
-		
-	  	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
-	      if (point) {
-	  		if (this.bTP != null) {
-	        	this.Map.map.removeOverlay(this.bTP);
-	  		}
-	  		this.bTP = new GMarker(point);
-	  		this.Map.map.addOverlay(this.bTP);
-	  		this.Map.map.panTo(point);
-	  		this.bModMLat.value = point.lat();
-	  		this.bModMLng.value = point.lng();
-	      }
-	    });
+			var f = $('edit-marker-form');
+			alert ('Marker ploting assistant activated for '+ f.title.value + ' marker. \n Click to Position!');
+
+			this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
+			  if (point) {
+				if (this.TempMarker != null) {
+					this.removeOverlay(this.TempMarker);
+				}
+				this.TempMarker = new GMarker(point);
+				this.addOverlay(this.TempMarker);
+				this.panTo(point);
+				f['geo[lng]'].value = point.lng();
+				f['geo[lat]'].value = point.lat();
+			  }
+			});
 		}
 	
 		if (a == 'map'){
 			f = $('edit-map-form');
 			alert ('Map centering assistant activated. \n Click to get center lat and lng values!');
 		
-	  	this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
-	      if (point) {
-	  		this.panTo(point);
-	  		f['geo[lng]'].value = point.lng();
-	  		f['geo[lat]'].value = point.lat();
-	      }
-	    });
+			this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
+			  if (point) {
+				this.panTo(point);
+				f['geo[lng]'].value = point.lng();
+				f['geo[lat]'].value = point.lat();
+			  }
+			});
 		}
 	},
 	
