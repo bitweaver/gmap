@@ -1,14 +1,43 @@
 <div class="list gmap display">
   {include file="bitpackage:gmap/gmap_header.tpl"}
   {include file="bitpackage:gmap/list_form.tpl"}
-  {include file="bitpackage:gmap/gmap_display.tpl"}
-  {* if stars is active we include a model stars div
-   * the container div has the id of 'stars-rating-1'
-   *}   
-  {if $gBitSystem->isPackageActive('stars') }
-  <div id="iwindow-stars" style="display:none">
-	  {include file="bitpackage:stars/stars_list_service.tpl" serviceHash=$GeoStars}
+  <div class="body">
+	<div class="gmap-content">
+	
+	{strip}
+	<div id="gmap-sidepanel" class="module box hide" style="
+		{* height:{if $gContent->mInfo.height == 0}
+				auto
+			  {else}
+				{$gContent->mInfo.height}px
+			  {/if}; *}
+			  
+		height: {if $gContent->mInfo.height}
+			{if $gContent->mInfo.height == 0}
+				auto
+			{else}
+				{$gContent->mInfo.height}px
+			{/if}
+		{elseif $gBitSystem->getConfig("gmap_height")}
+			{if $gBitSystem->getConfig("gmap_height") == 0}
+				auto
+			{else}
+				{$gBitSystem->getConfig("gmap_height")}px
+			{/if}
+		{else}
+			400px
+		{/if}
+	">
+		<h3>Search Results</h3>
+		<div id="gmap-sidepanel-table" class="boxcontent"></div>
 	</div>
-	{/if}
+	{/strip}
+
+	{include file='bitpackage:gmap/map_inc.tpl'}
+	</div>
+	<div class="content">
+		{$gContent->mInfo.clean_data}
+	</div>
+  </div> <!-- end .body -->
 </div>
 <div id="error"></div>

@@ -395,13 +395,86 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	//make side panel of markers
 	//works only with one map on a page
 	"attachSideMarkers": function(){
+		var center = this.map.getCenter();
+		var display = false;
+		var setscount = this.markersets.length;		
+		var panel = $('gmap-sidepanel');
+		for (var n=0; n<setscount; n++){
+			var set = this.markersets[n];
+			//if show set
+			if ( set.side_panel == true ){
+				$('gmap-map').style.marginRight = '300px';
+				BitMap.show('gmap-sidepanel');
+				var display = true;
+				//get the set icon style
+				var iconSrc = "http://www.google.com/mapfiles/marker.png";
+				var iconW = "20";
+				var iconH = "34";				
+				for (var i=0; i<this.iconstyles.length; i++){
+					if ( this.iconstyles[i].icon_id == set.icon_id ){
+						iconSrc = this.iconstyles[i].image;
+						iconW = this.iconstyles[i].icon_w;
+						iconH = this.iconstyles[i].icon_h;						
+					}
+				}
+
+				//add set container to side
+				var setDiv = DIV({"id":"sideset_" + set.set_id, "class":"module box"}, 
+									H3({"class":"gmapsidetitle"}, set.name),
+									DIV({"class":"gmapsidedesc"}, 
+										IMG({"src":iconSrc, "width":iconW + "px", "height":iconH + "px"}), 
+										SPAN(null, set.description),
+										DIV({"id":"listset_" + set.set_id, "class":"boxcontent gmapsidelist", "clear":"both"}, null)
+										)
+								);
+	
+				panel.appendChild(setDiv);
+			}
+		}
+
+		if ( display == true ){			
+			//go through all markers
+			var markercount = this.markers.length;
+			for ( var n=0; n<markercount; n++ ){
+				//if show set == y and show marker == y
+				var Marker = this.markers[n];
+				if ( Marker.side_panel == true && Marker.explode == true ) {
+					if (Marker.marker_type == 1){
+						var urlSrc = Marker.photo_url;
+						var pos = urlSrc.lastIndexOf('.');
+						var str_1 = urlSrc.substring(0, pos);
+						var str_2 = urlSrc.substring(pos, urlSrc.length); 
+						var thumbUrl = str_1 + "_thumb" + str_2;
+						var imgLink = SPAN( null, BR(), IMG({"src":thumbUrl}) );
+					}else{
+						var imgLink = null;
+					}
+
+					//add marker to side list
+					var newLink = A({"href":"javascript: BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html);"}, SPAN(null, Marker.title), imgLink );
+					var container = $('listset_' + Marker.set_id);
+					container.appendChild(newLink);
+					container.appendChild( BR() );
+
+	  				//if marker is set to init
+					if ( Marker.plot_on_load == true ) {
+						//set loaded to true
+					}else{
+						//set loaded to false
+					}
+				}
+			}
+		}
+		
+		
+		/*
 		var s = document.getElementById('gmap-sidepanel');
 		//go through all markers and add marker to side list
 		var count = this.markers.length;
 		if (count > 0){
-	   document.getElementById('gmap-map').style.marginRight = '200px';
-		 BitMap.show('gmap-sidepanel');
-	  }
+			document.getElementById('gmap-map').style.marginRight = '300px';
+			BitMap.show('gmap-sidepanel');
+		}
 		for ( var i=0; i<count; i++ ){
 			//make the link
 			var theNewLink = document.createElement('a');
@@ -419,17 +492,13 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			s.appendChild(theNewText);
 			s.appendChild(BR);
 		}
+		*/		
+
+		this.map.checkResize();
+		this.map.setCenter(center);
 	},
 
 
-	"clearSidepanel": function(){
-		var s = document.getElementById('gmap-sidepanel');
-		var count = s.childNodes.length;
-		for (n=count; n>1; n--){
-		 s.removeChild(s.childNodes[n-1]);
-	  }
-	},
-	
 	/*@todo Merge this function with the one above
 	 */ 
 	//make side panel of markers
@@ -438,7 +507,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		//add tracking var to get count of side sets
 		var x = 0;
 	
-	  var MarkerSets = BitMap.MapData[this.index].MarkerSets;
+		var MarkerSets = BitMap.MapData[this.index].MarkerSets;
 		//go through all marker sets
 		for ( var n=0; n<MarkerSets.length; n++ ){
 			//if show set == y
@@ -470,7 +539,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		}
 	
 		if ( x != 0 ){
-				document.getElementById('mapsidepanel').className = 'mapsidepanel';
+			document.getElementById('mapsidepanel').className = 'mapsidepanel';
 			if (bBrowser == 'op'){
 				document.getElementById('map').className = 'map-op';
 			}
@@ -493,33 +562,42 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 					}
 	
 					//add marker to side list 
-						var theNewLink = document.createElement('a');
-			      theNewLink.href = "javascript: BitMap.MapData[0].Map.markers["+i+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+i+"].gmarker.my_html);";
-						theNewLink.innerHTML = Marker.title + imgLink;
+					var theNewLink = document.createElement('a');
+			      	theNewLink.href = "javascript: BitMap.MapData[0].Map.markers["+i+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+i+"].gmarker.my_html);";
+					theNewLink.innerHTML = Marker.title + imgLink;
 	
-	//					var theText = document.createTextNode( bMData[q].title);
-	//					theNewLink.appendChild(theText);
+	//				var theText = document.createTextNode( bMData[q].title);
+	//				theNewLink.appendChild(theText);
 	
-						var BR = document.createElement('br');
-						document.getElementById('listset_'+ Marker.set_id).appendChild(theNewLink);
-						document.getElementById('listset_'+ Marker.set_id).appendChild(BR);
+					var BR = document.createElement('br');
+					document.getElementById('listset_'+ Marker.set_id).appendChild(theNewLink);
+					document.getElementById('listset_'+ Marker.set_id).appendChild(BR);
 	
-						/*
-						var openWindowLink = "<a href='javascript: bMData["+q+"].marker.openInfoWindowHtml(bMData["+q+"].marker.my_html'>"+bMData[q].title+"</a>";
-						var attachLink = "<a href='javascript: attachMarker(" + bMData[q].array_n + ", true);'>attach</a>";
-						document.getElementById('listset_'+ bMData[q].set_id).innerHTML = openWindowLink + " " + attachLink;
-						*/
+					/*
+					var openWindowLink = "<a href='javascript: bMData["+q+"].marker.openInfoWindowHtml(bMData["+q+"].marker.my_html'>"+bMData[q].title+"</a>";
+					var attachLink = "<a href='javascript: attachMarker(" + bMData[q].array_n + ", true);'>attach</a>";
+					document.getElementById('listset_'+ bMData[q].set_id).innerHTML = openWindowLink + " " + attachLink;
+					*/
 	
-						//copy model html div
-						//attach to document
+					//copy model html div
+					//attach to document
 	  				//if marker is set to init
-						if ( Marker.plot_on_load == true ) {
-	  					//set loaded to true
-						}else{
-	  					//set loaded to false
-						}
+					if ( Marker.plot_on_load == true ) {
+						//set loaded to true
+					}else{
+						//set loaded to false
+					}
 				}
 			}
 		}
+	},
+
+	"clearSidepanel": function(){
+		var s = document.getElementById('gmap-sidepanel');
+		var count = s.childNodes.length;
+		for (n=count; n>1; n--){
+		   s.removeChild(s.childNodes[n-1]);
+	    }
 	}
+	
 });

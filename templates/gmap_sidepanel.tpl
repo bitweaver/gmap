@@ -22,7 +22,6 @@
 		400px
 	{/if}
 ">
-	<h3>Search Results</h3>
 	<div id="gmap-sidepanel-table" class="boxcontent"></div>
 </div>
 {/strip}

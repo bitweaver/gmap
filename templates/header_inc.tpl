@@ -5,6 +5,8 @@
  {if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
 	{if $view_map }
 		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Base.js" type="text/javascript"></script>
+  		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/Iter.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}MochiKit/DOM.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}
@@ -45,9 +47,7 @@
 		.data-date {width:36%; text-align:center}
 		.data-rating {width:14%; text-align:center}
 		{/literal}
-		{/if}
-		
-		{if $edit_map }
+		{elseif $edit_map }
     	{literal}
 		  td {vertical-align:top; padding:0px;}
 		  th {text-align:left;}
@@ -57,19 +57,29 @@
 		  .gmapsidedesc {margin:6px 0px;}
 		  .gmapsidelist {padding:0px 2px 0px 6px; line-height:1.5em; clear:both;}
 
-  		.edit-optionstable {background-color:#eef; border-bottom:2px solid #f30;}
-	  	.edit-datatable {background-color:#feb; border-bottom:2px solid #f30;}
+		  .edit-optionstable {background-color:#eef; border-bottom:2px solid #f30;}
+		  .edit-datatable {background-color:#feb; border-bottom:2px solid #f30;}
 		  .edit-datatable ul {margin-left:0em;}
-  		.edit-datatable ul li {margin:0; padding:.25em 1em;}
-	  	.edit-titlebar {background-color:#cdf; margin:.5em 0em;}
+		  .edit-datatable ul li {margin:0; padding:.25em 1em;}
+		  .edit-titlebar {background-color:#cdf; margin:.5em 0em;}
 		  .edit-selected {background-color:#fc7; border-top:2px solid #f30;}
-  		.edit-selected .bar a.list {background-color:#feb}
-	  	.edit-select {background-color:#fff;}
+		  .edit-selected .bar a.list {background-color:#feb}
+		  .edit-select {background-color:#fff;}
 		  .tplform {background-color:#fff; margin:1em 0em; padding:2em; border:none;}
-  		table {border-collapse:collapse;}
-	  	table.data td {padding:.5em;}
-	   {/literal}
-	   {/if}
+		  table {border-collapse:collapse;}
+		  table.data td {padding:.5em;}
+		{/literal}
+		{else}
+		{literal}
+			#gmap-sidepanel {float:right; margin:0; padding:0; width:300px; overflow:auto;}
+			#gmap-sidepanel-table {margin:0; padding:0;}
+			table.data {border-collapse:collapse;}
+			table.data td{border-top:#eee solid 1px;padding:1px 3px;}
+			div.data-header {background-color:#eee; font-weight:bold; font-size:1.1em; padding:1px 3px;}
+			.data-date {width:36%; text-align:center}
+			.data-rating {width:14%; text-align:center}
+		{/literal}
+		{/if}
 	   
     {literal}
       .hide {display:none;}

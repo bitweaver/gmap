@@ -269,6 +269,7 @@ $gBitInstaller->registerSchemaSequences( GMAP_PKG_NAME, $sequences );
 
 
 //This does not work as one might expect
+/*
 $moduleHash = array(
 	'mod_package_menu' => array(
 		'title' => NULL,
@@ -281,7 +282,7 @@ $moduleHash = array(
 );
 
 $gBitInstaller->registerModules( $moduleHash );
-
+*/
 
 
 

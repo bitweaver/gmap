@@ -150,11 +150,18 @@ class BitGmap extends LibertyAttachable {
 		$ret = NULL;
 		if ($gmap_id && is_numeric($gmap_id)) {
 
+		 	
+			$whereSql = '';
+			$joinSql = '';
+			$selectSql = '';
 		 	$bindVars = array((int)$gmap_id);
-			$query = "SELECT bmm.*, lc.*, bms.*, bsk.*
+			
+			LibertyContent::getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+		 			 	
+			$query = "SELECT bmm.*, lc.*, bms.*, bsk.* $selectSql
                 FROM ( `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."gmaps_markers` bmm, `".BIT_DB_PREFIX."gmaps_marker_sets` bms )
-					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` )
-                WHERE bsk.`gmap_id` = ?
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
+                WHERE bsk.`gmap_id` = ? $whereSql
                 AND bsk.`set_type` = 'markers'
                 AND bms.`set_id` = bsk.`set_id`
                 AND bmk.`set_id` = bms.`set_id`
@@ -182,6 +189,7 @@ class BitGmap extends LibertyAttachable {
 
 			};
 		};
+				
 		return $ret;
 	}
 
