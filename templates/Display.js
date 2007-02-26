@@ -86,7 +86,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	  }else if (typeof(M.title) != 'undefined' && M.title != null){
 	    mytitle = M.title;
 	  }
-		  	
+	  
 	  M.gmarker = new GMarker(p, {icon: myicon, title:mytitle});
 	
 	  var mytitle = ["<h1 class='marker-title'>", M.title, "</h1>"].join("");
@@ -465,132 +465,10 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				}
 			}
 		}
-		
-		
-		/*
-		var s = document.getElementById('gmap-sidepanel');
-		//go through all markers and add marker to side list
-		var count = this.markers.length;
-		if (count > 0){
-			document.getElementById('gmap-map').style.marginRight = '300px';
-			BitMap.show('gmap-sidepanel');
-		}
-		for ( var i=0; i<count; i++ ){
-			//make the link
-			var theNewLink = document.createElement('a');
-			theNewLink.href = "javascript: BitMap.MapData[0].Map.markers["+i+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+i+"].gmarker.my_html);";
-			theNewLink.innerHTML = this.markers[i].title;
-			
-			var theNewText = document.createElement('span');
-			theNewText.innerHTML =  (this.markers[i].modified_date != null)?this.markers[i].modified_date:" no date avialable";
-			theNewText.innerHTML += (this.markers[i].stars_rating != null)?[" rating: ", this.markers[i].stars_rating].join(""):" not rated";
-			
-			//make a br
-			var BR = document.createElement('br');
-			//add link and space to container
-			s.appendChild(theNewLink);
-			s.appendChild(theNewText);
-			s.appendChild(BR);
-		}
-		*/		
-
 		this.map.checkResize();
 		this.map.setCenter(center);
 	},
 
-
-	/*@todo Merge this function with the one above
-	 */ 
-	//make side panel of markers
-	"attachSideMarkersOld": function(){
-
-		//add tracking var to get count of side sets
-		var x = 0;
-	
-		var MarkerSets = BitMap.MapData[this.index].MarkerSets;
-		//go through all marker sets
-		for ( var n=0; n<MarkerSets.length; n++ ){
-			//if show set == y
-			var MarkerSet = MarkerSets[n];
-			if ( MarkerSet.side_panel == true ){
-				//up the counter
-				x++;
-				//add set container to side and mod id
-				var theNewDiv = document.createElement('div');
-				theNewDiv.id = 'sideset_'+ MarkerSet.set_id;
-				theNewDiv.className = 'module box';
-	
-				var setTitle = "<h3 class='gmapsidetitle'>" + MarkerSet.name + "</h3>";
-	 			
-				var theIcon = "<img src='http://www.google.com/mapfiles/marker.png' class='gmapsideicon' style='width:20px; height:34px;'>"; 
-				var IconStyles = BitMap.MapData[this.index].IconStyles;
-				for (var m=0; m<IconStyles.length; m++){
-				  var IconStyle = IconStyles[m];
-					if ( IconStyle.icon_id == IconStyle.icon_id ){
-						var theIcon = "<img src='" + IconStyle.image + "' class='gmapsideicon' style='width:" + IconStyle.icon_w + "px; height:" + IconStyle.icon_h + "px;'>"; 
-					}
-				}
-	
-				var setDesc = "<div class='gmapsidedesc'>" + theIcon + " " + MarkerSet.description + "<div style='clear:both'></div></div>";
-				var setList = "<div class='boxcontent gmapsidelist' id='listset_" + MarkerSet.set_id + "'></div>";
-				theNewDiv.innerHTML += setTitle + setDesc + setList;
-				document.getElementById('mapsidepanel').appendChild(theNewDiv);
-			}
-		}
-	
-		if ( x != 0 ){
-			document.getElementById('mapsidepanel').className = 'mapsidepanel';
-			if (bBrowser == 'op'){
-				document.getElementById('map').className = 'map-op';
-			}
-			//go through all markers
-			for ( var q=0; q<this.markers.length; q++ ){
-				//sort alphabetically
-				//if show set == y and show marker == y
-				var Marker = this.markers[q];
-				if ( Marker.side_panel == true && Marker.explode == true ) {
-	
-					if (Marker.marker_type == 1){
-						var urlSrc = Marker.photo_url;
-						var pos = urlSrc.lastIndexOf('.');
-						var str_1 = urlSrc.substring(0, pos);
-						var str_2 = urlSrc.substring(pos, urlSrc.length); 
-						var thumbUrl = str_1 + "_thumb" + str_2;
-						var imgLink = "<br/><img src='" + thumbUrl + "'>"
-					}else{
-						var imgLink ='';
-					}
-	
-					//add marker to side list 
-					var theNewLink = document.createElement('a');
-			      	theNewLink.href = "javascript: BitMap.MapData[0].Map.markers["+i+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+i+"].gmarker.my_html);";
-					theNewLink.innerHTML = Marker.title + imgLink;
-	
-	//				var theText = document.createTextNode( bMData[q].title);
-	//				theNewLink.appendChild(theText);
-	
-					var BR = document.createElement('br');
-					document.getElementById('listset_'+ Marker.set_id).appendChild(theNewLink);
-					document.getElementById('listset_'+ Marker.set_id).appendChild(BR);
-	
-					/*
-					var openWindowLink = "<a href='javascript: bMData["+q+"].marker.openInfoWindowHtml(bMData["+q+"].marker.my_html'>"+bMData[q].title+"</a>";
-					var attachLink = "<a href='javascript: attachMarker(" + bMData[q].array_n + ", true);'>attach</a>";
-					document.getElementById('listset_'+ bMData[q].set_id).innerHTML = openWindowLink + " " + attachLink;
-					*/
-	
-					//copy model html div
-					//attach to document
-	  				//if marker is set to init
-					if ( Marker.plot_on_load == true ) {
-						//set loaded to true
-					}else{
-						//set loaded to false
-					}
-				}
-			}
-		}
-	},
 
 	"clearSidepanel": function(){
 		var s = document.getElementById('gmap-sidepanel');
