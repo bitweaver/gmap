@@ -2064,27 +2064,8 @@ BitMap.Edit.prototype = {
 		//this.Map.markers[n] = {};
 		var m = this.Map.markers[n] = {};
 
-		//shorten var names
-		var id = xml.documentElement.getElementsByTagName('id');			
-		m.marker_id = id[0].firstChild.nodeValue;
-		var ty = xml.documentElement.getElementsByTagName('marker_type');			
-		m.marker_type = ty[0].firstChild.nodeValue;
-		var tl = xml.documentElement.getElementsByTagName('title');
-		m.title = tl[0].firstChild.nodeValue;
-		var lt = xml.documentElement.getElementsByTagName('lat');
-		m.lat = parseFloat(lt[0].firstChild.nodeValue);
-		var ln = xml.documentElement.getElementsByTagName('lng');
-		m.lng = parseFloat(ln[0].firstChild.nodeValue);
-		var dt = xml.documentElement.getElementsByTagName('data');
-		m.data = dt[0].firstChild.nodeValue;
-		var pdt = xml.documentElement.getElementsByTagName('parsed_data');
-		m.parsed_data = pdt[0].firstChild.nodeValue;
-		var l = xml.documentElement.getElementsByTagName('label');
-		m.label_data = l[0].firstChild.nodeValue;
-		var pu = xml.documentElement.getElementsByTagName('photo_url');
-		m.photo_url = ( pu[0].firstChild != null )?pu[0].firstChild.nodeValue:'';
-		var z = xml.documentElement.getElementsByTagName('z');
-		m.zindex = parseInt(z[0].firstChild.nodeValue);
+		//add the xml data to the marker record
+		this.parseMarkerXML(m, xml);
 
 		var s;
 		for(a=0; a<this.Map.markersets.length; a++){
@@ -2110,13 +2091,24 @@ BitMap.Edit.prototype = {
 		this.editMarker(n);
 	},
 	
-		 	 
 	"updateMarker": function(rslt){
 	    var xml = rslt.responseXML;							
 		//the marker data we are changing
 		var n = this.editObjectN;
 		var m = this.Map.markers[n];
 
+		//add the xml data to the marker record
+		this.parseMarkerXML(m, xml);
+		
+		//unload the marker
+		if ( m.gmarker ){ this.Map.map.removeOverlay( m.gmarker ) };
+		//remake the marker
+		this.Map.addMarker(n);
+		//remove the assistant if used
+		this.removeAssistant();
+	},
+	
+	"parseMarkerXML": function(m, xml){
 		//shorten var names
 		var id = xml.documentElement.getElementsByTagName('id');			
 		m.marker_id = id[0].firstChild.nodeValue;				
@@ -2137,16 +2129,9 @@ BitMap.Edit.prototype = {
 		var pu = xml.documentElement.getElementsByTagName('photo_url');
 		m.photo_url = ( pu[0].firstChild != null )?pu[0].firstChild.nodeValue:'';
 		var z = xml.documentElement.getElementsByTagName('z');
-		m.zindex = parseInt(z[0].firstChild.nodeValue);
-				
-		//unload the marker
-		if ( m.gmarker ){ this.Map.map.removeOverlay( m.gmarker ) };
-		//remake the marker
-		this.Map.addMarker(n);
-		//remove the assistant if used
-		this.removeAssistant();
+		m.zindex = parseInt(z[0].firstChild.nodeValue);	
 	},
-	
+		 	 
 	
 		 
 	
