@@ -2056,65 +2056,65 @@ BitMap.Edit.prototype = {
 	 *******************/	 
 	
 	"addMarker": function(rslt){
-	      var xml = rslt.responseXML;
-	
-		 		//the marker data we are changing
-				var n = this.Map.markers.length;
-				this.Map.markers[n] = new Array();
-				var m = this.Map.markers[n];
-	
-		 		//shorten var names
-				var id = xml.documentElement.getElementsByTagName('id');			
-				m.marker_id = id[0].firstChild.nodeValue;
-				var ty = xml.documentElement.getElementsByTagName('marker_type');			
-				m.marker_type = ty[0].firstChild.nodeValue;
-				var tl = xml.documentElement.getElementsByTagName('title');
-				m.title = tl[0].firstChild.nodeValue;
-				var lt = xml.documentElement.getElementsByTagName('lat');
-				m.lat = parseFloat(lt[0].firstChild.nodeValue);
-				var ln = xml.documentElement.getElementsByTagName('lng');
-				m.lng = parseFloat(ln[0].firstChild.nodeValue);
-				var dt = xml.documentElement.getElementsByTagName('data');
-				m.data = dt[0].firstChild.nodeValue;
-				var pdt = xml.documentElement.getElementsByTagName('parsed_data');
-		 		m.parsed_data = pdt[0].firstChild.nodeValue;
-				var l = xml.documentElement.getElementsByTagName('label');
-				m.label_data = l[0].firstChild.nodeValue;
-				var pu = xml.documentElement.getElementsByTagName('photo_url');
-				m.photo_url = pu[0].firstChild.nodeValue;
-				var z = xml.documentElement.getElementsByTagName('z');
-				m.zindex = parseInt(z[0].firstChild.nodeValue);
-	
-		 		var s;
-				for(a=0; a<this.Map.markersets.length; a++){
-					if ( ( this.Map.markersets[a] != null ) && ( this.Map.markersets[a].set_id == this.editSetId ) ){
-						s = a;
-					}
-				};
-	
-				m.set_id = this.Map.markersets[s].set_id;
-				m.style_id = this.Map.markersets[s].style_id;
-				m.icon_id = this.Map.markersets[s].icon_id;
-				m.plot_on_load = this.Map.markersets[s].plot_on_load;
-				m.side_panel = this.Map.markersets[s].side_panel;
-				m.explode = this.Map.markersets[s].explode;
-				m.array_n = parseInt(n);
-	
-	        //make the marker
-				this.Map.attachMarker(n, true);
-				// clear the form
-				$('markerform_new').reset();
-				this.removeAssistant();
-				// update the sets menus
-				this.editMarkers();
-				this.editSet(editSetId);
+	    var xml = rslt.responseXML;
+
+		//the marker data we are changing
+		var n = this.Map.markers.length;
+		
+		//this.Map.markers[n] = {};
+		var m = this.Map.markers[n] = {};
+
+		//shorten var names
+		var id = xml.documentElement.getElementsByTagName('id');			
+		m.marker_id = id[0].firstChild.nodeValue;
+		var ty = xml.documentElement.getElementsByTagName('marker_type');			
+		m.marker_type = ty[0].firstChild.nodeValue;
+		var tl = xml.documentElement.getElementsByTagName('title');
+		m.title = tl[0].firstChild.nodeValue;
+		var lt = xml.documentElement.getElementsByTagName('lat');
+		m.lat = parseFloat(lt[0].firstChild.nodeValue);
+		var ln = xml.documentElement.getElementsByTagName('lng');
+		m.lng = parseFloat(ln[0].firstChild.nodeValue);
+		var dt = xml.documentElement.getElementsByTagName('data');
+		m.data = dt[0].firstChild.nodeValue;
+		var pdt = xml.documentElement.getElementsByTagName('parsed_data');
+		m.parsed_data = pdt[0].firstChild.nodeValue;
+		var l = xml.documentElement.getElementsByTagName('label');
+		m.label_data = l[0].firstChild.nodeValue;
+		var pu = xml.documentElement.getElementsByTagName('photo_url');
+		m.photo_url = ( pu[0].firstChild != null )?pu[0].firstChild.nodeValue:'';
+		var z = xml.documentElement.getElementsByTagName('z');
+		m.zindex = parseInt(z[0].firstChild.nodeValue);
+
+		var s;
+		for(a=0; a<this.Map.markersets.length; a++){
+			if ( ( this.Map.markersets[a] != null ) && ( this.Map.markersets[a].set_id == this.editSetId ) ){
+				s = a;
+			}
+		};
+
+		m.set_id = this.Map.markersets[s].set_id;
+		m.style_id = this.Map.markersets[s].style_id;
+		m.icon_id = this.Map.markersets[s].icon_id;
+		m.plot_on_load = this.Map.markersets[s].plot_on_load;
+		m.side_panel = this.Map.markersets[s].side_panel;
+		m.explode = this.Map.markersets[s].explode;
+		m.array_n = parseInt(n);
+
+		//make the marker
+		this.Map.addMarker(n);
+
+		this.removeAssistant();
+		// update the sets menus
+		this.editMarkers();
+		this.editSet(this.editSetId);
 	},
 	
 		 	 
 	"updateMarker": function(rslt){
 	    var xml = rslt.responseXML;							
 		//the marker data we are changing
-		var n = this.editObjectN;				
+		var n = this.editObjectN;
 		var m = this.Map.markers[n];
 
 		//shorten var names
@@ -2145,9 +2145,9 @@ BitMap.Edit.prototype = {
 		var z = xml.documentElement.getElementsByTagName('z');
 		var zindex = parseInt(z[0].firstChild.nodeValue);
 		m.zindex = zindex;
-		
+				
 		//unload the marker
-		this.Map.map.removeOverlay( m.gmarker );
+		if ( m.gmarker ){ this.Map.map.removeOverlay( m.gmarker ) };
 		//remake the marker
 		this.Map.addMarker(n);
 		//remove the assistant if used
@@ -3281,11 +3281,11 @@ BitMap.Edit.prototype = {
 
 			this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
 			  if (point) {
-				if (this.TempMarker != null) {
-					this.removeOverlay(this.TempMarker);
+				if (this.TempOverlay != null) {
+					this.removeOverlay(this.TempOverlay);
 				}
-				this.TempMarker = new GMarker(point);
-				this.addOverlay(this.TempMarker);
+				this.TempOverlay = new GMarker(point);
+				this.addOverlay(this.TempOverlay);
 				this.panTo(point);
 				f['geo[lng]'].value = point.lng();
 				f['geo[lat]'].value = point.lat();
@@ -3309,9 +3309,9 @@ BitMap.Edit.prototype = {
 	
 		
 	"removeAssistant": function(){
-	   if (this.bAssistant != null){
-	      this.Map.map.removeOverlay(this.bTP);
-	   		GEvent.removeListener(this.bAssistant);
+	    if (this.bAssistant != null){
+	        this.Map.map.removeOverlay( this.TempOverlay );
+	   	    GEvent.removeListener(this.bAssistant);
 	  		this.bAssistant = null;
 		 }
 	 }
