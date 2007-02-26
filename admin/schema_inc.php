@@ -34,22 +34,47 @@ $tables = array(
   CONSTRAINTS ', CONSTRAINT `gmaps_sets_keychain_gmap_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."gmaps`( `gmap_id` )'
 ",
 
-//basetype and alttype values: 0 => Streetmap 1 => Satellite, 2 => Hybrid
+//maptypes and related data
 'gmaps_maptypes' => "
   maptype_id I4 PRIMARY,
   name C(64),
+  shortname C(4),
   description C(255),
-  copyright C(64),
-  basetype I2 DEFAULT 0,
-  alttype I2 DEFAULT 0,
-  bounds X,
-  minzoom C(4),
-  maxzoom C(4),
-  maptiles_url X,
-  lowresmaptiles_url X DEFAULT 'google',
-  hybridtiles_url X,
-  lowreshybridtiles_url X DEFAULT 'google'
+  minzoom I4,
+  maxzoom I4,
+  errormsg C(255)
 ",
+
+'gmaps_tilelayers' => "
+  tilelayer_id I4 PRIMARY,
+  minzoom I4,
+  maxzoom I4,
+  ispng L,
+  tileurl X,
+  opacity F
+",
+
+'gmaps_copyright' => "
+  copyright_id I4 PRIMARY,
+  minzoom I4,
+  bounds X,
+  notice C(32)
+",
+
+'gmaps_tilelayers_keychain' => "
+  maptype_id I4 NOTNULL,
+  tilelayer_id I4 NOTNULL
+  CONSTRAINT ', CONSTRAINT `gmaps_tilelayers_keychain_maptype_ref` FOREIGN KEY (`maptype_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_maptypes`( `maptype_id` )
+              , CONSTRAINT `gmaps_tilelayers_keychain_tilelayers_ref` FOREIGN KEY (`tilelayers_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayers_id` )'
+",
+
+'gmaps_copyrights_keychain' => "
+  copyright_id I4 NOTNULL,
+  tilelayer_id I4 NOTNULL
+  CONSTRAINT ', CONSTRAINT `gmaps_copyrights_keychain_copyright_ref` FOREIGN KEY (`copyright_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_copyrights`( `copyright_id` )
+              , CONSTRAINT `gmaps_copyrights_keychain_tilelayers_ref` FOREIGN KEY (`tilelayers_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayers_id` )'
+",
+
 
 //types has two options: 0 => Normal, 1 => AutoPhoto
 'gmaps_markers' => "
