@@ -77,96 +77,140 @@
 	-   Maptype Editing Form
 	------------------------->
 
-<!-- maptypes editing -->
+<!-- maptype editing menu -->
+<div id="edit-maptypes-menu" style="display:none;">
+		<a href="javascript:BitMap.EditSession.newMaptype();">New Maptype</a>
+</div>
+<!-- end of maptype editing menu -->
+
+
+<!-- maptype editing menu -->
 <div id="edit-maptypes-table" class="edit-table" style="display:none;">
-  <div id="edit-marptypes" class="edit-titlebar edit-selected">
+  <h2>MapTypes Associated With This Map</h2>
+  <div id="edit-maptype" class="edit-titlebar" style="display:none;">
     <table class="bar">
     	<tr>
-        <td width="200px">
-			    <span class="setname">Maptypes Associated With This Map</span>
-        </td>
-		</tr>
+        <td width="200px"><span class="setname">MapType Name Here</span></td>
+      <td>
+        <a class="opts" href="javascript:BitMap.EditSession.editMaptypeOptions(n);">Edit Maptype Options</a> | 
+        <a class="list" href="javascript:BitMap.EditSession.editMaptypeTilelayers(n);">Edit Tilelayers In This Maptype</a>
+      </td>
+    </tr>
     </table>
-	<div id="edit-maptype-table" class="edit-datatable">
-	  <form action="javascript:;" name="edit-maptype-form" id="edit-maptype-form">
-		<input name="array_n" type="hidden" value="">
-		<input name="save_maptype" type="hidden" value="true">
-		<input name="maptype_id" type="hidden" size="3" value="maptype_id">
-		<table>
-		  <tr>
-			<td width="200px">Maptypes:<br/>
-				<ul>
-				<li style="display:none;"><a href="javascript:BitMap.EditSession.editMaptype(n);">Maptype Name Here</a></li>
-        <li id="edit-maptypelink-new"><b><a id="edit-maptypelink-new-a" href="javascript:BitMap.EditSession.newMaptype();">Add New Maptype</a></li>
-				</ul>
-			</td>
-			<td>
-			  <div class="tplform">
-          <div>
-            Name<br/>
-            <input name="name" type="text" size="50" value="a name"><br/>
-			      Description<br/>
-			      <input name="description" type="text" size="50" value="a description">
+  </div>
+</div>
+<!-- end of maptype editing menu -->
+
+
+<!-- maptype options form -->
+<div id="edit-maptype-options-table" class="edit-datatable" style="display:none;">
+  <form action="javascript:;" name="edit-maptype-options-form" id="edit-maptype-options-form">
+	<input name="array_n" type="hidden" value="">
+	<input name="save_maptype" type="hidden" value="true">
+	<input name="maptype_id" type="hidden" size="3" value="maptype_id">
+	<table>
+	  <tr>
+		<td width="200px">
+		</td>
+		<td>
+		  <div class="tplform">
+		  <div>
+			Name<br/>
+			<input name="name" type="text" size="50" value="a name"><br/>
+			Short Name<br/>
+			<input name="name" type="text" size="10" value="a short name"><br/>
+		  	Description<br/>
+		  	<input name="description" type="text" size="50" value="a description">
+		  </div>
+		  <div>
+			Min Zoom <input name="minzoom" type="text" size="3" value="0"><br/>
+			Max Zoom <input name="maxzoom" type="text" size="3" value="16"><br/>
+			Error Message<br/>
+			<input name="errormsg" type="text" size="50" value="">
+		  </div>
+		  <div>
+			<input type="button" name="save_maptype_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMaptype(document['edit-maptype-form']);">
+		  </div>
+		</div>
+	  </td>
+	  <td width="200px">
+		<div id="edit-maptype-tips">Tips<br/>
+			 Put advice here
+		</div>
+		<div id="edit-maptype-options-actions">Edit Maptype Actions<br/>
+				<a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');">show</a>
+				<a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMaptype(document['edit-maptype-form']);">remove</a>
+				<a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMaptype(document['edit-maptype-form']);">delete</a>
+		</div>
+	  </td>
+	  </tr>
+  </table>
+        <input type="button" name="savenewmaptype" value="Save" onclick="javascript:BitMap.EditSession.storeMaptype(document['edit-markerset-options-form']);"/>
+        <input type="button" name="closemaptypeform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptypeOptions()"/>
+  </form>
+</div>
+<!-- end of maptype options form -->
+
+
+<!-- edit tilelayers form -->
+<div id="edit-tilelayers-table" class="edit-datatable" style="display:none;">
+    <form action="javascript:;" name="edit-tilelayer-form" id="edit-tilelayer-form" >
+    <input name="save_tilelayer" type="hidden" value="true">
+    <input name="tilelayer_id" type="hidden" value="tilelayer_id">
+    <input name="tilelayer_array_n" type="hidden" value="n">
+    <input name="maptype_id" type="hidden" value="maptype_id">
+    <table>
+    	<tr>
+        <td width="200px">Tilelayers:<br/>
+            <ul>
+            <li style="display:none;"><a href="javascript:BitMap.EditSession.editTilelayer(n);">Tilelayer Name Here</a></li>
+            <li id="edit-tilelayerlink-new"><b><a id="edit-tilelayerlink-new-a" href="javascript:BitMap.EditSession.newTilelayer(setindex);">Add A New Tilelayer</a></b></li>
+            </ul>
+        </td>
+    	  <td>
+          <div class="tplform">
+            <div>
+            	Name<br/>
+            	<input name="name" type="text" size="50" value="a name"><br/>			    
+				<b>TODO:</b> Need Copyrights Creation<br/>			      
+				MinZoom<br/>
+				<input name="minzoom" type="text" size="5" value="0"><br/>
+				MaxZoom<br/>
+				<input name="maxzoom" type="text" size="5" value="0"><br/>
+				Tiles are PNGs<br/>
+					  <select name="ispng">
+						  <option value="0" >False</option>
+						  <option value="1" >True</option>
+					  </select><br/>	
+				Tiles URL<br/>
+				<input name="tilesurl" type="text" size="50" value=""><br/>
+				Opacity (a float from 0 to 1)<br/>
+				<input name="opacity" type="text" size="5" value="1"><br/>
+			</div>
+			<div>
+				<input type="button" name="save_tilelayer_btn" value="Save" onclick="javascript:BitMap.EditSession.storeTilelayer(document['edit-tilelayer-form']);">
+			</div>
+        </td>
+        <td width="200px">
+          <div id="edit-tilelayer-tips">Tips<br/>
+               Put advice here
           </div>
-			    <div>
-            Base Map Type<br/>
-			      <select name="basetype">
-				      <option value="0" >Street Map</option>
-				      <option value="1" >Satellite</option>
-				      <option value="2" >Hybrid</option>
-			      </select><br/>
-			      Alt Map Type<br/>
-			      <select name="alttype">
-				      <option value="0" >Street Map</option>
-				      <option value="1" >Satellite</option>
-				      <option value="2" >Hybrid</option>
-			      </select></div>
-			    <div>
-            Map Tiles URL<br/>
-			      <input name="maptiles_url" type="text" size="50" value=""><br/>
-			        Low Res Map Tiles URL<br/>
-			      <input name="lowtiles_url" type="text" size="50" value="google">
+          <div id="edit-tilelayer-actions">Edit Marker Actions<br/>
+            <a name="remove_tilelayer_btn" title="remove from this maptype" href="javascript:BitMap.EditSession.removeTilelayer(document.edit-tilelayer-form);">remove</a>
+            <a name="expunge_tilelayer_btn" title="delete the tilelayer!" href="javascript:BitMap.EditSession.expungeTilelayer(document.edit-tilelayer-form);">delete</a><br/>
           </div>
-			    <div>
-            Hybrid Tiles URL<br/>
-			      <input name="hybridtiles_url" type="text" size="50" value="none"><br/>
-			      Low Res Hybrid Tiles URL<br/>
-			      <input name="lowhybridtiles_url" type="text" size="50" value="google">
-          </div>
-			    <div>
-            Copyright<br/>
-			      <input name="copyright" type="text" size="50" value=""><br/>
-			      Min Zoom<br/>
-			      <input name="minzoom" type="text" size="3" value="0">
-			      Max Zoom<br/>
-			      <input name="maxzoom" type="text" size="3" value="16">
-          </div>
-			    <div>
-            Bounds<br/>
-			      <textarea name="bounds" rows="3"></textarea>
-          </div>
-			    <div>
-            <input type="button" name="save_maptype_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMaptype(document['edit-maptype-form']);">
-          </div>
-        </div>
-      </td>
-      <td width="200px">
-        <div id="edit-maptype-tips">Tips<br/>
-             Put advice here
-        </div>
-        <div id="edit-maptype-actions">Edit Marker Actions<br/>
-			    <a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');">show</a>
-			    <a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMaptype(document['edit-maptype-form']);">remove</a>
-			    <a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMaptype(document['edit-maptype-form']);">delete</a>
-        </div>
-      </td>
-		  </tr>
-	  </table>
-	  <input type="button" name="closemaptypeform" value="Cancel Editing Maptypes" onclick="javascript:BitMap.EditSession.canceledit('edit-maptypes-table');">
-	  </form>
-	</div>
-	</div>
-</div> <!-- end of editmaptypeform -->
+        </td>
+     	</tr>
+    </table>
+    <input type="button" name="closetilelayerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditTilelayers()"></br></div>
+    </form>
+</div> 
+<!-- edit of edit tilelayers form -->
+
+<!-- close all maptype editing -->
+<div id="edit-maptypes-cancel" style="display:none;">
+  <input type="button" name="closemaptypeform" value="Close Maptype Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptypes();" />
+</div>
 
 
 

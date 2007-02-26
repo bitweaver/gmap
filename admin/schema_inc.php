@@ -47,10 +47,11 @@ $tables = array(
 
 'gmaps_tilelayers' => "
   tilelayer_id I4 PRIMARY,
+  name C(64),
   minzoom I4,
   maxzoom I4,
   ispng L,
-  tileurl X,
+  tilesurl X,
   opacity F
 ",
 

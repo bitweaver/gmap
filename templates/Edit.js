@@ -133,45 +133,77 @@ BitMap.Edit.prototype = {
 		  form.map_comm.value = ?; for type="checkbox
 		*/
 	},
+
+
+
+	/*******************
+	 *
+	 * MAPTYPE FORM FUNCTIONS
+	 *
+	 *******************/	
 	
 	"editMaptypes": function(){
-	  var table = $('edit-maptypes-table');
-	  var linksList = table.getElementsByTagName("ul").item(0);
-	  var links = table.getElementsByTagName("li");
-	  //Clear all the existing maptypes listed  
-	  //We leave the first two, the first is the model we clone, the second if for a new maptype
-	  var count = links.length;
-	  for (n=count-1; n>1; n--){
-	    linksList.removeChild(links.item(n));
-	  }  
-	  //For each maptype add a link
-	  count = this.Map.maptypes.length;
-	  if (count > 0){
-	    var firstselected = false;
-	    for (var n=0; n<count; n++) {
-	      var m = this.Map.maptypes[n];
-	  		  var newLI = links.item(0).cloneNode(true);
-	        newLI.id = 'edit-maptypelink-'+n;
-	  		  var newLink = newLI.getElementsByTagName("a").item(0);
-	        newLink.href = "javascript:BitMap.EditSession.editMaptype("+n+")";
-	        newLink.innerHTML = m.title;
-	        linksList.appendChild(newMarkerLI);
-	  		  newLI.style.display = "block";
-	  			
-	  			if (firstselected != true){
-	  			  this.editMaptype(n);
-	  			  firstselected = true;
-	  			}
+		BitMap.show('edit-maptypes-menu');
+	  //First check if there are any marker sets
+	  if (this.Map.markersets.length > 0){
+	    // We assume editMarkers has been called before and remove 
+	  	// any previously existing sets from the UI	
+	  	for (var n=0; n<this.Map.maptypes.length; n++) {
+	  		if (this.Map.maptypes[n]!= null){
+	    		var getElem = "edit-maptypes-"+n;
+	    		if ( $(getElem) ) {
+	    			$('edit-maptypes-table').removeChild($(getElem));
+	    		}
+			}
+	  	}
+	    //Add a tool bar for each MarkerSet
+	    for (var n=0; n<this.Map.maptypes.length; n++) {
+	  		var newMarkerSet = $('edit-maptype').cloneNode(true);
+	    	newMarkerSet.id = "edit-maptype-"+n;
+	   		newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[n].name;
+	   		newMarkerSet.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMaptypeOptions("+n+");";
+	   		newMarkerSet.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMaptypeTilelayers("+n+");";
+	    	$('edit-maptypes-table').appendChild(newMarkerSet);
+	    	BitMap.show('edit-maptype-'+n);
 	    }
 	  }else{
-	    this.newMaptype();
+		//alert you must create a maptype first
 	  }
-	  //We assume it is not visible and make it so
-	  BitMap.show('edit-maptypes-table')
+	  BitMap.show('edit-maptypes-table');
+	  BitMap.show('edit-maptypes-cancel');
 	},
 	
 	
 	"newMaptype": function(){
+	  this.cancelEditTilelayers();
+	  var count = this.Map.maptypes.length;
+	  for (n=0; n<count; n++){
+	    BitMap.jscss('remove', $('edit-maptype-'+n), 'edit-selected');
+	  }
+	
+	  if( !$('edit-maptype-new') ){
+	    var newMaptype = $('edit-maptype').cloneNode(true);
+	    newMaptype.id = "edit-maptype-new";
+	    newMaptype.getElementsByTagName("span").item(0).innerHTML = "New Maptype";
+	    var tdtags = newMaptype.getElementsByTagName("td");
+	    tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
+	    $('edit-maptypes-menu').appendChild(newMaptype);
+	  }
+	  
+	  BitMap.jscss('add', $('edit-maptype-new'), 'edit-selected');
+	  BitMap.hide('edit-maptype-options-actions');
+	  $('edit-maptype-new').appendChild( $('edit-maptype-options-table') );
+	  BitMap.show('edit-maptype-new');
+	  BitMap.show('edit-maptype-options-table');
+	  
+	  //customize the form values
+	  var form = $('edit-maptype-options-form');
+	  form.reset();
+	  form.maptype_id.value = null;
+	  form.array_n.value = null;
+
+	
+	/*
 	  var count = this.Map.maptypes.length;
 	  for (n=0; n<count; n++){
 	    if($('edit-maptypelink-'+n)){
@@ -184,8 +216,8 @@ BitMap.Edit.prototype = {
 	  form.array_n.value = null;
 	  form.reset();
 	  BitMap.hide('edit-maptype-actions');  
-	},
-	
+	 */
+	},	
 	
 	"editMaptype": function(){
 	  BitMap.jscss('remove', $('edit-maptypelink-new'), 'edit-select');
@@ -229,6 +261,39 @@ BitMap.Edit.prototype = {
 	  BitMap.show('edit-maptype-actions');
 	},
 	
+	"cancelEditMaptypes": function(){
+	  //rescue our form tables lest we destroy them by accident
+	  this.canceledit('edit-tilelayers-table');
+	  var elm = $('edit-tilelayers-table');
+	  document.body.appendChild(elm);
+	  this.canceledit('edit-maptype-options-table');
+	  var elm = $('edit-maptype-options-table');
+	  document.body.appendChild(elm);
+	  this.canceledit('edit-maptypes-menu');
+	  this.canceledit('edit-maptypes-table');
+	  this.canceledit('edit-maptypes-cancel');
+	  this.canceledit('editerror');
+	},
+
+	"cancelEditMaptypeOptions": function(){
+	  this.cancelNewMaptype();
+	  this.canceledit('edit-maptype-options-table');
+	  this.canceledit('editerror');
+	},
+	
+	"cancelNewMaptype": function(){
+	  if( $('edit-maptype-new') ){ BitMap.hide('edit-maptype-new'); }
+	},
+	
+	"cancelNewTilelayer": function(){
+	  this.canceledit('edit-tilelayer-new');
+	},
+		
+	"cancelEditTilelayers": function(){
+	  BitMap.hide('edit-tilelayers-table');
+	},
+
+
 	
 	
 	/*******************
@@ -510,7 +575,7 @@ BitMap.Edit.prototype = {
 	  
 	  //update links
 	  var formLinks = $('edit-marker-actions').getElementsByTagName("a");
-	  formLinks.item(0).href = "javascript:BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html);";
+	  formLinks.item(0).href = "javascript:BitMap.MapData[0].Map.markers["+i+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+i+"].gmarker.my_html);";
 	  
 	  BitMap.show('edit-marker-actions');
 	},
@@ -2168,6 +2233,7 @@ BitMap.Edit.prototype = {
 				 BitMap.hide('edit-markerset-new');
 				
 				// update the sets menus
+				this.cancelEditMarkerSets
 				this.editMarkerSets();
 				this.editMarkers(n);
 	},
@@ -2223,7 +2289,7 @@ BitMap.Edit.prototype = {
 				};
 	
 				// update the sets menus
-				this.editMarkers();
+				this.editMarkers(this.editObjectN);
 	},
 	
 	
