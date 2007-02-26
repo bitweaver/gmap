@@ -1593,7 +1593,11 @@ BitMap.Edit.prototype = {
 				this.editSetId = f.set_id.value;
 				this.editObjectN = f.marker_array_n.value;
 				var callback = (f.marker_id.value != "")?this.updateMarker:this.addMarker;
-			  doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+/*
+				BitMap.show('editerror');
+				$('editerror').innerHTML = str;
+*/
+			  	doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 		 
 		 "removeMarker": function(f){
@@ -1615,10 +1619,6 @@ BitMap.Edit.prototype = {
 				this.editSetId = f.set_id.value;
 				this.editObjectN = f.set_array_n.value;
 				var callback = (f.set_id.value != "")?this.updateMarkerSet:this.addMarkerSet;
-				/*
-				BitMap.show('editerror');
-				$('editerror').innerHTML = str;
-				*/
 				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 	
@@ -2112,47 +2112,46 @@ BitMap.Edit.prototype = {
 	
 		 	 
 	"updateMarker": function(rslt){
-	      var xml = rslt.responseXML;
-							
-		 		//the marker data we are changing
-				var n = this.editObjectN;
-				var m = this.Map.markers[n];
-	
-		 		//shorten var names
-				var id = xml.documentElement.getElementsByTagName('id');			
-				var marker_id = id[0].firstChild.nodeValue;
-				var ty = xml.documentElement.getElementsByTagName('marker_type');			
-				m.marker_type = ty[0].firstChild.nodeValue;
-				var tl = xml.documentElement.getElementsByTagName('title');
-				var title = tl[0].firstChild.nodeValue;			
-		 		m.title = title;
-				var lt = xml.documentElement.getElementsByTagName('lat');
-				var lat = parseFloat(lt[0].firstChild.nodeValue);
-		 		m.lat = lat;
-				var ln = xml.documentElement.getElementsByTagName('lng');
-				var lng = parseFloat(ln[0].firstChild.nodeValue);
-		 		m.lng = lng;
-				var dt = xml.documentElement.getElementsByTagName('data');
-				var data = dt[0].firstChild.nodeValue;			
-		 		m.data = data;
-				var pdt = xml.documentElement.getElementsByTagName('parsed_data');
-				var parsed_data = pdt[0].firstChild.nodeValue;
-		 		m.parsed_data = parsed_data;
-				var l = xml.documentElement.getElementsByTagName('label');
-				var label = l[0].firstChild.nodeValue;			
-		 		m.label_data = label;			
-				var pu = xml.documentElement.getElementsByTagName('photo_url');
-				m.photo_url = pu[0].firstChild.nodeValue;
-				var z = xml.documentElement.getElementsByTagName('z');
-				var zindex = parseInt(z[0].firstChild.nodeValue);
-				m.zindex = zindex;
-				
-	        //unload the marker
-	      this.Map.map.removeOverlay( m.marker );
-	        //remake the marker
-				this.Map.attachMarker(n, true);
-				//remove the assistant
-				this.removeAssistant();
+	    var xml = rslt.responseXML;							
+		//the marker data we are changing
+		var n = this.editObjectN;				
+		var m = this.Map.markers[n];
+
+		//shorten var names
+		var id = xml.documentElement.getElementsByTagName('id');			
+		var marker_id = id[0].firstChild.nodeValue;				
+		var tl = xml.documentElement.getElementsByTagName('title');
+		var title = tl[0].firstChild.nodeValue;			
+		m.title = title;
+		var ty = xml.documentElement.getElementsByTagName('marker_type');			
+		m.marker_type = ty[0].firstChild.nodeValue;
+		var lt = xml.documentElement.getElementsByTagName('lat');
+		var lat = parseFloat(lt[0].firstChild.nodeValue);
+		m.lat = lat;
+		var ln = xml.documentElement.getElementsByTagName('lng');
+		var lng = parseFloat(ln[0].firstChild.nodeValue);
+		m.lng = lng;
+		var dt = xml.documentElement.getElementsByTagName('data');
+		var data = dt[0].firstChild.nodeValue;			
+		m.data = data;
+		var pdt = xml.documentElement.getElementsByTagName('parsed_data');
+		var parsed_data = pdt[0].firstChild.nodeValue;
+		m.parsed_data = parsed_data;
+		var l = xml.documentElement.getElementsByTagName('label');
+		var label = l[0].firstChild.nodeValue;			
+		m.label_data = label;
+		var pu = xml.documentElement.getElementsByTagName('photo_url');
+		m.photo_url = ( pu[0].firstChild != null )?pu[0].firstChild.nodeValue:'';
+		var z = xml.documentElement.getElementsByTagName('z');
+		var zindex = parseInt(z[0].firstChild.nodeValue);
+		m.zindex = zindex;
+		
+		//unload the marker
+		this.Map.map.removeOverlay( m.gmarker );
+		//remake the marker
+		this.Map.addMarker(n);
+		//remove the assistant if used
+		this.removeAssistant();
 	},
 	
 	
