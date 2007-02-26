@@ -23,25 +23,18 @@ $gContent = new BitGmap();
 
 if (!empty($_REQUEST["save_maptype"])) {
     if( $result = $gContent->storeMapType( $_REQUEST ) ) {
-
-				//if store is successful we return XML
-				$mRet = "<maptype>"
-      		  ."<maptype_id>".$result->fields['maptype_id']."</maptype_id>"
-      		  ."<name>".$result->fields['name']."</name>"
-      		  ."<description>".$result->fields['description']."</description>"
-      		  ."<copyright>".$result->fields['copyright']."</copyright>"
-      		  ."<basetype>".$result->fields['basetype']."</basetype>"
-      		  ."<alttype>".$result->fields['alttype']."</alttype>"
-      		  ."<bounds>".$result->fields['bounds']."</bounds>"
-      		  ."<maxzoom>".$result->fields['maxzoom']."</maxzoom>"
-      		  ."<maptiles_url>".$result->fields['maptiles_url']."</maptiles_url>"
-      		  ."<lowresmaptiles_url>".$result->fields['lowresmaptiles_url']."</lowresmaptiles_url>"
-      		  ."<hybridtiles_url>".$result->fields['hybridtiles_url']."</hybridtiles_url>"
-      		  ."<lowreshybridtiles_url>".$result->fields['lowreshybridtiles_url']."</lowreshybridtiles_url>"
-						."</maptype>";
-																			
+		//if store is successful we return XML
+		$mRet = "<maptype>"
+		  ."<maptype_id>".$result->fields['maptype_id']."</maptype_id>"
+		  ."<name>".$result->fields['name']."</name>"
+		  ."<shortname>".$result->fields['shortname']."</shortname>"
+		  ."<description>".$result->fields['description']."</description>"
+		  ."<minzoom>".$result->fields['minzoom']."</minzoom>"
+		  ."<maxzoom>".$result->fields['maxzoom']."</maxzoom>"
+		  ."<errormsg>".$result->fields['copyright']."</errormsg>"
+		."</maptype>";
     }else{
-		//@todo - return some sort of store failure message in the xml
+	  //@todo - return some sort of store failure message in the xml
       $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
     }
 //Check if this to remove from a set, or to delete completely

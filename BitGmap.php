@@ -948,11 +948,108 @@ class BitGmap extends LibertyAttachable {
 	}
 	
 	
+	function verifyTilelayer( &$pParamHash ) {
+
+		$pParamHash['tilelayer_store'] = array();
+
+		if( !empty( $pParamHash['name'] ) ) {
+			$pParamHash['tilelayer_store']['name'] = $pParamHash['name'];
+		}
+
+		if( isset( $pParamHash['minzoom'] ) && is_numeric( $pParamHash['minzoom'] ) ) {
+			$pParamHash['tilelayer_store']['minzoom'] = $pParamHash['minzoom'];
+		}
+
+		if( isset( $pParamHash['maxzoom'] ) && is_numeric( $pParamHash['maxzoom'] ) ) {
+			$pParamHash['tilelayer_store']['maxzoom'] = $pParamHash['maxzoom'];
+		}
+		
+		if( !empty( $pParamHash['ispng'] ) ) {
+			$pParamHash['tilelayer_store']['ispng'] = $pParamHash['ispng'];
+		}
+
+		if( !empty( $pParamHash['tilesurl'] ) ) {
+			$pParamHash['tilelayer_store']['tilesurl'] = $pParamHash['tilesurl'];
+		}
+
+		if( isset( $pParamHash['opacity'] ) && is_numeric( $pParamHash['opacity'] ) ) {
+			$pParamHash['tilelayer_store']['opacity'] = $pParamHash['opacity'];
+		}
+		
+		return( count( $this->mErrors ) == 0 );
+	}
 	
-	
-	//Storage of Markers is handled by the marker class in BitGmapMarker.php
+	function storeTilelayer( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyTilelayer( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['tilelayer_id'] ) ) {			
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_tilelayers", $pParamHash['tilelayer_store'], array( "tilelayer_id" => $pParamHash['tilelayer_id'] ) );
+			}else{
+				 $pParamHash['tilelayer_id'] = $this->mDb->GenID( 'gmaps_tilelayers_tilelayer_id_seq' );
+				 $pParamHash['tilelayer_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers", $pParamHash['tilelayer_store'] );				 
+				 // if its a new tilelayer we also get a maptype_id for the keychain and automaticallly associate it with a maptype.
+				 $pParamHash['keychain_store']['maptype_id'] = $pParamHash['maptype_id'];
+				 $pParamHash['keychain_store']['maptype_id'] = $pParamHash['maptype_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers_keychain", $pParamHash['keychain_store'] );
+			}
+			$this->mDb->CompleteTrans();
+
+			// re-query to confirm results
+			$result = $this->getMapTypeData($pParamHash['tilelayer_id']);
+		}
+		return $result;
+	}
 	
 
+	function verifyCopyright( &$pParamHash ) {
+
+		$pParamHash['copyright_store'] = array();
+
+		if( isset( $pParamHash['minzoom'] ) && is_numeric( $pParamHash['minzoom'] ) ) {
+			$pParamHash['copyright_store']['minzoom'] = $pParamHash['minzoom'];
+		}
+
+		if( !empty( $pParamHash['bounds'] ) ) {
+			$pParamHash['copyright_store']['bounds'] = $pParamHash['bounds'];
+		}
+
+		if( !empty( $pParamHash['notice'] ) ) {
+			$pParamHash['copyright_store']['notice'] = $pParamHash['notice'];
+		}
+
+		return( count( $this->mErrors ) == 0 );
+	}
+	
+	function storeCopyright( &$pParamHash ) {
+		$return = FALSE;
+		if( $this->verifyCopyright( $pParamHash ) ) {
+			$this->mDb->StartTrans();
+			// store the posted changes
+			if ( !empty( $pParamHash['copyright_id'] ) ) {			
+				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_copyrights", $pParamHash['copyright_store'], array( "copyright_id" => $pParamHash['copyright_id'] ) );
+			}else{
+				 $pParamHash['copyright_id'] = $this->mDb->GenID( 'gmaps_copyrights_copyright_id_seq' );
+				 $pParamHash['copyright_store']['copyright_id'] = $pParamHash['copyright_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_copyrights", $pParamHash['copyright_store'] );
+				 // if its a new copyright we also get a tilelayer_id for the keychain and automaticallly associate it with a tilelayer.
+				 $pParamHash['keychain_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
+				 $pParamHash['keychain_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
+				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_copyrights_keychain", $pParamHash['keychain_store'] );
+			}
+			$this->mDb->CompleteTrans();
+
+			// re-query to confirm results
+			$result = $this->getMapTypeData($pParamHash['copyright_id']);
+		}
+		return $result;
+	}
+
+
+	
+	//Storage of Markers is handled by the marker class in BitGmapMarker.php
 	
 	
 	

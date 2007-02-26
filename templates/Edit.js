@@ -201,22 +201,6 @@ BitMap.Edit.prototype = {
 	  form.reset();
 	  form.maptype_id.value = null;
 	  form.array_n.value = null;
-
-	
-	/*
-	  var count = this.Map.maptypes.length;
-	  for (n=0; n<count; n++){
-	    if($('edit-maptypelink-'+n)){
-	    BitMap.jscss('remove', $('edit-maptypelink-'+n), 'edit-select');
-	    }
-	  }
-	  BitMap.jscss('add', $('edit-maptypelink-new'), 'edit-select');
-	  var form = $('edit-maptype-form');
-	  form.maptype_id.value = null;
-	  form.array_n.value = null;
-	  form.reset();
-	  BitMap.hide('edit-maptype-actions');  
-	 */
 	},	
 	
 	"editMaptype": function(){

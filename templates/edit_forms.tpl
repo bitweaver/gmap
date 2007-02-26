@@ -145,7 +145,7 @@
 	  </td>
 	  </tr>
   </table>
-        <input type="button" name="savenewmaptype" value="Save" onclick="javascript:BitMap.EditSession.storeMaptype(document['edit-markerset-options-form']);"/>
+        <input type="button" name="savenewmaptype" value="Save" onclick="javascript:BitMap.EditSession.storeMaptype(document['edit-maptype-options-form']);"/>
         <input type="button" name="closemaptypeform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptypeOptions()"/>
   </form>
 </div>
@@ -172,7 +172,10 @@
             <div>
             	Name<br/>
             	<input name="name" type="text" size="50" value="a name"><br/>			    
-				<b>TODO:</b> Need Copyrights Creation<br/>			      
+				<b>TODO:</b> Need Copyrights Creation | <b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.newCopyright(setindex);">Add A New Copyright</a></b>				
+				<div style="display:none;">
+					<a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Name Here</a>
+				</div>
 				MinZoom<br/>
 				<input name="minzoom" type="text" size="5" value="0"><br/>
 				MaxZoom<br/>
@@ -206,6 +209,36 @@
     </form>
 </div> 
 <!-- edit of edit tilelayers form -->
+
+
+<!-- edit copyrights form -->
+<div id="edit-copyright-table" class="edit-datatable" style="display:none;">
+    <form action="javascript:;" name="edit-copyright-form" id="edit-copyright-form" >
+    <input name="save_copyright" type="hidden" value="true">
+    <input name="copyright_id" type="hidden" value="copyright_id">
+    <input name="copyright_array_n" type="hidden" value="n">
+    <input name="tilelayer_id" type="hidden" value="tilelayer_id">
+          <div class="tplform">
+            <div>
+            	Notice<br/>
+            	<input name="notice" type="text" size="50" value="copyright notice"><br/>
+            	
+				MinZoom<br/>
+				<input name="minzoom" type="text" size="5" value="0"><br/>
+								
+            	Bounds<br/>
+                <textarea name="bounds" rows="10"></textarea>
+			</div>
+			<div>
+				<input type="button" name="save_copyright_btn" value="Save" onclick="javascript:BitMap.EditSession.storeCopyright(document['edit-copyright-form']);">
+			</div>
+    <input type="button" name="closecopyrightset" value="Close This Copyright" onclick="javascript:BitMap.EditSession.cancelEditCopyright()"></br></div>
+    
+	<a name="remove_copyright_btn" title="remove from this maptype" href="javascript:BitMap.EditSession.removeCopyright(document.edit-copyright-form);">remove</a> | 
+	<a name="expunge_copyright_btn" title="delete the copyright!" href="javascript:BitMap.EditSession.expungeCopyright(document.edit-copyright-form);">delete</a>
+    </form>
+</div> 
+<!-- edit of edit copyrights form -->
 
 <!-- close all maptype editing -->
 <div id="edit-maptypes-cancel" style="display:none;">
