@@ -1826,24 +1826,94 @@ class BitGmap extends LibertyAttachable {
 		$ret = FALSE;
 
 		if( !empty( $pParamHash['maptype_id'] ) && is_numeric( $pParamHash['maptype_id'] ) ) {
-  		$this->mDb->StartTrans();
-  		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_maptypes` 
-  		WHERE `maptype_id` =?";
-  		$result = $this->mDb->query( $query, array( $pParamHash['maptype_id'] ) );
-  		$this->mDb->CompleteTrans();
-			
-			// delete all references to the maptype from the map sets keychain
 			$this->mDb->StartTrans();
-  		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
-  			WHERE `set_id` =?
-  			AND `set_type` ='maptypes'";
+			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_maptypes` 
+				WHERE `maptype_id` =?";
 			$result = $this->mDb->query( $query, array( $pParamHash['maptype_id'] ) );
 			$this->mDb->CompleteTrans();
-  		$ret = TRUE;			
+
+			// delete all references to the maptype from the map sets keychain
+			$this->mDb->StartTrans();
+			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
+				WHERE `set_id` =?
+				AND `set_type` ='maptypes'";
+			$result = $this->mDb->query( $query, array( $pParamHash['maptype_id'] ) );
+			$this->mDb->CompleteTrans();
+
+  			// delete all references to the marker set from the marker keychain
+  			$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` 
+    			WHERE `maptype_id` =?";
+    		$result = $this->mDb->query( $query, array( $pParamHash['maptype_id'] ) );
+    		$this->mDb->CompleteTrans();				
+				
+			$ret = TRUE;		
 		}
 		
 		return $ret;
 	}	
+
+
+	/**
+	* This function deletes a tilelayer and all references to it in the tilelayers keychain
+	**/
+	function expungeTilelayer(&$pParamHash) {
+		$ret = FALSE;
+
+		if( !empty( $pParamHash['tilelayer_id'] ) && is_numeric( $pParamHash['tilelayer_id'] ) ) {
+			$this->mDb->StartTrans();
+			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_tilelayers` 
+				WHERE `tilelayer_id` =?";
+			$result = $this->mDb->query( $query, array( $pParamHash['tilelayer_id'] ) );
+			$this->mDb->CompleteTrans();
+
+			// delete all references to the tilelayer from the tilelayers keychain
+			$this->mDb->StartTrans();
+			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` 
+				WHERE `tilelayer_id` =?";
+			$result = $this->mDb->query( $query, array( $pParamHash['tilelayer_id'] ) );
+			$this->mDb->CompleteTrans();
+
+  			// delete all references to the tilelayer set from the copyright keychain
+  			$this->mDb->StartTrans();
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_copyrights_keychain` 
+    			WHERE `tilelayer_id` =?";
+    		$result = $this->mDb->query( $query, array( $pParamHash['tilelayer_id'] ) );
+    		$this->mDb->CompleteTrans();
+
+			$ret = TRUE;		
+		}
+		
+		return $ret;
+	}	
+
+
+	/**
+	* This function deletes a copyright and all references to it in the copyright keychain
+	**/
+	function expungeCopyright(&$pParamHash) {
+		$ret = FALSE;
+
+		if( !empty( $pParamHash['copyright_id'] ) && is_numeric( $pParamHash['copyright_id'] ) ) {
+			$this->mDb->StartTrans();
+			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_copyrights` 
+				WHERE `copyright_id` =?";
+			$result = $this->mDb->query( $query, array( $pParamHash['copyright_id'] ) );
+			$this->mDb->CompleteTrans();
+
+			// delete all references to the copyright from the copyrights keychain
+			$this->mDb->StartTrans();
+			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_copyrights_keychain` 
+				WHERE `copyright_id` =?";
+			$result = $this->mDb->query( $query, array( $pParamHash['copyright_id'] ) );
+			$this->mDb->CompleteTrans();
+
+			$ret = TRUE;		
+		}
+		
+		return $ret;
+	}	
+
 
 	
 	/**
