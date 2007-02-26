@@ -2106,8 +2106,8 @@ BitMap.Edit.prototype = {
 
 		this.removeAssistant();
 		// update the sets menus
-		this.editMarkers();
-		this.editSet(this.editSetId);
+		this.editMarkers(s);
+		this.editMarker(n);
 	},
 	
 		 	 
@@ -2119,32 +2119,25 @@ BitMap.Edit.prototype = {
 
 		//shorten var names
 		var id = xml.documentElement.getElementsByTagName('id');			
-		var marker_id = id[0].firstChild.nodeValue;				
+		m.marker_id = id[0].firstChild.nodeValue;				
 		var tl = xml.documentElement.getElementsByTagName('title');
-		var title = tl[0].firstChild.nodeValue;			
-		m.title = title;
+		m.title = tl[0].firstChild.nodeValue;			
 		var ty = xml.documentElement.getElementsByTagName('marker_type');			
 		m.marker_type = ty[0].firstChild.nodeValue;
 		var lt = xml.documentElement.getElementsByTagName('lat');
-		var lat = parseFloat(lt[0].firstChild.nodeValue);
-		m.lat = lat;
+		m.lat = parseFloat(lt[0].firstChild.nodeValue);
 		var ln = xml.documentElement.getElementsByTagName('lng');
-		var lng = parseFloat(ln[0].firstChild.nodeValue);
-		m.lng = lng;
+		m.lng = parseFloat(ln[0].firstChild.nodeValue);
 		var dt = xml.documentElement.getElementsByTagName('data');
-		var data = dt[0].firstChild.nodeValue;			
-		m.data = data;
+		m.data = dt[0].firstChild.nodeValue;			
 		var pdt = xml.documentElement.getElementsByTagName('parsed_data');
-		var parsed_data = pdt[0].firstChild.nodeValue;
-		m.parsed_data = parsed_data;
+		m.parsed_data = pdt[0].firstChild.nodeValue;
 		var l = xml.documentElement.getElementsByTagName('label');
-		var label = l[0].firstChild.nodeValue;			
-		m.label_data = label;
+		m.label_data = l[0].firstChild.nodeValue;			
 		var pu = xml.documentElement.getElementsByTagName('photo_url');
 		m.photo_url = ( pu[0].firstChild != null )?pu[0].firstChild.nodeValue:'';
 		var z = xml.documentElement.getElementsByTagName('z');
-		var zindex = parseInt(z[0].firstChild.nodeValue);
-		m.zindex = zindex;
+		m.zindex = parseInt(z[0].firstChild.nodeValue);
 				
 		//unload the marker
 		if ( m.gmarker ){ this.Map.map.removeOverlay( m.gmarker ) };
