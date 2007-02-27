@@ -1671,6 +1671,12 @@ BitMap.Edit.prototype = {
 	 *  AJAX FUNCTIONS
 	 *
 	 *******************/
+
+				/*
+				BitMap.show('editerror');
+				$('editerror').innerHTML = str;
+				*/
+
 			 
 		 "storeMap": function(f){
 				doSimpleXMLHttpRequest("edit.php", f).addCallback( bind(this.updateMap, this) ); 
@@ -1680,12 +1686,6 @@ BitMap.Edit.prototype = {
 				this.editObjectN = f.array_n.value;
 		 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
 				var callback = (f.maptype_id.value != "")?this.updateMaptype:this.addMaptype;
-				
-				/*
-				BitMap.show('editerror');
-				$('editerror').innerHTML = str;
-				*/
-				
 				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 		 
@@ -1701,6 +1701,28 @@ BitMap.Edit.prototype = {
 				this.editSetId = f.maptype_id.value;
 		 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
+		 },
+
+		 "storeTilelayer": function(f){
+		 		var str = "edit_tilelayer.php?" + queryString(f);
+				this.editSetId = f.maptype_id.value;
+				this.editObjectN = f.array_n.value;
+				var callback = (f.tilelayer_id.value != "")?this.updateTilelayer:this.addTilelayer;
+			  	doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+		 },
+		 
+		 "removeTilelayer": function(f){
+				this.editSetId = f.set_id.value;
+				this.editTilelayerId = f.tilelayer_id.value;
+		 		var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true";
+				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
+		 },
+	
+		 "expungeTilelayer": function(f){
+				this.editSetId = f.set_id.value;
+				this.editTilelayerId = f.tilelayer_id.value;
+		 		var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true";
+				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
 		 },
 	
 		 "storeMarker": function(f){
@@ -2103,12 +2125,113 @@ BitMap.Edit.prototype = {
 								
 	      			}
 	    		}			
-	
-					
 		 },
 		 
 		 
-		 
+
+	"addTilelayer": function(rslt){
+	    var xml = rslt.responseXML;
+
+		//the tilelayer data we are changing
+		
+		/*  *******  */
+		// need maptypes index here
+		// var i = ;
+		/*  *******  */
+		var n = this.Map.maptype[i].tilelayers.length;
+		
+		//this.Map.markers[n] = {};
+		var m = this.Map.maptype[i].tilelayers[n] = {};
+
+		//add the xml data to the marker record
+		this.parseTilelayerXML(m, xml);
+
+		/*  *******  */
+		// shoudlnt need this
+		/*  *******  */		
+		var s;
+		for(a=0; a<this.Map.maptypes.length; a++){
+			if ( ( this.Map.maptypes[a] != null ) && ( this.Map.maptypes[a].maptype_id == this.editSetId ) ){
+				s = a;
+			}
+		};
+
+		//remove the related maptype
+		//re-add the maptype
+		//add the tilelayer
+		/*  *******  */
+		// probably needs a ref to parent maptype
+		/*  *******  */
+		this.Map.addTilelayer(n);
+
+		// update the maptypes menus
+		this.editMaptype(s);
+		this.editTilelayer(n);
+	},
+	
+	"updateTilelayer": function(rslt){
+	    var xml = rslt.responseXML;							
+		//the marker data we are changing
+		var n = this.editObjectN;
+		
+		/*  *******  */
+		// need maptypes index here
+		// var i = ;
+		/*  *******  */
+		var m = this.Map.maptype[i].tilelayers[n];
+
+		//add the xml data to the marker record
+		this.parseTilelayerXML(m, xml);
+		
+		//remove the related maptype
+		//re-add the maptype
+		/*  *******  */
+		// probably needs a ref to parent maptype
+		/*  *******  */
+		//add the tilelayer
+		this.Map.addTilelayer(n);
+		
+		/*  *******  */
+		// update the maptypes menus ?
+		/*  *******  */
+	},
+	
+	"parseTilelayerXML": function(tl, xml){
+		// assign map type values data array				
+		var id = xml.documentElement.getElementsByTagName('tilelayer_id');			
+		tl.maptype_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.documentElement.getElementsByTagName('tiles_name');			
+		tl.tiles_name = nm[0].firstChild.nodeValue;
+		var minz = xml.documentElement.getElementsByTagName('tiles_minzoom');
+		tl.tiles_minzoom = parseInt( minz[0].firstChild.nodeValue );
+		var mz = xml.documentElement.getElementsByTagName('tiles_maxzoom');
+		tl.tiles_maxzoom = parseInt( mz[0].firstChild.nodeValue );		
+		var png = xml.documentElement.getElementsByTagName('ispng');
+		tl.ispng = png[0].firstChild.nodeValue;
+		var url = xml.documentElement.getElementsByTagName('tilesurl');
+		tl.tilesurl = url[0].firstChild.nodeValue;
+		var op = xml.documentElement.getElementsByTagName('opacity');
+		tl.opacity = parseFloat( op[0].firstChild.nodeValue );
+	},
+
+	"updateRemoveTilelayer": function(){
+		/*  *******  */
+		// need maptypes index here
+		// var i = ;
+		/*  *******  */
+
+			for (var n=0; n<this.Map.maptypes[i].tilelayers.length; n++){
+				if ( ( this.Map.maptypes[i].tilelayers[n] != null ) && ( this.Map.maptypes[i].tilelayers[n].marker_id == this.editTilelayerId ) ){
+					/*  *******  */
+					// remove layer from related maptype and update maptype on map
+					/*  *******  */
+					this.Map.maptypes[i].tilelayers[n] = null;
+				}
+			}
+			this.editMaptype(editSetId);
+			this.editTilelayers();
+	},
+
 		 
 	/*******************
 	 *
