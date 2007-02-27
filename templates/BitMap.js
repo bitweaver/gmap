@@ -116,6 +116,13 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
   this.map = new GMap2(document.getElementById(this.mapdiv));  
   this.SetControls();
   this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
+  // uncomment when supporting features work
+  /*
+  if (this.maptypes.length > 0){
+  	var ref = this;
+  	this.loopOver(ref.maptypes, function(i){ref.addMaptype(i);});
+  }
+  */
   this.SetMapType();
   if (this.markers.length > 0){
   	var ref = this;
@@ -211,40 +218,8 @@ BitMap.Map.prototype = {
 				ref.map.addOverlay(new GMarker(point));
 			}
 		});
-	},
-
-/*--------------------------------------------------------------------*/
-/*@todo this is a rough rewrite 
- *      need to look into hybrid types
- *      and what to do about boundry areas
- *      and what to show there 
- *      Also might need some variable to
- *      deal with V1 tile stack vs V2 tile stack  
- */
-// Adds all MapTypes, it is called from loadMap()
-	"addMapTypes": function(pParamHash){
-		var Maptypes = this.maptypes;
-		var count = Maptypes.length;
-		for (var n=0; n < count; n++) {
-			//must insert some sort of check for the Maptypes[n].basetype and special provisions for hybrids 
-			var copyright = new GCopyright(1,
-                              new GLatLngBounds(new GLatLng(-90, -180),
-                                                new GLatLng(90, 180)),
-                              Maptypes[n].minzoom,
-                              Maptypes[n].copyright);                              
-			var copyrightCollection = new GCopyrightCollection(Maptypes[n].name);
-			copyrightCollection.addCopyright(copyright);        
-			var tilelayers = [new GTileLayer(copyrightCollection, Maptypes[n].minzoom, Maptypes[n].maxzoom)];    
-			tilelayers[0].getTileUrl = CustomGetTileUrl;
-			function CustomGetTileUrl(a,b) {
-				var z = 17 - b;
-				var f = "/maps/?x="+a.x+"&y="+a.y+"&zoom="+z;
-				return f;
-			}
-			var custommap = new GMapType(tilelayers, new GMercatorProjection(Maptypes[n].maxzoom+1), "Maptypes[n].name", {errorMessage:"Sorry we do not have imagery available for this area"});
-			this.map.addMapType(custommap);
-		}
 	}
+
 }
 //end of BitMap.Map.prototype declaration
 

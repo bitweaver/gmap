@@ -25,13 +25,14 @@ BitMap.MapData.push({ldelim}
   Maptypes:[
   {if count($gContent->mMapTypes) > 0}{section name=maptypes loop=$gContent->mMapTypes}
   {ldelim}
-		maptype_id: {$gContent->mMapTypes[maptypes].maptype_id},
-		name: "{$gContent->mMapTypes[maptypes].name}",
-		shortname: "{$gContent->mMapTypes[maptypes].shortname}",
-		description: "{$gContent->mMapTypes[maptypes].description}",
-		minzoom: {$gContent->mMapTypes[maptypes].minzoom},
-		maxzoom: {$gContent->mMapTypes[maptypes].maxzoom},
-		errormsg: "{$gContent->mMapTypes[maptypes].errormsg}"
+		maptype_id:{$gContent->mMapTypes[maptypes].maptype_id},
+		name:"{$gContent->mMapTypes[maptypes].name}",
+		shortname:"{$gContent->mMapTypes[maptypes].shortname}",
+		description:"{$gContent->mMapTypes[maptypes].description}",
+		minzoom:{$gContent->mMapTypes[maptypes].minzoom},
+		maxzoom:{$gContent->mMapTypes[maptypes].maxzoom},
+		errormsg:"{$gContent->mMapTypes[maptypes].errormsg}",
+		tilelayers:[]
   {rdelim},
   {/section}{/if}],
 	

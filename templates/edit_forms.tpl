@@ -171,7 +171,7 @@
             <div>
             	Name<br/>
             	<input name="tiles_name" type="text" size="50" value="a name"><br/>			    
-				<b>TODO:</b> Need Copyrights Creation | <b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.newCopyright(setindex);">Add A New Copyright</a></b>				
+				<div><b>TODO:</b> Need Copyrights Creation | <b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.newCopyright(setindex);">Add A New Copyright</a></b></div>
 				<div style="display:none;">
 					<a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Name Here</a>
 				</div>
