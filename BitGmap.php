@@ -885,24 +885,12 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['maptype_store']['name'] = $pParamHash['name'];
 		}
 
+		if( !empty( $pParamHash['shortname'] ) ) {
+			$pParamHash['maptype_store']['shortname'] = $pParamHash['shortname'];
+		}
+
 		if( !empty( $pParamHash['description'] ) ) {
 			$pParamHash['maptype_store']['description'] = $pParamHash['description'];
-		}
-
-		if( !empty( $pParamHash['copyright'] ) ) {
-			$pParamHash['maptype_store']['copyright'] = $pParamHash['copyright'];
-		}
-
-		if( isset( $pParamHash['basetype'] ) && is_numeric( $pParamHash['basetype'] ) ) {
-			$pParamHash['maptype_store']['basetype'] = $pParamHash['basetype'];
-		}
-		
-		if( isset( $pParamHash['alttype'] ) && is_numeric( $pParamHash['alttype'] ) ) {
-			$pParamHash['maptype_store']['alttype'] = $pParamHash['alttype'];
-		}
-
-		if( isset( $pParamHash['bounds'] ) && is_numeric( $pParamHash['bounds'] ) ) {
-			$pParamHash['maptype_store']['bounds'] = $pParamHash['bounds'];
 		}
 
 		if( isset( $pParamHash['minzoom'] ) && is_numeric( $pParamHash['minzoom'] ) ) {
@@ -913,20 +901,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['maptype_store']['maxzoom'] = $pParamHash['maxzoom'];
 		}
 
-		if( !empty( $pParamHash['maptiles_url'] ) ) {
-			$pParamHash['maptype_store']['maptiles_url'] = $pParamHash['maptiles_url'];
-		}
-		
-		if( !empty( $pParamHash['lowtiles_url'] ) ) {
-			$pParamHash['maptype_store']['lowresmaptiles_url'] = $pParamHash['lowtiles_url'];
-		}
-
-		if( !empty( $pParamHash['hybridtiles_url'] ) ) {
-			$pParamHash['maptype_store']['hybridtiles_url'] = $pParamHash['hybridtiles_url'];
-		}
-
-		if( !empty( $pParamHash['lowhybridtiles_url'] ) ) {
-			$pParamHash['maptype_store']['lowreshybridtiles_url'] = $pParamHash['lowhybridtiles_url'];
+		if( !empty( $pParamHash['errormsg'] ) ) {
+			$pParamHash['maptype_store']['errormsg'] = $pParamHash['errormsg'];
 		}
 
 		// set values for updating the marker keychain
@@ -966,16 +942,16 @@ class BitGmap extends LibertyAttachable {
 
 		$pParamHash['tilelayer_store'] = array();
 
-		if( !empty( $pParamHash['name'] ) ) {
-			$pParamHash['tilelayer_store']['name'] = $pParamHash['name'];
+		if( !empty( $pParamHash['tiles_name'] ) ) {
+			$pParamHash['tilelayer_store']['tiles_name'] = $pParamHash['tiles_name'];
 		}
 
-		if( isset( $pParamHash['minzoom'] ) && is_numeric( $pParamHash['minzoom'] ) ) {
-			$pParamHash['tilelayer_store']['minzoom'] = $pParamHash['minzoom'];
+		if( isset( $pParamHash['tiles_minzoom'] ) && is_numeric( $pParamHash['tiles_minzoom'] ) ) {
+			$pParamHash['tilelayer_store']['tiles_minzoom'] = $pParamHash['tiles_minzoom'];
 		}
 
-		if( isset( $pParamHash['maxzoom'] ) && is_numeric( $pParamHash['maxzoom'] ) ) {
-			$pParamHash['tilelayer_store']['maxzoom'] = $pParamHash['maxzoom'];
+		if( isset( $pParamHash['tiles_maxzoom'] ) && is_numeric( $pParamHash['tiles_maxzoom'] ) ) {
+			$pParamHash['tilelayer_store']['tiles_maxzoom'] = $pParamHash['tiles_maxzoom'];
 		}
 		
 		if( !empty( $pParamHash['ispng'] ) ) {
@@ -1022,8 +998,8 @@ class BitGmap extends LibertyAttachable {
 
 		$pParamHash['copyright_store'] = array();
 
-		if( isset( $pParamHash['minzoom'] ) && is_numeric( $pParamHash['minzoom'] ) ) {
-			$pParamHash['copyright_store']['minzoom'] = $pParamHash['minzoom'];
+		if( isset( $pParamHash['copyright_minzoom'] ) && is_numeric( $pParamHash['copyright_minzoom'] ) ) {
+			$pParamHash['copyright_store']['copyright_minzoom'] = $pParamHash['copyright_minzoom'];
 		}
 
 		if( !empty( $pParamHash['bounds'] ) ) {

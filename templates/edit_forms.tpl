@@ -156,7 +156,7 @@
     <form action="javascript:;" name="edit-tilelayer-form" id="edit-tilelayer-form" >
     <input name="save_tilelayer" type="hidden" value="true">
     <input name="tilelayer_id" type="hidden" value="tilelayer_id">
-    <input name="tilelayer_array_n" type="hidden" value="n">
+    <input name="array_n" type="hidden" value="n">
     <input name="maptype_id" type="hidden" value="maptype_id">
     <table>
     	<tr>
@@ -170,15 +170,15 @@
           <div class="tplform">
             <div>
             	Name<br/>
-            	<input name="name" type="text" size="50" value="a name"><br/>			    
+            	<input name="tiles_name" type="text" size="50" value="a name"><br/>			    
 				<b>TODO:</b> Need Copyrights Creation | <b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.newCopyright(setindex);">Add A New Copyright</a></b>				
 				<div style="display:none;">
 					<a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Name Here</a>
 				</div>
 				MinZoom<br/>
-				<input name="minzoom" type="text" size="5" value="0"><br/>
+				<input name="tiles_minzoom" type="text" size="5" value="0"><br/>
 				MaxZoom<br/>
-				<input name="maxzoom" type="text" size="5" value="0"><br/>
+				<input name="tiles_maxzoom" type="text" size="5" value="0"><br/>
 				Tiles are PNGs<br/>
 					  <select name="ispng">
 						  <option value="0" >False</option>
@@ -215,7 +215,7 @@
     <form action="javascript:;" name="edit-copyright-form" id="edit-copyright-form" >
     <input name="save_copyright" type="hidden" value="true">
     <input name="copyright_id" type="hidden" value="copyright_id">
-    <input name="copyright_array_n" type="hidden" value="n">
+    <input name="array_n" type="hidden" value="n">
     <input name="tilelayer_id" type="hidden" value="tilelayer_id">
           <div class="tplform">
             <div>
@@ -223,7 +223,7 @@
             	<input name="notice" type="text" size="50" value="copyright notice"><br/>
             	
 				MinZoom<br/>
-				<input name="minzoom" type="text" size="5" value="0"><br/>
+				<input name="copyright_minzoom" type="text" size="5" value="0"><br/>
 								
             	Bounds<br/>
                 <textarea name="bounds" rows="10"></textarea>
