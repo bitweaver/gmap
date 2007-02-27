@@ -47,9 +47,9 @@ $tables = array(
 
 'gmaps_tilelayers' => "
   tilelayer_id I4 PRIMARY,
-  name C(64),
-  minzoom I4,
-  maxzoom I4,
+  tiles_name C(64),
+  tiles_minzoom I4,
+  tiles_maxzoom I4,
   ispng L,
   tilesurl X,
   opacity F
@@ -57,7 +57,7 @@ $tables = array(
 
 'gmaps_copyrights' => "
   copyright_id I4 PRIMARY,
-  minzoom I4,
+  copyright_minzoom I4,
   bounds X,
   notice C(32)
 ",
@@ -66,14 +66,14 @@ $tables = array(
   maptype_id I4 NOTNULL,
   tilelayer_id I4 NOTNULL
   CONSTRAINT ', CONSTRAINT `gmaps_tilelayers_keychain_maptype_ref` FOREIGN KEY (`maptype_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_maptypes`( `maptype_id` )
-              , CONSTRAINT `gmaps_tilelayers_keychain_tilelayers_ref` FOREIGN KEY (`tilelayers_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayers_id` )'
+              , CONSTRAINT `gmaps_tilelayers_keychain_tilelayers_ref` FOREIGN KEY (`tilelayer_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayer_id` )'
 ",
 
 'gmaps_copyrights_keychain' => "
   copyright_id I4 NOTNULL,
   tilelayer_id I4 NOTNULL
   CONSTRAINT ', CONSTRAINT `gmaps_copyrights_keychain_copyright_ref` FOREIGN KEY (`copyright_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_copyrights`( `copyright_id` )
-              , CONSTRAINT `gmaps_copyrights_keychain_tilelayers_ref` FOREIGN KEY (`tilelayers_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayers_id` )'
+              , CONSTRAINT `gmaps_copyrights_keychain_tilelayers_ref` FOREIGN KEY (`tilelayer_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayer_id` )'
 ",
 
 

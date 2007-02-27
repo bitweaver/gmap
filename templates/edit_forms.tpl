@@ -118,7 +118,7 @@
 			Name<br/>
 			<input name="name" type="text" size="50" value="a name"><br/>
 			Short Name<br/>
-			<input name="name" type="text" size="10" value="a short name"><br/>
+			<input name="shortname" type="text" size="10" value="a short name"><br/>
 		  	Description<br/>
 		  	<input name="description" type="text" size="50" value="a description">
 		  </div>
@@ -129,7 +129,7 @@
 			<input name="errormsg" type="text" size="50" value="">
 		  </div>
 		  <div>
-			<input type="button" name="save_maptype_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMaptype(document['edit-maptype-form']);">
+			<input type="button" name="save_maptype_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMaptype(document['edit-maptype-options-form']);">
 		  </div>
 		</div>
 	  </td>
@@ -139,13 +139,12 @@
 		</div>
 		<div id="edit-maptype-options-actions">Edit Maptype Actions<br/>
 				<a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');">show</a>
-				<a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMaptype(document['edit-maptype-form']);">remove</a>
-				<a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMaptype(document['edit-maptype-form']);">delete</a>
+				<a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMaptype(document['edit-maptype-options-form']);">remove</a>
+				<a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMaptype(document['edit-maptype-options-form']);">delete</a>
 		</div>
 	  </td>
 	  </tr>
   </table>
-        <input type="button" name="savenewmaptype" value="Save" onclick="javascript:BitMap.EditSession.storeMaptype(document['edit-maptype-options-form']);"/>
         <input type="button" name="closemaptypeform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptypeOptions()"/>
   </form>
 </div>

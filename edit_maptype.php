@@ -31,7 +31,7 @@ if (!empty($_REQUEST["save_maptype"])) {
 		  ."<description>".$result->fields['description']."</description>"
 		  ."<minzoom>".$result->fields['minzoom']."</minzoom>"
 		  ."<maxzoom>".$result->fields['maxzoom']."</maxzoom>"
-		  ."<errormsg>".$result->fields['copyright']."</errormsg>"
+		  ."<errormsg>".$result->fields['errormsg']."</errormsg>"
 		."</maptype>";
     }else{
 	  //@todo - return some sort of store failure message in the xml

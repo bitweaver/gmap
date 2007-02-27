@@ -145,7 +145,7 @@ BitMap.Edit.prototype = {
 	"editMaptypes": function(){
 		BitMap.show('edit-maptypes-menu');
 	  //First check if there are any marker sets
-	  if (this.Map.markersets.length > 0){
+	  if (this.Map.maptypes.length > 0){
 	    // We assume editMarkers has been called before and remove 
 	  	// any previously existing sets from the UI	
 	  	for (var n=0; n<this.Map.maptypes.length; n++) {
@@ -158,12 +158,12 @@ BitMap.Edit.prototype = {
 	  	}
 	    //Add a tool bar for each MarkerSet
 	    for (var n=0; n<this.Map.maptypes.length; n++) {
-	  		var newMarkerSet = $('edit-maptype').cloneNode(true);
-	    	newMarkerSet.id = "edit-maptype-"+n;
-	   		newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[n].name;
-	   		newMarkerSet.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMaptypeOptions("+n+");";
-	   		newMarkerSet.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMaptypeTilelayers("+n+");";
-	    	$('edit-maptypes-table').appendChild(newMarkerSet);
+	  		var newMaptype = $('edit-maptype').cloneNode(true);
+	    	newMaptype.id = "edit-maptype-"+n;
+	   		newMaptype.getElementsByTagName("span").item(0).innerHTML = this.Map.maptypes[n].name;
+	   		newMaptype.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMaptypeOptions("+n+");";
+	   		newMaptype.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMaptypeTilelayers("+n+");";
+	    	$('edit-maptypes-table').appendChild(newMaptype);
 	    	BitMap.show('edit-maptype-'+n);
 	    }
 	  }else{
@@ -243,6 +243,12 @@ BitMap.Edit.prototype = {
 	  formLinks.item(0).href = "javascript:alert('feature coming soon')";
 	  
 	  BitMap.show('edit-maptype-actions');
+	},
+
+	"editMaptypeOptions": function(){
+	},
+	
+	"editMaptypeTilelayers": function(){
 	},
 	
 	"cancelEditMaptypes": function(){
@@ -1620,7 +1626,13 @@ BitMap.Edit.prototype = {
 				this.editObjectN = f.array_n.value;
 		 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
 				var callback = (f.maptype_id.value != "")?this.updateMaptype:this.addMaptype;
-				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+				
+
+				BitMap.show('editerror');
+				$('editerror').innerHTML = str;
+				
+				
+				//doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 		 
 		 "removeMaptype": function(f){
@@ -1642,10 +1654,6 @@ BitMap.Edit.prototype = {
 				this.editSetId = f.set_id.value;
 				this.editObjectN = f.marker_array_n.value;
 				var callback = (f.marker_id.value != "")?this.updateMarker:this.addMarker;
-/*
-				BitMap.show('editerror');
-				$('editerror').innerHTML = str;
-*/
 			  	doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 		 

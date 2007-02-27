@@ -49,7 +49,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			}
 			if (M.style_id == 0 || typeof( M.style_id ) == 'undefined' || M.style_id == null){
 				this.defineGMarker(i, icon);
-				if (o == true) {M.gmarker.openInfoWindowHtml( M.gmarker.my_html );};
+				// if (o == true) {M.gmarker.openInfoWindowHtml( M.gmarker.my_html );};
 			}else{
 				var s;
 				var MarkerStyles = this.markerstyles; 
@@ -88,7 +88,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	  }
 	  
 	  M.gmarker = new GMarker(p, {icon: myicon, title:mytitle});
-	
+	  
 	  var mytitle = ["<h1 class='marker-title'>", M.title, "</h1>"].join("");
 	  var desc = (M.content_description != '')?M.content_description+" ":'';
 	  var stars = '';

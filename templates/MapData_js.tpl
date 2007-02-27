@@ -27,27 +27,14 @@ BitMap.MapData.push({ldelim}
   {ldelim}
 		maptype_id: {$gContent->mMapTypes[maptypes].maptype_id},
 		name: "{$gContent->mMapTypes[maptypes].name}",
+		shortname: "{$gContent->mMapTypes[maptypes].shortname}",
 		description: "{$gContent->mMapTypes[maptypes].description}",
-		copyright: "{$gContent->mMapTypes[maptypes].copyright}",
-		basetype: {$gContent->mMapTypes[maptypes].basetype},
-		alttype: {$gContent->mMapTypes[maptypes].alttype},
 		minzoom: {$gContent->mMapTypes[maptypes].minzoom},
 		maxzoom: {$gContent->mMapTypes[maptypes].maxzoom},
-		{if $gContent->mMapTypes[maptypes].maptiles_url != NULL}
-			maptiles_url: "{$gContent->mMapTypes[maptypes].maptiles_url}",
-		{/if}
-		{if $gContent->mMapTypes[maptypes].lowresmaptiles_url != NULL}
-			lowresmaptiles_url: "{$gContent->mMapTypes[maptypes].lowresmaptiles_url}",
-		{/if}
-		{if $gContent->mMapTypes[maptypes].hybridtiles_url != NULL}
-			hybridtiles_url: "{$gContent->mMapTypes[maptypes].hybridtiles_url}",
-		{/if}
-		{if $gContent->mMapTypes[maptypes].lowreshybridtiles_url != NULL}
-			lowreshybridtiles_url: "{$gContent->mMapTypes[maptypes].lowreshybridtiles_url}",
-		{/if}
-		{rdelim},
-	{/section}{/if}],
-		
+		errormsg: "{$gContent->mMapTypes[maptypes].errormsg}"
+  {rdelim},
+  {/section}{/if}],
+	
   Markers:[{if count($listcontent) > 0}{section name=n loop=$listcontent}{if $listcontent[n].lat != NULL}
   {ldelim}		
 		content_id:{$listcontent[n].content_id},

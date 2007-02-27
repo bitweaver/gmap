@@ -111,11 +111,25 @@ class BitGmap extends LibertyAttachable {
 		if ($gmap_id && is_numeric($gmap_id)) {
 
 			$bindVars = array((int)$gmap_id, "maptypes");
+
+          	/*	
 			$query = "SELECT bmt.*
           			FROM `".BIT_DB_PREFIX."gmaps_maptypes` bmt, `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
           			WHERE bmt.`maptype_id` = bmk.`set_id` AND bmk.`gmap_id` = ? AND bmk.`set_type` = ?";
+          	*/
 
-  		$result = $this->mDb->query( $query, $bindVars );
+
+			$query = "SELECT gmt.*, btl.*, bcr.*
+          			FROM ( `".BIT_DB_PREFIX."gmaps_maptypes` gmt, `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk )
+          			LEFT JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` btk ON (btk.`maptype_id` = gmt.`maptype_id`)
+          			LEFT JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` btl ON (btk.`tilelayer_id` = btl.`tilelayer_id`)
+					LEFT JOIN `".BIT_DB_PREFIX."gmaps_copyrights_keychain` bck ON (bck.`tilelayer_id` = btl.`tilelayer_id`)
+          			LEFT JOIN `".BIT_DB_PREFIX."gmaps_copyrights` bcr ON (bck.`copyright_id` = bcr.`copyright_id`)
+          			WHERE gmt.`maptype_id` = bmk.`set_id` 
+          			AND bmk.`gmap_id` = ? 
+          			AND bmk.`set_type` = ?";
+          			
+			$result = $this->mDb->query( $query, $bindVars );
 
 			$ret = array();
 
