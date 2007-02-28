@@ -56,6 +56,8 @@ class BitGmap extends LibertyAttachable {
 
 				if( $pFullLoad ) {
 					$this->mMapTypes = $this->getMapTypes($lookupId);
+					$this->mTilelayers = $this->getTilelayers($lookupId);
+					$this->mCopyrights = $this->getCopyrights($lookupId);
 
 					$this->mMapMarkers = $this->getMarkers($lookupId);
 					$this->mMapMarkerSets = $this->getMarkerSetsDetails($lookupId);
