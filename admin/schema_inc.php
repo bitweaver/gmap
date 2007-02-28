@@ -30,7 +30,7 @@ $tables = array(
   plot_on_load C(5) DEFAULT 'true',
   side_panel C(5) DEFAULT 'true',
   explode C(5) DEFAULT 'true',
-  cluster C (5) DEFAULT 'false'
+  cluster C(5) DEFAULT 'false'
   CONSTRAINTS ', CONSTRAINT `gmaps_sets_keychain_gmap_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."gmaps`( `gmap_id` )'
 ",
 
@@ -50,7 +50,7 @@ $tables = array(
   tiles_name C(64),
   tiles_minzoom I4,
   tiles_maxzoom I4,
-  ispng L,
+  ispng C(5) DEFAULT 'false'
   tilesurl X,
   opacity F
 ",

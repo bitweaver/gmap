@@ -31,8 +31,32 @@ BitMap.MapData.push({ldelim}
 		description:"{$gContent->mMapTypes[maptypes].description}",
 		minzoom:{$gContent->mMapTypes[maptypes].minzoom},
 		maxzoom:{$gContent->mMapTypes[maptypes].maxzoom},
-		errormsg:"{$gContent->mMapTypes[maptypes].errormsg}",
-		tilelayers:[]
+		errormsg:"{$gContent->mMapTypes[maptypes].errormsg}"
+  {rdelim},
+  {/section}{/if}],
+
+  Tilelayers:[
+  {if count($gContent->mTilelayers) > 0}{section name=tilelayers loop=$gContent->mTilelayers}
+  {ldelim}
+		tilelayer_id:{$gContent->mTilelayers[tilelayers].tilelayer_id},
+		tiles_name:"{$gContent->mTilelayers[tilelayers].tiles_name}",
+		tiles_minzoom:{$gContent->mTilelayers[tilelayers].tiles_minzoom},
+		tiles_maxzoom:{$gContent->mTilelayers[tilelayers].tiles_maxzoom},
+		ispng:{$gContent->mTilelayers[tilelayers].ispng},
+		tilesurl:"{$gContent->mTilelayers[tilelayers].tilesurl}",
+		opacity:{$gContent->mTilelayers[tilelayers].opacity},
+		maptype_id:{$gContent->mTilelayers[tilelayers].maptype_id}
+  {rdelim},
+  {/section}{/if}],
+
+  Copyrights:[
+  {if count($gContent->mCopyrights) > 0}{section name=copyrights loop=$gContent->mCopyrights}
+  {ldelim}
+		copyright_id:{$gContent->mCopyrights[copyrights].copyright_id},
+		copyright_minzoom:{$gContent->mCopyrights[copyrights].copyright_minzoom},
+		bounds:"{$gContent->mCopyrights[copyrights].bounds}",
+		notice:"{$gContent->mCopyrights[copyrights].notice}",
+		tilelayer_id:{$gContent->mCopyrights[copyrights].tilelayer_id}
   {rdelim},
   {/section}{/if}],
 	

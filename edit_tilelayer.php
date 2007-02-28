@@ -22,7 +22,7 @@ $gContent = new BitGmap();
 //There is no callback to the server for previewing changes.
 
 if (!empty($_REQUEST["save_tilelayer"])) {
-    if( $result = $gContent->storeMapType( $_REQUEST ) ) {
+    if( $result = $gContent->storeTilelayer( $_REQUEST ) ) {
 		//if store is successful we return XML
 		$mRet = "<tilelayer>"
 		  ."<tilelayer_id>".$result->fields['tilelayer_id']."</tilelayer_id>"

@@ -84,7 +84,6 @@ class BitGmap extends LibertyAttachable {
 			vd($accessError);
 		}
 */
-
 		return( count( $this->mInfo ) );
 	}
 
