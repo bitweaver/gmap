@@ -112,23 +112,10 @@ class BitGmap extends LibertyAttachable {
 
 			$bindVars = array((int)$gmap_id, "maptypes");
 
-          	/*	
 			$query = "SELECT bmt.*
           			FROM `".BIT_DB_PREFIX."gmaps_maptypes` bmt, `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
           			WHERE bmt.`maptype_id` = bmk.`set_id` AND bmk.`gmap_id` = ? AND bmk.`set_type` = ?";
-          	*/
 
-
-			$query = "SELECT gmt.*, btl.*, bcr.*
-          			FROM ( `".BIT_DB_PREFIX."gmaps_maptypes` gmt, `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk )
-          			LEFT JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` btk ON (btk.`maptype_id` = gmt.`maptype_id`)
-          			LEFT JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` btl ON (btk.`tilelayer_id` = btl.`tilelayer_id`)
-					LEFT JOIN `".BIT_DB_PREFIX."gmaps_copyrights_keychain` bck ON (bck.`tilelayer_id` = btl.`tilelayer_id`)
-          			LEFT JOIN `".BIT_DB_PREFIX."gmaps_copyrights` bcr ON (bck.`copyright_id` = bcr.`copyright_id`)
-          			WHERE gmt.`maptype_id` = bmk.`set_id` 
-          			AND bmk.`gmap_id` = ? 
-          			AND bmk.`set_type` = ?";
-          			
 			$result = $this->mDb->query( $query, $bindVars );
 
 			$ret = array();
@@ -136,14 +123,14 @@ class BitGmap extends LibertyAttachable {
 			while ($res = $result->fetchrow()) {
 				$ret[] = $res;
 			};
-		}
+		}		
 		return $ret;
 	}
 
 
 
-	//* Gets data for a given polyline.
-	// @ todo this should probably take an array so that we can get data for a bunch of markers if we want
+	//* Gets data for a given maptype.
+	// @todo this should probably take an array so that we can get data for a bunch of maptypes if we want
 	function getMapTypeData($maptype_id) {
 		global $gBitSystem;
 		if ($maptype_id && is_numeric($maptype_id)) {
@@ -155,6 +142,90 @@ class BitGmap extends LibertyAttachable {
 		return $result;
 	}
 	
+
+
+	//get all Tilelayers data associated with maptypes associated with a given $gmap_id
+	function getTilelayers($gmap_id) {
+		global $gBitSystem;
+		$ret = NULL;
+		if ($gmap_id && is_numeric($gmap_id)) {
+
+			$bindVars = array((int)$gmap_id, "maptypes");
+
+			$query = "SELECT gtl.*, gtk.*
+					FROM ( `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk, `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk )
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` gtl ON ( gtl.`tilelayer_id` = gtk.`tilelayer_id` )
+					WHERE gtk.`maptype_id` = gsk.`set_id` 
+					AND gsk.`gmap_id` = ? AND gsk.`set_type` = ?";
+
+			$result = $this->mDb->query( $query, $bindVars );
+
+			$ret = array();
+
+			while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		}		
+		return $ret;
+	}
+
+
+	
+	//* Gets data for a given tilelayer.
+	function getTilelayerData($tilelayer_id) {
+		global $gBitSystem;
+		if ($tilelayer_id && is_numeric($tilelayer_id)) {
+			$query = "SELECT bmt.*
+			FROM `".BIT_DB_PREFIX."gmaps_tilelayers` bmt
+			WHERE bmt.tilelayer_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$tilelayer_id));
+		}
+		return $result;
+	}
+
+
+
+	//get all Copyrights data associated with tilelayers of maptypes associated with a given $gmap_id
+	function getCopyrights($gmap_id) {
+		global $gBitSystem;
+		$ret = NULL;
+		if ($gmap_id && is_numeric($gmap_id)) {
+
+			$bindVars = array((int)$gmap_id, "maptypes");
+
+			$query = "SELECT gcr.*, gck.*
+					FROM ( `".BIT_DB_PREFIX."gmaps_copyrights_keychain` gck, `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk, `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk )
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_copyrights` gcr ON ( gcr.`copyright_id` = gck.`copyright_id` )
+					WHERE gck.`tilelayer_id` = gtk.`tilelayer_id` 
+					AND gtk.`maptype_id` = gsk.`set_id` 
+					AND gsk.`gmap_id` = ? AND gsk.`set_type` = ?";
+
+			$result = $this->mDb->query( $query, $bindVars );
+
+			$ret = array();
+
+			while ($res = $result->fetchrow()) {
+				$ret[] = $res;
+			};
+		}		
+		return $ret;
+	}
+
+
+	
+	//* Gets data for a given copyright.
+	function getCopyrightData($copyright_id) {
+		global $gBitSystem;
+		if ($copyright_id && is_numeric($copyright_id)) {
+			$query = "SELECT gcr.*
+			FROM `".BIT_DB_PREFIX."gmaps_copyrights` gcr
+			WHERE gcr.copyright_id = ?";
+  		$result = $this->mDb->query( $query, array((int)$copyright_id));
+		}
+		return $result;
+	}
+
+
 	
 	
 	
@@ -988,7 +1059,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
-			$result = $this->getMapTypeData($pParamHash['tilelayer_id']);
+			$result = $this->getTilelayerData($pParamHash['tilelayer_id']);
 		}
 		return $result;
 	}
