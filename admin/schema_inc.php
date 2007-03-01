@@ -50,7 +50,7 @@ $tables = array(
   tiles_name C(64),
   tiles_minzoom I4,
   tiles_maxzoom I4,
-  ispng C(5) DEFAULT 'false'
+  ispng C(5) DEFAULT 'false',
   tilesurl X,
   opacity F
 ",
