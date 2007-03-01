@@ -171,7 +171,6 @@
             <div>
             	Name<br/>
             	<input name="tiles_name" type="text" size="50" value="a name"><br/>			    
-				<div><b>TODO:</b> Need Copyrights Creation | <b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.newCopyright(setindex);">Add A New Copyright</a></b></div>
 				<div style="display:none;">
 					<a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Name Here</a>
 				</div>
@@ -192,6 +191,7 @@
 			<div>
 				<input type="button" name="save_tilelayer_btn" value="Save" onclick="javascript:BitMap.EditSession.storeTilelayer(document['edit-tilelayer-form']);">
 			</div>
+			<div><b>TODO:</b> Add Copyrights | <b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.newCopyright(setindex);">Add A New Copyright</a></b></div>
         </td>
         <td width="200px">
           <div id="edit-tilelayer-tips">Tips<br/>

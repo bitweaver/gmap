@@ -1037,7 +1037,7 @@ class BitGmap extends LibertyAttachable {
 		if( isset( $pParamHash['opacity'] ) && is_numeric( $pParamHash['opacity'] ) ) {
 			$pParamHash['tilelayer_store']['opacity'] = $pParamHash['opacity'];
 		}
-		
+
 		return( count( $this->mErrors ) == 0 );
 	}
 	
@@ -1054,7 +1054,7 @@ class BitGmap extends LibertyAttachable {
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers", $pParamHash['tilelayer_store'] );				 
 				 // if its a new tilelayer we also get a maptype_id for the keychain and automaticallly associate it with a maptype.
 				 $pParamHash['keychain_store']['maptype_id'] = $pParamHash['maptype_id'];
-				 $pParamHash['keychain_store']['maptype_id'] = $pParamHash['maptype_id'];
+				 $pParamHash['keychain_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers_keychain", $pParamHash['keychain_store'] );
 			}
 			$this->mDb->CompleteTrans();
@@ -1098,7 +1098,7 @@ class BitGmap extends LibertyAttachable {
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_copyrights", $pParamHash['copyright_store'] );
 				 // if its a new copyright we also get a tilelayer_id for the keychain and automaticallly associate it with a tilelayer.
 				 $pParamHash['keychain_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
-				 $pParamHash['keychain_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
+				 $pParamHash['keychain_store']['copyright_id'] = $pParamHash['copyright_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_copyrights_keychain", $pParamHash['keychain_store'] );
 			}
 			$this->mDb->CompleteTrans();

@@ -72,6 +72,8 @@ BitMap.Initialize = function(){
       BitMap.MapData[n].maptype,
       {scale: BitMap.MapData[n].scale, maptype_control:BitMap.MapData[n].maptype_control, zoom_control: BitMap.MapData[n].zoom_control, overview_control: BitMap.MapData[n].overview_control},
       BitMap.MapData[n].Maptypes,
+      BitMap.MapData[n].Tilelayers,
+      BitMap.MapData[n].Copyrights,
       BitMap.MapData[n].Markers,
       BitMap.MapData[n].MarkerSets,
       BitMap.MapData[n].MarkerStyles,
@@ -88,7 +90,7 @@ BitMap.Initialize = function(){
 
 //center is an object containing .lat and .lng
 //controls is an object containing .scale .type_control .zoom_control
-BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width, height, center, zoom, maptype, controls, maptypes, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
+BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width, height, center, zoom, maptype, controls, maptypes, tilelayers, copyrights, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
   this.index = index;
   this.mapdiv = mapdiv;
   this.id = id;
@@ -103,6 +105,8 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
   this.maptype = maptype;
   this.controls = controls;
   this.maptypes = maptypes;
+  this.tilelayers = tilelayers;
+  this.copyrights = copyrights;
   this.markers = markers;
   this.markersets = markersets;
   this.markerstyles = markerstyles;

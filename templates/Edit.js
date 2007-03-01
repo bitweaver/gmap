@@ -258,19 +258,18 @@ BitMap.Edit.prototype = {
 	  for (n=count-1; n>1; n--){
 	    tilelayersLinksList.removeChild(tilelayersLinks.item(n));
 	  }
-	  
 	  $('edit-tilelayerlink-new-a').href = "javascript:BitMap.EditSession.newTilelayer("+i+");";
 	  //For each tilelayer in our new maptype, add a link
 	  var firstselected = false;
 	  for (var n=0; n<this.Map.tilelayers.length; n++) {
-		var m = this.Map.tilelayers[n];
-	    if (m.maptype_id == maptype_id){
-	    	var newTilelayerli = markerLinks.item(0).cloneNode(true);
-	    	newTilelayerli.id = 'edit-markerlink-'+n;
+		var t = this.Map.tilelayers[n];
+	    if (t.maptype_id == maptype_id){
+	    	var newTilelayerli = tilelayersLinks.item(0).cloneNode(true);
+	    	newTilelayerli.id = 'edit-tilelayerlink-'+n;
 	  		var newTilelayerLink = newTilelayerli.getElementsByTagName("a").item(0);
 	      	newTilelayerLink.href = "javascript:BitMap.EditSession.editTilelayer("+n+")";
-	      	newTilelayerLink.innerHTML = m.title;
-	      	tilelayerLinksList.appendChild(newTilelayerli);
+	      	newTilelayerLink.innerHTML = t.tiles_name;
+	      	tilelayersLinksList.appendChild(newTilelayerli);
 	  		newTilelayerli.style.display = "block";
 			if (firstselected != true){
 			  this.editTilelayer(n);
@@ -302,7 +301,7 @@ BitMap.Edit.prototype = {
 	  var form = $('edit-tilelayer-form');
 	  form.tilelayer_id.value = t.tilelayer_id;
 	  form.array_n.value = i;
-	  form.maptype_id.value = this.Map.maptypes[i].maptype_id;
+	  form.maptype_id.value = this.Map.tilelayers[i].maptype_id;
 
 	  form.tiles_name.value = t.tiles_name;
 	  form.tiles_minzoom.value = t.tiles_minzoom;
@@ -313,7 +312,8 @@ BitMap.Edit.prototype = {
 	  form.ispng.value = t.ispng;
 	  form.tilesurl.value = t.tilesurl;
 	  form.opacity.value = t.opacity;
-	  
+
+	  /*	  
 	  var copyrightsTable = $('edit-copyrights-table');
 	  //Move Copyrights Table to New Tilelayer
 	  $('edit-tilelayer-'+i).appendChild(copyrightsTable);
@@ -347,7 +347,7 @@ BitMap.Edit.prototype = {
 	  if (firstselected == false){
 	    this.newCopyright(i);
 	  }
-	  
+	  */	  
 	  BitMap.show('edit-tilelayer-actions');
 	},
 
@@ -2167,39 +2167,31 @@ BitMap.Edit.prototype = {
 	     	var xml = rslt.responseXML;	
 			// create a spot for a new maptype in the data array
 			var n = this.Map.maptypes.length;
-			this.Map.maptypes[n] = new Array();
-			
-			// assign map type values data array				
-			var id = xml.documentElement.getElementsByTagName('maptype_id');			
-			this.Map.maptypes[n].maptype_id = parseInt( id[0].firstChild.nodeValue );
-			var nm = xml.documentElement.getElementsByTagName('name');			
-			this.Map.maptypes[n].name = nm[0].firstChild.nodeValue;
-			var snm = xml.documentElement.getElementsByTagName('shortname');			
-			this.Map.maptypes[n].shortname = snm[0].firstChild.nodeValue;
-			var ds = xml.documentElement.getElementsByTagName('description');			
-			this.Map.maptypes[n].description = ds[0].firstChild.nodeValue;	  		
-			var minz = xml.documentElement.getElementsByTagName('minzoom');
-			this.Map.maptypes[n].minzoom = parseInt( minz[0].firstChild.nodeValue );
-			var mz = xml.documentElement.getElementsByTagName('maxzoom');
-			this.Map.maptypes[n].maxzoom = parseInt( mz[0].firstChild.nodeValue );
-
-			this.Map.maptypes[n].maptype_node = this.Map.map.mapTypes.length;
+			var m = this.Map.maptypes[n] = new Array();
+	
+			//add the xml data to the marker record
+			this.parseMaptypeXML(m, xml);
+			m.maptype_node = n;
 			
 			// attach the new map type to the map
+			/*
 			this.Map.addMaptype();
-							
+			*/
+
 			// set the map type to active
 			/*
 			this.Map.map.setMaptype(this.Map.maptypes[n].name);
 			*/
 
 			// update the controls
+			/*
 			this.Map.map.removeControl(typecontrols);
 			this.Map.map.addControl(typecontrols);
+			*/
 			
 			this.cancelEditMaptypes();
 			this.editMaptypes();
-			this.editMaptypeOptions(n);
+			this.editMaptypeTilelayers(n);
 		 },
 	
 		 
@@ -2207,31 +2199,38 @@ BitMap.Edit.prototype = {
 	      	var xml = rslt.responseXML;
 			var n = this.editObjectN;
 			//clear maptype in this location from the Map array of Types
-			this.Map.maptypes[this.Map.maptypes[n].name] = null;
-
-			// assign map type values data array			
-			var id = xml.documentElement.getElementsByTagName('maptype_id');			
-			this.Map.maptypes[n].maptype_id = parseInt( id[0].firstChild.nodeValue );
-			var nm = xml.documentElement.getElementsByTagName('name');			
-			this.Map.maptypes[n].name = nm[0].firstChild.nodeValue;
-			var snm = xml.documentElement.getElementsByTagName('shortname');			
-			this.Map.maptypes[n].shortname = snm[0].firstChild.nodeValue;
-			var ds = xml.documentElement.getElementsByTagName('description');			
-			this.Map.maptypes[n].description = ds[0].firstChild.nodeValue;	  		
-			var minz = xml.documentElement.getElementsByTagName('minzoom');
-			this.Map.maptypes[n].minzoom = parseInt( minz[0].firstChild.nodeValue );
-			var mz = xml.documentElement.getElementsByTagName('maxzoom');
-			this.Map.maptypes[n].maxzoom = parseInt( mz[0].firstChild.nodeValue );
-							
-			var p = this.Map.maptypes[n].maptype_node;
-
+			var m = this.Map.maptypes[n] = new Array();
+	
+			//add the xml data to the marker record
+			this.parseMaptypeXML(m, xml);
+			m.maptype_node = n;
+			
 			//@todo remove the maptype from the map
 			//@todo re-add the maptype to the map			
 			// set the map type to active
-			this.Map.map.setMaptype( this.Map.maptypes[this.Map.maptypes[n].name] );
+			//this.Map.map.setMaptype( this.Map.maptypes[this.Map.maptypes[n].name] );
+			
+			// update the maptype
+			this.editMaptypeTilelayers(n);		
 		 },
 	
-	
+		"parseMaptypeXML": function(m, xml){
+			// assign map type values data array				
+			var id = xml.documentElement.getElementsByTagName('maptype_id');			
+			m.maptype_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');			
+			m.name = nm[0].firstChild.nodeValue;
+			var snm = xml.documentElement.getElementsByTagName('shortname');			
+			m.shortname = snm[0].firstChild.nodeValue;
+			var ds = xml.documentElement.getElementsByTagName('description');			
+			m.description = ds[0].firstChild.nodeValue;	  		
+			var minz = xml.documentElement.getElementsByTagName('minzoom');
+			m.minzoom = parseInt( minz[0].firstChild.nodeValue );
+			var mz = xml.documentElement.getElementsByTagName('maxzoom');
+			m.maxzoom = parseInt( mz[0].firstChild.nodeValue );
+			var er = xml.documentElement.getElementsByTagName('errormsg');			
+			m.errormsg = er[0].firstChild.nodeValue;
+		},
 		 
 		 "updateRemoveMaptype": function(rslt){
 				var n = this.editObjectN;
@@ -2272,30 +2271,23 @@ BitMap.Edit.prototype = {
 		 
 		 
 
-	"addTilelayer": function(rslt){
+	"addTilelayer": function(rslt){	
 	    var xml = rslt.responseXML;
 
-		//the tilelayer data we are changing
-		
-		/*  *******  */
-		// need maptypes index here
-		// var i = ;
-		/*  *******  */
-		var n = this.Map.maptype[i].tilelayers.length;
-		
-		//this.Map.markers[n] = {};
-		var m = this.Map.maptype[i].tilelayers[n] = {};
+		//the tilelayer data we are changing		
+		var n = this.Map.tilelayers.length;		
+		var t = this.Map.tilelayers[n] = {};
 
 		//add the xml data to the marker record
-		this.parseTilelayerXML(m, xml);
+		this.parseTilelayerXML(t, xml);
+		t.maptype_id = this.editSetId;
 
-		/*  *******  */
-		// shoudlnt need this
-		/*  *******  */		
 		var s;
-		for(a=0; a<this.Map.maptypes.length; a++){
-			if ( ( this.Map.maptypes[a] != null ) && ( this.Map.maptypes[a].maptype_id == this.editSetId ) ){
+		var mts = this.Map.maptypes;
+		for(a=0; a<mts.length; a++){
+			if ( ( mts[a] != null ) && ( mts[a].maptype_id == this.editSetId ) ){
 				s = a;
+				break;
 			}
 		};
 
@@ -2305,26 +2297,31 @@ BitMap.Edit.prototype = {
 		/*  *******  */
 		// probably needs a ref to parent maptype
 		/*  *******  */
-		this.Map.addTilelayer(n);
+		//this.Map.addTilelayer(n);
 
 		// update the maptypes menus
-		this.editMaptype(s);
+		this.editMaptypeTilelayers(s);
 		this.editTilelayer(n);
 	},
 	
 	"updateTilelayer": function(rslt){
-	    var xml = rslt.responseXML;							
+	    var xml = rslt.responseXML;
 		//the marker data we are changing
 		var n = this.editObjectN;
-		
-		/*  *******  */
-		// need maptypes index here
-		// var i = ;
-		/*  *******  */
-		var m = this.Map.maptype[i].tilelayers[n];
+		var t = this.Map.tilelayers[n];
 
 		//add the xml data to the marker record
-		this.parseTilelayerXML(m, xml);
+		this.parseTilelayerXML(t, xml);
+		t.maptype_id = this.editSetId;
+
+		var s;
+		var mts = this.Map.maptypes;
+		for(a=0; a<mts.length; a++){
+			if ( ( mts[a] != null ) && ( mts[a].maptype_id == this.editSetId ) ){
+				s = a;
+				break;
+			}
+		};
 		
 		//remove the related maptype
 		//re-add the maptype
@@ -2332,11 +2329,11 @@ BitMap.Edit.prototype = {
 		// probably needs a ref to parent maptype
 		/*  *******  */
 		//add the tilelayer
-		this.Map.addTilelayer(n);
+		//this.Map.addTilelayer(n);
 		
-		/*  *******  */
-		// update the maptypes menus ?
-		/*  *******  */
+		// update the maptypes menus
+		this.editMaptypeTilelayers(s);
+		this.editTilelayer(n);
 	},
 	
 	"parseTilelayerXML": function(tl, xml){
@@ -2355,8 +2352,6 @@ BitMap.Edit.prototype = {
 		tl.tilesurl = url[0].firstChild.nodeValue;
 		var op = xml.documentElement.getElementsByTagName('opacity');
 		tl.opacity = parseFloat( op[0].firstChild.nodeValue );
-		var mid = xml.documentElement.getElementsByTagName('maptype_id');			
-		tl.maptype_id = parseInt( mid[0].firstChild.nodeValue );
 	},
 
 	"updateRemoveTilelayer": function(){
