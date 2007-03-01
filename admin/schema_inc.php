@@ -30,7 +30,8 @@ $tables = array(
   plot_on_load C(5) DEFAULT 'true',
   side_panel C(5) DEFAULT 'true',
   explode C(5) DEFAULT 'true',
-  cluster C(5) DEFAULT 'false'
+  cluster C(5) DEFAULT 'false',
+  pos F
   CONSTRAINTS ', CONSTRAINT `gmaps_sets_keychain_gmap_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."gmaps`( `gmap_id` )'
 ",
 
@@ -64,7 +65,8 @@ $tables = array(
 
 'gmaps_tilelayers_keychain' => "
   maptype_id I4 NOTNULL,
-  tilelayer_id I4 NOTNULL
+  tilelayer_id I4 NOTNULL,
+  pos F
   CONSTRAINT ', CONSTRAINT `gmaps_tilelayers_keychain_maptype_ref` FOREIGN KEY (`maptype_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_maptypes`( `maptype_id` )
               , CONSTRAINT `gmaps_tilelayers_keychain_tilelayers_ref` FOREIGN KEY (`tilelayer_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayer_id` )'
 ",
@@ -143,7 +145,8 @@ $tables = array(
 
 'gmaps_marker_keychain' => "
   set_id I4 NOTNULL,
-  marker_id I8 NOTNULL
+  marker_id I8 NOTNULL.
+  pos F
   CONSTRAINT ', CONSTRAINT `gmaps_marker_keychain_set_ref` FOREIGN KEY (`set_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_marker_sets`( `set_id` )
               , CONSTRAINT `gmaps_marker_keychain_marker_ref` FOREIGN KEY (`marker_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_markers`( `marker_id` )'
 ",
@@ -198,7 +201,8 @@ $tables = array(
 
 'gmaps_polyline_keychain' => "
   set_id I4 NOTNULL,
-  polyline_id I4 NOTNULL
+  polyline_id I4 NOTNULL,
+  pos F
   CONSTRAINT ', CONSTRAINT `gmaps_polyline_keychain_set_ref` FOREIGN KEY (`set_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_sets`( `set_id` )
               , CONSTRAINT `gmaps_polyline_keychain_polyline_ref` FOREIGN KEY (`polyline_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polylines`( `polyline_id` )'
 ",
@@ -246,7 +250,8 @@ $tables = array(
 
 'gmaps_polygon_keychain' => "
   set_id I4 NOTNULL,
-  polygon_id I4 NOTNULL
+  polygon_id I4 NOTNULL,
+  pos F
   CONSTRAINT ', CONSTRAINT `gmaps_polygon_keychain_set_ref` FOREIGN KEY (`set_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polygon_sets`( `set_id` )
               , CONSTRAINT `gmaps_polygon_keychain_polygon_ref` FOREIGN KEY (`polygon_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polygons`( `polygon_id` )'
 ",
