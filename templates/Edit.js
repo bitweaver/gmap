@@ -285,6 +285,7 @@ BitMap.Edit.prototype = {
 	},
 
 	"editTilelayer": function(i){
+	  this.cancelEditCopyright();
 	  //i is the maptype_index
 	  BitMap.jscss('remove', $('edit-tilelayerlink-new'), 'edit-select');
 	  var a;
@@ -306,48 +307,35 @@ BitMap.Edit.prototype = {
 	  form.tiles_name.value = t.tiles_name;
 	  form.tiles_minzoom.value = t.tiles_minzoom;
 	  form.tiles_maxzoom.value = t.tiles_maxzoom;
-	  /* ****** */
-	  //ispng needs to be a check box
-	  /* ****** */
 	  form.ispng.value = t.ispng;
 	  form.tilesurl.value = t.tilesurl;
 	  form.opacity.value = t.opacity;
 
-	  /*	  
-	  var copyrightsTable = $('edit-copyrights-table');
-	  //Move Copyrights Table to New Tilelayer
-	  $('edit-tilelayer-'+i).appendChild(copyrightsTable);
-	  //set some constants
-	  var copyrightsLinksList = copyrightsTable.getElementsByTagName("ul").item(0);
-	  var copyrightsLinks = copyrightsTable.getElementsByTagName("li");
+	  //make menu of copyrights
 	  //Clear all the existing copyrights listed  
-	  //We leave the first two, the first is the model we clone, the second if for a new copyright
-	  var count = copyrightsLinks.length;
-	  for (n=count-1; n>1; n--){
-	    copyrightsLinksList.removeChild(copyrightsLinks.item(n));
+	  var count = this.Map.copyrights.length;
+	  for (n=0; n<count; n++){
+	  	if ($("edit-copyrightlink-"+n)){
+	    	$('edit-copyright-menu').removeChild($("edit-copyrightlink-"+n));
+	    }
 	  }
-	  //for each copyright add it to box
-	  var firstselected = false;
-	  for (var n=0; n<this.Map.coprights.length; n++) {
-		var c = this.Map.coprights[n];
+	  $('edit-copyrightlink-new-a').href = "javascript:BitMap.EditSession.newCopyright("+i+");";
+	  //for each copyright
+	  for (var n=0; n<count; n++) {
+		var c = this.Map.copyrights[n];
 	    if (c.tilelayer_id == t.tilelayer_id){
-	    	var newCopyrightli = tilelayerLinks.item(0).cloneNode(true);
-	    	newCopyrightli.id = 'edit-tilelayerlink-'+n;
-	  		var newCopyrightLink = newCopyrightli.getElementsByTagName("a").item(0);
-	      	newCopyrightLink.href = "javascript:BitMap.EditSession.editCopyright("+n+")";
-	      	newCopyrightLink.innerHTML = "copyright notice " + c.copyright_id;
-	      	tilelayerLinksList.appendChild(newCopyrightli);
-	  		newCopyrightli.style.display = "block";
-			if (firstselected != true){
-			  this.editCopyright(n);
-			  firstselected = true;
-			}	        
-	  	}
+		  //get the model menu and clone it
+		  newCopyrightMenu = $('edit-copyrightlink').cloneNode(true);
+		  //update the values
+		  newCopyrightMenu.id = "edit-copyrightlink-"+n;
+		  newCopyrightLink = newCopyrightMenu.getElementsByTagName("a").item(0);
+		  newCopyrightLink.href = "javascript:BitMap.EditSession.editCopyright("+n+")";
+		  newCopyrightLink.innerHTML = c.notice;
+		  //add it to the copyrights menu
+		  $('edit-copyright-menu').appendChild(newCopyrightMenu);
+	  	  newCopyrightMenu.style.display = "block";
+		}
 	  }
-	  if (firstselected == false){
-	    this.newCopyright(i);
-	  }
-	  */	  
 	  BitMap.show('edit-tilelayer-actions');
 	},
 
@@ -376,22 +364,23 @@ BitMap.Edit.prototype = {
 	  var count = this.Map.copyrights.length;
 	  for (n=0; n<count; n++){
 	    if($('edit-copyrightlink-'+n)){
-	    a = (n==i)?'add':'remove';
+		a = (n==i)?'add':'remove';
 	    BitMap.jscss(a, $('edit-copyrightlink-'+n), 'edit-select');
 	    }
 	  }
-	  
 	  var c = this.Map.copyrights[i];
-	  //change values
+	  //move the form to copyright being edited
+	  copyrightTable = $('edit-copyright-table');
+	  $('edit-copyrightlink-'+i).appendChild(copyrightTable);
 	  var form = $('edit-copyright-form');
+	  //change values
 	  form.copyright_id.value = c.copyright_id;
 	  form.array_n.value = i;
-	  form.tilelayer_id.value = c.set_id;
+	  form.tilelayer_id.value = c.tilelayer_id;
+	  form.copyright_minzoom.value = c.copyright_minzoom;
 	  form.notice.value = c.notice;
-	  form.minzoom.value = c.minzoom;
 	  form.bounds.value = c.bounds;
-	  
-	  BitMap.show('edit-copyright-actions');
+	  BitMap.show('edit-copyright-table');
 	},
 
 	
@@ -404,12 +393,15 @@ BitMap.Edit.prototype = {
 	    }
 	  }
 	  BitMap.jscss('add', $('edit-copyrightlink-new'), 'edit-select');
+	  //move the form to copyright being edited
+	  copyrightTable = $('edit-copyright-table');
+	  $('edit-copyrightlink-new').appendChild(copyrightTable);
 	  var form = $('edit-copyright-form');
 	  form.copyright_id.value = null;
 	  form.array_n.value = null;
 	  form.tilelayer_id.value = this.Map.tilelayers[i].tilelayer_id;
 	  form.reset();
-	  BitMap.hide('edit-copyright-actions');  
+	  BitMap.show('edit-copyright-table');
 	},	
 
 
@@ -417,6 +409,8 @@ BitMap.Edit.prototype = {
 	
 	"cancelEditMaptypes": function(){
 	  //rescue our form tables lest we destroy them by accident
+	  var elm = $('edit-copyright-table');
+	  document.body.appendChild(elm);
 	  this.canceledit('edit-tilelayers-table');
 	  var elm = $('edit-tilelayers-table');
 	  document.body.appendChild(elm);
@@ -448,11 +442,15 @@ BitMap.Edit.prototype = {
 	},
 
 	"cancelNewCopyright": function(){
-	  this.canceledit('edit-copyright-new');
+	  var elm = $('edit-copyright-table');
+	  document.body.appendChild(elm);
+	  BitMap.hide('edit-copyright-table');
 	},
 		
 	"cancelEditCopyright": function(){
-	  BitMap.hide('edit-copyrights-table');
+	  var elm = $('edit-copyright-table');
+	  document.body.appendChild(elm);
+	  BitMap.hide('edit-copyright-table');
 	},
 
 
@@ -2356,7 +2354,7 @@ BitMap.Edit.prototype = {
 
 	"updateRemoveTilelayer": function(){
 			for (var n=0; n<this.Map.tilelayers.length; n++){
-				if ( ( this.Map.tilelayers[n] != null ) && ( this.Map.maptypes[i].tilelayers[n].marker_id == this.editTilelayerId ) ){
+				if ( ( this.Map.tilelayers[n] != null ) && ( this.Map.maptypes[i].tilelayers[n].marker_id == this.editSetId ) ){
 					/*  *******  */
 					// remove layer from related maptype and update maptype on map
 					/*  *******  */
@@ -2367,27 +2365,80 @@ BitMap.Edit.prototype = {
 			this.editTilelayers();
 	},
 
-	"addCopyright":function(){
+	"addCopyright":function(rslt){
+	    var xml = rslt.responseXML;
+		//the copyright data we are adding
+		var n = this.Map.copyrights.length;
+		var c = this.Map.copyrights[n] = {};
+
+		//add the xml data to the marker record
+		this.parseCopyrightXML(c, xml);
+		c.tilelayer_id = this.editSetId;
+		var s;
+		var tls = this.Map.tilelayers;
+		for(a=0; a<tls.length; a++){
+			if ( ( tls[a] != null ) && ( tls[a].tilelayer_id == this.editSetId ) ){
+				s = a;
+				break;
+			}
+		};
+		
+		//remove the related maptype
+		//re-add the maptype
+		
+		// update the tilelayers menus
+		this.editTilelayer(s);
+		this.editCopyright(n);
 	},
 	
-	"updateCopyright":function(){
+	"updateCopyright":function(rslt){
+	    var xml = rslt.responseXML;
+		//the copyright data we are changing
+		var n = this.editObjectN;
+		var c = this.Map.copyrights[n];
+
+		//add the xml data to the marker record
+		this.parseCopyrightXML(c, xml);
+		c.tilelayer_id = this.editSetId;
+
+		var s;
+		var tls = this.Map.tilelayers;
+		for(a=0; a<tls.length; a++){
+			if ( ( tls[a] != null ) && ( tls[a].tilelayer_id == this.editSetId ) ){
+				s = a;
+				break;
+			}
+		};
+		
+		//remove the related maptype
+		//re-add the maptype
+		
+		// update the tilelayers menus
+		this.editTilelayer(s);
+		this.editCopyright(n);
 	},
 	
-	"parseCopyrightXML":function(cd, xml){
+	"parseCopyrightXML":function(c, xml){
 		// assign map type values data array				
 		var id = xml.documentElement.getElementsByTagName('copyright_id');			
-		cd.copyright_id = parseInt( id[0].firstChild.nodeValue );
+		c.copyright_id = parseInt( id[0].firstChild.nodeValue );
 		var minz = xml.documentElement.getElementsByTagName('copyright_minzoom');
-		cd.copyright_minzoom = parseInt( minz[0].firstChild.nodeValue );
+		c.copyright_minzoom = parseInt( minz[0].firstChild.nodeValue );
 		var bds = xml.documentElement.getElementsByTagName('bounds');
-		cd.bounds = bds[0].firstChild.nodeValue;
+		c.bounds = bds[0].firstChild.nodeValue;
 		var nt = xml.documentElement.getElementsByTagName('notice');
-		cd.notice = nt[0].firstChild.nodeValue;
-		var tid = xml.documentElement.getElementsByTagName('tilelayer_id');			
-		cd.tilelayer_id = parseInt( tid[0].firstChild.nodeValue );
+		c.notice = nt[0].firstChild.nodeValue;
 	},
 	
 	"updateRemoveCopyright":function(){
+		var n = this.editObjectN;
+		this.Map.copyrights[n] = null;
+
+		//remove the related maptype
+		//re-add the maptype
+	
+		this.cancelEditCopyright();
+		this.editTilelayer(s);	
 	},
 
 

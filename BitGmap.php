@@ -1104,7 +1104,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
-			$result = $this->getMapTypeData($pParamHash['copyright_id']);
+			$result = $this->getCopyrightData($pParamHash['copyright_id']);
 		}
 		return $result;
 	}

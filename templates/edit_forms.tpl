@@ -166,7 +166,7 @@
             <li id="edit-tilelayerlink-new"><b><a id="edit-tilelayerlink-new-a" href="javascript:BitMap.EditSession.newTilelayer(setindex);">Add A New Tilelayer</a></b></li>
             </ul>
         </td>
-    	  <td>
+    	<td>
           <div class="tplform">
             <div>
             	Name<br/>
@@ -191,7 +191,6 @@
 			<div>
 				<input type="button" name="save_tilelayer_btn" value="Save" onclick="javascript:BitMap.EditSession.storeTilelayer(document['edit-tilelayer-form']);">
 			</div>
-			<div><b>TODO:</b> Add Copyrights | <b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.newCopyright(setindex);">Add A New Copyright</a></b></div>
         </td>
         <td width="200px">
           <div id="edit-tilelayer-tips">Tips<br/>
@@ -204,37 +203,54 @@
         </td>
      	</tr>
     </table>
-    <input type="button" name="closetilelayerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditTilelayers()"></br></div>
     </form>
+    <table>
+    	<tr>
+        <td width="200px">
+        </td>
+    	<td>
+          <div class="tplform">
+            <div id="edit-copyright-menu">
+            	Copyright Notices for this Tilelayer
+				<div id="edit-copyrightlink-new">
+					<b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.newCopyright(setindex);">Add A New Copyright</a></b>
+				</div>
+				<div id="edit-copyrightlink" style="display:none;">
+					<b><a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Notice Here</a></b> 
+				</div>
+            </div>
+          </div>
+        </td>
+        <td width="200px">
+        </td>
+     	</tr>
+    </table>
+	<input type="button" name="closetilelayerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditTilelayers()"></br></div>
 </div> 
 <!-- edit of edit tilelayers form -->
 
 
 <!-- edit copyrights form -->
-<div id="edit-copyright-table" class="edit-datatable" style="display:none;">
+<div id="edit-copyright-table" style="display:none;">
     <form action="javascript:;" name="edit-copyright-form" id="edit-copyright-form" >
     <input name="save_copyright" type="hidden" value="true">
     <input name="copyright_id" type="hidden" value="copyright_id">
     <input name="array_n" type="hidden" value="n">
     <input name="tilelayer_id" type="hidden" value="tilelayer_id">
-          <div class="tplform">
-            <div>
-            	Notice<br/>
-            	<input name="notice" type="text" size="50" value="copyright notice"><br/>
-            	
-				MinZoom<br/>
-				<input name="copyright_minzoom" type="text" size="5" value="0"><br/>
-								
-            	Bounds<br/>
-                <textarea name="bounds" rows="10"></textarea>
-			</div>
-			<div>
-				<input type="button" name="save_copyright_btn" value="Save" onclick="javascript:BitMap.EditSession.storeCopyright(document['edit-copyright-form']);">
-			</div>
-    <input type="button" name="closecopyrightset" value="Close This Copyright" onclick="javascript:BitMap.EditSession.cancelEditCopyright()"></br></div>
-    
-	<a name="remove_copyright_btn" title="remove from this maptype" href="javascript:BitMap.EditSession.removeCopyright(document.edit-copyright-form);">remove</a> | 
-	<a name="expunge_copyright_btn" title="delete the copyright!" href="javascript:BitMap.EditSession.expungeCopyright(document.edit-copyright-form);">delete</a>
+	<div>
+		Notice<br/>
+		<input name="notice" type="text" size="50" value="copyright notice"><br/>
+		
+		MinZoom<br/>
+		<input name="copyright_minzoom" type="text" size="5" value="0"><br/>
+						
+		Bounds<br/>
+		<textarea name="bounds" rows="10"></textarea>
+	</div>
+	<input type="button" name="save_copyright_btn" value="Save" onclick="javascript:BitMap.EditSession.storeCopyright(document['edit-copyright-form']);">
+	<input type="button" name="closecopyrightset" value="Close This Copyright" onclick="javascript:BitMap.EditSession.cancelEditCopyright()"></br>
+	<a name="remove_copyright_btn" title="remove from this tilelayer" href="javascript:BitMap.EditSession.removeCopyright(document.edit-copyright-form);">Remove</a> | 
+	<a name="expunge_copyright_btn" title="delete this copyright!" href="javascript:BitMap.EditSession.expungeCopyright(document.edit-copyright-form);">Delete</a>
     </form>
 </div> 
 <!-- edit of edit copyrights form -->
