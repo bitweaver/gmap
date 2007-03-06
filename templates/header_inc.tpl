@@ -47,8 +47,11 @@
 		.data-date {width:36%; text-align:center}
 		.data-rating {width:14%; text-align:center}
 		{/literal}
+
 		{elseif $edit_map }
     	{literal}
+		  #gmap-sidepanel {float:right; margin:0; padding:0; width:300px; overflow:auto;}
+		  #gmap-sidepanel-table {margin:0; padding:0;}
 		  td {vertical-align:top; padding:0px;}
 		  th {text-align:left;}
 		  .map-op {margin-right:160px;}
@@ -70,6 +73,7 @@
 		  table.data td {padding:.5em;}
 		{/literal}
 		{else}
+
 		{literal}
 			#gmap-sidepanel {float:right; margin:0; padding:0; width:300px; overflow:auto;}
 			#gmap-sidepanel-table {margin:0; padding:0;}

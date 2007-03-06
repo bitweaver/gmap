@@ -216,7 +216,7 @@
 					<b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.newCopyright(setindex);">Add A New Copyright</a></b>
 				</div>
 				<div id="edit-copyrightlink" style="display:none;">
-					<b><a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Notice Here</a></b> 
+					<a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Notice Here</a>
 				</div>
             </div>
           </div>
