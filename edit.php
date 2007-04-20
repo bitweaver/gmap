@@ -95,13 +95,6 @@ if (!empty($_REQUEST["save_map"])) {
 		//@todo this was causing a header problem when needed and when not?
     //header("Location: ".$gContent->getDisplayUrl());
 				
-    // Configure quicktags list
-    if ($gBitSystem->isPackageActive( 'quicktags' ) ) {
-    	include_once( QUICKTAGS_PKG_PATH.'quicktags_inc.php' );
-    }
-    
-    // WYSIWYG and Quicktag variable
-    $gBitSmarty->assign( 'textarea_id', 'editsample' );
 		$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
 		$gBitSmarty->assign( 'loadMochiKit', TRUE );
 		$gBitSmarty->assign( 'edit_map', TRUE );
