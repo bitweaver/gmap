@@ -862,7 +862,7 @@ class BitGmap extends LibertyAttachable {
 		$query = "SELECT bm.*, lc.`content_id`, lc.`title`, lc.`data`
 			FROM `".BIT_DB_PREFIX."gmaps` bm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = bm.`content_id` )
 			".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." lc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'
-			ORDER BY ".$this->mDb->convert_sortmode( $sort_mode );
+			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "select count( * )from `".BIT_DB_PREFIX."liberty_content` lc ".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." lc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'";
 		$result = $this->mDb->query( $query,$bindvars,$max_records,$offset );
 		$ret = array();
