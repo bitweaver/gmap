@@ -100,6 +100,14 @@ BitMap.MapData.push({ldelim}
 		parsed_data: '{$gContent->mMapMarkers[marker_n].parsed_data}',
 		label_data: '{$gContent->mMapMarkers[marker_n].label_data}',
 		photo_url: '{$gContent->mMapMarkers[marker_n].photo_url}',
+
+		created:{$gContent->mMapMarkers[marker_n].created},
+		last_modified:{$gContent->mMapMarkers[marker_n].last_modified},
+		modifier_real_name:'{$gContent->mMapMarkers[marker_n].modifier_real_name}',
+		modifier_user_id:{$gContent->mMapMarkers[marker_n].modifier_user_id},
+		creator_real_name:'{$gContent->mMapMarkers[marker_n].creator_real_name}',
+		creator_user_id:{$gContent->mMapMarkers[marker_n].user_id},
+
 		set_id: {$gContent->mMapMarkers[marker_n].set_id},
 		style_id: {$gContent->mMapMarkers[marker_n].style_id},
 		icon_id: {$gContent->mMapMarkers[marker_n].icon_id},

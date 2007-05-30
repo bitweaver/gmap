@@ -158,19 +158,29 @@ BitMap.Map.prototype = {
 
 	"SetControls": function(){
 		if(this.controls.scale == true){
-			this.map.addControl(new GScaleControl());
+			this.scaleControl = new GScaleControl();
+			this.map.addControl( this.scaleControl );
 		}
 		switch (this.controls.zoom_control){
-			case 's': this.map.addControl(new GSmallMapControl());
+			case 's': 
+				this.navControls = new GSmallMapControl();
 				break;
-			case 'l': this.map.addControl(new GLargeMapControl());
+			case 'l': 
+				this.navControls = new GLargeMapControl();
 				break;
-			case 'z': this.map.addControl(new GSmallZoomControl());
+			case 'z': 
+				this.navControls = new GSmallZoomControl();
 				break;
-			default:;
+			default:
+				this.navControls = null;
+				break;
+		}
+		if ( this.navControls != null ){
+			this.map.addControl( this.navControls );
 		}
 		if (this.controls.maptype_control == true){
-			this.map.addControl(new GMapTypeControl());  
+			this.typeControl = new GMapTypeControl();
+			this.map.addControl( this.typeControl );  
 		}
 		if (this.controls.overview_control == true){
 			this.map.addControl(new GOverviewMapControl());  

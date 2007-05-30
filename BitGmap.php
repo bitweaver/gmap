@@ -35,10 +35,21 @@ class BitGmap extends LibertyAttachable {
 			$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
 			array_push( $bindVars,  $lookupId = @BitBase::verifyId( $this->mGmapId )? $this->mGmapId : $this->mContentId );
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
-			
+
+/*			
 			$query = "SELECT * $selectSql
 					  FROM `".BIT_DB_PREFIX."gmaps` bm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bm.`content_id`=lc.`content_id` )  $joinSql
 					  WHERE bm.`$lookupColumn`=? $whereSql";
+*/					  
+			$query = "select bm.*, lc.*,
+					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
+					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
+					  FROM `".BIT_DB_PREFIX."gmaps` bm
+						INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id` = bm.`content_id`) $joinSql
+						LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
+						LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
+					  WHERE bm.`$lookupColumn`=? $whereSql";
+					  
 			$result = $this->mDb->query( $query, $bindVars );
 
 			if( $result && $result->numRows() ) {
@@ -243,7 +254,8 @@ class BitGmap extends LibertyAttachable {
 		 	$bindVars = array((int)$gmap_id);
 			
 			LibertyContent::getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
-		 			 	
+
+/*		 			 						  
 			$query = "SELECT bmm.*, lc.*, bms.*, bsk.* $selectSql
                 FROM ( `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."gmaps_markers` bmm, `".BIT_DB_PREFIX."gmaps_marker_sets` bms )
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
@@ -252,7 +264,21 @@ class BitGmap extends LibertyAttachable {
                 AND bms.`set_id` = bsk.`set_id`
                 AND bmk.`set_id` = bms.`set_id`
                 AND bmm.`marker_id` = bmk.`marker_id`";
-								
+*/
+
+			$query = "SELECT bmm.*, lc.*, bms.*, bsk.*, 
+					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
+					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
+                FROM ( `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."gmaps_markers` bmm, `".BIT_DB_PREFIX."gmaps_marker_sets` bms )
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
+					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
+					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
+                WHERE bsk.`gmap_id` = ? $whereSql
+                AND bsk.`set_type` = 'markers'
+                AND bms.`set_id` = bsk.`set_id`
+                AND bmk.`set_id` = bms.`set_id`
+                AND bmm.`marker_id` = bmk.`marker_id`";
+
 			$result = $this->mDb->query( $query, $bindVars );
 
 			$ret = array();

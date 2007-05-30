@@ -118,7 +118,8 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	  M.gmarker = new GMarker(p, {icon: myicon, title:mytitle});
 	  
 	  var mytitle = ["<h1 class='marker-title'>", M.title, "</h1>"].join("");
-	  var desc = (M.content_description != '')?M.content_description+" ":'';
+	  // REMOVE - carried over from list - not used in regular maps where content type is always a marker
+	  //var desc = (M.content_description != '')?M.content_description+" ":'';
 	  var stars = '';
 	  if (typeof(document.getElementById('iwindow-stars')) != 'undefined' && M.stars_pixels != null){
 	    var starsElm = document.getElementById('iwindow-stars').cloneNode(true);
@@ -139,15 +140,22 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	  var d = (new Date(M.created * 1000)).toString();  
 		var di = d.lastIndexOf('GMT');
 		var ds = d.substring(0, di-10);  
-	  var creator = (M.creator_real_name != '')?["<div>", desc, "created by:", M.creator_real_name, " on:", ds, "</div>"].join(""):'';
+
+	  // REMOVE desc ref - carried over from list - not used in regular maps where content type is always a marker
+	  var creator = (M.creator_real_name != '')?["<div>", /*desc,*/ "Created by:", M.creator_real_name, " on:", ds, "</div>"].join(""):'';
+	  
 	  M.created_date = ds;
+	  
 	  var u = (new Date(M.last_modified * 1000)).toString();  
 		var ui = d.lastIndexOf('GMT');
 		var us = d.substring(0, di-10);  
 	  M.modified_date = us;
+
+	  var modifier = (M.modifier_real_name != '')?["<div>", /*desc,*/ "Last modification by:", M.modifier_real_name, " on:", us, "</div>"].join(""):'';
+	  
 	  var link = (M.display_url != '')?["<div><a href='", M.display_url, "'/>Permalink</a></div>"].join(""):'';
 	  var data = ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';    
-	  M.gmarker.my_html = ["<div style='white-space: nowrap;'>", mytitle, creator, link, stars, image, data, "</div>"].join("");
+	  M.gmarker.my_html = ["<div style='white-space: nowrap;'>", mytitle, creator, modifier, link, stars, image, data, "</div>"].join("");
 	
 	  this.map.addOverlay(M.gmarker);
 	},

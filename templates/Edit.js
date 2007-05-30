@@ -101,11 +101,10 @@ BitMap.Edit.prototype = {
 	      form.map_showcont.options[i].selected=true;
 	    }
 	  }
-	
-	  i=this.Map.controls.scale?1:0;
+	  i=(this.Map.controls.scale == true||this.Map.controls.scale=='true')?1:0;
 	  form.map_showscale.options[i].selected=true;
 			
-	  i=this.Map.controls.maptype_control?1:0;
+	  i=(this.Map.controls.maptype_control==true||this.Map.controls.maptype_control=='true')?1:0;
 	  form.map_showtypecont.options[i].selected=true;
 	
 						
@@ -117,9 +116,9 @@ BitMap.Edit.prototype = {
 			mapTypeCount += this.Map.maptypes.length;
 			var newMaptype = mapTypeRoot.options[0].cloneNode(false);
 			for (i=0; i<this.Map.maptypes.length; i++){
-	      mapTypeRoot.appendChild(newMaptype);
-	      mapTypeRoot.options[i+3].value = this.Map.maptypes[i].maptype_id;
-	      mapTypeRoot.options[i+3].text = this.Map.maptypes[i].name;
+			  mapTypeRoot.appendChild(newMaptype);
+			  mapTypeRoot.options[i+3].value = this.Map.maptypes[i].maptype_id;
+			  mapTypeRoot.options[i+3].text = this.Map.maptypes[i].name;
 			}
 		}
 							
@@ -2068,95 +2067,114 @@ BitMap.Edit.prototype = {
 	 *******************/	 
 		 
 		 "updateMap": function(rslt){
-	      var xml = rslt.responseXML;
+			var xml = rslt.responseXML;
 	
-		 		//shorten var names
-				var id = xml.documentElement.getElementsByTagName('gmap_id');
-				this.Map.id = id[0].firstChild.nodeValue;
-	 			var t = xml.documentElement.getElementsByTagName('title');
-				this.Map.title = t[0].firstChild.nodeValue;
-				var d = xml.documentElement.getElementsByTagName('description');
-				this.Map.description = d[0].firstChild.nodeValue;
-				var dt = xml.documentElement.getElementsByTagName('data');
+			//shorten var names
+			var id = xml.documentElement.getElementsByTagName('gmap_id');
+			this.Map.id = id[0].firstChild.nodeValue;
+			var t = xml.documentElement.getElementsByTagName('title');
+			this.Map.title = t[0].firstChild.nodeValue;
+			var d = xml.documentElement.getElementsByTagName('description');
+			this.Map.description = d[0].firstChild.nodeValue;				
+			var dt = xml.documentElement.getElementsByTagName('data');
+			if ( dt[0].hasChildNodes() ){
 				this.Map.data = dt[0].firstChild.nodeValue;
 				var pdt = xml.documentElement.getElementsByTagName('parsed_data');
 				this.Map.parsed_data = pdt[0].firstChild.nodeValue;
-				var w = xml.documentElement.getElementsByTagName('width');
-				this.Map.width = w[0].firstChild.nodeValue;
-				var h = xml.documentElement.getElementsByTagName('height');
-				this.Map.height = h[0].firstChild.nodeValue;			
-				var lt = xml.documentElement.getElementsByTagName('lat');
-				this.Map.center.lat = parseFloat(lt[0].firstChild.nodeValue);
-				var ln = xml.documentElement.getElementsByTagName('lng');
-				this.Map.center.lng = parseFloat(ln[0].firstChild.nodeValue);
-				var z = xml.documentElement.getElementsByTagName('zoom');
-				this.Map.zoom = parseInt(z[0].firstChild.nodeValue);
+			}else{
+				this.Map.data = "";
+				this.Map.parsed_data = "";
+			}
+			var w = xml.documentElement.getElementsByTagName('width');
+			this.Map.width = w[0].firstChild.nodeValue;
+			var h = xml.documentElement.getElementsByTagName('height');
+			this.Map.height = h[0].firstChild.nodeValue;			
+			var lt = xml.documentElement.getElementsByTagName('lat');
+			this.Map.center.lat = parseFloat(lt[0].firstChild.nodeValue);
+			var ln = xml.documentElement.getElementsByTagName('lng');
+			this.Map.center.lng = parseFloat(ln[0].firstChild.nodeValue);
+			var z = xml.documentElement.getElementsByTagName('zoom');
+			this.Map.zoom = parseInt(z[0].firstChild.nodeValue);
 	//			var mt = xml.documentElement.getElementsByTagName('maptype');
 	//			this.Map.maptype = this.Map.maptypes[mt[0].firstChild.nodeValue];			
-				var sc = xml.documentElement.getElementsByTagName('zoom_control');
-				this.Map.controls.zoom_control = sc[0].firstChild.nodeValue;
-				var sm = xml.documentElement.getElementsByTagName('maptype_control');
-				this.Map.controls.maptype_control = sm[0].firstChild.nodeValue;
-				var oc = xml.documentElement.getElementsByTagName('overview_control');
-				this.Map.controls.overview_control = oc[0].firstChild.nodeValue;
-				var ss = xml.documentElement.getElementsByTagName('scale');
-				this.Map.controls.scale = ss[0].firstChild.nodeValue;
+			var sc = xml.documentElement.getElementsByTagName('zoom_control');
+			this.Map.controls.zoom_control = sc[0].firstChild.nodeValue;
+			var sm = xml.documentElement.getElementsByTagName('maptype_control');
+			this.Map.controls.maptype_control = sm[0].firstChild.nodeValue;
+			var oc = xml.documentElement.getElementsByTagName('overview_control');
+			this.Map.controls.overview_control = oc[0].firstChild.nodeValue;
+			var ss = xml.documentElement.getElementsByTagName('scale');
+			this.Map.controls.scale = ss[0].firstChild.nodeValue;
 	
-				//replace everything	
-	      var maptile = $('mymaptitle');
-	      if (maptile){maptile.innerHTML=this.Map.title;}
-	
-	      var mapdesc = $('mymapdesc');
-	      if (mapdesc){mapdesc.innerHTML=this.Map.description;}
-	
-	      $('mapcontent').innerHTML = this.Map.parsed_data;
-	
-	      var mapdiv = $(this.Map.mapdiv);
-				if (this.Map.width !== '0' && this.Map.width !== 0){
-				   var newWidth = this.Map.width + "px";
-					}else{
-				   var newWidth = 'auto';
-					}
-				if (this.Map.height !== '0' && this.Map.height !== 0){
-				   var newHeight = this.Map.height + "px";
-					}else{
-				   var newHeight = 'auto';
-					}
-	      if (mapdiv){mapdiv.style.width=newWidth; mapdiv.style.height=newHeight; map.onResize();}
+			//replace everything	
+			var maptile = $('mymaptitle');
+			if (maptile){maptile.innerHTML=this.Map.title;}
+			
+			var mapdesc = $('mymapdesc');
+			if (mapdesc){mapdesc.innerHTML=this.Map.description;}
+			
+			$('mapcontent').innerHTML = this.Map.parsed_data;
+
+			var mapdiv = $(this.Map.mapdiv);
+			if (this.Map.width != '0' && this.Map.width != 0){
+			   var newWidth = this.Map.width + "px";
+			}else{
+			   var newWidth = 'auto';
+			}
+			if (this.Map.height != '0' && this.Map.height != 0){
+			   var newHeight = this.Map.height + "px";
+			}else{
+			   var newHeight = 'auto';
+			}
+
+			if (mapdiv){
+				mapdiv.style.width = newWidth; 
+				mapdiv.style.height = newHeight; 
+				this.Map.map.checkResize();
+			}
 				
 	//			this.Map.map.setMaptype(this.Map.maptype);
-				
-	      //Add Map TYPE controls - buttons in the upper right corner
+	
+			//Add Map TYPE controls - buttons in the upper right corner
 	  		if (this.Map.controls.maptype_control == 'true'){
-	  		    this.Map.map.removeControl(typecontrols);
-	  		    this.Map.map.addControl(typecontrols);
+	  		    this.Map.map.removeControl( this.Map.typeControl );
+				this.Map.typeControl = new GMapTypeControl();
+				this.Map.map.addControl( this.Map.typeControl );  
 	  		}else{
-	  		    this.Map.map.removeControl(typecontrols);
+	  		    this.Map.map.removeControl( this.Map.typeControl );
 	  		}
 	  		
 	  		//Add Scale controls
 	  		if (this.Map.controls.scale == 'true'){
-	  		    this.Map.map.removeControl(scale);
-	  		    this.Map.map.addControl(scale);
+	  		    this.Map.map.removeControl( this.Map.scaleControl );
+				this.Map.scaleControl = new GScaleControl();
+	  		    this.Map.map.addControl( this.Map.scaleControl );
 	  		}else{
-	  		    this.Map.map.removeControl(scale);
+	  		    this.Map.map.removeControl( this.Map.scaleControl );
 	  		}
 	  		
-	      //Add Navigation controls - buttons in the upper left corner		
-	  		this.Map.map.removeControl(smallcontrols);
-	  		this.Map.map.removeControl(largecontrols);
-	  		this.Map.map.removeControl(zoomcontrols);
-	  		if (this.Map.controls.zoom_control == 's') {
-	  		    this.Map.map.addControl(smallcontrols);
-	  		}else if (this.Map.controls.zoom_control == 'l') {
-	  		    this.Map.map.addControl(largecontrols);		
-	  		}else if (this.Map.controls.zoom_control == 'z') {
-	  		    this.Map.map.addControl(zoomcontrols);
-	  		}
-				
-				this.Map.map.setCenter(new GLatLng(this.Map.center.lat, this.Map.center.lng), this.Map.zoom);
-				
-				this.editMap();
+			//Add Navigation controls
+	  		this.Map.map.removeControl( this.Map.navControls );
+			switch (this.Map.controls.zoom_control){
+				case 's': 
+					this.Map.navControls = new GSmallMapControl();
+					break;
+				case 'l': 
+					this.Map.navControls = new GLargeMapControl();
+					break;
+				case 'z': 
+					this.Map.navControls = new GSmallZoomControl();
+					break;
+				default:
+					this.Map.navControls = null;
+					break;
+			}
+			if ( this.Map.navControls != null ){
+				this.Map.map.addControl( this.Map.navControls );
+			}
+	  		
+			this.Map.map.setCenter(new GLatLng(this.Map.center.lat, this.Map.center.lng), this.Map.zoom);				
+			this.editMap();
 		 },
 	
 	

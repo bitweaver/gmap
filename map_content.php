@@ -22,6 +22,7 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 
 	//get pigeonholes list
 	//this is just like pigeonholes:list.php without the tpl call
+	
 	$gBitSystem->verifyPackage( 'pigeonholes' );
 	$gBitSystem->verifyPermission( 'p_pigeonholes_view' );
 	
@@ -47,7 +48,7 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 		$gBitSmarty->assign( 'pigeonList', $pigeonList );
 	}
 	$gBitSmarty->assign( 'listInfo', $listHash['listInfo'] );
-
+	
 	//get content types in database list  
 	$c_types = $gLibertySystem->mContentTypes;
 	sort($c_types);

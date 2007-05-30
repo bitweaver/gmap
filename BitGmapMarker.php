@@ -46,7 +46,7 @@ class BitGmapMarker extends LibertyAttachable {
 		$this->mContentTypeGuid = BITGMAPMARKER_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGMAPMARKER_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGMAPMARKER_CONTENT_TYPE_GUID,
-			'content_description' => 'Marker for Google Maps',
+			'content_description' => 'Marker for Google Map',
 			'handler_class' => 'BitGmapMarker',
 			'handler_package' => 'gmap',
 			'handler_file' => 'BitGmapMarker.php',
@@ -67,9 +67,21 @@ class BitGmapMarker extends LibertyAttachable {
 			array_push( $bindVars,  $lookupId = @BitBase::verifyId( $this->mGmarkerId )? $this->mGmarkerId : $this->mContentId );
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
+			/*
 			$query = "SELECT * $selectSql
 					  FROM `".BIT_DB_PREFIX."gmaps_markers` bmm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
 					  WHERE bmm.`$lookupColumn`=? $whereSql";
+			*/
+			
+			$query = "select bmm.*, lc.*,
+					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
+					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
+					  FROM `".BIT_DB_PREFIX."gmaps_markers` bmm
+						INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id` = bmm.`content_id`) $joinSql
+						LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
+						LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
+					  WHERE bmm.`$lookupColumn`=? $whereSql";
+					  
 			$result = $this->mDb->query( $query, $bindVars );
 
 			if( $result && $result->numRows() ) {
