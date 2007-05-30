@@ -56,8 +56,10 @@ if (!isset($_REQUEST['gmap_id'] ) ) {
 	$gBitSmarty->assign('view_map', TRUE);
 	$gBitSystem->mOnload[] = 'BitMap.Display();';
 
+    //use Mochikit - prototype sucks
+	$gBitSystem->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'DOM.js' ) );
+	
 	$gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Gmap') );
-
 }
 
 ?>

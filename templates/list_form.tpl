@@ -12,7 +12,7 @@
 			<div style="float:left; margin-right:10px;">
 						<span>Content Types: </span><br/>
 						<select multiple size=5 name="content_type_guid[]">
-							<option value="" selected >Any</option>
+							<option value="Any" selected >Any</option>
 							{foreach from=$ContentTypes item=c_type}
 							{if $c_type.content_type_guid != 'bitcomment' && $c_type.content_type_guid != 'pigeonholes'}
  							<option value="{$c_type.content_type_guid}" >{if $c_type.content_description == "User Information"}Site Members{else}{$c_type.content_description}s{/if}</option>
@@ -26,7 +26,7 @@
 				<div style="float:left; margin-right:10px;">
 					<span>Categories: </span><br/>
 				    <select multiple size=5 name="liberty_categories[]">
-				  		<option value="" selected >Any</option>
+				  		<option value="Any" selected >Any</option>
 						{foreach from=$pigeonList item=item}
 							{section name=ix loop=$item.subtree}
 				  				<option value="{$item.subtree[ix].content_id}">{$item.subtree[ix].title}</option>

@@ -61,7 +61,10 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 
 	$gBitSmarty->assign('map_list', TRUE);
 	$gBitSystem->mOnload[] = 'BitMap.DisplayList();';
+	
+    //use Mochikit - prototype sucks
+	$gBitSystem->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js', 'DateTime.js',  'Style.js' ) );
+	
 	$gBitSystem->display( 'bitpackage:gmap/map_list.tpl', tra( 'Gmap' ) );
 }
-
 ?>

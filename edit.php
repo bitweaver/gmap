@@ -94,7 +94,8 @@ if (!empty($_REQUEST["save_map"])) {
 
 		//@todo this was causing a header problem when needed and when not?
     //header("Location: ".$gContent->getDisplayUrl());
-				
+
+
 		$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
 		$gBitSmarty->assign( 'loadMochiKit', TRUE );
 		$gBitSmarty->assign( 'edit_map', TRUE );
@@ -102,6 +103,8 @@ if (!empty($_REQUEST["save_map"])) {
     //set onload function in body
 	  $gBitSystem->mOnload[] = 'BitMap.EditMap();';
     
+    //use Mochikit - prototype sucks
+	$gBitSystem->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js' ) );	
     // Display the template
     $gBitSystem->display( 'bitpackage:gmap/edit_gmap.tpl', tra('Gmap') );    		
 }
