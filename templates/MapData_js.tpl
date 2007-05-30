@@ -54,7 +54,7 @@ BitMap.MapData.push({ldelim}
   {ldelim}
 		copyright_id:{$gContent->mCopyrights[copyrights].copyright_id},
 		copyright_minzoom:{$gContent->mCopyrights[copyrights].copyright_minzoom},
-		bounds:"{$gContent->mCopyrights[copyrights].bounds}",
+		bounds:[{$gContent->mCopyrights[copyrights].bounds}],
 		notice:"{$gContent->mCopyrights[copyrights].notice}",
 		tilelayer_id:{$gContent->mCopyrights[copyrights].tilelayer_id}
   {rdelim},

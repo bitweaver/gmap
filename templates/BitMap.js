@@ -118,16 +118,15 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
   this.polygonsets = polygonsets;
   this.polygonstyles = polygonstyles;
   this.map = new GMap2(document.getElementById(this.mapdiv));  
-  this.SetControls();
+  this.setControls();
   this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
-  // uncomment when supporting features work
-  /*
+ 
   if (this.maptypes.length > 0){
   	var ref = this;
   	this.loopOver(ref.maptypes, function(i){ref.addMaptype(i);});
   }
-  */
-  this.SetMapType();
+  
+  this.setMapType();
   if (this.markers.length > 0){
   	var ref = this;
   	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
@@ -156,7 +155,7 @@ BitMap.Map.prototype = {
 		} while (--iLoopCount > 0);
 	},
 
-	"SetControls": function(){
+	"setControls": function(){
 		if(this.controls.scale == true){
 			this.scaleControl = new GScaleControl();
 			this.map.addControl( this.scaleControl );
@@ -186,15 +185,68 @@ BitMap.Map.prototype = {
 			this.map.addControl(new GOverviewMapControl());  
 		}
 	},
+	
+	"addMaptype": function(i){
+		var M = this.maptypes[i];
 
-	"SetMapType": function(){
+		var layers = [];
+		for (n in this.tilelayers){
+			var T = this.tilelayers[n];
+			if (T.maptype_id = M.maptype_id){				
+				//get copyright info
+				var copyrightCollection = new GCopyrightCollection();
+				
+				for (c in this.copyrights){
+					var C = this.copyrights[c];
+					if (C.tilelayer_id == T.tilelayer_id){
+						// create copyright
+						var copyright = new GCopyright(C.copyright_id,
+											  new GLatLngBounds( new GLatLng( C.bounds[0],C.bounds[1] ), new GLatLng( C.bounds[2],C.bounds[3] ) ),
+											  C.copyright_minzoom,
+											  C.notice);
+						
+						//add to copyright collection
+						copyrightCollection.addCopyright(copyright);
+					}
+				}
+			
+				layers.push( new GTileLayer( copyrightCollection, T.minzoom, T.maxzoom ) );
+				// create GTileLayer
+				var customGetTileUrl=function(a, b){
+					var c = 17 - b;
+					return T.tilesurl+"?x="+a.x+"&y="+a.y+"&zoom="+c;
+				}
+				var t = layers.length - 1;
+				layers[t].getTileUrl = customGetTileUrl;
+
+				if ( T.ispng == true || T.ispng == 'true' ){
+					layers[t].isPng = function(){return true;};
+				}else{
+					layers[t].isPng = function(){return false;};
+				}				
+			}
+		}
+		
+		var opts = {};
+		opts.shortName = M.shortname?M.shortname:M.name;
+		opts.minResolution = (M.minzoom != null)?M.minzoom:0;
+		opts.maxResolution = (M.maxzoom != null)?M.maxzoom:17;
+		opts.errorMessage = M.errormsg?M.errormsg:"";
+		
+		var custommap = new GMapType(layers, G_NORMAL_MAP.getProjection(), M.name, opts);
+
+		//add it to the map
+		this.map.addMapType(custommap);		
+	},
+	
+	"setMapType": function(){
 		if (this.maptype < 3){
 			switch (this.maptype){
 				case 0: this.map.setMapType(G_NORMAL_MAP);
 					break;
-				case 1: this.map.setMapType(G_SATELLITE_MAP);
+				case -1: this.map.setMapType(G_SATELLITE_MAP);
 					break;
-				case 2: this.map.setMapType(G_HYBRID_MAP);
+				case -2: this.map.setMapType(G_HYBRID_MAP);
 					break;
 			}
 		}else{
