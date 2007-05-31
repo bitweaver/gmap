@@ -111,8 +111,14 @@ BitMap.Edit.prototype = {
 	  var mapTypeRoot = form.maptype;
 	
 		var mapTypeCount = 3;
-	
-		if (this.Map.maptypes > 0){
+		
+		if (mapTypeRoot.options.length > 3){
+			for (n=mapTypeRoot.options.length; n>3; n--){
+				mapTypeRoot.remove(n-1);
+			}
+		}
+
+		if (this.Map.maptypes.length > 0){
 			mapTypeCount += this.Map.maptypes.length;
 			var newMaptype = mapTypeRoot.options[0].cloneNode(false);
 			for (i=0; i<this.Map.maptypes.length; i++){
@@ -2095,8 +2101,8 @@ BitMap.Edit.prototype = {
 			this.Map.center.lng = parseFloat(ln[0].firstChild.nodeValue);
 			var z = xml.documentElement.getElementsByTagName('zoom');
 			this.Map.zoom = parseInt(z[0].firstChild.nodeValue);
-	//			var mt = xml.documentElement.getElementsByTagName('maptype');
-	//			this.Map.maptype = this.Map.maptypes[mt[0].firstChild.nodeValue];			
+			var mt = xml.documentElement.getElementsByTagName('maptype');
+			this.Map.maptype = parseInt(mt[0].firstChild.nodeValue);
 			var sc = xml.documentElement.getElementsByTagName('zoom_control');
 			this.Map.controls.zoom_control = sc[0].firstChild.nodeValue;
 			var sm = xml.documentElement.getElementsByTagName('maptype_control');
@@ -2132,8 +2138,28 @@ BitMap.Edit.prototype = {
 				mapdiv.style.height = newHeight; 
 				this.Map.map.checkResize();
 			}
-				
-	//			this.Map.map.setMaptype(this.Map.maptype);
+
+			if (this.Map.maptype < 1){
+				switch (this.Map.maptype){
+					case 0: 
+						this.Map.map.setMapType(G_NORMAL_MAP);
+						break;
+					case -1: 
+						this.Map.map.setMapType(G_SATELLITE_MAP);
+						break;
+					case -2: 
+						this.Map.map.setMapType(G_HYBRID_MAP);
+						break;
+				}
+			}else{
+			//insert check for maptype name in maptype array and set map to that
+				var count = this.Map.maptypes.length;
+				for (n=0; n<count; n++){
+					if (this.Map.maptypes[n].maptype_id == this.Map.maptype){
+						this.Map.map.setMapType(this.Map.maptypes[n].type);
+					}
+				}
+			}
 	
 			//Add Map TYPE controls - buttons in the upper right corner
 	  		if (this.Map.controls.maptype_control == 'true'){

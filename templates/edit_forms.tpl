@@ -57,8 +57,8 @@
               </select></td></tr>
         	<tr><td>Default Map Type</td><td><select name="maptype">
               <option value="0" >Street Map</option>
-              <option value="1" >Satellite</option>
-              <option value="2" >Hybrid</option>
+              <option value="-1" >Satellite</option>
+              <option value="-2" >Hybrid</option>
        			</select></td></tr>
 				<tr><td>Page Text</td><td><textarea name="edit" style="width:90%;" rows="20">textbox</textarea></td></tr>
 

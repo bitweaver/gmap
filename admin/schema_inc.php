@@ -35,7 +35,11 @@ $tables = array(
   CONSTRAINTS ', CONSTRAINT `gmaps_sets_keychain_gmap_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."gmaps`( `gmap_id` )'
 ",
 
-//maptypes and related data
+/* maptypes and related data
+ * values 0, -1, and -2 are reserved and reference google maps and are not stored.
+ * as google adds more maptype options additional negative numbers will be added
+ * sequence for this table starts at 1
+ */
 'gmaps_maptypes' => "
   maptype_id I4 PRIMARY,
   name C(64),

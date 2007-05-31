@@ -233,20 +233,23 @@ BitMap.Map.prototype = {
 		opts.maxResolution = (M.maxzoom != null)?M.maxzoom:17;
 		opts.errorMessage = M.errormsg?M.errormsg:"";
 		
-		var custommap = new GMapType(layers, G_NORMAL_MAP.getProjection(), M.name, opts);
+		M.type = new GMapType(layers, G_NORMAL_MAP.getProjection(), M.name, opts);
 
 		//add it to the map
-		this.map.addMapType(custommap);		
+		this.map.addMapType(M.type);		
 	},
 	
 	"setMapType": function(){
-		if (this.maptype < 3){
+		if (this.maptype < 1){
 			switch (this.maptype){
-				case 0: this.map.setMapType(G_NORMAL_MAP);
+				case 0: 
+					this.map.setMapType(G_NORMAL_MAP);
 					break;
-				case -1: this.map.setMapType(G_SATELLITE_MAP);
+				case -1: 
+					this.map.setMapType(G_SATELLITE_MAP);
 					break;
-				case -2: this.map.setMapType(G_HYBRID_MAP);
+				case -2: 
+					this.map.setMapType(G_HYBRID_MAP);
 					break;
 			}
 		}else{
@@ -254,7 +257,7 @@ BitMap.Map.prototype = {
 			var count = this.maptypes.length;
 			for (n=0; n<count; n++){
 				if (this.maptypes[n].maptype_id == this.maptype){
-					this.map.setMapType(this.maptypes[n].name);
+					this.map.setMapType(this.maptypes[n].type);
 				}
 			}
 		}
