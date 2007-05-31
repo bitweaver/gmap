@@ -95,7 +95,7 @@ $tables = array(
   CONSTRAINT ', CONSTRAINT `gmaps_markers_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
 ",
 
-//types has two options: 0 => GIcon, 1 => XIcon
+//types has one options: 0 => GIcon
 'gmaps_icon_styles' => "
   icon_id I4 PRIMARY,
   name C(64),
@@ -113,16 +113,10 @@ $tables = array(
   shadow_anchor_y I4 DEFAULT 25,
   infowindow_anchor_x I4 DEFAULT 9,
   infowindow_anchor_y I4 DEFAULT 2,
-  image_map X DEFAULT 0,	
-  points X DEFAULT 0,
-  scale F DEFAULT 1,
-  outline_color C(6) DEFAULT 'ffffff',
-  outline_weight I4 DEFAULT 2,
-  fill_color C(6) DEFAULT 'ff3300',
-  fill_opacity F DEFAULT .5
+  image_map X DEFAULT 0	
 ",
 
-//type options: 0 => GMarker, 1 => PdMarker, 2 => XMarker
+//type options: 0 => GMarker, 1 => PdMarker
 //lable hover opacity is for all
 //label opacity is PdMarker Class only
 //label hover styles is CSS for all

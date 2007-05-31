@@ -1616,8 +1616,8 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['iconstyle_store']['icon_style_type'] = $pParamHash['icon_style_type'];
 		}
 		
-		if( !empty( $pParamHash['image'] ) ) {
-			$pParamHash['iconstyle_store']['image'] = $pParamHash['image'];
+		if( !empty( $pParamHash['icon_image'] ) ) {
+			$pParamHash['iconstyle_store']['image'] = $pParamHash['icon_image'];
 		}
 		
 		if( !empty( $pParamHash['icon_w'] ) && is_numeric( $pParamHash['icon_w'] ) ) {
@@ -1667,7 +1667,7 @@ class BitGmap extends LibertyAttachable {
 		if( !empty( $pParamHash['infowindow_anchor_y'] ) && is_numeric( $pParamHash['infowindow_anchor_y'] ) ) {
 			$pParamHash['iconstyle_store']['infowindow_anchor_y'] = $pParamHash['infowindow_anchor_y'];
 		}
-
+/* DELETE XMAPS STUFF - NO LONGER SUPPORTED
 		if( !empty( $pParamHash['points'] ) || $pParamHash['points'] == 0 ) {
 			$pParamHash['iconstyle_store']['points'] = $pParamHash['points'];
 		}
@@ -1691,7 +1691,7 @@ class BitGmap extends LibertyAttachable {
 		if( !empty( $pParamHash['fill_opacity'] ) && is_numeric( $pParamHash['fill_opacity'] ) ) {
 			$pParamHash['iconstyle_store']['fill_opacity'] = $pParamHash['fill_opacity'];
 		}
-		
+*/	
 		return( count( $this->mErrors ) == 0 );
 	}
 	

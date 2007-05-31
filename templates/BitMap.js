@@ -120,13 +120,19 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
   this.map = new GMap2(document.getElementById(this.mapdiv));  
   this.setControls();
   this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
- 
+
   if (this.maptypes.length > 0){
   	var ref = this;
   	this.loopOver(ref.maptypes, function(i){ref.addMaptype(i);});
   }
   
   this.setMapType();
+
+  if (this.iconstyles.length > 0){
+  	var ref = this;
+  	this.loopOver(ref.maptypes, function(i){ref.defineGIcon(i);});
+  } 
+
   if (this.markers.length > 0){
   	var ref = this;
   	this.loopOver(ref.markers, function(i){ref.addMarker(i);});

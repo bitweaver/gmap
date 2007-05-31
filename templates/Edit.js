@@ -766,6 +766,7 @@ BitMap.Edit.prototype = {
 	},
 	
 	
+/*	
 	"newIconStyle": function(){
 			var check = false;
 	  	for (var i=0; i<this.Map.markersets.length; i++){
@@ -790,7 +791,6 @@ BitMap.Edit.prototype = {
 	  		$('iconstyleform_new').reset();  		  
 			}
 	},
-	
 	
 	"editIconStyles": function(){
 			BitMap.show('editiconstylesmenu');
@@ -876,7 +876,7 @@ BitMap.Edit.prototype = {
 	                form.print_shadow.value = this.Map.iconstyles[b].print_shadow;
 	                form.image_map.value = this.Map.iconstyles[b].image_map;
 					  */
-	
+/*	
 	                form.shadow_image.value = this.Map.iconstyles[b].shadow_image;
 	                form.shadow_w.value = this.Map.iconstyles[b].shadow_w;
 	                form.shadow_h.value = this.Map.iconstyles[b].shadow_h;
@@ -913,6 +913,13 @@ BitMap.Edit.prototype = {
 	  		}
 	  	}
 	},
+*/
+
+	/*******************
+	 *
+	 * MARKER STYLE FORM FUNCTIONS
+	 *
+	 *******************/
 
 	"newMarkerStyle":function(){
 		var count = this.Map.markerstyles.length;
@@ -996,7 +1003,121 @@ BitMap.Edit.prototype = {
 	  BitMap.hide('edit-markerstyle-table');
 	  BitMap.hide('edit-markerstyles-cancel');
 	},
+
+
+	/*******************
+	 *
+	 * ICON STYLE FORM FUNCTIONS
+	 *
+	 *******************/
+
+	"newIconStyle":function(){
+		var count = this.Map.iconstyles.length;
+		for (n=0; n<count; n++){
+			if($('edit-iconstylelink-'+n)){
+				BitMap.jscss('remove', $('edit-iconstylelink-'+n), 'edit-select');
+			}
+		}
+		BitMap.jscss('add', $('edit-iconstylelink-new'), 'edit-select');
+		var form = $('edit-iconstyle-form');
+		form.icon_id.value = null;
+		form.style_array_n.value = null;
+		form.reset();
+	},
 	
+	"editIconStyle":function(i){
+		BitMap.jscss('remove', $('edit-iconstylelink-new'), 'edit-select');
+		var a;
+		var count = this.Map.iconstyles.length;
+		for (n=0; n<count; n++){
+			if($('edit-iconstylelink-'+n)){
+				a = (n==i)?'add':'remove';
+				BitMap.jscss(a, $('edit-iconstylelink-'+n), 'edit-select');
+			}
+		}
+		var m = this.Map.iconstyles[i];
+		//change values
+		var form = $('edit-iconstyle-form');
+		form.icon_id.value = m.icon_id;
+		form.style_array_n.value = i;
+		form.name.value = m.name;
+		/* form currently does not have a select since there is only one type available
+		 * in the future if other icon types become available then this could be used
+		 */
+		//form.icon_style_type.options[m.icon_style_type].selected = true;		
+		form.icon_image.value = m.image;		
+		form.rollover_image.value = m.rollover_image;
+		form.icon_w.value = m.icon_w;
+		form.icon_h.value = m.icon_h;
+		form.icon_anchor_x.value = m.icon_anchor_x;
+		form.icon_anchor_y.value = m.icon_anchor_y;
+		form.shadow_image.value = m.shadow_image;
+		form.shadow_w.value = m.shadow_w;
+		form.shadow_h.value = m.shadow_h;
+		form.shadow_anchor_x.value = m.shadow_anchor_x;
+		form.shadow_anchor_y.value = m.shadow_anchor_y;
+		form.infowindow_anchor_x.value = m.infowindow_anchor_x;
+		form.infowindow_anchor_y.value = m.infowindow_anchor_y;		
+		
+		/* The following are Google icon features not implemented 
+		   because they are an annoying pain in the ass for most people.
+		   The database supports them, but the form does not.
+		   Maybe an "advanced" form is needed for anyone who
+		   might want to deal with these headaches.
+		*/
+		/*
+		form.print_image.value = m.print_image;
+		form.moz_print_image.value = m.moz_print_image;
+		form.transparent.value = m.transparent;
+		form.print_shadow.value = m.print_shadow;
+		*/		
+	},
+
+	"editIconStyles": function(){
+		BitMap.show('edit-iconstyles-table');
+		BitMap.show('edit-iconstyles-cancel');
+		
+		var iconstyleTable = $('edit-iconstyle-table');
+		//set some constants
+		var linksList = iconstyleTable.getElementsByTagName("ul").item(0);
+		var links = iconstyleTable.getElementsByTagName("li");
+		//Clear all the existing iconstyles listed
+		//We leave the first two, the first is the model we clone, the second is for a new iconstyle
+		var count = links.length;
+		for (n=count-1; n>1; n--){
+			linksList.removeChild(links.item(n));
+		}
+		
+		$('edit-iconstylelink-new-a').href = "javascript:BitMap.EditSession.newIconStyle();";
+		//For each iconstyle, add a link
+		var firstselected = false;
+		for (var n=0; n<this.Map.iconstyles.length; n++) {
+			var m = this.Map.iconstyles[n];
+			var newIconstyleli = links.item(0).cloneNode(true);
+			newIconstyleli.id = 'edit-iconstylelink-'+n;
+			var newIconstyleLink = newIconstyleli.getElementsByTagName("a").item(0);
+			newIconstyleLink.href = "javascript:BitMap.EditSession.editIconStyle("+n+")";
+			newIconstyleLink.innerHTML = m.name;
+			linksList.appendChild(newIconstyleli);
+			newIconstyleli.style.display = "block";
+			
+			if (firstselected != true){
+				this.editIconStyle(n);
+				firstselected = true;
+			}			
+		}
+		if (firstselected == false){
+			this.newIconStyle();
+		}
+		//We assume it is not visible and make it so
+		BitMap.show('edit-iconstyle-table');
+	},
+	
+	"cancelEditIconStyles": function(){
+	  BitMap.hide('edit-iconstyles-table');
+	  BitMap.hide('edit-iconstyle-table');
+	  BitMap.hide('edit-iconstyles-cancel');
+	},
 	
 	/*******************
 	 *
@@ -1873,29 +1994,18 @@ BitMap.Edit.prototype = {
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
 		 },
 
-		/* DELETE		 
-		 "storeNewMarkerStyle": function(f){
-		 		var str = "edit_markerstyle.php?" + queryString(f);
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.addMarkerStyle, this) ); 
-		 },
-		*/
-	
 		 "storeMarkerStyle": function(f){
 		 		var str = "edit_markerstyle.php?" + queryString(f);
 				this.editObjectN = f.style_array_n.value;
 				var callback = (f.style_id.value != "")?this.updateMarkerStyle:this.addMarkerStyle;
 				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
-	
-		 "storeNewIconStyle": function(f){
-		 		var str = "edit_iconstyle.php?" + queryString(f);
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.addIconStyle, this) ); 
-		 },
-	
+
 		 "storeIconStyle": function(f){
-				this.editObjectN = f.style_array_n.value;
 		 		var str = "edit_iconstyle.php?" + queryString(f);
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateIconStyle, this) ); 
+				this.editObjectN = f.style_array_n.value;
+				var callback = (f.icon_id.value != "")?this.updateIconStyle:this.addIconStyle;
+				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 	
 		 "storeNewPolyline": function(f){
@@ -2771,151 +2881,122 @@ BitMap.Edit.prototype = {
 	
 	
 	"addIconStyle": function(rslt){
-	      var xml = rslt.responseXML;
+		var xml = rslt.responseXML;
 	
-				// create a spot for a new iconstyle in the data array
-				var n = this.Map.iconstyles.length;
-				this.Map.iconstyles[n] = new Array();
-				var i = this.Map.iconstyles[n];
-	
-				// assign iconstyle values to data array			
-				var id = xml.documentElement.getElementsByTagName('icon_id');
-	  		i.icon_id = parseInt( id[0].firstChild.nodeValue );
-				var nm = xml.documentElement.getElementsByTagName('name');
-	  		i.name = nm[0].firstChild.nodeValue;
-				var tp = xml.documentElement.getElementsByTagName('icon_style_type');
-	  		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
-				var ig = xml.documentElement.getElementsByTagName('image');
-	  		i.image = ig[0].firstChild.nodeValue;
-				var rig = xml.documentElement.getElementsByTagName('rollover_image');
-	  		i.rollover_image = rig[0].firstChild.nodeValue;
-				var icw = xml.documentElement.getElementsByTagName('icon_w');
-	  		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
-				var ich = xml.documentElement.getElementsByTagName('icon_h');
-	  		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
-				var is = xml.documentElement.getElementsByTagName('shadow_image');			
-	  		i.shadow_image = is[0].firstChild.nodeValue;
-				var isw = xml.documentElement.getElementsByTagName('shadow_w');
-	  		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
-				var ish = xml.documentElement.getElementsByTagName('shadow_h');
-	  		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
-				var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
-	  		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
-				var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
-	  		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
-				var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
-	  		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
-				var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
-	  		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
-				var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
-	  		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
-				var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
-	  		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
-				var pt = xml.documentElement.getElementsByTagName('points');
-	  		i.points = pt[0].firstChild.nodeValue;
-				var sc = xml.documentElement.getElementsByTagName('scale');
-	  		i.scale = sc[0].firstChild.nodeValue;
-				var olc = xml.documentElement.getElementsByTagName('outline_color');
-	  		i.outline_color = olc[0].firstChild.nodeValue;
-				var olw = xml.documentElement.getElementsByTagName('outline_weight');
-	  		i.outline_weight = olw[0].firstChild.nodeValue;
-				var fc = xml.documentElement.getElementsByTagName('fill_color');
-	  		i.fill_color = fc[0].firstChild.nodeValue;
-				var fo = xml.documentElement.getElementsByTagName('fill_opacity');
-	  		i.fill_opacity = fo[0].firstChild.nodeValue;
-	
-				//make the icon available
-	  		if (i.icon_style_type == 0) {
-	  			this.Map.defineGIcon(n);
-	  		}
-	
-				// clear the form
-				$('iconstyleform_new').reset();
-				// update the styles menus
-				this.editMarkers();
-				this.editIconStyles();
+		// create a spot for a new iconstyle in the data array
+		var n = this.Map.iconstyles.length;
+		this.Map.iconstyles[n] = new Array();
+		var i = this.Map.iconstyles[n];
+		// assign iconstyle values to data array			
+		var id = xml.documentElement.getElementsByTagName('icon_id');
+		i.icon_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.documentElement.getElementsByTagName('name');
+		i.name = nm[0].firstChild.nodeValue;
+		var tp = xml.documentElement.getElementsByTagName('icon_style_type');
+		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
+		var ig = xml.documentElement.getElementsByTagName('image');
+		i.image = ig[0].firstChild.nodeValue;
+		var rig = xml.documentElement.getElementsByTagName('rollover_image');
+		i.rollover_image = rig[0].firstChild.nodeValue;
+		var icw = xml.documentElement.getElementsByTagName('icon_w');
+		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
+		var ich = xml.documentElement.getElementsByTagName('icon_h');
+		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
+		var is = xml.documentElement.getElementsByTagName('shadow_image');			
+		i.shadow_image = is[0].firstChild.nodeValue;
+		var isw = xml.documentElement.getElementsByTagName('shadow_w');
+		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
+		var ish = xml.documentElement.getElementsByTagName('shadow_h');
+		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
+		var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
+		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
+		var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
+		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
+		var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
+		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
+		var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
+		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
+		var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
+		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
+		var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
+		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
+
+		//make the icon available
+		if (i.icon_style_type == 0) {
+			this.Map.defineGIcon(n);
+		}
+		
+		// update the styles menus
+		this.editIconStyles();
 	},
 	
 	
 		
 	"updateIconStyle": function(rslt){
-	      var xml = rslt.responseXML;
-	
-				//get the style we are updating
-				var i = this.Map.iconstyles[editObjectN];
-	
-				// assign iconsstyle values to data array
-				var id = xml.documentElement.getElementsByTagName('icon_id');
-	  		i.icon_id = parseInt( id[0].firstChild.nodeValue );
-				var nm = xml.documentElement.getElementsByTagName('name');
-	  		i.name = nm[0].firstChild.nodeValue;
-				var tp = xml.documentElement.getElementsByTagName('icon_style_type');
-	  		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
-				var ig = xml.documentElement.getElementsByTagName('image');
-	  		i.image = ig[0].firstChild.nodeValue;
-				var rig = xml.documentElement.getElementsByTagName('rollover_image');
-	  		i.rollover_image = rig[0].firstChild.nodeValue;
-				var icw = xml.documentElement.getElementsByTagName('icon_w');
-	  		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
-				var ich = xml.documentElement.getElementsByTagName('icon_h');
-	  		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
-				var is = xml.documentElement.getElementsByTagName('shadow_image');			
-	  		i.shadow_image = is[0].firstChild.nodeValue;
-				var isw = xml.documentElement.getElementsByTagName('shadow_w');
-	  		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
-				var ish = xml.documentElement.getElementsByTagName('shadow_h');
-	  		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
-				var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
-	  		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
-				var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
-	  		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
-				var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
-	  		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
-				var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
-	  		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
-				var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
-	  		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
-				var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
-	  		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
-				var pt = xml.documentElement.getElementsByTagName('points');
-	  		i.points = pt[0].firstChild.nodeValue;
-				var sc = xml.documentElement.getElementsByTagName('scale');
-	  		i.scale = sc[0].firstChild.nodeValue;
-				var olc = xml.documentElement.getElementsByTagName('outline_color');
-	  		i.outline_color = olc[0].firstChild.nodeValue;
-				var olw = xml.documentElement.getElementsByTagName('outline_weight');
-	  		i.outline_weight = olw[0].firstChild.nodeValue;
-				var fc = xml.documentElement.getElementsByTagName('fill_color');
-	  		i.fill_color = fc[0].firstChild.nodeValue;
-				var fo = xml.documentElement.getElementsByTagName('fill_opacity');
-	  		i.fill_opacity = fo[0].firstChild.nodeValue;
-	
-				//update the icon
-	  		if (i.icon_style_type == 0) {
-	  			this.Map.defineGIcon(editObjectN);
-	  		}
-	
-				//update all markers
-	      	var a = this.Map.markers;
-	    
-	    	//if the length of the array is > 0
-	    	if (a.length > 0){
-	      	//loop through the array
-	    		for(var n=0; n<a.length; n++){
-	      		//if the array item is not Null
-	    			if (a[n]!= null && a[n].marker != null && a[n].icon_id == i.icon_id){
-		      			//unload the marker
-	  					this.Map.map.removeOverlay( a[n].marker );
-							//define the marker
-							this.attachMarker(n);
-						}
-	    		}
+		var xml = rslt.responseXML;
+		
+		//get the style we are updating
+		var i = this.Map.iconstyles[this.editObjectN];
+		
+		// assign iconsstyle values to data array
+		var id = xml.documentElement.getElementsByTagName('icon_id');
+		i.icon_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.documentElement.getElementsByTagName('name');
+		i.name = nm[0].firstChild.nodeValue;
+		var tp = xml.documentElement.getElementsByTagName('icon_style_type');
+		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
+		var ig = xml.documentElement.getElementsByTagName('image');
+		i.image = ig[0].firstChild.nodeValue;
+		var rig = xml.documentElement.getElementsByTagName('rollover_image');
+		i.rollover_image = rig[0].firstChild.nodeValue;
+		var icw = xml.documentElement.getElementsByTagName('icon_w');
+		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
+		var ich = xml.documentElement.getElementsByTagName('icon_h');
+		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
+		var is = xml.documentElement.getElementsByTagName('shadow_image');			
+		i.shadow_image = is[0].firstChild.nodeValue;
+		var isw = xml.documentElement.getElementsByTagName('shadow_w');
+		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
+		var ish = xml.documentElement.getElementsByTagName('shadow_h');
+		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
+		var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
+		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
+		var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
+		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
+		var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
+		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
+		var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
+		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
+		var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
+		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
+		var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
+		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
+
+		// update the styles menus
+		this.editIconStyles();
+		
+		//update the icon
+		if (i.icon_style_type == 0) {
+			this.Map.defineGIcon(this.editObjectN);
+		}
+		
+		//update all markers
+		var a = this.Map.markers;
+		
+		//if the length of the array is > 0
+		if (a.length > 0){
+			//loop through the array
+			for(var n=0; n<a.length; n++){
+				//if the array item is not Null
+				if (a[n]!= null && a[n].marker != null && a[n].icon_id == i.icon_id){
+					//unload the marker
+					this.Map.map.removeOverlay( a[n].marker );
+					//define the marker
+					this.addMarker(n);
 				}
+			}
+		}		
 	},
-	
-	
-	
-	
 	
 	
 	

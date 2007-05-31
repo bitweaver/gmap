@@ -416,132 +416,6 @@
 
 
 
-
-
-
-
-<div id="editiconstylesmenu" style="display:none;">
-		<a href="javascript:BitMap.EditSession.newIconStyle();">Add a New Icon Style</a>
-</div>
-
-
-<div id="newiconstyleform" class="editform" style="display:none;">
-		<h2>Add a New Icon Style</h2>		
-    		<div class="table" id="editiconstyletable_new">
-    			<form action="javascript:;" name="iconstyleform_new" id="iconstyleform_new">
-					<input name="save_iconstyle" type="hidden" value="true">
-    			<table class="data gmapeditstrong">
-						<tr>
-							<td>Name<br/><input name="name" type="text" size="15" value="a name"></td>
-							<td>Type<br/><select name="icon_style_type" onChange="javascript:BitMap.EditSession.toggleIconMenu(this.value, 'new');">
-                                <option value="0">GIcon</option>
-                                <option value="1">XIcon</option>
-                             </select></td>
-                		<td>Window Anchor X<br/><input name="infowindow_anchor_x" type="text" size="15" value="9"></td>
-                		<td>Window Anchor Y<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"></td>
-							<td></td>
-							<td></td>
-                		<td>ACTIONS<br/><a name="new_iconstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewIconStyle(document.iconstyleform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
-						</tr>
-                	<tr id="gicon_style_head_new">
-                		<th colspan="7">GIcon Styles</th>
-						</tr>
-                	<tr id="gicon_style_menu1_new">
-                		<td>Image <br/><input name="image" type="text" size="15" value="icons/flat_color_pins/205.png"></td>
-                		<td>Rollover Image <br/><input name="rollover_image" type="text" size="15" value="icons/flat_color_pins/090.png"></td>
-                		<td>Icon Width<br/><input name="icon_w" type="text" size="15" value="20"></td>
-                		<td>Icon Height<br/><input name="icon_h" type="text" size="15" value="34"></td>
-                		<td>Icon Anchor X<br/><input name="icon_anchor_x" type="text" size="15" value="9"></td>
-                		<td>Icon Anchor Y<br/><input name="icon_anchor_y" type="text" size="15" value="34"></td>
-						</tr>
-                	<tr id="gicon_style_menu2_new">
-							<td></td>
-                		<td>Shadow Image <br/><input name="shadow_image" type="text" size="15" value="http://www.google.com/mapfiles/shadow50.png"></td>
-                		<td>Shadow Width <br/><input name="shadow_w" type="text" size="15" value="37"></td>
-                		<td>Shadow Height <br/><input name="shadow_h" type="text" size="15" value="34"></td>
-                		<td>Shadow Anchor X<br/><input name="shadow_anchor_x" type="text" size="15" value="18"></td>
-                		<td>Shadow Anchor Y<br/><input name="shadow_anchor_y" type="text" size="15" value="25"></td>
-						</tr>
-                	<tr id="xicon_style_head_new" style="display:none">
-                		<th colspan="7">XIcon Styles</th>
-						</tr>
-                	<tr id="xicon_style_menu_new" style="display:none">			
-                		<td>Points<br/><input name="points" type="text" size="15" value="0"></td>
-                		<td>Scale<br/><input name="scale" type="text" size="15" value="1"></td>
-                		<td>Outline Color (HEX)<br/><input name="outline_color" type="text" size="15" value="ffffff"></td>
-                		<td>Outline Weight<br/><input name="outline_weight" type="text" size="15" value="2"></td>
-                		<td>Fill Color<br/><input name="fill_color" type="text" size="15" value="ff3300"></td>
-                		<td>Fill Opacity<br/><input name="fill_opacity" type="text" size="15" value=".5"></td
-						</tr>
-    			</table>
-    			</form>
-  		  </div>
-		<div id="newiconstylecancel" ><input type="button" name="closeiconstyleform" value="Cancel New Icon Style" onclick="javascript:BitMap.EditSession.canceledit('newiconstyleform'); BitMap.EditSession.canceledit('editerror');"></div>
-</div>
-<!-- end of newiconstyleform -->
-
-
-<div id="editiconstyleform" class="editform" style="display:none;">
-		<h2>Icon Styles Associated with Marker Sets on This Map</h2>		
-		<div class="table" id="editiconstyletable_n">
-			<form action="javascript:;" name="iconstyleform_n" id="iconstyleform_n" style="display:none;">
-				<input name="save_iconstyle" type="hidden" value="true">
-				<input name="style_array_n" type="hidden" value="n">
-				<input name="icon_id" type="hidden" value="n">
-				<table class="data" id="iconstyleformdata_n">
-					<tr>
-						<td>Name<br/><input name="name" type="text" size="15" value=""></td>
-						<td>Type<br/><select name="icon_style_type" onChange="javascript:BitMap.EditSession.toggleIconMenu(this.value, this.form.icon_id.value);">
-                                <option value="0">GIcon</option>
-                                <option value="1">XIcon</option>
-                             </select></td>
-                	<td>Window Anchor X<br/><input name="infowindow_anchor_x" type="text" size="15" value="9"></td>
-                	<td>Window Anchor Y<br/><input name="infowindow_anchor_y" type="text" size="15" value="2"></td>
-						<td></td>
-						<td></td>
-                	<td>ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_iconstyle_btn" title="save" href="javascript:BitMap.EditSession.storeIconStyle(document.iconstyleform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
-					</tr>
-                <tr id="gicon_style_head_new">
-                	<th colspan="7">GIcon Styles</th>
-					</tr>
-                <tr id="gicon_style_menu1_new">
-                	<td>Image <br/><input name="image" type="text" size="15" value=""></td>
-                	<td>Rollover Image <br/><input name="rollover_image" type="text" size="15" value=""></td>
-                	<td>Icon Width<br/><input name="icon_w" type="text" size="15" value=""></td>
-                	<td>Icon Height<br/><input name="icon_h" type="text" size="15" value=""></td>
-                	<td>Icon Anchor X<br/><input name="icon_anchor_x" type="text" size="15" value=""></td>
-                	<td>Icon Anchor Y<br/><input name="icon_anchor_y" type="text" size="15" value=""></td>
-					</tr>
-                <tr id="gicon_style_menu2_new">
-						<td></td>
-                	<td>Shadow Image <br/><input name="shadow_image" type="text" size="15" value=""></td>
-                	<td>Shadow Width <br/><input name="shadow_w" type="text" size="15" value=""></td>
-               		<td>Shadow Height <br/><input name="shadow_h" type="text" size="15" value=""></td>
-               		<td>Shadow Anchor X<br/><input name="shadow_anchor_x" type="text" size="15" value=""></td>
-               		<td>Shadow Anchor Y<br/><input name="shadow_anchor_y" type="text" size="15" value=""></td>
-					</tr>
-               	<tr id="xicon_style_head_new" style="display:none">
-               		<th colspan="7">XIcon Styles</th>
-					</tr>
-               	<tr id="xicon_style_menu_new" style="display:none">			
-               		<td>Points<br/><input name="points" type="text" size="15" value=""></td>
-               		<td>Scale<br/><input name="scale" type="text" size="15" value=""></td>
-               		<td>Outline Color (HEX)<br/><input name="outline_color" type="text" size="15" value=""></td>
-               		<td>Outline Weight<br/><input name="outline_weight" type="text" size="15" value=""></td>
-               		<td>Fill Color<br/><input name="fill_color" type="text" size="15" value=""></td>
-               		<td>Fill Opacity<br/><input name="fill_opacity" type="text" size="15" value=""></td
-					</tr>
-				</table>
-			</form>
-		</div>
-</div> <!-- end of editiconstylesform -->
-
-<div id="editiconstylescancel" style="display:none;"><input type="button" name="closeiconstylesform" value="Cancel Editing Icon Styles" onclick="javascript:BitMap.EditSession.canceledit('editiconstylesmenu'); BitMap.EditSession.canceledit('newiconstyleform'); BitMap.EditSession.canceledit('editiconstyleform'); BitMap.EditSession.canceledit('editiconstylescancel');"></div>
-<!--end icon style editing forms -->
-
-
-
-
 <!--------------------------------
 	-  Markerstyles Editing Forms
 	-------------------------------->
@@ -570,7 +444,7 @@
 				<td width="200px"><br />
 					<ul>
 						<li style="display:none;"><a href="javascript:BitMap.EditSession.editMarkerStyle(n);">Marker Style Name Here</a></li>
-						<li id="edit-markerstylelink-new"><b><a id="edit-markerstylelink-new-a" href="javascript:BitMap.EditSession.newMarkerStyle(setindex);">Add A New Marker Style</a></b></li>
+						<li id="edit-markerstylelink-new"><b><a id="edit-markerstylelink-new-a" href="javascript:BitMap.EditSession.newMarkerStyle();">Add A New Marker Style</a></b></li>
 					</ul>
 				</td>
 				<td>
@@ -618,6 +492,109 @@
 <!-- end markerstyles editing forms -->
 
 
+
+
+<!--------------------------------
+	-  Iconstyles Editing Forms
+	-------------------------------->
+
+<!-- iconstyle editing menu -->
+<div id="edit-iconstyles-table" class="edit-table" style="display:none;">
+	<h2>Icon Styles Associated with Icon Sets on This Map</h2>
+	<div id="edit-iconstyles" class="edit-selected">
+		<table class="bar">
+			<tr>
+				<td><span class="setname">Icon Styles:</span></td>
+			</tr>
+		</table>
+	</div>
+</div>
+<!-- end of iconstyle editing menu -->
+
+<!-- edit iconstyles form -->
+<div id="edit-iconstyle-table" class="edit-datatable" style="display:none;">
+    <form action="javascript:;" name="edit-iconstyle-form" id="edit-iconstyle-form" >
+		<input name="icon_id" type="hidden" value="icon_id">
+		<input name="style_array_n" type="hidden" value="n">
+		<input name="save_iconstyle" type="hidden" value="true">
+		<table>
+			<tr>
+				<td width="200px"><br />
+					<ul>
+						<li style="display:none;"><a href="javascript:BitMap.EditSession.editIconStyle(n);">Icon Style Name Here</a></li>
+						<li id="edit-iconstylelink-new"><b><a id="edit-iconstylelink-new-a" href="javascript:BitMap.EditSession.newIconStyle();">Add A New Icon Style</a></b></li>
+					</ul>
+				</td>
+				<td>
+					<div class="tplform">
+						<div>Name<br/>
+							<input name="name" type="text" style="width:90%" value=""></div>
+							<!-- GIcon is only type supported right now - in future if other types are available this could be an option -->
+							<input name="icon_style_type" type="hidden" value="0">
+						<p>
+							<h4>Icon Image Settings</h4>
+							<div>Path to Image <br/>
+								<input name="icon_image" type="text" style="width:90%" value="icons/flat_color_pins/205.png"></div>
+							<div>Path to Rollover Image <br/>
+								<input name="rollover_image" type="text" style="width:90%" value="icons/flat_color_pins/090.png"></div>
+						</p>
+						<p>
+							<div>Icon Width<br/>
+								<input name="icon_w" type="text" size="5" value="20"></div>
+							<div>Icon Height<br/>
+								<input name="icon_h" type="text" size="5" value="34"></div>
+						</p>
+						<p>
+							<div>Icon Anchor X<br/>
+								<input name="icon_anchor_x" type="text" size="5" value="9"></div>
+							<div>Icon Anchor Y<br/>
+								<input name="icon_anchor_y" type="text" size="5" value="34"></div>
+						</p>
+						<p>
+							<h4>Shadow Image Settings</h4>
+							<div>Shadow Image <br/>
+								<input name="shadow_image" type="text"  style="width:90%" value="http://www.google.com/mapfiles/shadow50.png"></div>
+						</p>
+						<p>
+							<div>Shadow Width <br/>
+								<input name="shadow_w" type="text" size="5" value="37"></div>
+							<div>Shadow Height <br/>
+								<input name="shadow_h" type="text" size="5" value="34"></div>
+							<div>Shadow Anchor X<br/>
+								<input name="shadow_anchor_x" type="text" size="5" value="18"></div>
+							<div>Shadow Anchor Y<br/>
+								<input name="shadow_anchor_y" type="text" size="5" value="25"></div>
+						</p>
+						<p>
+							<h4>InfoWindow Postion Settings</h4>
+							<div>Window Anchor X<br/>
+								<input name="infowindow_anchor_x" type="text" size="5" value="9"></div>
+							<div>Window Anchor Y<br/>
+								<input name="infowindow_anchor_y" type="text" size="5" value="2"></div>
+						</p>
+						<div>
+							<input type="button" name="save_iconstyle_btn" value="Save" onclick="javascript:BitMap.EditSession.storeIconStyle(document['edit-iconstyle-form']);">
+						</div>
+					</div>
+				</td>
+				<td width="200px">
+					<div id="edit-iconstyle-tips">Tips<br/>
+						Put advice here
+					</div>
+					<div id="edit-iconstyle-actions">Edit Icon Style Actions<br/>
+						Currently no delete or expunge options
+					</div>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div> <!-- end of edit iconstyles form -->
+
+<!-- close all iconstyles editing -->
+<div id="edit-iconstyles-cancel" style="display:none;">
+  <input type="button" name="closeiconstylesform" value="Close Icon Styles Editing" onclick="javascript:BitMap.EditSession.cancelEditIconStyles();" />
+</div>
+<!-- end iconstyles editing forms -->
 
 
 

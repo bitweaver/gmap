@@ -167,14 +167,16 @@ BitMap.MapData.push({ldelim}
 		shadow_anchor_x: {$gContent->mMapIconStyles[markericondata].shadow_anchor_x},
 		shadow_anchor_y: {$gContent->mMapIconStyles[markericondata].shadow_anchor_y},
 		infowindow_anchor_x: {$gContent->mMapIconStyles[markericondata].infowindow_anchor_x},
-		infowindow_anchor_y: {$gContent->mMapIconStyles[markericondata].infowindow_anchor_y},
+		infowindow_anchor_y: {$gContent->mMapIconStyles[markericondata].infowindow_anchor_y}
 		{* image_map: {$gContent->mMapIconStyles[markericondata].image_map}, *}
+		{* DELETE - NOLONGER AVAILABLE FROM XMAPS
 		points: "{$gContent->mMapIconStyles[markericondata].points}",
 		scale: {$gContent->mMapIconStyles[markericondata].scale},
 		outline_color: "{$gContent->mMapIconStyles[markericondata].outline_color}",
 		outline_weight: {$gContent->mMapIconStyles[markericondata].outline_weight},
 		fill_color: "{$gContent->mMapIconStyles[markericondata].fill_color}",
 		fill_opacity: {$gContent->mMapIconStyles[markericondata].fill_opacity}
+		*}
 	{rdelim},
 	{/section}{/if}],
 
