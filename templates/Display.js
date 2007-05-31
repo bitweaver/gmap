@@ -184,7 +184,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			var imgLink = "<p><img src='"+medUrl+"'></p>"
 		}
 	
-	  M.gmarker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+M.title+"</h1>" + imgLink + "<p>"+M.parsed_data+"</p></div>";
+	  M.gmarker.my_html = "<div style='white-space: nowrap;' class='win-"+this.markerstyles[s].name + "'><h1 class='markertitle'>"+M.title+"</h1>" + imgLink + "<p>"+M.parsed_data+"</p></div>";
 	  this.map.addOverlay(M.gmarker);
 	},
 
