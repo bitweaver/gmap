@@ -357,52 +357,53 @@
 <!-- edit markers form -->
 <div id="edit-markers-table" class="edit-datatable" style="display:none;">
     <form action="javascript:;" name="edit-marker-form" id="edit-marker-form" >
-    <input name="save_marker" type="hidden" value="true">
-    <input name="marker_id" type="hidden" value="marker_id">
-    <input name="marker_array_n" type="hidden" value="n">
-    <input name="set_id" type="hidden" value="set_id">
-    <table>
-    	<tr>
-        <td width="200px">Markers:<br/>
-            <ul>
-            <li style="display:none;"><a href="javascript:BitMap.EditSession.editMarker(n);">Marker Name Here</a></li>
-            <li id="edit-markerlink-new"><b><a id="edit-markerlink-new-a" href="javascript:BitMap.EditSession.newMarker(setindex);">Add A New Marker</a></b></li>
-            </ul>
-        </td>
-    	  <td>
-          <div class="tplform">
-            <div>Type <select name="marker_type">
-											<option value="0" >Normal</option>
-											<option value="1" >Auto-Photo</option>
-											</select></div>
-            <div>Latitutde &nbsp;<input size="50" name="geo[lat]" type="text" value=""><br/>
-                 Longitude <input size="50" name="geo[lng]" type="text" value=""><br/>
-                 <a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a></div>
-            <div>Title<br/>
-                 <input size="50" name="title" type="text" value="a title"></div>
-            <div>Label Title<br/>
-                 <textarea name="marker_labeltext" rows="1"></textarea></div>
-            <div>Window Text<br/>
-                 <textarea name="edit" rows="10"></textarea></div>
-            <div>Photo URL<br/>
-                 <input size="50" name="photo_url" type="text" value=""></div>
-            <div>
-                <input type="button" name="save_marker_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarker(document['edit-marker-form']);">
-          </div>
-        </td>
-        <td width="200px">
-          <div id="edit-marker-tips">Tips<br/>
-               Put advice here
-          </div>
-          <div id="edit-marker-actions">Edit Marker Actions<br/>
-            <a name="locate_marker_btn" title="locate on the map" href="javascript:BitMap.MapData[0].Map.markers[n].marker.openInfoWindowHtml(BitMap.MapData[0].Map.markers[n].marker.my_html);">show</a>
-            <a name="remove_marker_btn" title="remove from this set" href="javascript:BitMap.EditSession.removeMarker(document.edit-marker-form);">remove</a>
-            <a name="expunge_marker_btn" title="delete the marker!" href="javascript:BitMap.EditSession.expungeMarker(document.edit-marker-form);">delete</a><br/>
-          </div>
-        </td>
-     	</tr>
-    </table>
-    <input type="button" name="closemarkerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditMarkers()"></br></div>
+		<input name="save_marker" type="hidden" value="true">
+		<input name="marker_id" type="hidden" value="marker_id">
+		<input name="marker_array_n" type="hidden" value="n">
+		<input name="set_id" type="hidden" value="set_id">
+		<table>
+			<tr>
+				<td width="200px">Markers:<br/>
+					<ul>
+						<li style="display:none;"><a href="javascript:BitMap.EditSession.editMarker(n);">Marker Name Here</a></li>
+						<li id="edit-markerlink-new"><b><a id="edit-markerlink-new-a" href="javascript:BitMap.EditSession.newMarker(setindex);">Add A New Marker</a></b></li>
+					</ul>
+				</td>
+				<td>
+					<div class="tplform">
+						<div>Type <select name="marker_type">
+														<option value="0" >Normal</option>
+														<option value="1" >Auto-Photo</option>
+														</select></div>
+						<div>Latitutde &nbsp;<input size="50" name="geo[lat]" type="text" value=""><br/>
+							 Longitude <input size="50" name="geo[lng]" type="text" value=""><br/>
+							 <a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a></div>
+						<div>Title<br/>
+							 <input size="50" name="title" type="text" value="a title"></div>
+						<div>Label Title<br/>
+							 <textarea name="marker_labeltext" rows="1"></textarea></div>
+						<div>Window Text<br/>
+							 <textarea name="edit" rows="10"></textarea></div>
+						<div>Photo URL<br/>
+							 <input size="50" name="photo_url" type="text" value=""></div>
+						<div>
+							<input type="button" name="save_marker_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarker(document['edit-marker-form']);">
+						</div>
+					</div>
+				</td>
+				<td width="200px">
+					<div id="edit-marker-tips">Tips<br/>
+					   Put advice here
+					</div>
+					<div id="edit-marker-actions">Edit Marker Actions<br/>
+						<a name="locate_marker_btn" title="locate on the map" href="javascript:BitMap.MapData[0].Map.markers[n].marker.openInfoWindowHtml(BitMap.MapData[0].Map.markers[n].marker.my_html);">show</a>
+						<a name="remove_marker_btn" title="remove from this set" href="javascript:BitMap.EditSession.removeMarker(document.edit-marker-form);">remove</a>
+						<a name="expunge_marker_btn" title="delete the marker!" href="javascript:BitMap.EditSession.expungeMarker(document.edit-marker-form);">delete</a><br/>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<input type="button" name="closemarkerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditMarkers()"></br>
     </form>
 </div> 
 <!-- edit of edit markers form -->
@@ -539,7 +540,7 @@
 <!--end icon style editing forms -->
 
 
-
+<!--
 <div id="editmarkerstylesmenu" style="display:none;">
 		<a href="javascript:BitMap.EditSession.newMarkerStyle();">Add a New Marker Style</a>
 </div>
@@ -620,10 +621,84 @@
 
 <div id="editmarkerstylescancel" style="display:none;"><input type="button" name="closemarkerstylesform" value="Cancel Editing Marker Styles" onclick="javascript:BitMap.EditSession.canceledit('editmarkerstylesmenu'); BitMap.EditSession.canceledit('newmarkerstyleform'); BitMap.EditSession.canceledit('editmarkerstyleform'); BitMap.EditSession.canceledit('editmarkerstylescancel');"></div>
 <!--end marker style editing forms -->
+-->
 
 
 
+<!--------------------------------
+	-  Markerstyles Editing Forms
+	-------------------------------->
 
+<!-- markerstyle editing menu -->
+<div id="edit-markerstyles-table" class="edit-table" style="display:none;">
+	<h2>Marker Styles Associated with Marker Sets on This Map</h2>
+	<div id="edit-markerstyles" class="edit-selected">
+		<table class="bar">
+			<tr>
+				<td><span class="setname">Marker Styles:</span></td>
+			</tr>
+		</table>
+	</div>
+</div>
+<!-- end of markerstyle editing menu -->
+
+<!-- edit markerstyles form -->
+<div id="edit-markerstyle-table" class="edit-datatable" style="display:none;">
+    <form action="javascript:;" name="edit-markerstyle-form" id="edit-markerstyle-form" >
+		<input name="style_id" type="hidden" value="style_id">
+		<input name="style_array_n" type="hidden" value="n">
+		<input name="save_markerstyle" type="hidden" value="true">
+		<table>
+			<tr>
+				<td width="200px"><br />
+					<ul>
+						<li style="display:none;"><a href="javascript:BitMap.EditSession.editMarkerStyle(n);">Marker Style Name Here</a></li>
+						<li id="edit-markerstylelink-new"><b><a id="edit-markerstylelink-new-a" href="javascript:BitMap.EditSession.newMarkerStyle(setindex);">Add A New Marker Style</a></b></li>
+					</ul>
+				</td>
+				<td>
+					<div class="tplform">
+						<div>Name<br/>
+							<input name="name" type="text" style="width:90%" value="">
+						</div>
+						<div>Type<select name="marker_style_type">
+									<option value="0">GMarker</option>
+									<option value="1">PdMarker</option>
+								</select>
+						</div>
+						<div>Label Hover Opacity (%) <input name="label_hover_opacity" type="text" size="5" value="70">
+						</div>
+						<div>Label Opacity (%) <input name="label_opacity" type="text" size="5" value="100">
+						</div>
+						<div>Label Hover Styles (CSS)<br />
+							<textarea name="label_hover_styles" style="width:90%" rows="3"></textarea>
+						</div>
+						<div>Window Styles (CSS)<br />
+							<textarea name="window_styles" style="width:90%" rows="3"></textarea>
+						</div>
+						<div>
+							<input type="button" name="save_markerstyle_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarkerStyle(document['edit-markerstyle-form']);">
+						</div>
+					</div>
+				</td>
+				<td width="200px">
+					<div id="edit-markerstyle-tips">Tips<br/>
+						Put advice here
+					</div>
+					<div id="edit-markerstyle-actions">Edit Marker Style Actions<br/>
+						Currently no delete or expunge options
+					</div>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div> <!-- end of edit markerstyles form -->
+
+<!-- close all markerstyles editing -->
+<div id="edit-markerstyles-cancel" style="display:none;">
+  <input type="button" name="closemarkerstylesform" value="Close Marker Styles Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerStyles();" />
+</div>
+<!-- end markerstyles editing forms -->
 
 
 

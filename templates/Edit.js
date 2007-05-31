@@ -913,128 +913,88 @@ BitMap.Edit.prototype = {
 	  		}
 	  	}
 	},
-	
-	
-	"newMarkerStyle": function(){
-			var check = false;
-	  	for (var i=0; i<this.Map.markersets.length; i++){
-	  		if ( this.Map.markersets[i] != null ){
-					check = true;
-	  		}
-	  	}
-	
-	  	if (check == false){
-	  		//set warning message, show it, fade it
-	  		$('errortext').innerHTML = "To add a marker style, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new marker style!";
-				BitMap.show('editerror');
-	  		Fat.fade_all();
-	  		//display new marker set form
-	      this.newMarkerSet();
-	
-			}else{
-	      // Display the New Marker Style Div
-	   		BitMap.show('newmarkerstyleform');
-	
-	  		// Reset the Form
-	  		$('markerstyleform_new').reset();  		  
-			};
-	},
-	
-	
-	"editMarkerStyles": function(){
-			BitMap.show('editmarkerstylesmenu');
-			BitMap.show('editmarkerstyleform');
-			BitMap.show('editmarkerstylescancel');
-	
-			//if markerstyles data exists
-			if ( typeof( this.Map.markerstyles ) ) {
-	
-	  	// We assume editMarkerStyles has been called before and remove 
-	  	// any previously existing sets from the UI
-	  	for (var a=0; a<this.Map.markerstyles.length; a++) {
-	  		if ( this.Map.markerstyles[a]!= null ){
-	    		var getElem = "editmarkerstyletable_" + this.Map.markerstyles[a].style_id;
-	    		if ( $(getElem) ) {
-	        	var extraMarkerStyleForm = $(getElem);
-	    			$('editmarkerstyleform').removeChild(extraMarkerStyleForm);
-	    		}
-				}
-	  	}
-	
-	  	var editMarkerStyleId;
-	
-			var x = 0;
-	  	// for each markerstyle data set clone the form
-	  	for (var b=0; b<this.Map.markerstyles.length; b++) {
-	    	if ( this.Map.markerstyles[b]!= null ){  						
-					x++
-	    		editMarkerStyleId = this.Map.markerstyles[b].style_id;
-	
-	    		// clone the form container
-	  			var newMarkerStyle = $('editmarkerstyletable_n').cloneNode(true);
-	    		// give a new id to the new form container
-	    		newMarkerStyle.id = "editmarkerstyletable_"+editMarkerStyleId;
-	
-	  			// update the new form ids
-	    		newMarkerStyleForm = newMarkerStyle.childNodes;
-	            for ( var n = 0; n < newMarkerStyleForm.length; n++ ) {
-						if ( newMarkerStyleForm[n].id == "markerstyleform_n" ) {					
-							newMarkerStyleForm[n].id = "markerstyleform_" + editMarkerStyleId;
-	              		newMarkerStyleForm[n].name = "markerstyleform_" + editMarkerStyleId;					 
-	            		if (x % 2){
-	            			addElementClass( newMarkerStyleForm[n], 'even');
-	            		}else{
-	            			addElementClass( newMarkerStyleForm[n], 'odd');
-	            		}
-	      				var nMSFKids = newMarkerStyleForm[n].childNodes;
-	      				for (var o=0; o<nMSFKids.length; o++){
-	      					if (nMSFKids[o].id == "markerstyleformdata_n"){
-	      						nMSFKids[o].id = "markerstyleformdata_" + editMarkerStyleId;
-	      					}
-	      				}
-	      			}
-	      		}
-	
-	        	// add form to style table
-	    		$('editmarkerstyleform').appendChild(newMarkerStyle);
-	    		BitMap.show( 'editmarkerstyletable_'+editMarkerStyleId );
-	    		BitMap.show( 'markerstyleform_'+editMarkerStyleId );
-	
-	  			// populate set form values
-	  			form = $('markerstyleform_' + editMarkerStyleId );
-	
-	            form.style_id.value = this.Map.markerstyles[b].style_id;
-	            form.style_array_n.value = b;
-	            form.name.value = this.Map.markerstyles[b].name;
-	            for (var r=0; r < 3; r++) {
-	               if (form.marker_style_type.options[r].value == this.Map.markerstyles[b].marker_style_type){
-	               		form.marker_style_type.options[r].selected=true;
-	               }
-	            };
-	            form.label_hover_opacity.value = this.Map.markerstyles[b].label_hover_opacity;
-	            form.label_opacity.value = this.Map.markerstyles[b].label_opacity;
-	            form.label_hover_styles.value = this.Map.markerstyles[b].label_hover_styles;
-	            form.window_styles.value = this.Map.markerstyles[b].window_styles;
-	
-	  			// just for a pretty button - js sucks it!
-		/*
-	  			var linkParent = $('markerstyleformdata_'+editMarkerStyleId);
-	  			var linkPKids = linkParent.childNodes;
-	  			for (var p=0; p<linkPKids.length; p++){
-	  						if (linkPKids[p].name == "save_markerstyle_btn"){
-	  							 linkPKids[p].href = "javascript:storeMarkerStyle('edit_markerstyle.php', document.markerstyleform_"+editMarkerStyleId+");" ;
-	  						}
-					}
-		*/
-	
-	           	var mytable = $('markerstyleformdata_'+editMarkerStyleId);
-	           	var mytablebody = mytable.getElementsByTagName("tbody").item(0);
-	   			var myrow = mytablebody.getElementsByTagName("tr").item(0);
-	           	var mycel = myrow.getElementsByTagName("td").item(6);
-	   			mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storeMarkerStyle(document.markerstyleform_"+editMarkerStyleId+");";
-	  		}
+
+	"newMarkerStyle":function(){
+		var count = this.Map.markerstyles.length;
+		for (n=0; n<count; n++){
+			if($('edit-markerstylelink-'+n)){
+				BitMap.jscss('remove', $('edit-markerstylelink-'+n), 'edit-select');
 			}
 		}
+		BitMap.jscss('add', $('edit-markerstylelink-new'), 'edit-select');
+		var form = $('edit-markerstyle-form');
+		form.style_id.value = null;
+		form.style_array_n.value = null;
+		form.reset();
+	},
+	
+	"editMarkerStyle":function(i){
+		BitMap.jscss('remove', $('edit-markerstylelink-new'), 'edit-select');
+		var a;
+		var count = this.Map.markerstyles.length;
+		for (n=0; n<count; n++){
+			if($('edit-markerstylelink-'+n)){
+				a = (n==i)?'add':'remove';
+				BitMap.jscss(a, $('edit-markerstylelink-'+n), 'edit-select');
+			}
+		}
+		var m = this.Map.markerstyles[i];
+		//change values
+		var form = $('edit-markerstyle-form');
+		form.style_id.value = m.style_id;
+		form.style_array_n.value = i;
+		form.name.value = m.name;
+		form.marker_style_type.options[m.marker_style_type].selected = true;
+		form.label_hover_opacity.value = m.label_hover_opacity;
+		form.label_opacity.value = m.label_opacity;
+		form.label_hover_styles.value = m.label_hover_styles;
+		form.window_styles.value = m.window_styles;		
+	},
+
+	"editMarkerStyles": function(){
+		BitMap.show('edit-markerstyles-table');
+		BitMap.show('edit-markerstyles-cancel');
+		
+		var markerstyleTable = $('edit-markerstyle-table');
+		//set some constants
+		var linksList = markerstyleTable.getElementsByTagName("ul").item(0);
+		var links = markerstyleTable.getElementsByTagName("li");
+		//Clear all the existing markerstyles listed
+		//We leave the first two, the first is the model we clone, the second is for a new markerstyle
+		var count = links.length;
+		for (n=count-1; n>1; n--){
+			linksList.removeChild(links.item(n));
+		}
+		
+		$('edit-markerstylelink-new-a').href = "javascript:BitMap.EditSession.newMarkerStyle();";
+		//For each markerstyle, add a link
+		var firstselected = false;
+		for (var n=0; n<this.Map.markerstyles.length; n++) {
+			var m = this.Map.markerstyles[n];
+			var newMarkerstyleli = links.item(0).cloneNode(true);
+			newMarkerstyleli.id = 'edit-markerstylelink-'+n;
+			var newMarkerstyleLink = newMarkerstyleli.getElementsByTagName("a").item(0);
+			newMarkerstyleLink.href = "javascript:BitMap.EditSession.editMarkerStyle("+n+")";
+			newMarkerstyleLink.innerHTML = m.name;
+			linksList.appendChild(newMarkerstyleli);
+			newMarkerstyleli.style.display = "block";
+			
+			if (firstselected != true){
+				this.editMarkerStyle(n);
+				firstselected = true;
+			}			
+		}
+		if (firstselected == false){
+			this.newMarkerStyle();
+		}
+		//We assume it is not visible and make it so
+		BitMap.show('edit-markerstyle-table');
+	},
+
+	"cancelEditMarkerStyles": function(){
+	  BitMap.hide('edit-markerstyles-table');
+	  BitMap.hide('edit-markerstyle-table');
+	  BitMap.hide('edit-markerstyles-cancel');
 	},
 	
 	
@@ -1912,16 +1872,19 @@ BitMap.Edit.prototype = {
 				var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
 		 },
-		 
+
+		/* DELETE		 
 		 "storeNewMarkerStyle": function(f){
 		 		var str = "edit_markerstyle.php?" + queryString(f);
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.addMarkerStyle, this) ); 
 		 },
+		*/
 	
 		 "storeMarkerStyle": function(f){
-				this.editObjectN = f.style_array_n.value;
 		 		var str = "edit_markerstyle.php?" + queryString(f);
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMarkerStyle, this) ); 
+				this.editObjectN = f.style_array_n.value;
+				var callback = (f.style_id.value != "")?this.updateMarkerStyle:this.addMarkerStyle;
+				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 	
 		 "storeNewIconStyle": function(f){
@@ -2708,103 +2671,99 @@ BitMap.Edit.prototype = {
 	
 	
 	"addMarkerStyle": function(rslt){
-	      var xml = rslt.responseXML;
-	
-				// create a spot for a new markerstyle in the data array
-				var n = this.Map.markerstyles.length;
-				this.Map.markerstyles[n] = new Array();
-				var s = this.Map.markerstyles[n];
-	
-				// assign markerstyle values data array			
-				var id = xml.documentElement.getElementsByTagName('style_id');			
-	  		s.style_id = parseInt( id[0].firstChild.nodeValue );
-				var nm = xml.documentElement.getElementsByTagName('name');			
-	  		s.name = nm[0].firstChild.nodeValue;
-				var tp = xml.documentElement.getElementsByTagName('marker_style_type');
-	  		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
-				var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
-	  		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
-				var lo = xml.documentElement.getElementsByTagName('label_opacity');			
-	  		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
-				var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
-	  		s.label_hover_styles = lhs[0].firstChild.nodeValue;
-				var ws = xml.documentElement.getElementsByTagName('window_styles');			
-	  		s.window_styles = ws[0].firstChild.nodeValue;
-	
-	        var ttStyle = document.createElement('style');
-				var ttStyleProperties = document.createTextNode(".tip-" + s.name + " {" + s.label_hover_styles + "}");
-	        ttStyle.setAttribute ("type", "text/css");
-	        ttStyle.appendChild(ttStyleProperties);
-				document.body.appendChild(ttStyle);
-	
-	        var winStyle = document.createElement('style');
-				var winStyleProperties = document.createTextNode(".win-" + s.name + " {" + s.window_styles + "}");
-	        winStyle.setAttribute ("type", "text/css");
-	        winStyle.appendChild(winStyleProperties);
-				document.body.appendChild(winStyle);
-							
-				// clear the form
-				$('markerstyleform_new').reset();
-				// update the styles menus
-				this.editMarkerStyles();
-				this.editMarkers();
+		var xml = rslt.responseXML;
+		// create a spot for a new markerstyle in the data array
+		var n = this.Map.markerstyles.length;
+		this.Map.markerstyles[n] = new Array();
+		var s = this.Map.markerstyles[n];
+		
+		// assign markerstyle values data array			
+		var id = xml.documentElement.getElementsByTagName('style_id');			
+		s.style_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.documentElement.getElementsByTagName('name');			
+		s.name = nm[0].firstChild.nodeValue;
+		var tp = xml.documentElement.getElementsByTagName('marker_style_type');
+		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
+		var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
+		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
+		var lo = xml.documentElement.getElementsByTagName('label_opacity');			
+		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
+		var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
+		s.label_hover_styles = lhs[0].firstChild.nodeValue;
+		var ws = xml.documentElement.getElementsByTagName('window_styles');			
+		s.window_styles = ws[0].firstChild.nodeValue;
+		
+		var ttStyle = document.createElement('style');
+		var ttStyleProperties = document.createTextNode(".tip-" + s.name + " {" + s.label_hover_styles + "}");
+		ttStyle.setAttribute ("type", "text/css");
+		ttStyle.appendChild(ttStyleProperties);
+		document.body.appendChild(ttStyle);
+		
+		var winStyle = document.createElement('style');
+		var winStyleProperties = document.createTextNode(".win-" + s.name + " {" + s.window_styles + "}");
+		winStyle.setAttribute ("type", "text/css");
+		winStyle.appendChild(winStyleProperties);
+		document.body.appendChild(winStyle);
+				
+		// update the styles menus
+		this.editMarkerStyles();
 	},
 	
 	
 	
 	"updateMarkerStyle": function(rslt){
-	      var xml = rslt.responseXML;
-	
-				//get the style we are updating
-				var s = this.Map.markerstyles[editObjectN];
-				var oldtp = s.marker_style_type;
-	
-				// assign markerstyle values data array			
-				var id = xml.documentElement.getElementsByTagName('style_id');			
-	  		s.style_id = parseInt( id[0].firstChild.nodeValue );
-				var nm = xml.documentElement.getElementsByTagName('name');			
-	  		s.name = nm[0].firstChild.nodeValue;
-				var tp = xml.documentElement.getElementsByTagName('marker_style_type');
-	  		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
-				var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
-	  		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
-				var lo = xml.documentElement.getElementsByTagName('label_opacity');			
-	  		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
-				var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
-	  		s.label_hover_styles = lhs[0].firstChild.nodeValue;
-				var ws = xml.documentElement.getElementsByTagName('window_styles');			
-	  		s.window_styles = ws[0].firstChild.nodeValue;
-	
-				//add the replacement styles
-	        var ttStyle = document.createElement('style');
-				var ttStyleProperties = document.createTextNode(".tip-" + s.name + " {" + s.label_hover_styles + "}");
-	        ttStyle.setAttribute ("type", "text/css");
-	        ttStyle.appendChild(ttStyleProperties);
-				document.body.appendChild(ttStyle);
-	
-	        var winStyle = document.createElement('style');
-				var winStyleProperties = document.createTextNode(".win-" + s.name + " {" + s.window_styles + "}");
-	        winStyle.setAttribute ("type", "text/css");
-	        winStyle.appendChild(winStyleProperties);
-				document.body.appendChild(winStyle);
-	
-				//update all markers
-	      	var a = this.Map.markers;
-	    	//if the length of the array is > 0
-	    	if (a.length > 0){
-	      	//loop through the array
-	    		for(var n=0; n<a.length; n++){
-	      		//if the array item is not Null
-	    			if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
-		      			//unload the marker
-	  					this.map.removeOverlay( a[n].marker );
-		      			//define new marker with new styles
-							this.attachMarker(n);
-						}
-					}
+		var xml = rslt.responseXML;
+		//get the style we are updating
+		var s = this.Map.markerstyles[this.editObjectN];
+		var oldtp = s.marker_style_type;
+		
+		// assign markerstyle values data array			
+		var id = xml.documentElement.getElementsByTagName('style_id');			
+		s.style_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.documentElement.getElementsByTagName('name');			
+		s.name = nm[0].firstChild.nodeValue;
+		var tp = xml.documentElement.getElementsByTagName('marker_style_type');
+		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
+		var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
+		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
+		var lo = xml.documentElement.getElementsByTagName('label_opacity');			
+		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
+		var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
+		s.label_hover_styles = lhs[0].firstChild.nodeValue;
+		var ws = xml.documentElement.getElementsByTagName('window_styles');			
+		s.window_styles = ws[0].firstChild.nodeValue;
+		
+		//add the replacement styles
+		var ttStyle = document.createElement('style');
+		var ttStyleProperties = document.createTextNode(".tip-" + s.name + " {" + s.label_hover_styles + "}");
+		ttStyle.setAttribute ("type", "text/css");
+		ttStyle.appendChild(ttStyleProperties);
+		document.body.appendChild(ttStyle);
+		
+		var winStyle = document.createElement('style');
+		var winStyleProperties = document.createTextNode(".win-" + s.name + " {" + s.window_styles + "}");
+		winStyle.setAttribute ("type", "text/css");
+		winStyle.appendChild(winStyleProperties);
+		document.body.appendChild(winStyle);
+
+		// update the styles menus
+		this.editMarkerStyles();
+		
+		//update all markers
+		var a = this.Map.markers;
+		//if the length of the array is > 0
+		if (a.length > 0){
+		//loop through the array
+		for(var n=0; n<a.length; n++){
+			//if the array item is not Null
+			if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
+				//unload the marker
+				this.map.removeOverlay( a[n].marker );
+				//define new marker with new styles
+					this.addMarker(n);
 				}
-				this.editMarkerStyles();
-				this.editMarkers();
+			}
+		}
 	},
 	
 		

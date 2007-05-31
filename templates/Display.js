@@ -87,10 +87,10 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 					}
 				}
 				if ( MarkerStyles[s].marker_style_type == 0){
-					this.defineGxMarker(n, icon, s);
+					this.defineGxMarker(i, icon, s);
 					if (o == true) {M.gmarker.openInfoWindowHtml(M.gmarker.my_html);};
 				}else if ( MarkerStyles[s].marker_style_type == 1){
-					this.definePdMarker(n, icon, s);
+					this.definePdMarker(i, icon, s);
 					if (o == true) {
 						M.gmarker.showTooltip();
 						M.gmarker.hideTooltip();
