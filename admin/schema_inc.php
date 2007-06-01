@@ -314,10 +314,12 @@ $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
 	array('p_gmap_view_history', 'Can view maps', 'basic', GMAP_PKG_NAME),
 	array('p_gmap_edit', 'Can edit maps', 'editors', GMAP_PKG_NAME),
 	array('p_gmap_remove', 'Can remove maps', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_rollback', 'Can rollback version of a map', 'editors', GMAP_PKG_NAME),
 	array('p_marker_view', 'Can view maps', 'basic', GMAP_PKG_NAME),
 	array('p_marker_view_history', 'Can view maps', 'basic', GMAP_PKG_NAME),
 	array('p_marker_edit', 'Can edit maps', 'editors', GMAP_PKG_NAME),
 	array('p_marker_remove', 'Can remove maps', 'editors', GMAP_PKG_NAME),
+	array('p_marker_rollback', 'Can rollback version of a marker', 'editors', GMAP_PKG_NAME),
 ) );
 
 
