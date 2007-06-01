@@ -167,29 +167,30 @@
             </ul>
         </td>
     	<td>
-          <div class="tplform">
-            <div>
-            	Name<br/>
-            	<input name="tiles_name" type="text" size="50" value="a name"><br/>			    
-				<div style="display:none;">
-					<a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Name Here</a>
+			<div class="tplform">
+				<div>
+					Name<br/>
+					<input name="tiles_name" type="text" size="50" value="a name"><br/>			    
+					<div style="display:none;">
+						<a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Name Here</a>
+					</div>
+					MinZoom<br/>
+					<input name="tiles_minzoom" type="text" size="5" value="0"><br/>
+					MaxZoom<br/>
+					<input name="tiles_maxzoom" type="text" size="5" value="0"><br/>
+					Tiles are PNGs<br/>
+						  <select name="ispng">
+							  <option value="0" >False</option>
+							  <option value="1" >True</option>
+						  </select><br/>	
+					Tiles URL<br/>
+					<input name="tilesurl" type="text" size="50" value=""><br/>
+					Opacity (a float from 0 to 1)<br/>
+					<input name="opacity" type="text" size="5" value="1"><br/>
 				</div>
-				MinZoom<br/>
-				<input name="tiles_minzoom" type="text" size="5" value="0"><br/>
-				MaxZoom<br/>
-				<input name="tiles_maxzoom" type="text" size="5" value="0"><br/>
-				Tiles are PNGs<br/>
-					  <select name="ispng">
-						  <option value="0" >False</option>
-						  <option value="1" >True</option>
-					  </select><br/>	
-				Tiles URL<br/>
-				<input name="tilesurl" type="text" size="50" value=""><br/>
-				Opacity (a float from 0 to 1)<br/>
-				<input name="opacity" type="text" size="5" value="1"><br/>
-			</div>
-			<div>
-				<input type="button" name="save_tilelayer_btn" value="Save" onclick="javascript:BitMap.EditSession.storeTilelayer(document['edit-tilelayer-form']);">
+				<div>
+					<input type="button" name="save_tilelayer_btn" value="Save" onclick="javascript:BitMap.EditSession.storeTilelayer(document['edit-tilelayer-form']);">
+				</div>
 			</div>
         </td>
         <td width="200px">
@@ -225,7 +226,7 @@
         </td>
      	</tr>
     </table>
-	<input type="button" name="closetilelayerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditTilelayers()"></br></div>
+	<input type="button" name="closetilelayerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditTilelayers()"></br>
 </div> 
 <!-- edit of edit tilelayers form -->
 

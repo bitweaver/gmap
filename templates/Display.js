@@ -441,7 +441,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			if ( set.side_panel == true ){
 				$('gmap-map').style.marginRight = '300px';
 				BitMap.show('gmap-sidepanel');
-				var display = true;
+				display = true;
 				//get the set icon style
 				var iconSrc = "http://www.google.com/mapfiles/marker.png";
 				var iconW = "20";
