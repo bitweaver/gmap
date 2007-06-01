@@ -158,13 +158,15 @@ $tables = array(
   version I4 NOTNULL,
   name C(255),
   points_data X,
-  border_text X,
+  levels_data X,
+  zoom_factor I4,
+  num_levels I4,  
   zindex I8 DEFAULT 0
 ",
 
-//type options: 0 => Google Default, 1 => XPolyline
-//opacity and text_bgstyle_opacity take a float from 0-1
-//pattern takes an array. Default NULL
+//type options: 0 => Google Default
+//opacity takes a float from 0-1
+//some columns here are not used at this time
 'gmaps_polyline_styles' => "
   style_id I4 PRIMARY,
   name C(64),
@@ -176,17 +178,7 @@ $tables = array(
   segment_count I8 DEFAULT 0,
   begin_arrow C(5) DEFAULT 'false',
   end_arrow C(5) DEFAULT 'false',
-  arrows_every I8 DEFAULT 0,
-  font c(255) DEFAULT 'Arial',
-  text_every I8 DEFAULT 0,
-  text_fgstyle_color C(6) DEFAULT 'ffffff',
-  text_fgstyle_weight I4 DEFAULT 1,
-  text_fgstyle_opacity F DEFAULT 1,
-  text_fgstyle_zindex I8 DEFAULT 0,
-  text_bgstyle_color C(6) DEFAULT 'ff3300',
-  text_bgstyle_weight I4 DEFAULT 2,
-  text_bgstyle_opacity  F DEFAULT 1,
-  text_bgstyle_zindex I8 DEFAULT 0
+  arrows_every I8 DEFAULT 0
 ",
 
 'gmaps_polyline_sets' => "
@@ -222,7 +214,6 @@ $tables = array(
   points_data X DEFAULT 0,
   circle_center X DEFAULT 0,
   radius F DEFAULT 0,
-  border_text X,
   zindex I8 DEFAULT 0
 ",
 
@@ -319,9 +310,14 @@ $gBitInstaller->registerModules( $moduleHash );
 
 //
 $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
-	array('bit_gm_edit_map', 'Can edit maps', 'editors', GMAP_PKG_NAME),
-	array('bit_gm_view_map', 'Can view maps', 'basic', GMAP_PKG_NAME),
-	array('bit_gm_remove_map', 'Can remove maps', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_view', 'Can view maps', 'basic', GMAP_PKG_NAME),
+	array('p_gmap_view_history', 'Can view maps', 'basic', GMAP_PKG_NAME),
+	array('p_gmap_edit', 'Can edit maps', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_remove', 'Can remove maps', 'editors', GMAP_PKG_NAME),
+	array('p_marker_view', 'Can view maps', 'basic', GMAP_PKG_NAME),
+	array('p_marker_view_history', 'Can view maps', 'basic', GMAP_PKG_NAME),
+	array('p_marker_edit', 'Can edit maps', 'editors', GMAP_PKG_NAME),
+	array('p_marker_remove', 'Can remove maps', 'editors', GMAP_PKG_NAME),
 ) );
 
 
