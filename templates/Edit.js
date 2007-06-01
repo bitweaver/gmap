@@ -591,7 +591,6 @@ BitMap.Edit.prototype = {
 	    a = (n==i)?'add':'remove';
 	    BitMap.jscss(a, $('edit-markerset-'+n), 'edit-selected');
 	  }
-	
 	  this.cancelNewMarkerSet();
 	  this.cancelEditMarkers();
 	  var s = this.Map.markersets[i];
@@ -600,7 +599,6 @@ BitMap.Edit.prototype = {
 	  target.insertBefore(optionsTable, target.childNodes[2]);  
 	  BitMap.show('edit-markerset-options-actions');
 	  BitMap.show('edit-markerset-options-table');
-	    
 	  //customize the form values
 	  var form = $('edit-markerset-options-form');
 	  form.set_id.value = s.set_id;
@@ -611,7 +609,7 @@ BitMap.Edit.prototype = {
 	  if (s.side_panel == false){ form.side_panel.options[0].selected=true; }else{form.side_panel.options[1].selected=true;};
 	  if (s.explode == false){ form.explode.options[0].selected=true }else{form.explode.options[1].selected=true};
 	  if (s.cluster == false){ form.cluster.options[0].selected=true }else{form.cluster.options[1].selected=true};
-	  if ( this.Map.markerstyles.length > 0 ){
+	  if ( this.Map.markerstyles.length > 0 && form.style_id.options.length < (this.Map.markerstyles.length + 1) ){
 		var OptionN = form.style_id.options.length;
 	  	for (var d=0; d<this.Map.markerstyles.length; d++){
 	      if ( this.Map.markerstyles[d] != null ){
@@ -622,7 +620,7 @@ BitMap.Edit.prototype = {
 	  	  }
 	  	}
 	  }
-	  if ( this.Map.iconstyles.length > 0 ){
+	  if ( this.Map.iconstyles.length > 0 && form.icon_id.options.length < (this.Map.iconstyles.length + 1) ){
 	    var IconN = form.icon_id.options.length;
 	  	for (var e=0; e<this.Map.iconstyles.length; e++){
 	      if ( this.Map.iconstyles[e] != null ){
@@ -766,154 +764,6 @@ BitMap.Edit.prototype = {
 	},
 	
 	
-/*	
-	"newIconStyle": function(){
-			var check = false;
-	  	for (var i=0; i<this.Map.markersets.length; i++){
-	  		if ( this.Map.markersets[i] != null ){
-					check = true;
-	  		}
-	  	}
-	
-	  	if (check == false){
-	  		//set warning message, show it, fade it
-	  		$('errortext').innerHTML = "To add a icon style, there first must be a marker set associated with this map. Please create a new marker set, then you can add your new icon style!";
-				BitMap.show('editerror');
-	  		Fat.fade_all();
-	  		//display new marker set form
-	      this.newMarkerSet();
-	
-			}else{
-	      // Display the New Icon Style Div
-	   		BitMap.show('newiconstyleform');
-	
-	  		// Reset the Form
-	  		$('iconstyleform_new').reset();  		  
-			}
-	},
-	
-	"editIconStyles": function(){
-			BitMap.show('editiconstylesmenu');
-			BitMap.show('editiconstyleform');
-			BitMap.show('editiconstylescancel');
-	
-	  	//if iconstyles data exists
-	  	if ( typeof( this.Map.iconstyles ) ) {
-	  
-	    	// We assume editIconStyles has been called before and remove 
-	    	// any previously existing sets from the UI
-	    	for (var a=0; a<this.Map.iconstyles.length; a++) {
-	    		if ( this.Map.iconstyles[a]!= null ){
-	      			var getElem = "editiconstyletable_" + this.Map.iconstyles[a].icon_id;
-	        		if ( $(getElem) ) {
-	            		var extraIconStyleForm = $(getElem);
-	        			$('editiconstyleform').removeChild(extraIconStyleForm);
-	        		}
-	  			}
-	    	}
-	  
-	    	var editIconStyleId;
-				var x = 0;
-	    	// for each iconstyle data set clone the form
-	    	for (var b=0; b<this.Map.iconstyles.length; b++) {
-	        	if ( this.Map.iconstyles[b]!= null ){  						
-						x++;    
-	        		editIconStyleId = this.Map.iconstyles[b].icon_id;
-	    
-	        		// clone the form container
-	      			var newIconStyle = $('editiconstyletable_n').cloneNode(true);
-	        		// give a new id to the new form container
-	        		newIconStyle.id = "editiconstyletable_"+editIconStyleId;
-	    
-	      			// update the new form ids
-	        		newIconStyleForm = newIconStyle.childNodes;
-	                for ( var n = 0; n < newIconStyleForm.length; n++ ) {
-	            		if ( newIconStyleForm[n].id == "iconstyleform_n" ) {					
-	                  		newIconStyleForm[n].id = "iconstyleform_" + editIconStyleId;
-	                  		newIconStyleForm[n].name = "iconstyleform_" + editIconStyleId;
-	            			if (x % 2){
-	            				addElementClass( newIconStyleForm[n], 'even');
-	            			}else{
-	            				addElementClass( newIconStyleForm[n], 'odd');
-	            			}			 
-	          				var nLSFKids = newIconStyleForm[n].childNodes;
-	          				for (var o=0; o<nLSFKids.length; o++){
-	          					if (nLSFKids[o].id == "iconstyleformdata_n"){
-	          						nLSFKids[o].id = "iconstyleformdata_" + editIconStyleId;
-	          					}
-	          				}
-	          			}
-	          		}
-	    
-	            	// add form to style table
-	        		$('editiconstyleform').appendChild(newIconStyle);
-	        		BitMap.show( 'editiconstyletable_'+editIconStyleId );
-	        		BitMap.show( 'iconstyleform_'+editIconStyleId );
-	    
-	      			// populate set form values
-	      			form = $('iconstyleform_' + editIconStyleId );
-	    
-	                form.style_array_n.value = b;
-	                form.icon_id.value = this.Map.iconstyles[b].icon_id;
-	                form.name.value = this.Map.iconstyles[b].name;
-	                for (var r=0; r < 2; r++) {
-	                   if (form.icon_style_type.options[r].value == this.Map.iconstyles[b].icon_style_type){
-	                   		form.icon_style_type.options[r].selected=true;
-	                   }
-	                };
-	                form.image.value = this.Map.iconstyles[b].image;
-	                form.rollover_image.value = this.Map.iconstyles[b].rollover_image;
-	                form.icon_w.value = this.Map.iconstyles[b].icon_w;
-	                form.icon_h.value = this.Map.iconstyles[b].icon_h;
-	
-					 /* not sure want to both supporting these, 
-				 	  * probably more complex than people want to be bothered with
-					  * they are NOT in the edit_form.tpl
-						----------------------------------------------------------	
-						form.print_image.value = this.Map.iconstyles[b].print_image;
-	                form.moz_print_image.value = this.Map.iconstyles[b].moz_print_image;
-	                form.transparent.value = this.Map.iconstyles[b].transparent;
-	                form.print_shadow.value = this.Map.iconstyles[b].print_shadow;
-	                form.image_map.value = this.Map.iconstyles[b].image_map;
-					  */
-/*	
-	                form.shadow_image.value = this.Map.iconstyles[b].shadow_image;
-	                form.shadow_w.value = this.Map.iconstyles[b].shadow_w;
-	                form.shadow_h.value = this.Map.iconstyles[b].shadow_h;
-	                form.icon_anchor_x.value = this.Map.iconstyles[b].icon_anchor_x;
-	                form.icon_anchor_y.value = this.Map.iconstyles[b].icon_anchor_y;
-	                form.shadow_anchor_x.value = this.Map.iconstyles[b].shadow_anchor_x;
-	                form.shadow_anchor_y.value = this.Map.iconstyles[b].shadow_anchor_y;
-	                form.infowindow_anchor_x.value = this.Map.iconstyles[b].infowindow_anchor_x;
-	                form.infowindow_anchor_y.value = this.Map.iconstyles[b].infowindow_anchor_y;
-	                form.points.value = this.Map.iconstyles[b].points;
-	                form.scale.value = this.Map.iconstyles[b].scale;
-	                form.outline_color.value = this.Map.iconstyles[b].outline_color;
-	                form.outline_weight.value = this.Map.iconstyles[b].outline_weight;
-	                form.fill_color.value = this.Map.iconstyles[b].fill_color;
-	                form.fill_opacity.value = this.Map.iconstyles[b].fill_opacity;
-	    
-	      			// custom menu options and a pretty button
-	           		var mytable = $('iconstyleformdata_'+editIconStyleId);
-	           		var mytablebody = mytable.getElementsByTagName("tbody").item(0);
-	   				var myrow = mytablebody.getElementsByTagName("tr").item(0);
-	           		var mycel = myrow.getElementsByTagName("td").item(1);
-	
-	//					alert(mycel.getElementsByTagName("select").item(0).onchange);
-	//					mycel.getElementsByTagName("select").item(0).onchange = "javascript:toggleIconMenu(this.value, "+editIconStyleId+");";
-	
-						mycel = myrow.getElementsByTagName("td").item(6);
-						mycel.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.storeIconStyle(document.iconstyleform_"+editIconStyleId+");";
-	
-						mytablebody.getElementsByTagName("tr").item(1).id = "gicon_style_head_"+editIconStyleId;
-						mytablebody.getElementsByTagName("tr").item(2).id = "gicon_style_menu1_"+editIconStyleId;
-						mytablebody.getElementsByTagName("tr").item(3).id = "gicon_style_menu2_"+editIconStyleId;
-	
-	      		}
-	  		}
-	  	}
-	},
-*/
 
 	/*******************
 	 *
@@ -2689,55 +2539,55 @@ BitMap.Edit.prototype = {
 	
 	
 	"updateMarkerSet": function(rslt){
-	      var xml = rslt.responseXML;
-	
-				var s = this.Map.markersets[this.editObjectN];
-				var oldStyle = s.style_id;
-				var oldIcon = s.icon_id;
-	
-		 		//shorten var names
-				var id = xml.documentElement.getElementsByTagName('set_id');			
-				s.set_id = parseInt(id[0].firstChild.nodeValue);
-				var nm = xml.documentElement.getElementsByTagName('name');
-				s.name = nm[0].firstChild.nodeValue;
-				var dc = xml.documentElement.getElementsByTagName('description');
-				s.description = dc[0].firstChild.nodeValue;
-				var sy = xml.documentElement.getElementsByTagName('style_id');
-				s.style_id = parseInt(sy[0].firstChild.nodeValue);			
-				var ic = xml.documentElement.getElementsByTagName('icon_id');
-				s.icon_id = parseInt(ic[0].firstChild.nodeValue);
-				var pol = xml.documentElement.getElementsByTagName('plot_on_load');
-				if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
-				var sp = xml.documentElement.getElementsByTagName('side_panel');
-				if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
-				var ex = xml.documentElement.getElementsByTagName('explode');
-				if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
-				var cl = xml.documentElement.getElementsByTagName('cluster');
-				if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
-	
-				if ( ( oldStyle != s.style_id ) || ( oldIcon != s.icon_id ) ) {
-					a = this.Map.markers;
-	           	//if the length of the array is > 0
-	           	if (a.length > 0){
-	             	//loop through the array
-	           		for(var n=0; n<a.length; n++){
-	             		//if the array item is not Null
-	           			if (a[n]!= null && a[n].plot_on_load == true){
-	       					if (a[n].set_id == s.set_id){
-									a[n].style_id = s.style_id;
-									a[n].icon_id = s.icon_id;
-									//unload the marker
-	         				this.Map.map.removeOverlay( a[n].marker );
-	    						//define marker
-									this.Map.attachMarker(n);
-	       					}
-	       				}
-	       			}
-	       		}
-				};
-	
-				// update the sets menus
-				this.editMarkers(this.editObjectN);
+		var xml = rslt.responseXML;
+		
+		var s = this.Map.markersets[this.editObjectN];
+		var oldStyle = s.style_id;
+		var oldIcon = s.icon_id;
+		
+		//shorten var names
+		var id = xml.documentElement.getElementsByTagName('set_id');			
+		s.set_id = parseInt(id[0].firstChild.nodeValue);
+		var nm = xml.documentElement.getElementsByTagName('name');
+		s.name = nm[0].firstChild.nodeValue;
+		var dc = xml.documentElement.getElementsByTagName('description');
+		s.description = dc[0].firstChild.nodeValue;
+		var sy = xml.documentElement.getElementsByTagName('style_id');
+		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
+		var ic = xml.documentElement.getElementsByTagName('icon_id');
+		s.icon_id = parseInt(ic[0].firstChild.nodeValue);
+		var pol = xml.documentElement.getElementsByTagName('plot_on_load');
+		if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
+		var sp = xml.documentElement.getElementsByTagName('side_panel');
+		if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
+		var ex = xml.documentElement.getElementsByTagName('explode');
+		if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
+		var cl = xml.documentElement.getElementsByTagName('cluster');
+		if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
+		
+		if ( ( oldStyle != s.style_id ) || ( oldIcon != s.icon_id ) ) {
+			a = this.Map.markers;
+			//if the length of the array is > 0
+			if (a.length > 0){
+				//loop through the array
+				for(var n=0; n<a.length; n++){
+					//if the array item is not Null
+					if (a[n]!= null && a[n].plot_on_load == true){
+						if (a[n].set_id == s.set_id){
+							a[n].style_id = s.style_id;
+							a[n].icon_id = s.icon_id;
+							//unload the marker
+							this.Map.map.removeOverlay( a[n].marker );
+							//define marker
+							this.Map.addMarker(n);
+						}
+					}
+				}
+			}
+		}
+		
+		// update the sets menus
+		this.editMarkerSetOptions(this.editObjectN);
 	},
 	
 	
