@@ -153,7 +153,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	  
 	  var data = DIV(null, "");
 	  data.innerHTML += ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';
-	  var comments = ( M.allow_comments == 'y' )?DIV(null, A({'href':'javascript:void(0);', 'onClick':'alert("comments loading coming soon")'}, (M.num_comments != null)?M.num_comments:"0", " Comment(s)")):null;
+	  var comments = ( M.allow_comments == 'y' )?DIV(null, A({'href':'javascript:void(0);', 'onclick':'alert("comments loading coming soon")'}, (M.num_comments != null)?M.num_comments:"0", " Comment(s)")):null;
 	  M.gmarker.my_html = DIV( {'style':'white-space: nowrap;'}, mytitle, creator, modifier, stars, image, data, comments);
 	
 	  this.map.addOverlay(M.gmarker);
