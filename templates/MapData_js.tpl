@@ -94,7 +94,7 @@ BitMap.MapData.push({ldelim}
   {ldelim}
 		marker_id: {$gContent->mMapMarkers[marker_n].marker_id},
 		marker_type: {$gContent->mMapMarkers[marker_n].marker_type},
-		title: "{$gContent->mMapMarkers[marker_n].title}",
+		title: "{$gContent->mMapMarkers[marker_n].title|addslashes}",
 		lat: {$gContent->mMapMarkers[marker_n].lat},
 		lng: {$gContent->mMapMarkers[marker_n].lng},
 		data: '{$gContent->mMapMarkers[marker_n].data}',

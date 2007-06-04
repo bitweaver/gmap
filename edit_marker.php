@@ -29,7 +29,7 @@ if (!empty($_REQUEST["save_marker"])) {
 		//if store is successful we return XML
 		$mRet = "<marker>"
 			."<id>".$gContent->mInfo['marker_id']."</id>"
-			."<title>".$gContent->getTitle()."</title>"
+			."<title>".$gContent->mInfo['title']."</title>"
 			."<marker_type>".$gContent->mInfo['marker_type']."</marker_type>"
 			."<lat>".$gContent->mInfo['lat']."</lat>"
 			."<lng>".$gContent->mInfo['lng']."</lng>"

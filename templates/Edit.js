@@ -2463,19 +2463,28 @@ BitMap.Edit.prototype = {
 
 		//add the xml data to the marker record
 		this.parseMarkerXML(m, xml);
-		
+
 		//unload the marker
 		if ( m.gmarker ){ this.Map.map.removeOverlay( m.gmarker ) };
 		//remake the marker
 		this.Map.addMarker(n);
 		//remove the assistant if used
 		this.removeAssistant();
+
+		var s;
+		for(a=0; a<this.Map.markersets.length; a++){
+			if ( ( this.Map.markersets[a] != null ) && ( this.Map.markersets[a].set_id == this.editSetId ) ){
+				s = a;
+			}
+		};
+		this.editMarkers(s);
+		this.editMarker(n);
 	},
 	
 	"parseMarkerXML": function(m, xml){
 		//shorten var names
 		var id = xml.documentElement.getElementsByTagName('id');			
-		m.marker_id = id[0].firstChild.nodeValue;				
+		m.marker_id = id[0].firstChild.nodeValue;
 		var tl = xml.documentElement.getElementsByTagName('title');
 		m.title = tl[0].firstChild.nodeValue;			
 		var ty = xml.documentElement.getElementsByTagName('marker_type');			
@@ -2489,11 +2498,11 @@ BitMap.Edit.prototype = {
 		var pdt = xml.documentElement.getElementsByTagName('parsed_data');
 		m.parsed_data = pdt[0].firstChild.nodeValue;
 		var l = xml.documentElement.getElementsByTagName('label');
-		m.label_data = l[0].firstChild.nodeValue;			
+		m.label_data = ( l[0].firstChild != null )?l[0].firstChild.nodeValue:'';
 		var pu = xml.documentElement.getElementsByTagName('photo_url');
 		m.photo_url = ( pu[0].firstChild != null )?pu[0].firstChild.nodeValue:'';
-		var z = xml.documentElement.getElementsByTagName('z');
-		m.zindex = parseInt(z[0].firstChild.nodeValue);	
+		//var z = xml.documentElement.getElementsByTagName('z');
+		//m.zindex = parseInt(z[0].firstChild.nodeValue);	
 		var com = xml.documentElement.getElementsByTagName('allow_comments');
 		m.allow_comments = com[0].firstChild.nodeValue;
 	},
