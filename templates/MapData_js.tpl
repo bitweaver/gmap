@@ -5,7 +5,7 @@ BitMap.MapData.push({ldelim}
   browser:"{$browserInfo.browser}",
   {if !$geo_edit_serv}
   id:{if $gContent->mInfo.gmap_id}{$gContent->mInfo.gmap_id}{else}null{/if},
-  title:"{$gContent->mInfo.title}",
+  title:"{$gContent->mInfo.title|addslashes}",
   description:"{$gContent->mInfo.description}",
   data:"{$gContent->mInfo.data}",
   parsed_data:"{$gContent->mInfo.parsed_data}",
@@ -68,7 +68,7 @@ BitMap.MapData.push({ldelim}
 		content_description:'{$listcontent[n].content_description}',
 		lat:{$listcontent[n].lat},
 		lng:{$listcontent[n].lng},
-		title:'{$listcontent[n].title}',
+		title:'{$listcontent[n].title|addslashes}',
 {*	description:'{$listcontent[n].description}',  *}
 		created:{$listcontent[n].created},
 		last_modified:{$listcontent[n].last_modified},
