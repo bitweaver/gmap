@@ -117,9 +117,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	  
 	  M.gmarker = new GMarker(p, {icon: myicon, title:mytitle});
 	  
-	  var mytitle = ["<h1 class='marker-title'>", M.title, "</h1>"].join("");
-	  // REMOVE - carried over from list - not used in regular maps where content type is always a marker
-	  //var desc = (M.content_description != '')?M.content_description+" ":'';
+	  var mytitle = H1( {'class':'marker-title'}, M.title );
 	  var stars = '';
 	  if (typeof(document.getElementById('iwindow-stars')) != 'undefined' && M.stars_pixels != null){
 	    var starsElm = document.getElementById('iwindow-stars').cloneNode(true);
@@ -135,27 +133,28 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			var str_1 = urlSrc.substring(0, pos);
 			var str_2 = urlSrc.substring(pos, urlSrc.length);
 			var medUrl = str_1 + "_medium" + str_2;
-			image = ["<p><a onClick=\"javascript: window.open('", urlSrc, "','", /* @todo: PathToRoot here */ "')\"><img src='", medUrl, "'></a></p>"].join("");
+			var targImg = /* @todo: PathToRoot here + */ urlSrc;
+			image = P(null, A({'onClick':'javascript:window.open('+targImg+')'}, IMG({'src':medUrl})));
 	  }
 	  var d = (new Date(M.created * 1000)).toString();  
-		var di = d.lastIndexOf('GMT');
-		var ds = d.substring(0, di-10);  
+	  var di = d.lastIndexOf('GMT');
+	  var ds = d.substring(0, di-10);  
 
-	  // REMOVE desc ref - carried over from list - not used in regular maps where content type is always a marker
-	  var creator = (M.creator_real_name != '')?["<div>", /*desc,*/ "Created by:", M.creator_real_name, " on:", ds, "</div>"].join(""):'';
+	  var creator = (M.creator_real_name != '')?DIV(null, "Created by ", M.creator_real_name, " on ", ds):null;
 	  
 	  M.created_date = ds;
 	  
 	  var u = (new Date(M.last_modified * 1000)).toString();  
-		var ui = d.lastIndexOf('GMT');
-		var us = d.substring(0, di-10);  
+	  var ui = d.lastIndexOf('GMT');
+	  var us = d.substring(0, di-10);  
 	  M.modified_date = us;
 
-	  var modifier = (M.modifier_real_name != '')?["<div>", /*desc,*/ "Last modification by:", M.modifier_real_name, " on:", us, "</div>"].join(""):'';
+	  var modifier = (M.modifier_real_name != '')?DIV(null, "Last modification by ", M.modifier_real_name, " on ", us):null;
 	  
-	  var link = (M.display_url != '')?["<div><a href='", M.display_url, "'/>Permalink</a></div>"].join(""):'';
-	  var data = ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';    
-	  M.gmarker.my_html = ["<div style='white-space: nowrap;'>", mytitle, creator, modifier, link, stars, image, data, "</div>"].join("");
+	  var data = DIV(null, "");
+	  data.innerHTML += ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';
+	  var comments = ( M.allow_comments == 'y' )?DIV(null, A({'href':'javascript:void(0);', 'onClick':'alert("comments loading coming soon")'}, (M.num_comments != null)?M.num_comments:"0", " Comment(s)")):null;
+	  M.gmarker.my_html = DIV( {'style':'white-space: nowrap;'}, mytitle, creator, modifier, stars, image, data, comments);
 	
 	  this.map.addOverlay(M.gmarker);
 	},
@@ -170,7 +169,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		if (i != null){
 			icon = this.iconstyles[i].icon;
 		}
-		var mytip = "<div class='tip-"+this.markerstyles[s].name + "'>" + M.label_data + "</div>";
+		var mytip = DIV({'class':'tip-'+this.markerstyles[s].name}, M.label_data);
 	  M.gmarker = new GxMarker(point, icon, mytip);
 	  M.gmarker.marker_style_type = 0;
 	
@@ -181,10 +180,12 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			var str_1 = urlSrc.substring(0, pos);
 			var str_2 = urlSrc.substring(pos, urlSrc.length); 
 			var medUrl = str_1 + "_medium" + str_2;
-			var imgLink = "<p><img src='"+medUrl+"'></p>"
+			var imgLink = P(null, IMG({'src':medUrl}));
 		}
-	
-	  M.gmarker.my_html = "<div style='white-space: nowrap;' class='win-"+this.markerstyles[s].name + "'><h1 class='markertitle'>"+M.title+"</h1>" + imgLink + "<p>"+M.parsed_data+"</p></div>";
+		
+	  var data = DIV(null, "");
+	  data.innerHTML += ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';	
+	  M.gmarker.my_html = DIV({'style':'white-space: nowrap;', 'class':'win-'+this.markerstyles[s].name}, H1({'class':markertitle}, M.title), imgLink, data);
 	  this.map.addOverlay(M.gmarker);
 	},
 

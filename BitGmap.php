@@ -243,28 +243,14 @@ class BitGmap extends LibertyAttachable {
 	
 	//returns array of marker data and associated style and icon style ids for given gmap_id and set_type
 	function getMarkers($gmap_id) {
-		global $gBitSystem;
+		global $gBitSystem, $commentsLib;
 		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-
-		 	
+		if ($gmap_id && is_numeric($gmap_id)) {		 	
 			$whereSql = '';
 			$joinSql = '';
 			$selectSql = '';
-		 	$bindVars = array((int)$gmap_id);
-			
+		 	$bindVars = array((int)$gmap_id);			
 			LibertyContent::getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
-
-/*		 			 						  
-			$query = "SELECT bmm.*, lc.*, bms.*, bsk.* $selectSql
-                FROM ( `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."gmaps_markers` bmm, `".BIT_DB_PREFIX."gmaps_marker_sets` bms )
-					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
-                WHERE bsk.`gmap_id` = ? $whereSql
-                AND bsk.`set_type` = 'markers'
-                AND bms.`set_id` = bsk.`set_id`
-                AND bmk.`set_id` = bms.`set_id`
-                AND bmm.`marker_id` = bmk.`marker_id`";
-*/
 
 			$query = "SELECT bmm.*, lc.*, bms.*, bsk.*, 
 					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
@@ -282,7 +268,8 @@ class BitGmap extends LibertyAttachable {
 			$result = $this->mDb->query( $query, $bindVars );
 
 			$ret = array();
-
+			
+			$comment = &new LibertyComment();
 			while ($res = $result->fetchrow()) {
 /*
 				$res['parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
@@ -290,7 +277,12 @@ class BitGmap extends LibertyAttachable {
 				$res['data'] = addslashes($res['data']);
 				$res['data'] = str_replace("\n", "\\n", $res['data']);
 */
-
+				//need something like this - but need to get the prefs in the query
+				$res['allow_comments'] = "n";
+				if( $this->getPreference('allow_comments', null, $res['content_id']) == 'y' ) {
+					$res['allow_comments'] = "y";
+					$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
+				}
 				$res['xml_parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
 				$res['parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
 				$res['parsed_data'] = addslashes($res['parsed_data']);
@@ -301,7 +293,6 @@ class BitGmap extends LibertyAttachable {
 
 			};
 		};
-				
 		return $ret;
 	}
 
@@ -861,6 +852,7 @@ class BitGmap extends LibertyAttachable {
 	* This function generates a list of records from the liberty_content database for use in a list page
 	**/
 	function getList( &$pParamHash ) {
+		global $commentsLib;
 		LibertyContent::prepGetList( $pParamHash );
 
 		$find = $pParamHash['find'];
@@ -892,7 +884,12 @@ class BitGmap extends LibertyAttachable {
 		$query_cant = "select count( * )from `".BIT_DB_PREFIX."liberty_content` lc ".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." lc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'";
 		$result = $this->mDb->query( $query,$bindvars,$max_records,$offset );
 		$ret = array();
+		
+		$comment = &new LibertyComment();
 		while( $res = $result->fetchRow() ) {
+			if( $this->getPreference('allow_comments', null, $res['content_id']) == 'y' ) {
+				$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
+			}
 			$ret[] = $res;
 		}
 		$pParamHash["data"] = $ret;

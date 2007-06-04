@@ -15,56 +15,36 @@ $gBitSystem->verifyPermission('bit_gm_edit_map' );
 // Get the map for specified gmap_id
 require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 
-// Tells smarty to include the Prototype js library
-// $gBitSmarty->assign( 'loadAjax', TRUE );
-
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
-
-/*
-//@todo kill - we think we dont need these when we use constants set in schema_inc
-if ( empty($_REQUEST['gmap_id']) && empty($_REQUEST['content_id']) ){
-
-		$gContent->mInfo['title'] = '';
-		$gContent->mInfo['description'] = '';
-		$gContent->mInfo['data'] = '';
-		$gContent->mInfo['parsed_data'] = '';
-		$gContent->mInfo['width'] = 0;
-		$gContent->mInfo['height'] = 400;
-		$gContent->mInfo['lat'] = 0;
-		$gContent->mInfo['lng'] = 0;
-		$gContent->mInfo['zoom'] = 16;
-		$gContent->mInfo['maptype'] = 0;
-		$gContent->mInfo['zoom_control'] = 's';
-		$gContent->mInfo['maptype_control'] = 'TRUE';
-		$gContent->mInfo['overview_control'] = 'TRUE';
-		$gContent->mInfo['scale'] = 'TRUE';
-		$gContent->mInfo['allow_comments'] = 'TRUE';
-
-}
-*/
 
 //Check if this is a update or a new map
 if (!empty($_REQUEST["save_map"])) {
     if( $gContent->store( $_REQUEST ) ) {
-				//if store is successful we return XML				
-				$mRet = "<map>"
-					."<gmap_id>".$gContent->mInfo['gmap_id']."</gmap_id>"
-					."<title>".$gContent->getTitle()."</title>"
-					."<description>".$gContent->mInfo['description']."</description>"
-					."<data>".$gContent->mInfo['xml_data']."</data>"
-					."<parsed_data><![CDATA[".$gContent->mInfo['parsed_data']."]]></parsed_data>"				
-					."<width>".$gContent->mInfo['width']."</width>"
-					."<height>".$gContent->mInfo['height']."</height>"
-					."<lat>".$gContent->mInfo['lat']."</lat>"
-					."<lng>".$gContent->mInfo['lng']."</lng>"
-					."<zoom>".$gContent->mInfo['zoom']."</zoom>"
-					."<maptype>".$gContent->mInfo['maptype']."</maptype>"
-					."<zoom_control>".$gContent->mInfo['zoom_control']."</zoom_control>"
-					."<maptype_control>".$gContent->mInfo['maptype_control']."</maptype_control>"
-					."<overview_control>".$gContent->mInfo['overview_control']."</overview_control>"
-					."<scale>".$gContent->mInfo['scale']."</scale>"
-					."</map>";
+    
+		//$gContent->storePreference( 'is_public', !empty( $_REQUEST['is_public'] ) ? $_REQUEST['is_public'] : NULL );
+		$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
+		$gContent->load();    
+    
+		//if store is successful we return XML				
+		$mRet = "<map>"
+			."<gmap_id>".$gContent->mInfo['gmap_id']."</gmap_id>"
+			."<title>".$gContent->getTitle()."</title>"
+			."<description>".$gContent->mInfo['description']."</description>"
+			."<data>".$gContent->mInfo['xml_data']."</data>"
+			."<parsed_data><![CDATA[".$gContent->mInfo['parsed_data']."]]></parsed_data>"				
+			."<width>".$gContent->mInfo['width']."</width>"
+			."<height>".$gContent->mInfo['height']."</height>"
+			."<lat>".$gContent->mInfo['lat']."</lat>"
+			."<lng>".$gContent->mInfo['lng']."</lng>"
+			."<zoom>".$gContent->mInfo['zoom']."</zoom>"
+			."<maptype>".$gContent->mInfo['maptype']."</maptype>"
+			."<zoom_control>".$gContent->mInfo['zoom_control']."</zoom_control>"
+			."<maptype_control>".$gContent->mInfo['maptype_control']."</maptype_control>"
+			."<overview_control>".$gContent->mInfo['overview_control']."</overview_control>"
+			."<scale>".$gContent->mInfo['scale']."</scale>"
+			."<allow_comments>".(($gContent->getPreference('allow_comments') == 'y')?"y":"n")."</allow_comments>"
+			."</map>";
 					
       	//since we are returning xml we must report so in the header
       	//we also need to tell the browser not to cache the page
@@ -92,16 +72,15 @@ if (!empty($_REQUEST["save_map"])) {
     }
 }else{
 
-		//@todo this was causing a header problem when needed and when not?
+	//@todo this was causing a header problem when needed and when not?
     //header("Location: ".$gContent->getDisplayUrl());
-
-
-		$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
-		$gBitSmarty->assign( 'loadMochiKit', TRUE );
-		$gBitSmarty->assign( 'edit_map', TRUE );
+    
+	$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
+	$gBitSmarty->assign( 'loadMochiKit', TRUE );
+	$gBitSmarty->assign( 'edit_map', TRUE );
 
     //set onload function in body
-	  $gBitSystem->mOnload[] = 'BitMap.EditMap();';
+	$gBitSystem->mOnload[] = 'BitMap.EditMap();';
     
     //use Mochikit - prototype sucks
 	$gBitSystem->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js' ) );	

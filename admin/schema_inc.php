@@ -14,8 +14,7 @@ $tables = array(
   zoom_control C(1) DEFAULT 's',
   maptype_control C(5) DEFAULT 'true',
   overview_control C(5) DEFAULT 'true',
-  scale C(5) DEFAULT 'true',
-  allow_comments C(5) DEFAULT 'true'
+  scale C(5) DEFAULT 'true'
   CONSTRAINT ', CONSTRAINT `gmaps_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
 ",
 

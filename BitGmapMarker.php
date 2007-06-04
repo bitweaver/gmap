@@ -5,11 +5,11 @@
  * @package gmap
  * @subpackage BitGmapMarker
  *
- * @author will <will@wjamesphoto.com>
+ * @author will <will@onnyturf.com>
  *
  * @version v.0
  *
- * Copyright (c) 2005,2006 bitweaver.org, Will James
+ * Copyright (c) 2005,2006,2007 bitweaver.org, Will James
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
  *

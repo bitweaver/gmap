@@ -93,7 +93,7 @@ BitMap.Edit.prototype = {
 	  form['geo[lat]'].value = this.Map.center.lat;
 	  form['geo[lng]'].value = this.Map.center.lng;
 	  form.map_z.value = this.Map.zoom;
-		form.edit.value = this.Map.data?this.Map.data:"";
+	  form.edit.value = this.Map.data?this.Map.data:"";
 	
 	  var i;
 	  for (i=0; i < 4; i++) {
@@ -133,10 +133,8 @@ BitMap.Edit.prototype = {
 	      form.maptype.options[i].selected=true;
 	    }
 	  }
-										
-	  /*@todo create value for comments
-		  form.map_comm.value = ?; for type="checkbox
-		*/
+
+	  form.allow_comments.checked = (this.Map.allow_comments == "y")?true:false;
 	},
 
 
@@ -738,6 +736,7 @@ BitMap.Edit.prototype = {
 	  form.edit.value = m.data;
 	  form.marker_labeltext.value = m.label_data;
 	  form.photo_url.value = m.photo_url;
+	  form.allow_comments.checked = (m.allow_comments == "y")?true:false;
 	  
 	  //update links
 	  var formLinks = $('edit-marker-actions').getElementsByTagName("a");
@@ -2034,6 +2033,8 @@ BitMap.Edit.prototype = {
 			this.Map.controls.overview_control = oc[0].firstChild.nodeValue;
 			var ss = xml.documentElement.getElementsByTagName('scale');
 			this.Map.controls.scale = ss[0].firstChild.nodeValue;
+			var com = xml.documentElement.getElementsByTagName('allow_comments');
+			this.Map.allow_comments = com[0].firstChild.nodeValue;
 	
 			//replace everything	
 			var maptile = $('mymaptitle');
@@ -2493,6 +2494,8 @@ BitMap.Edit.prototype = {
 		m.photo_url = ( pu[0].firstChild != null )?pu[0].firstChild.nodeValue:'';
 		var z = xml.documentElement.getElementsByTagName('z');
 		m.zindex = parseInt(z[0].firstChild.nodeValue);	
+		var com = xml.documentElement.getElementsByTagName('allow_comments');
+		m.allow_comments = com[0].firstChild.nodeValue;
 	},
 		 	 
 	

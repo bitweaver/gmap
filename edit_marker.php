@@ -22,27 +22,31 @@ require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );
 
 if (!empty($_REQUEST["save_marker"])) {
     if( $gContent->store( $_REQUEST ) ) {		
-				//if store is successful we return XML
-				$mRet = "<marker>"
-              ."<id>".$gContent->mInfo['marker_id']."</id>"
-              ."<title>".$gContent->getTitle()."</title>"
-              ."<marker_type>".$gContent->mInfo['marker_type']."</marker_type>"
-              ."<lat>".$gContent->mInfo['lat']."</lat>"
-              ."<lng>".$gContent->mInfo['lng']."</lng>"
-              ."<data>".$gContent->mInfo['xml_data']."</data>"
-              ."<parsed_data><![CDATA[".$gContent->mInfo['xml_parsed_data']."]]></parsed_data>"
-              ."<label>".$gContent->mInfo['label_data']."</label>"
-              ."<photo_url>".$gContent->mInfo['photo_url']."</photo_url>"
-              ."<z>".$gContent->mInfo['zindex']."</z>"
-						 	."</marker>";
+		//$gContent->storePreference( 'is_public', !empty( $_REQUEST['is_public'] ) ? $_REQUEST['is_public'] : NULL );
+		$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
+		$gContent->load();    
+    
+		//if store is successful we return XML
+		$mRet = "<marker>"
+			."<id>".$gContent->mInfo['marker_id']."</id>"
+			."<title>".$gContent->getTitle()."</title>"
+			."<marker_type>".$gContent->mInfo['marker_type']."</marker_type>"
+			."<lat>".$gContent->mInfo['lat']."</lat>"
+			."<lng>".$gContent->mInfo['lng']."</lng>"
+			."<data>".$gContent->mInfo['xml_data']."</data>"
+			."<parsed_data><![CDATA[".$gContent->mInfo['xml_parsed_data']."]]></parsed_data>"
+			."<label>".$gContent->mInfo['label_data']."</label>"
+			."<photo_url>".$gContent->mInfo['photo_url']."</photo_url>"
+			."<z>".$gContent->mInfo['zindex']."</z>"
+			."<allow_comments>".(($gContent->getPreference('allow_comments') == 'y')?"y":"n")."</allow_comments>"
+			."</marker>";
 
-				//@todo replace in xml when I know what I am doing
-				//	."<data>".$gContent->parseData()."</data>"
-					
-		}else{
-		//@todo - return some sort of store failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
-    }
+		//@todo replace in xml when I know what I am doing
+		//	."<data>".$gContent->parseData()."</data>"
+	}else{
+	//@todo - return some sort of store failure message in the xml
+	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+}
 						
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_marker"])) {

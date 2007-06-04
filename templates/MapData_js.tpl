@@ -21,7 +21,8 @@ BitMap.MapData.push({ldelim}
   maptype_control:{if $gContent->mInfo.maptype_control}{$gContent->mInfo.maptype_control}{elseif $gBitSystem->getConfig("gmap_maptype_control")}{$gBitSystem->getConfig("gmap_maptype_control")}{else}true{/if}, /*true,false*/
   zoom_control:'{if $gContent->mInfo.zoom_control}{$gContent->mInfo.zoom_control}{elseif $gBitSystem->getConfig("gmap_zoom_control")}{$gBitSystem->getConfig("gmap_zoom_control")}{else}s{/if}', /*s,l,z,n*/
   overview_control:{if $gContent->mInfo.overview_control}{$gContent->mInfo.overview_control}{elseif $gBitSystem->getConfig("gmap_overview_control")}{$gBitSystem->getConfig("gmap_overview_control")}{else}true{/if}, /*true,false*/
-
+  allow_comments:'{if $gContent->getPreference("allow_comments") eq "y"}y{else}n{/if}',
+  
   Maptypes:[
   {if count($gContent->mMapTypes) > 0}{section name=maptypes loop=$gContent->mMapTypes}
   {ldelim}
@@ -115,7 +116,9 @@ BitMap.MapData.push({ldelim}
 		plot_on_load: {$gContent->mMapMarkers[marker_n].plot_on_load},
 		side_panel: {$gContent->mMapMarkers[marker_n].side_panel},
 		explode: {$gContent->mMapMarkers[marker_n].explode},
-		cluster: {$gContent->mMapMarkers[marker_n].cluster}
+		cluster: {$gContent->mMapMarkers[marker_n].cluster},
+		allow_comments:'{if $gContent->mMapMarkers[marker_n].allow_comments eq "y"}y{else}n{/if}',
+		num_comments:{if ($gContent->mMapMarkers[marker_n].allow_comments eq "y" || $gBitUser->isAdmin()) && $gContent->mMapMarkers[marker_n].num_comments }{$gContent->mMapMarkers[marker_n].num_comments}{else}null{/if}
 	{rdelim},
 	{/section}{/if}],
 	

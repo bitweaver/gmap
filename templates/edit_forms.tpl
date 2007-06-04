@@ -30,14 +30,14 @@
 					<td><input name="title" type="text" size="40" value=""></td></tr>
         	<tr><td>Description</td><td><input name="map_desc" type="text" size="40" value=""></td></tr>
         	<tr>
-					<td>Center Latitude</td>
-					<td><input name="geo[lat]" type="text" size="40" value=""></td>
-				</tr>
+				<td>Center Latitude</td>
+				<td><input name="geo[lat]" type="text" size="40" value=""></td>
+			</tr>
         	<tr>
-					<td>Center Longitude</td>
-					<td><input name="geo[lng]" type="text" size="40" value=""></td>
-				</tr>
-				<tr><td></td><td><a name="map_assist_btn" title="click a center!" href="javascript:BitMap.EditSession.addAssistant('map');">( Use Locating Assistant )</a></td></tr>
+				<td>Center Longitude</td>
+				<td><input name="geo[lng]" type="text" size="40" value=""></td>
+			</tr>
+			<tr><td></td><td><a name="map_assist_btn" title="click a center!" href="javascript:BitMap.EditSession.addAssistant('map');">( Use Locating Assistant )</a></td></tr>
         	<tr><td>Width (use '0' for auto)</td><td><input name="map_w" type="text" size="12" value=""></td></tr>
         	<tr><td>Height</td><td><input name="map_h" type="text" size="12" value=""></td></tr>
         	<tr><td>Zoom Level</td><td><input name="map_z" type="text" size="12" value=""></td></tr>
@@ -60,12 +60,13 @@
               <option value="-1" >Satellite</option>
               <option value="-2" >Hybrid</option>
        			</select></td></tr>
-				<tr><td>Page Text</td><td><textarea name="edit" style="width:90%;" rows="20">textbox</textarea></td></tr>
-
-        <!-- Allow Comments <input name="map_comm" type="checkbox" value=""><br/> //-->
-        <tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap(document['edit-map-form']);"> 
-				<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit('edit-map-table');"></td>
-				</tr>
+       		<tr><td>Allow Comments</td>
+				<td><input type="checkbox" name="allow_comments" value="y" checked="checked"/></td>
+			</tr>
+			<tr><td>Page Text</td><td><textarea name="edit" style="width:90%;" rows="20">textbox</textarea></td></tr>
+			<tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap(document['edit-map-form']);"> 
+					<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit('edit-map-table');"></td>
+					</tr>
 			</table>
     </form>
 </div>	
@@ -387,6 +388,7 @@
 							 <textarea name="edit" rows="10"></textarea></div>
 						<div>Photo URL<br/>
 							 <input size="50" name="photo_url" type="text" value=""></div>
+						<div>Allow Comments &nbsp;<input type="checkbox" name="allow_comments" value="y" {if $gContent->getPreference('allow_comments') eq 'y'}checked="checked"{/if} /></div>
 						<div>
 							<input type="button" name="save_marker_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarker(document['edit-marker-form']);">
 						</div>
