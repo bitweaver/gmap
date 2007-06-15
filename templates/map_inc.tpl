@@ -6,7 +6,7 @@
             {else}
               auto
             {/if}; 
-       height:{if $gBitSystem->getConfig("gmap_height")}
+       height:800px{* {if $gBitSystem->getConfig("gmap_height")}
                {if $gBitSystem->getConfig("gmap_height") > 0}
                  {$gBitSystem->getConfig("gmap_height")}px
                {else}
@@ -14,7 +14,7 @@
                {/if}
             {else}
               400px
-            {/if};
+            {/if}*};
        background-color:#ccc;">
   Google Map Goes Here
 </div>

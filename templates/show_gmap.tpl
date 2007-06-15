@@ -4,7 +4,7 @@
   {include file="bitpackage:gmap/gmap_display.tpl"}
 </div>
 
-{if $gContent->getPreference('allow_comments') eq 'y'}
+{if $gContent->isCommentable() }
 	{include file="bitpackage:liberty/comments.tpl"}
 {/if}
 {/strip}

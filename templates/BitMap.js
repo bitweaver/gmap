@@ -275,7 +275,11 @@ BitMap.Map.prototype = {
 		GEvent.addListener(this.map, "click", function(overlay) {
 			if (overlay){ 
 				if (overlay.my_html){ 
-					overlay.openInfoWindow(overlay.my_html);
+					if (overlay.my_maxurl){
+						overlay.openInfoWindow(overlay.my_html, {maxUrl:overlay.my_maxurl});
+					}else{
+						overlay.openInfoWindow(overlay.my_html);
+					}
 				}
 			}
 		});
@@ -300,3 +304,5 @@ BitMap.Map.prototype = {
 }
 //end of BitMap.Map.prototype declaration
 
+//this is temporary - google map api requires it in current version, future versions will not - dumb.
+var _mFlags = {};

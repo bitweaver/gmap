@@ -92,6 +92,7 @@ BitMap.MapData.push({ldelim}
 	{rdelim},
 	{elseif count($gContent->mMapMarkers) > 0}{section name=marker_n loop=$gContent->mMapMarkers}
   {ldelim}
+		content_id:{$gContent->mMapMarkers[marker_n].content_id},
 		marker_id: {$gContent->mMapMarkers[marker_n].marker_id},
 		marker_type: {$gContent->mMapMarkers[marker_n].marker_type},
 		title: "{$gContent->mMapMarkers[marker_n].title|addslashes}",

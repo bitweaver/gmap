@@ -12,7 +12,7 @@ require_once('../bit_setup_inc.php' );
 $gBitSystem->verifyPackage('gmap' );
 
 // Now check permissions to access this page
-$gBitSystem->verifyPermission('bit_gm_edit_map' );
+$gBitSystem->verifyPermission('p_gmap_edit' );
 
 // Get the map for specified gmap_id
 require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );

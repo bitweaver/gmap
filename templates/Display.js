@@ -153,9 +153,10 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	  
 	  var data = DIV(null, "");
 	  data.innerHTML += ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';
-	  var comments = ( M.allow_comments == 'y' )?DIV(null, A({'href':'javascript:void(0);', 'onclick':'alert("comments loading coming soon")'}, (M.num_comments != null)?M.num_comments:"0", " Comment(s)")):null;
+	  var comments = ( M.allow_comments == 'y' )?DIV(null, DIV({'id':'comment_'+M.content_id}, null), A({'href':'javascript:void(0);', 'onclick':'BitMap.MapData[0].Map.map.getInfoWindow().maximize()'}, (M.num_comments != null)?M.num_comments:"0", " Comment(s)"), DIV({'id':'comment_'+M.content_id+'_footer'}, null)):null;
+	  //var comments = ( M.allow_comments == 'y' )?DIV(null, DIV({'id':'comment_'+M.content_id}, null), A({'href':'javascript:void(0);', 'onclick':'LibertyComment.attachForm("comment_'+M.content_id+'", "'+M.content_id+'")'}, (M.num_comments != null)?M.num_comments:"0", " Comment(s)"), DIV({'id':'comment_'+M.content_id+'_footer'}, null)):null;
 	  M.gmarker.my_html = DIV( {'style':'white-space: nowrap;'}, mytitle, creator, modifier, stars, image, data, comments);
-	
+	  M.gmarker.my_maxurl = BitMap.BIT_ROOT_URL + "gmap/view_marker.php?marker_id=" + M.marker_id;
 	  this.map.addOverlay(M.gmarker);
 	},
 

@@ -56,8 +56,14 @@ if (!isset($_REQUEST['gmap_id'] ) ) {
 	$gBitSmarty->assign('view_map', TRUE);
 	$gBitSystem->mOnload[] = 'BitMap.Display();';
 
-	if( $gContent->getPreference('allow_comments') == 'y' ) {
+    //use Mochikit - prototype sucks
+	$gBitSystem->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js' ) );
+
+	if( $gContent->isCommentable() ) {
+		$gBitSystem->loadAjax( 'mochikit', array( 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ) );	
+		$gBitSmarty->assign('comments_ajax', TRUE);
 		$commentsParentId = $gContent->mContentId;
+		$gBitSmarty->assign('commentsParentId', $commentsParentId);
 		$comments_vars = Array('gmap');
 		$comments_prefix_var='gmap:';
 		$comments_object_var='gmap';
@@ -65,8 +71,6 @@ if (!isset($_REQUEST['gmap_id'] ) ) {
 		include_once( LIBERTY_PKG_PATH.'comments_inc.php' );
 	}	
 
-    //use Mochikit - prototype sucks
-	$gBitSystem->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'DOM.js' ) );
 	$gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Gmap') );
 }
 
