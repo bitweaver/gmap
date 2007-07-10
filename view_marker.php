@@ -12,10 +12,10 @@ $gBitSystem->verifyPermission('p_marker_view' );
 require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );
 
 //use Mochikit - prototype sucks
-$gBitSystem->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js' ) );
+$gBitThemes->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js' ) );
 
 if( $gContent->isCommentable() ) {
-	$gBitSystem->loadAjax( 'mochikit', array( 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ) );	
+	$gBitThemes->loadAjax( 'mochikit', array( 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ) );	
 	$gBitSmarty->assign('comments_ajax', TRUE);
 	$commentsParentId = $gContent->mContentId;
 	$gBitSmarty->assign('commentsParentId', $commentsParentId);

@@ -83,7 +83,7 @@ if (!empty($_REQUEST["save_map"])) {
 	$gBitSystem->mOnload[] = 'BitMap.EditMap();';
     
     //use Mochikit - prototype sucks
-	$gBitSystem->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js' ) );	
+	$gBitThemes->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js' ) );	
     // Display the template
     $gBitSystem->display( 'bitpackage:gmap/edit_gmap.tpl', tra('Gmap') );    		
 }

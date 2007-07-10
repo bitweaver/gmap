@@ -57,10 +57,10 @@ if (!isset($_REQUEST['gmap_id'] ) ) {
 	$gBitSystem->mOnload[] = 'BitMap.Display();';
 
     //use Mochikit - prototype sucks
-	$gBitSystem->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js' ) );
+	$gBitThemes->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js' ) );
 
 	if( $gContent->isCommentable() ) {
-		$gBitSystem->loadAjax( 'mochikit', array( 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ) );	
+		$gBitThemes->loadAjax( 'mochikit', array( 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ) );	
 		$gBitSmarty->assign('comments_ajax', TRUE);
 		$commentsParentId = $gContent->mContentId;
 		$gBitSmarty->assign('commentsParentId', $commentsParentId);
