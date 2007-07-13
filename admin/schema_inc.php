@@ -323,7 +323,7 @@ $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
 
 
 $gBitInstaller->registerPreferences( GMAP_PKG_NAME, array(
-	array( GMAP_PKG_NAME, 'gmap_api_key', 'you must get a key from google'),
+//	array( GMAP_PKG_NAME, 'gmap_api_key', 'you must get a key from google'),
 	array( GMAP_PKG_NAME, 'gmap_width', '0'),
 	array( GMAP_PKG_NAME, 'gmap_height', '400'),
 	array( GMAP_PKG_NAME, 'gmap_lat', 40.0),

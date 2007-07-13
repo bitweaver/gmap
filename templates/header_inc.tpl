@@ -1,4 +1,4 @@
-{if $gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap') }
+{if $gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap') && $gBitSystem->getConfig('gmap_api_key')}
  {if $geo_edit_serv || $view_map || $map_list || $edit_map}
 		{include file="bitpackage:gmap/header_base.tpl"}
  {/if}

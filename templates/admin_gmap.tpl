@@ -7,8 +7,11 @@
 					<div class="row">
             {formlabel label="Google Maps API Key" for=apikey}
             {forminput}
-              <input type="text" name="gmap_api_key" size="80" value="{$gBitSystem->getConfig('gmap_api_key')}" />
-              {formhelp note='register for a key at <a href="http://www.google.com/apis/maps/signup.html" target="_new" >http://www.google.com/apis/maps/signup.html</a>'}
+              <input type="text" name="gmap_api_key" size="50" value="{if $gBitSystem->getConfig('gmap_api_key')}{$gBitSystem->getConfig('gmap_api_key')}{/if}" />
+              {if !$gBitSystem->getConfig('gmap_api_key')}
+				{formfeedback warning="You must get a key from Google to use Gmap Package!"}
+              {/if}
+              {formhelp note='Register for a key at <a href="http://www.google.com/apis/maps/signup.html" target="_new" >http://www.google.com/apis/maps/signup.html</a>'}
             {/forminput}
 					</div>
 

@@ -1,4 +1,5 @@
 <div class="list gmap display">
+{if $gBitSystem->getConfig('gmap_api_key')}    
   {include file="bitpackage:gmap/gmap_header.tpl"}
   {include file="bitpackage:gmap/list_form.tpl"}
   <div class="body">
@@ -39,5 +40,11 @@
 		{$gContent->mInfo.clean_data}
 	</div>
   </div> <!-- end .body -->
+{elseif $gBitUser->isAdmin()}
+	{formfeedback warning="You must get a Google Map API key from Google to use Gmap Package!"}
+	Get and store your Google Maps API in the <a href="{$smarty.const.KERNEL_PKG_PATH}/admin/index.php?page=gmap">Gmap Package Administration Panel</a>
+{else}
+	Sorry, the Google Maps Package is not enabled on this site.
+{/if}
 </div>
 <div id="error"></div>
