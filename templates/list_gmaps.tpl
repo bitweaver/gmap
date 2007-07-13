@@ -27,7 +27,7 @@
 						<th>{smartlink ititle="Description" isort=description offset=$control.offset}</th>
 {*					{/if}											 																						*}
 
-{*					{if $gBitUser->hasPermission( 'bit_p_remove_gmap' )}									*}
+{*					{if $gBitUser->hasPermission( 'p_gmap_remove' )}									*}
 						<th>{tr}Actions{/tr}</th>
 {*					{/if}											 																						*}
 				</tr>
@@ -47,7 +47,7 @@
 {*						{/if}																 		 *}
 
 							<td class="actionicon">
-						{if $gBitUser->hasPermission( 'bit_p_remove_gmap' )}
+						{if $gBitUser->hasPermission( 'p_gmap_remove' )}
 								{smartlink ititle="Edit" ifile="edit.php" ibiticon="icons/accessories-text-editor" gmap_id=$list[changes].gmap_id}
 								<input type="checkbox" name="checked[]" title="{$list[changes].title}" value="{$list[changes].gmap_id|escape}" />
 						{/if}
@@ -61,7 +61,7 @@
 			</table>
 {/strip}
 
-			{if $gBitUser->hasPermission( 'bit_p_remove_gmap' )}
+			{if $gBitUser->hasPermission( 'p_gmap_remove' )}
 				<div style="text-align:right;">
 					<script type="text/javascript">//<![CDATA[
 						// check / uncheck all.
@@ -71,7 +71,7 @@
 
 					<select name="submit_mult" onchange="this.form.submit();">
 						<option value="" selected="selected">{tr}with checked{/tr}:</option>
-						{if $gBitUser->hasPermission( 'bit_p_remove_gmap' )}
+						{if $gBitUser->hasPermission( 'p_gmap_remove' )}
 							<option value="remove_gmaps">{tr}remove{/tr}</option>
 						{/if}
 					</select>
@@ -88,6 +88,6 @@
 		{/form}
 	</div><!-- end .body -->
 
-	{pagination_c}
+	{pagination}
 	{minifind sort_mode=$sort_mode}
 </div><!-- end .admin -->
