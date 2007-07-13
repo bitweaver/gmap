@@ -2427,7 +2427,9 @@ class BitGmap extends LibertyAttachable {
 function gmap_content_edit() {
 	global $gBitSmarty;
 	global $gBitSystem;
-	$gBitSmarty->assign('geo_edit_serv', TRUE);
-	$gBitSystem->mOnload[] = 'BitMap.EditContent();';
+	if ($gBitSystem->isFeatureActive('gmap_api_key')){
+		$gBitSmarty->assign('geo_edit_serv', TRUE);
+		$gBitSystem->mOnload[] = 'BitMap.EditContent();';
+	}
 }
 ?>
