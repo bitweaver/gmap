@@ -3,7 +3,7 @@ BitMap.BIT_ROOT_URL = '{$smarty.const.BIT_ROOT_URL}';
 {* we get different map data depending on if we are editing content, getting a map, or browsing geo-located content *}
 BitMap.MapData.push({ldelim}
   browser:"{$browserInfo.browser}",
-  {if !$geo_edit_serv}
+  {if !$geo_edit_serv && !map_list}
   id:{if $gContent->mInfo.gmap_id}{$gContent->mInfo.gmap_id}{else}null{/if},
   title:"{$gContent->mInfo.title|addslashes}",
   description:"{$gContent->mInfo.description}",
