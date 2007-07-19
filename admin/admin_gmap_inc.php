@@ -36,4 +36,29 @@ if( $processForm ) {
 	}
 }
 
+
+
+// allow selection of what packages can have ratings
+$exclude = array( 'bitgmap', 'bitgmapmarker', 'tikisticky', 'pigeonholes' );
+foreach( $gLibertySystem->mContentTypes as $cType ) {
+	if( !in_array( $cType['content_type_guid'], $exclude ) ) {
+		$formMapable['guids']['gmap_map_'.$cType['content_type_guid']]  = $cType['content_description'];
+	}
+}
+
+if( !empty( $_REQUEST['gmap_preferences'] ) ) {
+	foreach( array_keys( $formMapable['guids'] ) as $mapable ) {
+		$gBitSystem->storeConfig( $mapable, ( ( !empty( $_REQUEST['mapable_content'] ) && in_array( $mapable, $_REQUEST['mapable_content'] ) ) ? 'y' : NULL ), GMAP_PKG_NAME );
+	}
+}
+
+// check the correct packages in the package selection
+foreach( $gLibertySystem->mContentTypes as $cType ) {
+	if( $gBitSystem->getConfig( 'gmap_map_'.$cType['content_type_guid'] ) ) {
+		$formMapable['checked'][] = 'gmap_map_'.$cType['content_type_guid'];
+	}
+}
+$gBitSmarty->assign( 'formMapable', $formMapable );
+
+
 ?>

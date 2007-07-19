@@ -2424,10 +2424,10 @@ class BitGmap extends LibertyAttachable {
 }
 
 
-function gmap_content_edit() {
+function gmap_content_edit( &$pObject ) {
 	global $gBitSmarty;
 	global $gBitSystem;
-	if ($gBitSystem->isFeatureActive('gmap_api_key')){
+	if( $gBitSystem->isFeatureActive('gmap_api_key') && $gBitSystem->isFeatureActive( 'gmap_map_'.$pObject->getContentType() ) ) {
 		$gBitSmarty->assign('geo_edit_serv', TRUE);
 		$gBitSystem->mOnload[] = 'BitMap.EditContent();';
 	}

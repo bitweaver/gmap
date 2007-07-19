@@ -1,3 +1,4 @@
+{if $gBitSystem->isFeatureActive( 'gmap_map_bituser')}
 {jstab title="User Location"}
 	{form legend="Geo Coordinates"}
 		<input type="hidden" name="view_user" value="{$view_user}" />
@@ -8,3 +9,4 @@
 		</div>
 	{/form}
 {/jstab}
+{/if}
