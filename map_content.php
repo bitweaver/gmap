@@ -16,8 +16,9 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 	if ($gBitSystem->isFeatureActive('gmap_api_key')){	
 		// if we have a content_id, we load and display it with the search form - otherwise we just display the search form
 		if( @BitBase::verifyId( $_REQUEST['content_id'] )) {
-			include_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
-			$dataHash = $gContent->mInfo;
+			//BUG: this include causes gContent to be set which messes some things up in the gmap tpls.
+			$content = LibertyBase::getLibertyObject( $_REQUEST['content_id'] );
+			$dataHash = $content->mInfo;
 			// because content mInfo does not hand over the same info as list below
 			$dataHash['creator_user_id'] = $dataHash['user_id'];
 			$aContent = array( $dataHash );
