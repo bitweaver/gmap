@@ -13,8 +13,16 @@ global $gLibertySystem;
 if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap')){
 	//if there is no API key don't even bother
 	//we would include this in the first check but we want a particular error page if only the API key is missing
-	if ($gBitSystem->isFeatureActive('gmap_api_key')){
-		if ( !empty($_REQUEST['content_type_guid']) ){
+	if ($gBitSystem->isFeatureActive('gmap_api_key')){	
+		// if we have a content_id, we load and display it with the search form - otherwise we just display the search form
+		if( @BitBase::verifyId( $_REQUEST['content_id'] )) {
+			include_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
+			$dataHash = $gContent->mInfo;
+			// because content mInfo does not hand over the same info as list below
+			$dataHash['creator_user_id'] = $dataHash['user_id'];
+			$aContent = array( $dataHash );
+			$gBitSmarty->assign_by_ref('listcontent', $aContent);
+		} elseif ( !empty($_REQUEST['content_type_guid']) ){
 			//forces return of $contentList from get_content_list_inc.php
 			$_REQUEST['output'] = 'raw';
 			//forces only geo located data
@@ -22,11 +30,15 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 			include_once( LIBERTY_PKG_PATH.'list_content.php' );
 			$gBitSmarty->assign_by_ref('listcontent', $contentList["data"]);
 		}
+
+		//get content types in database list  
+		$c_types = $gLibertySystem->mContentTypes;
+		sort($c_types);
+		$gBitSmarty->assign_by_ref('ContentTypes', $c_types);
 	
 		//get pigeonholes list
 		if ( $gBitSystem->isPackageActive('pigeonholes') ){			
 			//this is just like pigeonholes:list.php without the tpl call
-			//$gBitSystem->verifyPackage( 'pigeonholes' );
 			$gBitSystem->verifyPermission( 'p_pigeonholes_view' );
 			
 			include_once( PIGEONHOLES_PKG_PATH.'lookup_pigeonholes_inc.php' );
@@ -52,20 +64,17 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 			}
 			$gBitSmarty->assign( 'listInfo', $listHash['listInfo'] );
 		}
-		
-		//get content types in database list  
-		$c_types = $gLibertySystem->mContentTypes;
-		sort($c_types);
-		$gBitSmarty->assign_by_ref('ContentTypes', $c_types);
-	
-		//php is annoying, so 0 would be interpretted as null and not trigger the tpl this relates too.  
-		$GeoStars = array('stars_pixels' => 1, 'stars_version_pixels' => 1, 'stars_load' => 1);
-		$gBitSmarty->assign('loadStars', TRUE);
-		$gBitSmarty->assign_by_ref('GeoStars', $GeoStars);
+			
+		if ( $gBitSystem->isPackageActive('stars') ){			
+			//php is annoying, so 0 would be interpretted as null and not trigger the tpl this relates too.  
+			$GeoStars = array('stars_pixels' => 1, 'stars_version_pixels' => 1, 'stars_load' => 1);
+			$gBitSmarty->assign('loadStars', TRUE);
+			$gBitSmarty->assign_by_ref('GeoStars', $GeoStars);
+		}
 	
 		$gBitSmarty->assign('map_list', TRUE);
 		$gBitSystem->mOnload[] = 'BitMap.DisplayList();';
-		
+
 		//use Mochikit - prototype sucks
 		$gBitThemes->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js', 'DateTime.js',  'Style.js' ) );
 		
