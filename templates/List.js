@@ -82,8 +82,6 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		if (rslt.Status.code == 200){
 			for (n=0; n<this.markers.length; n++){if(this.markers[n].gmarker != 'undefined'){this.map.removeOverlay(this.markers[n].gmarker)}};
 			this.markers = rslt.Content;
-			//annoying hack
-			for (n=0; n<this.markers.length; n++){this.markers[n].n = n};
 			var ref = this;
 			this.loopOver(ref.markers, function(i){ref.addMarker(i);});
 			this.clearSidepanel();
@@ -106,6 +104,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	"addMarker": function(i){
 	  if (this.markers[i]!= null){
 		var M = this.markers[i];
+		M.n = i;
 		var p = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
 		// for now we have to assume there is an icon for the content type.
 		/* In the future we would like to set the image onerror property something like this, but it needs to be supported by google.
