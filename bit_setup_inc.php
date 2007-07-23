@@ -21,7 +21,10 @@ if( $gBitSystem->isPackageActive( 'gmap' ) ) {
 
 	$gLibertySystem->registerService( LIBERTY_SERVICE_MAPS, GMAP_PKG_NAME, array(
 		'content_edit_function'  => 'gmap_content_edit',
-		'content_edit_mini_tpl' => 'bitpackage:gmap/edit_gmap_mini_inc.tpl',
+		'content_edit_mini_tpl'  => 'bitpackage:gmap/edit_gmap_mini_inc.tpl',
+		'content_nav_tpl'        => 'bitpackage:gmap/view_gmap_nav.tpl',
+		'content_body_tpl'       => 'bitpackage:gmap/view_gmap_body.tpl',
+		'content_view_tpl'       => 'bitpackage:gmap/view_gmap_view.tpl',
 	) );
 }
 

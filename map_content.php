@@ -21,13 +21,15 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 			//vd($content);
 			$dataHash = $content->mInfo;
 			// because content mInfo does not hand over the same info as contentList as below we need to complete the hash
-			$dataHash['creator_user_id'] = $dataHash['user_id'];
-			$dataHash['content_description'] = $content->mType['content_description'];
-			$modUser = new BitUser( $dataHash['modifier_user_id'] );
-			$modUser->load();
-			$dataHash['modifier_real_name'] = $modUser->mInfo['real_name'];
-			$dataHash['creator_real_name'] = $dataHash['real_name'];
-			$dataHash['display_url'] =	$content->getDisplayUrl();
+			$dataHash['display_url'] = !empty($dataHash['display_url'])?$dataHash['display_url']:$content->getDisplayUrl();
+			$dataHash['creator_user_id'] = !empty($dataHash['creator_user_id'])?$dataHash['creator_user_id']:$dataHash['user_id'];
+			$dataHash['content_description'] = !empty($dataHash['content_description'])?$dataHash['content_description']:$content->mType['content_description'];
+			$dataHash['creator_real_name'] = !empty($dataHash['creator_real_name'])?$dataHash['creator_real_name']:$dataHash['real_name'];
+			if (empty($dataHash['modifier_real_name'])){
+				$modUser = new BitUser( $dataHash['modifier_user_id'] );
+				$modUser->load();
+				$dataHash['modifier_real_name'] = $modUser->mInfo['real_name'];
+			}
 			//assign it in an array as a single item list
 			$aContent = array( $dataHash );
 			$gBitSmarty->assign_by_ref('listcontent', $aContent);

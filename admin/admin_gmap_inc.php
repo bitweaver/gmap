@@ -37,28 +37,56 @@ if( $processForm ) {
 }
 
 
-
 // allow selection of what packages can have ratings
 $exclude = array( 'bitgmap', 'bitgmapmarker', 'tikisticky', 'pigeonholes' );
 foreach( $gLibertySystem->mContentTypes as $cType ) {
 	if( !in_array( $cType['content_type_guid'], $exclude ) ) {
-		$formMapable['guids']['gmap_map_'.$cType['content_type_guid']]  = $cType['content_description'];
+		$formMappable['guids']['gmap_map_'.$cType['content_type_guid']]  = $cType['content_description'];
 	}
 }
 
+// where to display content permalinks to mapped-content map
+$formGmapServiceDisplayOptions = array(
+	"gmap_in_nav" => array(
+		'label' => 'Gmap Link In Nav',
+		'note' => 'Shows a link to the content map at the top of a page. Only visible when the full content page is loaded',
+		'type' => 'toggle',
+	),
+	"gmap_in_body" => array(
+		'label' => 'Gmap Link In Body',
+		'note' => 'Shows a link to the content map above the body text of content. Visible both in listings and when the full content page is loaded',
+		'type' => 'toggle',
+	),
+	"gmap_in_view" => array(
+		'label' => 'Gmap Link In View',
+		'note' => 'Shows a link to the content map at the bottom of a page after the body text. Only visible when the full content page is loaded',
+		'type' => 'toggle',
+	),
+);
+$gBitSmarty->assign( 'formGmapServiceDisplayOptions', $formGmapServiceDisplayOptions );
+
+// store the prefs
 if( !empty( $_REQUEST['gmap_preferences'] ) ) {
-	foreach( array_keys( $formMapable['guids'] ) as $mapable ) {
-		$gBitSystem->storeConfig( $mapable, ( ( !empty( $_REQUEST['mapable_content'] ) && in_array( $mapable, $_REQUEST['mapable_content'] ) ) ? 'y' : NULL ), GMAP_PKG_NAME );
+	foreach( $formGmapServiceDisplayOptions as $item => $data ) {
+		if( $data['type'] == 'numeric' ) {
+			simple_set_int( $item, GMAP_PKG_NAME );
+		} elseif( $data['type'] == 'toggle' ) {
+			simple_set_toggle( $item, GMAP_PKG_NAME );
+		} elseif( $data['type'] == 'input' ) {
+			simple_set_value( $item, GMAP_PKG_NAME );
+		}
+	}
+	foreach( array_keys( $formMappable['guids'] ) as $mappable ) {
+		$gBitSystem->storeConfig( $mappable, ( ( !empty( $_REQUEST['mappable_content'] ) && in_array( $mappable, $_REQUEST['mappable_content'] ) ) ? 'y' : NULL ), GMAP_PKG_NAME );
 	}
 }
 
 // check the correct packages in the package selection
 foreach( $gLibertySystem->mContentTypes as $cType ) {
 	if( $gBitSystem->getConfig( 'gmap_map_'.$cType['content_type_guid'] ) ) {
-		$formMapable['checked'][] = 'gmap_map_'.$cType['content_type_guid'];
+		$formMappable['checked'][] = 'gmap_map_'.$cType['content_type_guid'];
 	}
 }
-$gBitSmarty->assign( 'formMapable', $formMapable );
-
+$gBitSmarty->assign( 'formMappable', $formMappable );
 
 ?>
