@@ -489,7 +489,11 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 					}
 
 					//add marker to side list
-					var newLink = A({"href":"javascript: BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html);"}, SPAN(null, Marker.title), imgLink );
+					if (Marker.allow_comments == 'y'){
+						var newLink = A({"href":"javascript:BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html, {maxUrl:BitMap.MapData[0].Map.markers["+n+"].gmarker.my_maxurl});"}, SPAN(null, Marker.title), imgLink );
+					}else{
+						var newLink = A({"href":"javascript:BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html);"}, SPAN(null, Marker.title), imgLink );
+					}
 					var container = $('listset_' + Marker.set_id);
 					container.appendChild(newLink);
 					container.appendChild( BR() );
