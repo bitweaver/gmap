@@ -252,7 +252,37 @@ class BitGmapMarker extends LibertyAttachable {
 		}
 		return $ret;
 	}
+
+	/**
+	* Generates the URL to view a marker on a standalone page
+	* @param pMixed a hash passed in by LibertyContent:getList
+	* @return the link to display the marker data.
+	*/
+	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
+		$ret = NULL;
+		$id = NULL;
+		if( empty( $this->mGmarkerId ) && empty( $pMixed['marker_id'] ) && !empty( $pContentId ) ) {
+  			$this->mDb->StartTrans();
+  			$query = "SELECT `marker_id` FROM `".BIT_DB_PREFIX."gmaps_markers` WHERE `content_id` = ?";
+  			$result = $this->mDb->query( $query, $pContentId );
+  			$this->mDb->CompleteTrans();
+  			$res = $result->fetchrow();
+  			$id = $res['marker_id'];
+  		}
 	
+		if( empty( $this->mGmarkerId ) && !empty( $pMixed['marker_id'] )) {
+			$id = $pMixed['marker_id'];
+		}
+		
+		if( !empty( $this->mGmarkerId ) ) {
+			$id = $this->mGmarkerId;
+		}
+		
+		if ($id != NULL){
+			$ret = GMAP_PKG_URL."view_marker.php?marker_id=".$id;
+		}
+		return $ret;
+	}	
 }
 
 ?>

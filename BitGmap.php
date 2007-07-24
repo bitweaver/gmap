@@ -2410,14 +2410,32 @@ class BitGmap extends LibertyAttachable {
 	}
 	
 	/**
-	* Generates the URL to the sample page
-	* @param pExistsHash the hash that was returned by LibertyContent::pageExists
-	* @return the link to display the page.
+	* Generates the URL to the gmap page
+	* @param pMixed a hash passed in by LibertyContent:getList
+	* @return the link to display the gmap.
 	*/
-	function getDisplayUrl() {
+	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
 		$ret = NULL;
+		$id = NULL;
+		if( empty( $this->mGmapId ) && empty( $pMixed['gmap_id'] ) && !empty( $pContentId ) ) {
+  			$this->mDb->StartTrans();
+  			$query = "SELECT `gmap_id` FROM `".BIT_DB_PREFIX."gmaps` WHERE `content_id` = ?";
+  			$result = $this->mDb->query( $query, $pContentId );
+  			$this->mDb->CompleteTrans();
+  			$res = $result->fetchrow();
+  			$id = $res['gmap_id'];
+  		}
+	
+		if( empty( $this->mGmapId ) && !empty( $pMixed['gmap_id'] )) {
+			$id = $pMixed['gmap_id'];
+		}
+		
 		if( !empty( $this->mGmapId ) ) {
-			$ret = GMAP_PKG_URL."index.php?gmap_id=".$this->mGmapId;
+			$id = $this->mGmapId;
+		}
+		
+		if ($id != NULL){
+			$ret = GMAP_PKG_URL."index.php?gmap_id=".$id;
 		}
 		return $ret;
 	}
