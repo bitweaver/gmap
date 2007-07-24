@@ -62,6 +62,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		$gBitThemes->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js' ) );
 	
 		if( $gContent->isCommentable() ) {
+			$gBitSystem->setConfig( 'comments_ajax', 'y' );
 			$gBitThemes->loadAjax( 'mochikit', array( 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ) );	
 			$gBitSmarty->assign('comments_ajax', TRUE);
 			$commentsParentId = $gContent->mContentId;
