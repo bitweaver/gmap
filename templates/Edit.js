@@ -25,6 +25,8 @@ BitMap.EditMap = function(){
 
 BitMap.Edit = function(){
   this.SPINNER = $('spinner');
+  this.SPINNER_TEXT = $('spinner-text');
+  this.SPINNER_TEXT_ORG = this.SPINNER_TEXT.innerHTML;
   this.Map = BitMap.MapData[0].Map;
   // for tracking which object we are updating
   this.editArray;
@@ -49,9 +51,8 @@ BitMap.Edit.prototype = {
 	"positionSpinner": function(){
 		var pageDimensions = MochiKit.Style.getViewportDimensions();
 		var arrayPageScroll = this.getPageScrollTop();
-		var SPINNER_WIDTH = this.SPINNER.style.width;
-		var SPINNER_HEIGHT = this.SPINNER.style.height;
-		MochiKit.Style.setStyle("spinner", {"width":(SPINNER_WIDTH + "px"), "left":((arrayPageScroll[0] + (pageDimensions.w - SPINNER_WIDTH)/2)+"px"), "top":((arrayPageScroll[1] + (pageDimensions.h-SPINNER_HEIGHT)/2)+"px")});
+		var spinnerDimensions = MochiKit.Style.getElementDimensions(this.SPINNER);
+		MochiKit.Style.setStyle("spinner", {"top":((arrayPageScroll[1] + (pageDimensions.h-spinnerDimensions.h)/2)+"px")});
 	},
 	
 	"getPageScrollTop": function(){
@@ -71,17 +72,23 @@ BitMap.Edit.prototype = {
 		return arrayPageScroll;
 	},
 
-	"showSpinner": function(){
+	"showSpinner": function(str){
+		this.SPINNER_TEXT.innerHTML = (str!=null)?str:this.SPINNER_TEXT_ORG;
 		this.positionSpinner();
-		this.SPINNER.style.display = "block";
+		this.SPINNER.style.display="block";
 	},
 	
-	"hideSpinner": function(){
-		var ref = this;
-		function hideMe(){
-			ref.SPINNER.style.display = "none";
-		}
-		window.setTimeout(hideMe(),3000);
+	"hideSpinner": function(str){
+		this.SPINNER_TEXT.innerHTML = (str!=null)?str:this.SPINNER_TEXT.innerHTML;
+		/*	this would be useful but 
+			regeneration of the edit 
+			forms is pushing the 
+			spinner div to the bottom 
+			of the page when we leave it 
+			visible for an extra second
+		*/
+		//setTimeout("this.SPINNER.style.display='none'", 1000);
+		this.SPINNER.style.display="none";
 	},
 	
 	// for sorting arrays
@@ -1772,12 +1779,12 @@ BitMap.Edit.prototype = {
 
 			 
 		 "storeMap": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Map...");
 				doSimpleXMLHttpRequest("edit.php", f).addCallback( bind(this.updateMap, this) ); 
 		 },
 	
 		 "storeMaptype": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Map...");
 				this.editObjectN = f.array_n.value;
 		 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
 				var callback = (f.maptype_id.value != "")?this.updateMaptype:this.addMaptype;
@@ -1785,7 +1792,7 @@ BitMap.Edit.prototype = {
 		 },
 		 
 		 "removeMaptype": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Removing Maptype...");
 				this.editObjectN = f.array_n.value;
 				this.editSetId = f.maptype_id.value;
 		 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
@@ -1793,7 +1800,7 @@ BitMap.Edit.prototype = {
 		 },
 		 
 		 "expungeMaptype": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Deleting Maptype...");
 				this.editObjectN = f.array_n.value;
 				this.editSetId = f.maptype_id.value;
 		 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
@@ -1801,7 +1808,7 @@ BitMap.Edit.prototype = {
 		 },
 
 		 "storeTilelayer": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Tilelayer...");
 		 		var str = "edit_tilelayer.php?" + queryString(f);
 				this.editSetId = f.maptype_id.value;
 				this.editObjectN = f.array_n.value;
@@ -1810,7 +1817,7 @@ BitMap.Edit.prototype = {
 		 },
 		 
 		 "removeTilelayer": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Removing Tilelayer...");
 				this.editSetId = f.set_id.value;
 				this.editTilelayerId = f.tilelayer_id.value;
 		 		var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true";
@@ -1818,7 +1825,7 @@ BitMap.Edit.prototype = {
 		 },
 	
 		 "expungeTilelayer": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Deleting Tilelayer...");
 				this.editSetId = f.set_id.value;
 				this.editTilelayerId = f.tilelayer_id.value;
 		 		var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true";
@@ -1826,7 +1833,7 @@ BitMap.Edit.prototype = {
 		 },
 
 		 "storeCopyright": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Copyright...");
 		 		var str = "edit_copyright.php?" + queryString(f);
 				this.editSetId = f.tilelayer_id.value;
 				this.editObjectN = f.array_n.value;
@@ -1835,7 +1842,7 @@ BitMap.Edit.prototype = {
 		 },
 		 
 		 "removeCopyright": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Removing Copyright...");
 				this.editSetId = f.set_id.value;
 				this.editCopyrightId = f.copyright_id.value;
 		 		var str = "edit_copyright.php?set_id=" + this.editSetId + "&copyright_id=" + this.editCopyrightId + "&remove_copyright=true";
@@ -1843,7 +1850,7 @@ BitMap.Edit.prototype = {
 		 },
 	
 		 "expungeCopyright": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Deleting Copyright...");
 				this.editSetId = f.set_id.value;
 				this.editCopyrightId = f.copyright_id.value;
 		 		var str = "edit_copyright.php?copyright_id=" + this.editCopyrightId + "&expunge_copyright=true";
@@ -1851,7 +1858,7 @@ BitMap.Edit.prototype = {
 		 },
 
 		 "storeMarker": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Marker...");
 		 		var str = "edit_marker.php?" + queryString(f);
 				this.editSetId = f.set_id.value;
 				this.editObjectN = f.marker_array_n.value;
@@ -1860,7 +1867,7 @@ BitMap.Edit.prototype = {
 		 },
 		 
 		 "removeMarker": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Removing Marker...");
 				this.editSetId = f.set_id.value;
 				this.editMarkerId = f.marker_id.value;
 		 		var str = "edit_marker.php?set_id=" + this.editSetId + "&marker_id=" + this.editMarkerId + "&remove_marker=true";
@@ -1868,7 +1875,7 @@ BitMap.Edit.prototype = {
 		 },
 	
 		 "expungeMarker": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Deleting Marker...");
 				this.editSetId = f.set_id.value;
 				this.editMarkerId = f.marker_id.value;
 		 		var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
@@ -1876,7 +1883,7 @@ BitMap.Edit.prototype = {
 		 },
 	
 		 "storeMarkerSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Markerset...");
 		 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
 				this.editSetId = f.set_id.value;
 				this.editObjectN = f.set_array_n.value;
@@ -1885,21 +1892,21 @@ BitMap.Edit.prototype = {
 		 },
 	
 		 "removeMarkerSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Removing Markerset...");
 				this.editSetId = f.set_id.value;
 				var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
 		 },
 	
 		 "expungeMarkerSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Deleting Markerset...");
 				this.editSetId = f.set_id.value;
 				var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
 		 },
 
 		 "storeMarkerStyle": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Markerstyle...");
 		 		var str = "edit_markerstyle.php?" + queryString(f);
 				this.editObjectN = f.style_array_n.value;
 				var callback = (f.style_id.value != "")?this.updateMarkerStyle:this.addMarkerStyle;
@@ -1907,7 +1914,7 @@ BitMap.Edit.prototype = {
 		 },
 
 		 "storeIconStyle": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Iconstyle...");
 		 		var str = "edit_iconstyle.php?" + queryString(f);
 				this.editObjectN = f.style_array_n.value;
 				var callback = (f.icon_id.value != "")?this.updateIconStyle:this.addIconStyle;
@@ -1915,20 +1922,20 @@ BitMap.Edit.prototype = {
 		 },
 	
 		 "storeNewPolyline": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Polyline...");
 				this.editSetId = f.set_id.value;
 		 		var str = "edit_polyline.php?" + queryString(f) + "&save_polyline=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.addPolyline, this) );
 		 },
 		 
 		 "storePolyline": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Polyline...");
 				this.editObjectN = f.polyline_array_n.value;
 				doSimpleXMLHttpRequest("edit_polyline.php", f).addCallback( bind(this.updatePolyline, this) );
 		 },
 		 
 		 "removePolyline": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Removing Polyline...");
 				this.editSetId = f.set_id.value;
 				this.editPolylineId = f.polyline_id.value;
 		 		var str = "edit_polyline.php?set_id=" + this.editSetId + "&polyline_id=" + f.polyline_id.value + "&remove_polyline=true";
@@ -1936,7 +1943,7 @@ BitMap.Edit.prototype = {
 		 },
 	
 		 "expungePolyline": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Deleting ...");
 				this.editSetId = f.set_id.value;
 				this.editPolylineId = f.polyline_id.value;
 		 		var str = "edit_polyline.php?polyline_id=" + f.polyline_id.value + "&expunge_polyline=true";
@@ -1944,14 +1951,14 @@ BitMap.Edit.prototype = {
 		 },
 		 
 		 "storeNewPolylineSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving ...");
 				this.canceledit('editerror');
 		 		var str = "edit_polylineset.php?" + queryString(f) + "&set_type=polylines" + "&gmap_id=" + this.Map.id;
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.addPolylineSet, this) );
 		 },
 	
 		 "storePolylineSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving ...");
 				this.editSetId = f.set_id.value;
 				this.editObjectN = f.set_array_n.value;
 		 		var str = "edit_polylineset.php?" + queryString(f) + "&gmap_id=" + this.Map.id + "&save_polylineset=true";
@@ -1959,47 +1966,47 @@ BitMap.Edit.prototype = {
 		 },
 	
 		 "removePolylineSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Removing ...");
 				this.editSetId = f.set_id.value;
 		 		var str = "edit_polylineset.php?set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polylineset=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolylineSet, this) );
 		 },
 		 
 		 "expungePolylineSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Deleting ...");
 				this.editSetId = f.set_id.value;
 		 		var str = "edit_polylineset.php?set_id=" + f.set_id.value + "&expunge_polylineset=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolylineSet, this) );
 		 },
 	
 		 "storeNewPolylineStyle": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving ...");
 		 		var str = "edit_polylinestyle.php?" + queryString(f);
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.addPolylineStyle, this) ); 
 		 },
 	
 		 "storePolylineStyle": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving ...");
 				this.editObjectN = f.style_array_n.value;
 		 		var str = "edit_polylinestyle.php?" + queryString(f);
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updatePolylineStyle, this) ); 
 		 },
 		 
 		 "storeNewPolygon": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Polygon...");
 				this.editSetId = f.set_id.value;
 		 		var str = "edit_polygon.php?" + queryString(f) + "&save_polygon=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.addPolygon, this) );
 		 },
 		 
 		 "storePolygon": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Polygon...");
 				this.editObjectN = f.polygon_array_n.value;
 				doSimpleXMLHttpRequest("edit_polygon.php", f).addCallback( bind(this.updatePolygon, this) );
 		 },
 		 
 		 "removePolygon": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Removing Polygon...");
 				this.editSetId = f.set_id.value;
 				this.editPolygonId = f.polygon_id.value;
 		 		var str = "edit_polygon.php?set_id=" + this.editSetId + "&polygon_id=" + f.polygon_id.value + "&remove_polygon=true";
@@ -2007,7 +2014,7 @@ BitMap.Edit.prototype = {
 		 },
 	
 		 "expungePolygon": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Deleting Polygon...");
 				this.editSetId = f.set_id.value;
 				this.editPolygonId = f.polygon_id.value;
 		 		var str = "edit_polygon.php?polygon_id=" + f.polygon_id.value + "&expunge_polygon=true";
@@ -2015,14 +2022,14 @@ BitMap.Edit.prototype = {
 		 },
 		 
 		 "storeNewPolygonSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Polygonset...");
 				this.canceledit('editerror');
 		 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.addPolygonSet, this) );
 		 },
 	
 		 "storePolygonSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Polygonset...");
 				this.editSetId = f.set_id.value;
 				this.editObjectN = f.set_array_n.value;
 		 		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + this.Map.id + "&save_polygonset=true";
@@ -2030,27 +2037,27 @@ BitMap.Edit.prototype = {
 		 },
 	
 		 "removePolygonSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Removing Polygonset...");
 				this.editSetId = f.set_id.value;
 		 		var str = "edit_polygonset.php?set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polygonset=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) );
 		 },
 		 
 		 "expungePolygonSet": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Deleting Polygonset...");
 				this.editSetId = f.set_id.value;
 		 		var str = "edit_polygonset.php?set_id=" + f.set_id.value + "&expunge_polygonset=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) );
 		 },
 	
 		 "storeNewPolygonStyle": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Polygonstyle...");
 		 		var str = "edit_polygonstyle.php?" + queryString(f);
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.addPolygonStyle, this) ); 
 		 },
 	
 		 "storePolygonStyle": function(f){
-		 		this.showSpinner();
+		 		this.showSpinner("Saving Polygonstyle...");
 				this.editObjectN = f.style_array_n.value;
 		 		var str = "edit_polygonstyle.php?" + queryString(f);
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updatePolygonStyle, this) ); 
@@ -2201,7 +2208,7 @@ BitMap.Edit.prototype = {
 			}
 	  		
 			this.Map.map.setCenter(new GLatLng(this.Map.center.lat, this.Map.center.lng), this.Map.zoom);
-			this.hideSpinner();
+			this.hideSpinner("DONE!");
 			this.editMap();			
 		 },
 	
@@ -2233,7 +2240,7 @@ BitMap.Edit.prototype = {
 			this.Map.map.addControl(typecontrols);
 			*/
 			
-			this.hideSpinner();
+			this.hideSpinner("DONE!");
 			this.cancelEditMaptypes();
 			this.editMaptypes();
 			this.editMaptypeTilelayers(n);
@@ -2256,7 +2263,7 @@ BitMap.Edit.prototype = {
 			//this.Map.map.setMaptype( this.Map.maptypes[this.Map.maptypes[n].name] );
 			
 			// update the maptype
-			this.hideSpinner();
+			this.hideSpinner("DONE!");
 			this.editMaptypeTilelayers(n);		
 		 },
 	
@@ -2313,7 +2320,7 @@ BitMap.Edit.prototype = {
 							
 				}
 			}			
-			this.hideSpinner();
+			this.hideSpinner("DONE!");
 		 },
 		 
 		 
@@ -2346,7 +2353,7 @@ BitMap.Edit.prototype = {
 		/*  *******  */
 		//this.Map.addTilelayer(n);
 
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the maptypes menus
 		this.editMaptypeTilelayers(s);
 		this.editTilelayer(n);
@@ -2379,7 +2386,7 @@ BitMap.Edit.prototype = {
 		//add the tilelayer
 		//this.Map.addTilelayer(n);
 		
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the maptypes menus
 		this.editMaptypeTilelayers(s);
 		this.editTilelayer(n);
@@ -2412,7 +2419,7 @@ BitMap.Edit.prototype = {
 				this.Map.tilelayers[n] = null;
 			}
 		}
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.editMaptype(editSetId);
 		this.editTilelayers();
 	},
@@ -2438,7 +2445,7 @@ BitMap.Edit.prototype = {
 		//remove the related maptype
 		//re-add the maptype
 		
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the tilelayers menus
 		this.editTilelayer(s);
 		this.editCopyright(n);
@@ -2466,7 +2473,7 @@ BitMap.Edit.prototype = {
 		//remove the related maptype
 		//re-add the maptype
 		
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the tilelayers menus
 		this.editTilelayer(s);
 		this.editCopyright(n);
@@ -2491,7 +2498,7 @@ BitMap.Edit.prototype = {
 		//remove the related maptype
 		//re-add the maptype
 	
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.cancelEditCopyright();
 		this.editTilelayer(s);	
 	},
@@ -2537,7 +2544,7 @@ BitMap.Edit.prototype = {
 		this.Map.addMarker(n);
 
 		this.removeAssistant();
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the sets menus
 		this.editMarkers(s);
 		this.editMarker(n);
@@ -2565,7 +2572,7 @@ BitMap.Edit.prototype = {
 				s = a;
 			}
 		};
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.editMarkers(s);
 		this.editMarker(n);
 	},
@@ -2631,7 +2638,7 @@ BitMap.Edit.prototype = {
 		// clear the form				
 		 BitMap.hide('edit-markerset-new');
 		
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the sets menus
 		this.cancelEditMarkerSets();
 		this.editMarkerSets();
@@ -2688,7 +2695,7 @@ BitMap.Edit.prototype = {
 			}
 		}
 		
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the sets menus
 		this.editMarkerSetOptions(this.editObjectN);
 	},
@@ -2703,7 +2710,7 @@ BitMap.Edit.prototype = {
 				this.Map.markers[n] = null;
 			}
 		}
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.editMarkers();
 		this.editSet(editSetId);
 	},
@@ -2729,7 +2736,7 @@ BitMap.Edit.prototype = {
 	  			this.Map.markersets[s] = null;
 	  		}
 		}
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.editMarkers();
 	},
 		
@@ -2771,7 +2778,7 @@ BitMap.Edit.prototype = {
 		document.body.appendChild(winStyle);
 				
 		// update the styles menus
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.editMarkerStyles();
 	},
 	
@@ -2812,7 +2819,7 @@ BitMap.Edit.prototype = {
 		winStyle.appendChild(winStyleProperties);
 		document.body.appendChild(winStyle);
 
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the styles menus
 		this.editMarkerStyles();
 		
@@ -2883,7 +2890,7 @@ BitMap.Edit.prototype = {
 			this.Map.defineGIcon(n);
 		}
 		
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the styles menus
 		this.editIconStyles();
 	},
@@ -2930,7 +2937,7 @@ BitMap.Edit.prototype = {
 		var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
 		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
 
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the styles menus
 		this.editIconStyles();
 		
@@ -3010,7 +3017,7 @@ BitMap.Edit.prototype = {
 		// clear the form
 		$('polylineform_new').reset();
 				
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the sets menus
 		this.editPolylines();
 		this.editPolylineSet(this.editSetId);
@@ -3044,7 +3051,7 @@ BitMap.Edit.prototype = {
 		this.Map.attachPolyline(n);
 
 		this.removeAssistant();
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 	},
 	
 	
@@ -3078,7 +3085,7 @@ BitMap.Edit.prototype = {
 		$('polylinesetform_new').reset();
 		// update the sets menus
 		if ( $('newpolylineform').style.display == "block" ){ this.newPolyline(); };
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.editPolylines();
 	 },
 	
@@ -3125,7 +3132,7 @@ BitMap.Edit.prototype = {
 			}
 		};
 
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the sets menus
 		this.editPolylines();
 	},
@@ -3183,7 +3190,7 @@ BitMap.Edit.prototype = {
 		var tbi = xml.documentElement.getElementsByTagName('text_fgstyle_zindex');			
 		s.text_bgstyle_zindex = parseInt( tbi[0].firstChild.nodeValue );
 	
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// clear the form
 		$('polylinestyleform_new').reset();
 		// update the styles menus
@@ -3269,7 +3276,7 @@ BitMap.Edit.prototype = {
 			}
 		}
 
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the polyline menus
 		this.editPolylineStyles();
 		this.editPolylines();
@@ -3286,7 +3293,7 @@ BitMap.Edit.prototype = {
 				this.Map.polylines[i] = null;
 			}
 		}
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.editPolylines();
 		this.editPolylineSet(editSetId);
 	},
@@ -3313,7 +3320,7 @@ BitMap.Edit.prototype = {
 	  			this.Map.polylinesets[s] = null;
 	  		}
 		}
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 	},
 	
 	
@@ -3373,7 +3380,7 @@ BitMap.Edit.prototype = {
 		//create polygon
 		this.Map.attachPolygon(n);
 	
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// clear the form
 		$('polygonform_new').reset();
 		// update the sets menus
@@ -3414,7 +3421,7 @@ BitMap.Edit.prototype = {
 		//create polygon
 		this.Map.attachPolygon(n);
 	
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.removeAssistant();
 	},
 	
@@ -3448,7 +3455,7 @@ BitMap.Edit.prototype = {
 		if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
 		s.set_type = 'polygons';
 				
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// clear the form
 		$('polygonsetform_new').reset();
 		// update the sets menus
@@ -3504,7 +3511,7 @@ BitMap.Edit.prototype = {
 			}
 		};
 		// update the sets menus
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.editPolygons();
 	},
 	
@@ -3532,7 +3539,7 @@ BitMap.Edit.prototype = {
 		var op = xml.documentElement.getElementsByTagName('opacity');			
 		s.opacity = op[0].firstChild.nodeValue;
 	
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// clear the form
 		$('polygonstyleform_new').reset();
 		// update the styles menus
@@ -3576,7 +3583,7 @@ BitMap.Edit.prototype = {
 			}
 		}
 	
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		// update the styles menus
 		this.editPolygonStyles();
 		this.editPolygons();
@@ -3592,7 +3599,7 @@ BitMap.Edit.prototype = {
 				this.Map.polygons[n] = null;
 			}
 		}
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 		this.editPolygons();
 		this.editPolygonSet(this.editSetId);
 	},
@@ -3617,7 +3624,7 @@ BitMap.Edit.prototype = {
 				this.Map.polygonsets[s] = null;
 		  	}
 		}
-		this.hideSpinner();
+		this.hideSpinner("DONE!");
 	},
 	
 	
