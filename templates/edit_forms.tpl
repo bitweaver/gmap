@@ -1199,3 +1199,8 @@
 
 <div id="editpolygoncancel" style="display:none;"><input type="button" name="closepolygonform" value="Cancel Editing Polygons" onclick="javascript:BitMap.EditSession.cancelPolygonEdit(); BitMap.EditSession.canceledit('newpolygonsetform'); BitMap.EditSession.canceledit('editerror');"></div>
 <!--end polygon editing forms -->
+
+
+<div id="spinner" style="z-index:1500; position:absolute; top:50%; left:50%; margin-left:-125px; margin-top:-35px; width:250px; line-height:50px; padding:25px 0; border:3px solid #ccc; background:#fff; font-weight:bold; color:#900; text-align:center; display:none;">
+	{biticon ipackage=liberty iname=busy iexplain=Loading style="vertical-align:middle;"}&nbsp;&nbsp;&nbsp;&nbsp;{tr}Sending Request{/tr}&hellip;
+</div>

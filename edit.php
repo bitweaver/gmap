@@ -85,7 +85,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		$gBitSystem->mOnload[] = 'BitMap.EditMap();';
 		
 		//use Mochikit - prototype sucks
-		$gBitThemes->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js' ) );
+		$gBitThemes->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js', 'Style.js' ) );
 	
 		// Display the template
 		$gBitSystem->display( 'bitpackage:gmap/edit_gmap.tpl', tra('Gmap') );    		
