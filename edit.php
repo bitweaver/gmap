@@ -34,7 +34,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 				."<title>".$gContent->getTitle()."</title>"
 				."<description>".$gContent->mInfo['description']."</description>"
 				."<data>".$gContent->mInfo['xml_data']."</data>"
-				."<parsed_data><![CDATA[".$gContent->mInfo['parsed_data']."]]></parsed_data>"				
+				."<parsed_data><![CDATA[".$gContent->mInfo['xml_parsed_data']."]]></parsed_data>"
 				."<width>".$gContent->mInfo['width']."</width>"
 				."<height>".$gContent->mInfo['height']."</height>"
 				."<lat>".$gContent->mInfo['lat']."</lat>"
