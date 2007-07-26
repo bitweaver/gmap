@@ -13,7 +13,7 @@ BitMap.MapData.push({ldelim}
   {/if}
   mapdiv:'{$smarty.const.ACTIVE_PACKAGE}-map',
   width:{if $gContent->mInfo.width}{$gContent->mInfo.width}{elseif $gBitSystem->getConfig("gmap_width")}{$gBitSystem->getConfig("gmap_width")}{else}0{/if},
-  height:{if $gContent->mInfo.height}{$gContent->mInfo.height}{elseif $gBitSystem->getConfig("gmap_height")}{$gBitSystem->getConfig("gmap_height")}{else}0{/if},
+  height:{if $geo_edit_serv}400{elseif $gContent->mInfo.height}{$gContent->mInfo.height}{elseif $gBitSystem->getConfig("gmap_height")}{$gBitSystem->getConfig("gmap_height")}{else}0{/if},
   lat:{if $gContent->mInfo.lat}{$gContent->mInfo.lat}{elseif $gBitSystem->getConfig("gmap_lat")}{$gBitSystem->getConfig("gmap_lat")}{else}0{/if},
   lng:{if $gContent->mInfo.lng}{$gContent->mInfo.lng}{elseif $gBitSystem->getConfig("gmap_lng")}{$gBitSystem->getConfig("gmap_lng")}{else}0{/if},
   zoom:{if $gContent->mInfo.zoom}{$gContent->mInfo.zoom}{elseif $gBitSystem->getConfig("gmap_zoom")}{$gBitSystem->getConfig("gmap_zoom")}{else}2{/if},
