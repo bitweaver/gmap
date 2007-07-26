@@ -166,10 +166,10 @@ class BitGmap extends LibertyAttachable {
 			$bindVars = array((int)$gmap_id, "maptypes");
 
 			$query = "SELECT gtl.*, gtk.*
-					FROM ( `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk, `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk )
+					FROM `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk
+						INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON(gtk.`maptype_id` = gsk.`set_id`)
 					INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` gtl ON ( gtl.`tilelayer_id` = gtk.`tilelayer_id` )
-					WHERE gtk.`maptype_id` = gsk.`set_id` 
-					AND gsk.`gmap_id` = ? AND gsk.`set_type` = ?";
+					WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = ?";
 
 			$result = $this->mDb->query( $query, $bindVars );
 
@@ -207,11 +207,11 @@ class BitGmap extends LibertyAttachable {
 			$bindVars = array((int)$gmap_id, "maptypes");
 
 			$query = "SELECT gcr.*, gck.*
-					FROM ( `".BIT_DB_PREFIX."gmaps_copyrights_keychain` gck, `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk, `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk )
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_copyrights` gcr ON ( gcr.`copyright_id` = gck.`copyright_id` )
-					WHERE gck.`tilelayer_id` = gtk.`tilelayer_id` 
-					AND gtk.`maptype_id` = gsk.`set_id` 
-					AND gsk.`gmap_id` = ? AND gsk.`set_type` = ?";
+					FROM `".BIT_DB_PREFIX."gmaps_copyrights_keychain` gck
+						INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk ON(gck.`tilelayer_id` = gtk.`tilelayer_id` )
+						INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON(gtk.`maptype_id` = gsk.`set_id`)
+						INNER JOIN `".BIT_DB_PREFIX."gmaps_copyrights` gcr ON ( gcr.`copyright_id` = gck.`copyright_id` )
+					WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = ?";
 
 			$result = $this->mDb->query( $query, $bindVars );
 
@@ -256,15 +256,14 @@ class BitGmap extends LibertyAttachable {
 			$query = "SELECT bmm.*, lc.*, bms.*, bsk.*, 
 					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
-                FROM ( `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."gmaps_markers` bmm, `".BIT_DB_PREFIX."gmaps_marker_sets` bms )
+                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk 
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` bms ON( bms.`set_id` = bsk.`set_id` )
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk ON(bmk.`set_id` = bms.`set_id`)
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_markers` bmm ON(bmm.`marker_id` = bmk.`marker_id`)
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
-                WHERE bsk.`gmap_id` = ? $whereSql
-                AND bsk.`set_type` = 'markers'
-                AND bms.`set_id` = bsk.`set_id`
-                AND bmk.`set_id` = bms.`set_id`
-                AND bmm.`marker_id` = bmk.`marker_id`";
+                WHERE bsk.`gmap_id` = ? $whereSql AND bsk.`set_type` = 'markers'";
 
 			$result = $this->mDb->query( $query, $bindVars );
 
