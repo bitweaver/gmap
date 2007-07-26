@@ -1,7 +1,6 @@
 <div class="list gmap display">
 {if $gBitSystem->getConfig('gmap_api_key')}    
   {include file="bitpackage:gmap/gmap_header.tpl"}
-  {include file="bitpackage:gmap/list_form.tpl"}
   <div class="body">
 	<div class="gmap-content">
 	

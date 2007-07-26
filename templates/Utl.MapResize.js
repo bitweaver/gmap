@@ -77,7 +77,7 @@ BitMap.Utl.MapResize.sizeMapDiv = function(){
 	}
 	BitMap.Utl.MapResize.mapDivRef.style.height = h + 'px';
 	if ( BitMap.Utl.MapResize.panelDivRef != null){
-		BitMap.Utl.MapResize.panelDivRef.style.height = (h - 146) + 'px';
+		BitMap.Utl.MapResize.panelDivRef.style.height = h + 'px';
 	}
 }
 

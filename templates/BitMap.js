@@ -92,67 +92,69 @@ BitMap.Initialize = function(){
 //center is an object containing .lat and .lng
 //controls is an object containing .scale .type_control .zoom_control
 BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width, height, center, zoom, maptype, controls, allow_comments, maptypes, tilelayers, copyrights, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
-  this.index = index;
-  this.mapdiv = mapdiv;
-  this.id = id;
-  this.title = title;
-  this.description = desc;
-  this.data = data;
-  this.parsed_data = parsed_data;
-  this.width = width;
-  this.height = height;
-  this.center = center;
-  this.zoom = zoom;
-  this.maptype = maptype;
-  this.controls = controls;
-  this.allow_comments = allow_comments;
-  this.maptypes = maptypes;
-  this.tilelayers = tilelayers;
-  this.copyrights = copyrights;
-  this.markers = markers;
-  this.markersets = markersets;
-  this.markerstyles = markerstyles;
-  this.iconstyles = iconstyles;
-  this.polylines = polylines;
-  this.polylinesets = polylinesets;
-  this.polylinestyles = polylinestyles;
-  this.polygons = polygons;
-  this.polygonsets = polygonsets;
-  this.polygonstyles = polygonstyles;
-  this.map = new GMap2(document.getElementById(this.mapdiv));  
-  this.setControls();
+	this.index = index;
+	this.mapdiv = mapdiv;
+	this.id = id;
+	this.title = title;
+	this.description = desc;
+	this.data = data;
+	this.parsed_data = parsed_data;
+	this.width = width;
+	this.height = height;
+	this.center = center;
+	this.zoom = zoom;
+	this.maptype = maptype;
+	this.controls = controls;
+	this.allow_comments = allow_comments;
+	this.maptypes = maptypes;
+	this.tilelayers = tilelayers;
+	this.copyrights = copyrights;
+	this.markers = markers;
+	this.markersets = markersets;
+	this.markerstyles = markerstyles;
+	this.iconstyles = iconstyles;
+	this.polylines = polylines;
+	this.polylinesets = polylinesets;
+	this.polylinestyles = polylinestyles;
+	this.polygons = polygons;
+	this.polygonsets = polygonsets;
+	this.polygonstyles = polygonstyles;
+	this.map = new GMap2(document.getElementById(this.mapdiv));  
+	this.setControls();
 
 	//auto resize stuff
 	if (this.height == 0){
 		this.MR = BitMap.Utl.MapResize;
-		//MR.regOffsetObjs([$('top'),$('header'),$('footer')]);
-		this.MR.regOffsetBonus(68);
-		this.MR.regMinSize(200);
+		//set these variables to customize
+		this.MR.regOffsetObjs([$('gmap-header'),$('footer')]);
+		this.MR.regOffsetBonus(0);
+		this.MR.regMinSize(400);
+		//these are constants dont mess with them
 		this.MR.regMap(this.map);
 		this.MR.regMapDiv($(this.mapdiv));
-		//MR.regPanelDiv(this.paneldiv);
+		this.MR.regPanelDiv($('gmap-sidepanel'));
 		this.MR.sizeMapDiv();
 		this.MR.setResizeListener();
 	}
 	
-  this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
-
-  if (this.maptypes.length > 0){
-  	var ref = this;
-  	this.loopOver(ref.maptypes, function(i){ref.addMaptype(i);});
-  }
-  
-  this.setMapType();
-
-  if (this.iconstyles.length > 0){
-  	var ref = this;
-  	this.loopOver(ref.maptypes, function(i){ref.defineGIcon(i);});
-  } 
-
-  if (this.markers.length > 0){
-  	var ref = this;
-  	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
-  }  
+	this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
+	
+	if (this.maptypes.length > 0){
+	var ref = this;
+	this.loopOver(ref.maptypes, function(i){ref.addMaptype(i);});
+	}
+	
+	this.setMapType();
+	
+	if (this.iconstyles.length > 0){
+	var ref = this;
+	this.loopOver(ref.maptypes, function(i){ref.defineGIcon(i);});
+	} 
+	
+	if (this.markers.length > 0){
+	var ref = this;
+	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
+	}  
 };
 
 //a utility method we use instead of for loops
