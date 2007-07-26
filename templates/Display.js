@@ -5,9 +5,9 @@
 
 MochiKit.Base.update(BitMap.Map.prototype, {
 
-	"addMapType": function(pParamHash){
 	// legacy code from R1/V1
 	/*
+	"addMapType": function(pParamHash){
 		var Maptypes = this.maptypes;
 		var count = Maptypes.length;
 		for (var n=0; n < count; n++) {
@@ -29,9 +29,8 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			var custommap = new GMapType(tilelayers, new GMercatorProjection(Maptypes[n].maxzoom+1), "Maptypes[n].name", {errorMessage:"Sorry we do not have imagery available for this area"});
 			this.map.addMapType(custommap);
 		}
-	*/
 	},
-
+	*/
 
 	"attachIcons": function(){
 		var i = this.iconstyles;

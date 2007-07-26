@@ -121,6 +121,20 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
   this.polygonstyles = polygonstyles;
   this.map = new GMap2(document.getElementById(this.mapdiv));  
   this.setControls();
+
+	//auto resize stuff
+	if (this.height = 0){
+		this.MR = BitMap.Utl.MapResize;
+		//MR.regOffsetObjs([$('top'),$('header'),$('footer')]);
+		this.MR.regOffsetBonus(68);
+		this.MR.regMinSize(200);
+		this.MR.regMap(this.map);
+		this.MR.regMapDiv($(this.mapdiv));
+		//MR.regPanelDiv(this.paneldiv);
+		this.MR.sizeMapDiv();
+		this.MR.setResizeListener();
+	}
+	
   this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
 
   if (this.maptypes.length > 0){
@@ -138,7 +152,7 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
   if (this.markers.length > 0){
   	var ref = this;
   	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
-  }
+  }  
 };
 
 //a utility method we use instead of for loops

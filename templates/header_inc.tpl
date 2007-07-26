@@ -21,6 +21,7 @@
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Edit.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}
+		<script src="{$smarty.const.GMAP_PKG_URL}templates/Utl.MapResize.js" type="text/javascript"></script>
 
 	<style type="text/css">
 		{if $map_list }
