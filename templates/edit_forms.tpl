@@ -39,7 +39,7 @@
 			</tr>
 			<tr><td></td><td><a name="map_assist_btn" title="click a center!" href="javascript:BitMap.EditSession.addAssistant('map');">( Use Locating Assistant )</a></td></tr>
         	<tr><td>Width (use '0' for auto)</td><td><input name="map_w" type="text" size="12" value=""></td></tr>
-        	<tr><td>Height</td><td><input name="map_h" type="text" size="12" value=""></td></tr>
+        	<tr><td>Height (use '0' for auto)</td><td><input name="map_h" type="text" size="12" value=""></td></tr>
         	<tr><td>Zoom Level</td><td><input name="map_z" type="text" size="12" value=""></td></tr>
         	<tr><td>Show Controls</td><td><select name="map_showcont">
               <option value="s" >Small</option>

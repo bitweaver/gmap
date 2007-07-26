@@ -123,7 +123,7 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
   this.setControls();
 
 	//auto resize stuff
-	if (this.height = 0){
+	if (this.height == 0){
 		this.MR = BitMap.Utl.MapResize;
 		//MR.regOffsetObjs([$('top'),$('header'),$('footer')]);
 		this.MR.regOffsetBonus(68);

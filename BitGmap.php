@@ -916,7 +916,7 @@ class BitGmap extends LibertyAttachable {
 		if( isset( $pParamHash['map_w'] ) && is_numeric( $pParamHash['map_w'] ) ) {
 			$pParamHash['gmap_store']['width'] = $pParamHash['map_w'];
 		}
-		if( !empty( $pParamHash['map_h'] ) && is_numeric( $pParamHash['map_h'] ) ) {
+		if( isset( $pParamHash['map_h'] ) && is_numeric( $pParamHash['map_h'] ) ) {
 			$pParamHash['gmap_store']['height'] = $pParamHash['map_h'];
 		}		
 		if( isset( $pParamHash['map_z'] ) && is_numeric( $pParamHash['map_z'] ) ) {

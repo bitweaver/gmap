@@ -59,11 +59,11 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		$gBitSystem->mOnload[] = 'BitMap.Display();';
 	
 		//use Mochikit - prototype sucks
-		$gBitThemes->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js' ) );
+		$gBitThemes->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js', 'Style.js' ) );
 	
 		if( $gContent->isCommentable() ) {
 			$gBitSystem->setConfig( 'comments_ajax', 'y' );
-			$gBitThemes->loadAjax( 'mochikit', array( 'Style.js', 'Color.js', 'Position.js', 'Visual.js' ) );	
+			$gBitThemes->loadAjax( 'mochikit', array( 'Color.js', 'Position.js', 'Visual.js' ) );	
 			$gBitSmarty->assign('comments_ajax', TRUE);
 			$commentsParentId = $gContent->mContentId;
 			$gBitSmarty->assign('commentsParentId', $commentsParentId);
