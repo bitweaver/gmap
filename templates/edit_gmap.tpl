@@ -15,11 +15,23 @@
 		  {include file='bitpackage:gmap/gmap_sidepanel.tpl'}
 		  {include file="bitpackage:gmap/map_inc.tpl"}
 	    </div>
-	    <div>
-			{include file="bitpackage:gmap/edit_forms.tpl"}
+		<div>
+			<a id="emap" href="javascript:BitMap.EditSession.editMap({$mapInfo.gmap_id});">Edit Map</a> | 
+			<a id="emaptype" href="javascript:BitMap.EditSession.editMaptypes();">Edit Maptypes</a> |
+			<a id="emarker" href="javascript:BitMap.EditSession.editMarkerSets();">Edit Markers</a> | 
+			<a id="epolyline" href="javascript:BitMap.EditSession.editPolylines();">Edit Polylines</a> | 
+			<a id="epolygon" href="javascript:BitMap.EditSession.editPolygons();">Edit Polygons</a>
+		</div>
+		{* this is a container for our forms - we ajax them in *}
+	    <div id="gmap-forms">
+			{* DEPRECATED *}
+			{* {include file="bitpackage:gmap/edit_forms.tpl"} *}
 		</div>
 		<div id="mapcontent" class="content">
 			{$gContent->mInfo.clean_data}
+		</div>
+		<div id="spinner" style="z-index:1500; position:absolute; top:50%; left:50%; margin-left:-125px; margin-top:-35px; width:250px; line-height:50px; padding:25px 0; border:3px solid #ccc; background:#fff; font-weight:bold; color:#900; text-align:center; display:none;">
+			{biticon ipackage=liberty iname=busy iexplain=Loading style="vertical-align:middle;"}&nbsp;&nbsp;&nbsp;&nbsp;<span id="spinner-text">{tr}Sending Request{/tr}&hellip;</span>
 		</div>
 	</div> <!-- end .body -->
 </div>

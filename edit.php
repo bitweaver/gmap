@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2005 bitweaver Gmap
+// Copyright (c) 2005-2007 bitweaver Gmap
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
@@ -9,8 +9,8 @@ require_once('../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
-// Now check permissions to access this page
-$gBitSystem->verifyPermission('bit_gm_edit_map' );
+// Now check permission to edit or create a map
+$gBitSystem->verifyPermission('p_gmap_edit' );
 
 // Get the map for specified gmap_id
 require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
@@ -24,7 +24,6 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	if (!empty($_REQUEST["save_map"])) {
 		if( $gContent->store( $_REQUEST ) ) {
 		
-			//$gContent->storePreference( 'is_public', !empty( $_REQUEST['is_public'] ) ? $_REQUEST['is_public'] : NULL );
 			$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
 			$gContent->load();    
 		
@@ -63,7 +62,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 			//XML Header
 			header("content-type:text/xml");
 	
-				print_r('<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>');
+			print_r('<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>');
 			print_r($mRet);
 									
 			die;
@@ -77,6 +76,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		//@todo this was causing a header problem when needed and when not?
 		//header("Location: ".$gContent->getDisplayUrl());
 		
+		$gBitSmarty->assign_by_ref('mapInfo', $gContent->mInfo);
 		$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
 		$gBitSmarty->assign( 'loadMochiKit', TRUE );
 		$gBitSmarty->assign( 'edit_map', TRUE );

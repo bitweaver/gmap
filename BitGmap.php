@@ -57,6 +57,7 @@ class BitGmap extends LibertyAttachable {
 				$this->mGmapId = $result->fields['gmap_id'];
 				$this->mContentId = $result->fields['content_id'];
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
+				$this->mInfo['raw'] = $this->mInfo['data'];
 				$this->mInfo['xml_parsed_data'] = $this->parseData( $this->mInfo['data'], $this->mInfo['format_guid'] );
 				$this->mInfo['parsed_data'] = $this->parseData( $this->mInfo['data'], $this->mInfo['format_guid'] );
 				$this->mInfo['clean_data'] = $this->mInfo['parsed_data'];

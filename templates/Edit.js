@@ -20,7 +20,7 @@ BitMap.EditMap = function(){
   BitMap.MapData[0].Map.attachSideMarkers();
 };
 
-// We use Mochikit library for AJAX and substituting getElementById with '$()'
+// We use Mochikit library for AJAX and substitute getElementById with '$()'
 // MAP EDITING FUNCTIONS
 
 BitMap.Edit = function(){
@@ -116,6 +116,22 @@ BitMap.Edit.prototype = {
 		}
 	},
 	
+	"executeJavascript": function(element) {
+		//var element = MochiKit.DOM.getElement(element);
+		if (element) {
+		  var st = element.getElementsByTagName("SCRIPT");
+		  var string_to_execute;
+		  for (var i=0;i<st.length; i++) {
+			string_to_execute = st[i].innerHTML;
+			try {
+			  eval(string_to_execute.split("<!--").join("").split("-->").join(""));
+			} catch(e) {
+			  MochiKit.Logging.log(e);
+			} // end try
+		  } // end for
+		} // end if
+	},
+	
 	
 	
 	/*******************
@@ -124,67 +140,16 @@ BitMap.Edit.prototype = {
 	 *
 	 *******************/
 	
-	// builds the map editing form
-	"editMap": function(){
-		
-	  var form = $('edit-map-form');
-		form.reset();
-		BitMap.show('edit-map-table');
-	
-	  form.gmap_id.value = this.Map.id? this.Map.id:"";
-	  form.title.value = this.Map.title?this.Map.title:"";
-	  form.map_desc.value = this.Map.description?this.Map.description:"";
-	  form.map_w.value = this.Map.width;
-	  form.map_h.value = this.Map.height;
-	  form['geo[lat]'].value = this.Map.center.lat;
-	  form['geo[lng]'].value = this.Map.center.lng;
-	  form.map_z.value = this.Map.zoom;
-	  form.edit.value = this.Map.data?this.Map.data:"";
-	
-	  var i;
-	  for (i=0; i < 4; i++) {
-	    if (form.map_showcont.options[i].value == this.Map.controls.zoom_control){
-	      form.map_showcont.options[i].selected=true;
-	    }
-	  }
-	  i=(this.Map.controls.scale == true||this.Map.controls.scale=='true')?1:0;
-	  form.map_showscale.options[i].selected=true;
-			
-	  i=(this.Map.controls.maptype_control==true||this.Map.controls.maptype_control=='true')?1:0;
-	  form.map_showtypecont.options[i].selected=true;
-	
-						
-	  var mapTypeRoot = form.maptype;
-	
-		var mapTypeCount = 3;
-		
-		if (mapTypeRoot.options.length > 3){
-			for (n=mapTypeRoot.options.length; n>3; n--){
-				mapTypeRoot.remove(n-1);
-			}
-		}
-
-		if (this.Map.maptypes.length > 0){
-			mapTypeCount += this.Map.maptypes.length;
-			var newMaptype = mapTypeRoot.options[0].cloneNode(false);
-			for (i=0; i<this.Map.maptypes.length; i++){
-			  mapTypeRoot.appendChild(newMaptype);
-			  mapTypeRoot.options[i+3].value = this.Map.maptypes[i].maptype_id;
-			  mapTypeRoot.options[i+3].text = this.Map.maptypes[i].name;
-			}
-		}
-							
-	  for (var i=0; i<mapTypeCount; i++) {
-	    if (form.maptype.options[i].value == this.Map.maptype){
-	      form.maptype.options[i].selected=true;
-	    }
-	  }
-
-	  form.allow_comments.checked = (this.Map.allow_comments == "y")?true:false;
+	"editMap": function(id){
+		doSimpleXMLHttpRequest("edit_map.php", {gmap_id:id}).addCallback( bind(this.editMapCallback, this) ); 
 	},
 
-
-
+	"editMapCallback": function(rslt){
+	    $('gmap-forms').innerHTML = rslt.responseText;
+	    this.executeJavascript($('gmap-forms'));
+		//setupAllTabs();
+	},
+	
 	/*******************
 	 *
 	 * MAPTYPE FORM FUNCTIONS

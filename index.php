@@ -51,6 +51,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	}else{
 	
 		require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
+		
+		$displayHash = array( 'perm_name' => 'p_gmap_view' );
+		$gContent->invokeServices( 'content_display_function', $displayHash );
 	
 		$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
 		

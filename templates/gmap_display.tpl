@@ -1,7 +1,8 @@
 {strip}
 <div class="body">
-	<div class="gmap-content">
+	<div class="content">
 		{include file='bitpackage:gmap/gmap_sidepanel.tpl'}
+		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
 		{include file='bitpackage:gmap/map_inc.tpl'}
 	</div>
     {* if stars is active we include a model stars div
