@@ -21,46 +21,18 @@ $gContent = new BitGmap();
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
 
+$format = 'xml';
+
 if (!empty($_REQUEST["save_markerstyle"])) {
     if( $result = $gContent->storeMarkerStyle( $_REQUEST ) ) {
-
-				//@todo - returned results need to include all the associated style properties as well
-				//if store is successful we return XML
-				$mRet = "<markerstyle>"
-      		  ."<style_id>".$result->fields['style_id']."</style_id>"
-      		  ."<name>".$result->fields['name']."</name>"
-      		  ."<marker_style_type>".$result->fields['marker_style_type']."</marker_style_type>"
-      		  ."<label_hover_opacity>".$result->fields['label_hover_opacity']."</label_hover_opacity>"
-      		  ."<label_opacity>".$result->fields['label_opacity']."</label_opacity>"
-      		  ."<label_hover_styles>".$result->fields['label_hover_styles']."</label_hover_styles>"
-      		  ."<window_styles>".$result->fields['window_styles']."</window_styles>"
-						."</markerstyle>";
-
-    }else{
-		//@todo - return some sort of store failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+		$gBitSmarty->assign_by_ref('markerstyleInfo', $result->fields );
     }
 }
 
-//@todo currently there is no function for deleting a style
-
-//since we are returning xml we must report so in the header
-//we also need to tell the browser not to cache the page
-//see: http://mapki.com/index.php?title=Dynamic_XML
-// Date in the past
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
-// always modified
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-// HTTP/1.1
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-// HTTP/1.0
-header("Pragma: no-cache");
-//XML Header
-header("content-type:text/xml");
-     		
-print_r($mRet);
-
-die;
-
+if ( count($gContent->mErrors) > 0 ){
+	$gBitSystem->setFormatHeader( 'center_only' );
+	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+}else{
+	$gBitSystem->display('bitpackage:gmap/edit_markerstyle_xml.tpl', null, $format);
+}
 ?>	

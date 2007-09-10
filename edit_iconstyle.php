@@ -21,55 +21,18 @@ $gContent = new BitGmap();
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
 
+$format = 'xml';
+
 if (!empty($_REQUEST["save_iconstyle"])) {
     if( $result = $gContent->storeIconStyle( $_REQUEST ) ) {
-
-				//@todo - returned results need to include all the associated style properties as well
-				//if store is successful we return XML
-				$mRet = "<iconstyle>"
-      		  ."<icon_id>".$result->fields['icon_id']."</icon_id>"
-      		  ."<name>".$result->fields['name']."</name>"
-      		  ."<icon_style_type>".$result->fields['icon_style_type']."</icon_style_type>"
-      		  ."<image>".$result->fields['image']."</image>"
-      		  ."<rollover_image>".$result->fields['rollover_image']."</rollover_image>"
-      		  ."<icon_w>".$result->fields['icon_w']."</icon_w>"
-      		  ."<icon_h>".$result->fields['icon_h']."</icon_h>"
-      		  ."<shadow_image>".$result->fields['shadow_image']."</shadow_image>"
-      		  ."<shadow_w>".$result->fields['shadow_w']."</shadow_w>"
-      		  ."<shadow_h>".$result->fields['shadow_h']."</shadow_h>"
-      		  ."<icon_anchor_x>".$result->fields['icon_anchor_x']."</icon_anchor_x>"
-      		  ."<icon_anchor_y>".$result->fields['icon_anchor_y']."</icon_anchor_y>"
-      		  ."<shadow_anchor_x>".$result->fields['shadow_anchor_x']."</shadow_anchor_x>"
-      		  ."<shadow_anchor_y>".$result->fields['shadow_anchor_y']."</shadow_anchor_y>"
-      		  ."<infowindow_anchor_x>".$result->fields['infowindow_anchor_x']."</infowindow_anchor_x>"
-      		  ."<infowindow_anchor_y>".$result->fields['infowindow_anchor_y']."</infowindow_anchor_y>"
-						."</iconstyle>";
-
-    }else{
-		//@todo - return some sort of store failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+		$gBitSmarty->assign_by_ref('iconstyleInfo', $result->fields );    
     }
 }
 
-//@todo currently there is no function for deleting a style
-
-//since we are returning xml we must report so in the header
-//we also need to tell the browser not to cache the page
-//see: http://mapki.com/index.php?title=Dynamic_XML
-// Date in the past
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
-// always modified
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-// HTTP/1.1
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-// HTTP/1.0
-header("Pragma: no-cache");
-//XML Header
-header("content-type:text/xml");
-     		
-print_r($mRet);
-
-die;
-
+if ( count($gContent->mErrors) > 0 ){
+	$gBitSystem->setFormatHeader( 'center_only' );
+	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+}else{
+	$gBitSystem->display('bitpackage:gmap/edit_iconstyle_xml.tpl', null, $format);
+}
 ?>	
