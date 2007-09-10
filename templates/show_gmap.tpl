@@ -6,9 +6,9 @@
 	{include file="bitpackage:gmap/gmap_display.tpl"}
 </div>
 
+{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}
+
 {if $gContent->isCommentable() }
 	{include file="bitpackage:liberty/comments.tpl"}
 {/if}
-
-{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}
 {/strip}
