@@ -456,6 +456,210 @@ BitMap.Edit.prototype = {
 	
 	
 
+	/*******************
+	 *
+	 * MARKER STYLE FORM FUNCTIONS
+	 *
+	 *******************/
+
+	"newMarkerStyle":function(){
+		var count = this.Map.markerstyles.length;
+		for (n=0; n<count; n++){
+			if($('edit-markerstylelink-'+n)){
+				BitMap.jscss('remove', $('edit-markerstylelink-'+n), 'edit-select');
+			}
+		}
+		BitMap.jscss('add', $('edit-markerstylelink-new'), 'edit-select');
+		var form = $('edit-markerstyle-form');
+		form.style_id.value = null;
+		form.style_array_n.value = null;
+		form.reset();
+	},
+	
+	"editMarkerStyle":function(i){
+		BitMap.jscss('remove', $('edit-markerstylelink-new'), 'edit-select');
+		var a;
+		var count = this.Map.markerstyles.length;
+		for (n=0; n<count; n++){
+			if($('edit-markerstylelink-'+n)){
+				a = (n==i)?'add':'remove';
+				BitMap.jscss(a, $('edit-markerstylelink-'+n), 'edit-select');
+			}
+		}
+		var m = this.Map.markerstyles[i];
+		//change values
+		var form = $('edit-markerstyle-form');
+		form.style_id.value = m.style_id;
+		form.style_array_n.value = i;
+		form.name.value = m.name;
+		form.marker_style_type.options[m.marker_style_type].selected = true;
+		form.label_hover_opacity.value = m.label_hover_opacity;
+		form.label_opacity.value = m.label_opacity;
+		form.label_hover_styles.value = m.label_hover_styles;
+		form.window_styles.value = m.window_styles;		
+	},
+
+	"editMarkerStyles": function(){
+		BitMap.show('edit-markerstyles-table');
+		BitMap.show('edit-markerstyles-cancel');
+		
+		var markerstyleTable = $('edit-markerstyle-table');
+		//set some constants
+		var linksList = markerstyleTable.getElementsByTagName("ul").item(0);
+		var links = markerstyleTable.getElementsByTagName("li");
+		//Clear all the existing markerstyles listed
+		//We leave the first two, the first is the model we clone, the second is for a new markerstyle
+		var count = links.length;
+		for (n=count-1; n>1; n--){
+			linksList.removeChild(links.item(n));
+		}
+		
+		$('edit-markerstylelink-new-a').href = "javascript:BitMap.EditSession.newMarkerStyle();";
+		//For each markerstyle, add a link
+		var firstselected = false;
+		for (var n=0; n<this.Map.markerstyles.length; n++) {
+			var m = this.Map.markerstyles[n];
+			var newMarkerstyleli = links.item(0).cloneNode(true);
+			newMarkerstyleli.id = 'edit-markerstylelink-'+n;
+			var newMarkerstyleLink = newMarkerstyleli.getElementsByTagName("a").item(0);
+			newMarkerstyleLink.href = "javascript:BitMap.EditSession.editMarkerStyle("+n+")";
+			newMarkerstyleLink.innerHTML = m.name;
+			linksList.appendChild(newMarkerstyleli);
+			newMarkerstyleli.style.display = "block";
+			
+			if (firstselected != true){
+				this.editMarkerStyle(n);
+				firstselected = true;
+			}			
+		}
+		if (firstselected == false){
+			this.newMarkerStyle();
+		}
+		//We assume it is not visible and make it so
+		BitMap.show('edit-markerstyle-table');
+	},
+
+	"cancelEditMarkerStyles": function(){
+	  BitMap.hide('edit-markerstyles-table');
+	  BitMap.hide('edit-markerstyle-table');
+	  BitMap.hide('edit-markerstyles-cancel');
+	},
+
+
+	/*******************
+	 *
+	 * ICON STYLE FORM FUNCTIONS
+	 *
+	 *******************/
+
+	"newIconStyle":function(){
+		var count = this.Map.iconstyles.length;
+		for (n=0; n<count; n++){
+			if($('edit-iconstylelink-'+n)){
+				BitMap.jscss('remove', $('edit-iconstylelink-'+n), 'edit-select');
+			}
+		}
+		BitMap.jscss('add', $('edit-iconstylelink-new'), 'edit-select');
+		var form = $('edit-iconstyle-form');
+		form.icon_id.value = null;
+		form.style_array_n.value = null;
+		form.reset();
+	},
+	
+	"editIconStyle":function(i){
+		BitMap.jscss('remove', $('edit-iconstylelink-new'), 'edit-select');
+		var a;
+		var count = this.Map.iconstyles.length;
+		for (n=0; n<count; n++){
+			if($('edit-iconstylelink-'+n)){
+				a = (n==i)?'add':'remove';
+				BitMap.jscss(a, $('edit-iconstylelink-'+n), 'edit-select');
+			}
+		}
+		var m = this.Map.iconstyles[i];
+		//change values
+		var form = $('edit-iconstyle-form');
+		form.icon_id.value = m.icon_id;
+		form.style_array_n.value = i;
+		form.name.value = m.name;
+		/* form currently does not have a select since there is only one type available
+		 * in the future if other icon types become available then this could be used
+		 */
+		//form.icon_style_type.options[m.icon_style_type].selected = true;		
+		form.icon_image.value = m.image;		
+		form.rollover_image.value = m.rollover_image;
+		form.icon_w.value = m.icon_w;
+		form.icon_h.value = m.icon_h;
+		form.icon_anchor_x.value = m.icon_anchor_x;
+		form.icon_anchor_y.value = m.icon_anchor_y;
+		form.shadow_image.value = m.shadow_image;
+		form.shadow_w.value = m.shadow_w;
+		form.shadow_h.value = m.shadow_h;
+		form.shadow_anchor_x.value = m.shadow_anchor_x;
+		form.shadow_anchor_y.value = m.shadow_anchor_y;
+		form.infowindow_anchor_x.value = m.infowindow_anchor_x;
+		form.infowindow_anchor_y.value = m.infowindow_anchor_y;		
+		
+		/* The following are Google icon features not implemented 
+		   because they are an annoying pain in the ass for most people.
+		   The database supports them, but the form does not.
+		   Maybe an "advanced" form is needed for anyone who
+		   might want to deal with these headaches.
+		*/
+		/*
+		form.print_image.value = m.print_image;
+		form.moz_print_image.value = m.moz_print_image;
+		form.transparent.value = m.transparent;
+		form.print_shadow.value = m.print_shadow;
+		*/		
+	},
+
+	"editIconStyles": function(){
+		BitMap.show('edit-iconstyles-table');
+		BitMap.show('edit-iconstyles-cancel');
+		
+		var iconstyleTable = $('edit-iconstyle-table');
+		//set some constants
+		var linksList = iconstyleTable.getElementsByTagName("ul").item(0);
+		var links = iconstyleTable.getElementsByTagName("li");
+		//Clear all the existing iconstyles listed
+		//We leave the first two, the first is the model we clone, the second is for a new iconstyle
+		var count = links.length;
+		for (n=count-1; n>1; n--){
+			linksList.removeChild(links.item(n));
+		}
+		
+		$('edit-iconstylelink-new-a').href = "javascript:BitMap.EditSession.newIconStyle();";
+		//For each iconstyle, add a link
+		var firstselected = false;
+		for (var n=0; n<this.Map.iconstyles.length; n++) {
+			var m = this.Map.iconstyles[n];
+			var newIconstyleli = links.item(0).cloneNode(true);
+			newIconstyleli.id = 'edit-iconstylelink-'+n;
+			var newIconstyleLink = newIconstyleli.getElementsByTagName("a").item(0);
+			newIconstyleLink.href = "javascript:BitMap.EditSession.editIconStyle("+n+")";
+			newIconstyleLink.innerHTML = m.name;
+			linksList.appendChild(newIconstyleli);
+			newIconstyleli.style.display = "block";
+			
+			if (firstselected != true){
+				this.editIconStyle(n);
+				firstselected = true;
+			}			
+		}
+		if (firstselected == false){
+			this.newIconStyle();
+		}
+		//We assume it is not visible and make it so
+		BitMap.show('edit-iconstyle-table');
+	},
+	
+	"cancelEditIconStyles": function(){
+	  BitMap.hide('edit-iconstyles-table');
+	  BitMap.hide('edit-iconstyle-table');
+	  BitMap.hide('edit-iconstyles-cancel');
+	},
+
 
 
 	/*******************
@@ -842,6 +1046,22 @@ BitMap.Edit.prototype = {
 				this._setIdRef = f.set_id.value;
 				var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
+		 },
+		 
+		 "storeMarkerStyle": function(f){
+		 		this.showSpinner("Saving Markerstyle...");
+		 		var str = "edit_markerstyle.php?" + queryString(f);
+				this.editObjectN = f.style_array_n.value;
+				var callback = (f.style_id.value != "")?this.updateMarkerStyle:this.addMarkerStyle;
+				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+		 },
+
+		 "storeIconStyle": function(f){
+		 		this.showSpinner("Saving Iconstyle...");
+		 		var str = "edit_iconstyle.php?" + queryString(f);
+				this.editObjectN = f.style_array_n.value;
+				var callback = (f.icon_id.value != "")?this.updateIconStyle:this.addIconStyle;
+				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 	
 		 "storeMaptype": function(f){
@@ -1295,6 +1515,230 @@ BitMap.Edit.prototype = {
 		this.editMarkers();
 	},
 		
+
+
+	"addMarkerStyle": function(rslt){
+		var xml = rslt.responseXML;
+		// create a spot for a new markerstyle in the data array
+		var n = this.Map.markerstyles.length;
+		this.Map.markerstyles[n] = new Array();
+		var s = this.Map.markerstyles[n];
+		
+		// assign markerstyle values data array			
+		var id = xml.documentElement.getElementsByTagName('style_id');			
+		s.style_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.documentElement.getElementsByTagName('name');			
+		s.name = nm[0].firstChild.nodeValue;
+		var tp = xml.documentElement.getElementsByTagName('marker_style_type');
+		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
+		var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
+		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
+		var lo = xml.documentElement.getElementsByTagName('label_opacity');			
+		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
+		var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
+		s.label_hover_styles = lhs[0].firstChild.nodeValue;
+		var ws = xml.documentElement.getElementsByTagName('window_styles');			
+		s.window_styles = ws[0].firstChild.nodeValue;
+		
+		var ttStyle = document.createElement('style');
+		var ttStyleProperties = document.createTextNode(".tip-" + s.name + " {" + s.label_hover_styles + "}");
+		ttStyle.setAttribute ("type", "text/css");
+		ttStyle.appendChild(ttStyleProperties);
+		document.body.appendChild(ttStyle);
+		
+		var winStyle = document.createElement('style');
+		var winStyleProperties = document.createTextNode(".win-" + s.name + " {" + s.window_styles + "}");
+		winStyle.setAttribute ("type", "text/css");
+		winStyle.appendChild(winStyleProperties);
+		document.body.appendChild(winStyle);
+				
+		// update the styles menus
+		this.hideSpinner("DONE!");
+		this.editMarkerStyles();
+	},
+	
+	
+	
+	"updateMarkerStyle": function(rslt){
+		var xml = rslt.responseXML;
+		//get the style we are updating
+		var s = this.Map.markerstyles[this.editObjectN];
+		var oldtp = s.marker_style_type;
+		
+		// assign markerstyle values data array			
+		var id = xml.documentElement.getElementsByTagName('style_id');			
+		s.style_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.documentElement.getElementsByTagName('name');			
+		s.name = nm[0].firstChild.nodeValue;
+		var tp = xml.documentElement.getElementsByTagName('marker_style_type');
+		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
+		var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
+		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
+		var lo = xml.documentElement.getElementsByTagName('label_opacity');			
+		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
+		var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
+		s.label_hover_styles = lhs[0].firstChild.nodeValue;
+		var ws = xml.documentElement.getElementsByTagName('window_styles');			
+		s.window_styles = ws[0].firstChild.nodeValue;
+		
+		//add the replacement styles
+		var ttStyle = document.createElement('style');
+		var ttStyleProperties = document.createTextNode(".tip-" + s.name + " {" + s.label_hover_styles + "}");
+		ttStyle.setAttribute ("type", "text/css");
+		ttStyle.appendChild(ttStyleProperties);
+		document.body.appendChild(ttStyle);
+		
+		var winStyle = document.createElement('style');
+		var winStyleProperties = document.createTextNode(".win-" + s.name + " {" + s.window_styles + "}");
+		winStyle.setAttribute ("type", "text/css");
+		winStyle.appendChild(winStyleProperties);
+		document.body.appendChild(winStyle);
+
+		this.hideSpinner("DONE!");
+		// update the styles menus
+		this.editMarkerStyles();
+		
+		//update all markers
+		var a = this.Map.markers;
+		//if the length of the array is > 0
+		if (a.length > 0){
+		//loop through the array
+		for(var n=0; n<a.length; n++){
+			//if the array item is not Null
+			if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
+				//unload the marker
+				this.map.removeOverlay( a[n].marker );
+				//define new marker with new styles
+					this.addMarker(n);
+				}
+			}
+		}
+	},
+	
+		
+	
+	
+	
+	"addIconStyle": function(rslt){
+		var xml = rslt.responseXML;
+	
+		// create a spot for a new iconstyle in the data array
+		var n = this.Map.iconstyles.length;
+		this.Map.iconstyles[n] = new Array();
+		var i = this.Map.iconstyles[n];
+		// assign iconstyle values to data array			
+		var id = xml.documentElement.getElementsByTagName('icon_id');
+		i.icon_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.documentElement.getElementsByTagName('name');
+		i.name = nm[0].firstChild.nodeValue;
+		var tp = xml.documentElement.getElementsByTagName('icon_style_type');
+		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
+		var ig = xml.documentElement.getElementsByTagName('image');
+		i.image = ig[0].firstChild.nodeValue;
+		var rig = xml.documentElement.getElementsByTagName('rollover_image');
+		i.rollover_image = rig[0].firstChild.nodeValue;
+		var icw = xml.documentElement.getElementsByTagName('icon_w');
+		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
+		var ich = xml.documentElement.getElementsByTagName('icon_h');
+		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
+		var is = xml.documentElement.getElementsByTagName('shadow_image');			
+		i.shadow_image = is[0].firstChild.nodeValue;
+		var isw = xml.documentElement.getElementsByTagName('shadow_w');
+		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
+		var ish = xml.documentElement.getElementsByTagName('shadow_h');
+		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
+		var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
+		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
+		var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
+		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
+		var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
+		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
+		var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
+		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
+		var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
+		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
+		var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
+		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
+
+		//make the icon available
+		if (i.icon_style_type == 0) {
+			this.Map.defineGIcon(n);
+		}
+		
+		this.hideSpinner("DONE!");
+		// update the styles menus
+		this.editIconStyles();
+	},
+	
+	
+		
+	"updateIconStyle": function(rslt){
+		var xml = rslt.responseXML;
+		
+		//get the style we are updating
+		var i = this.Map.iconstyles[this.editObjectN];
+		
+		// assign iconsstyle values to data array
+		var id = xml.documentElement.getElementsByTagName('icon_id');
+		i.icon_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.documentElement.getElementsByTagName('name');
+		i.name = nm[0].firstChild.nodeValue;
+		var tp = xml.documentElement.getElementsByTagName('icon_style_type');
+		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
+		var ig = xml.documentElement.getElementsByTagName('image');
+		i.image = ig[0].firstChild.nodeValue;
+		var rig = xml.documentElement.getElementsByTagName('rollover_image');
+		i.rollover_image = rig[0].firstChild.nodeValue;
+		var icw = xml.documentElement.getElementsByTagName('icon_w');
+		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
+		var ich = xml.documentElement.getElementsByTagName('icon_h');
+		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
+		var is = xml.documentElement.getElementsByTagName('shadow_image');			
+		i.shadow_image = is[0].firstChild.nodeValue;
+		var isw = xml.documentElement.getElementsByTagName('shadow_w');
+		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
+		var ish = xml.documentElement.getElementsByTagName('shadow_h');
+		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
+		var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
+		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
+		var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
+		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
+		var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
+		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
+		var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
+		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
+		var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
+		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
+		var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
+		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
+
+		this.hideSpinner("DONE!");
+		// update the styles menus
+		this.editIconStyles();
+		
+		//update the icon
+		if (i.icon_style_type == 0) {
+			this.Map.defineGIcon(this.editObjectN);
+		}
+		
+		//update all markers
+		var a = this.Map.markers;
+		
+		//if the length of the array is > 0
+		if (a.length > 0){
+			//loop through the array
+			for(var n=0; n<a.length; n++){
+				//if the array item is not Null
+				if (a[n]!= null && a[n].marker != null && a[n].icon_id == i.icon_id){
+					//unload the marker
+					this.Map.map.removeOverlay( a[n].marker );
+					//define the marker
+					this.addMarker(n);
+				}
+			}
+		}		
+	},
+	
 
 
 		 "addMaptype": function(rslt){
