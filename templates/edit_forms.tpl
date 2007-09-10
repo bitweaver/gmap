@@ -302,54 +302,27 @@
 
 <!-- edit markerstyles form -->
 <div id="edit-markerstyle-table" class="edit-datatable" style="display:none;">
-    <form action="javascript:;" name="edit-markerstyle-form" id="edit-markerstyle-form" >
-		<input name="style_id" type="hidden" value="style_id">
-		<input name="style_array_n" type="hidden" value="n">
-		<input name="save_markerstyle" type="hidden" value="true">
-		<table>
-			<tr>
-				<td width="200px"><br />
-					<ul>
-						<li style="display:none;"><a href="javascript:BitMap.EditSession.editMarkerStyle(n);">Marker Style Name Here</a></li>
-						<li id="edit-markerstylelink-new"><b><a id="edit-markerstylelink-new-a" href="javascript:BitMap.EditSession.newMarkerStyle();">Add A New Marker Style</a></b></li>
-					</ul>
-				</td>
-				<td>
-					<div class="tplform">
-						<div>Name<br/>
-							<input name="name" type="text" style="width:90%" value="">
-						</div>
-						<div>Type<select name="marker_style_type">
-									<option value="0">GMarker</option>
-									<option value="1">PdMarker</option>
-								</select>
-						</div>
-						<div>Label Hover Opacity (%) <input name="label_hover_opacity" type="text" size="5" value="70">
-						</div>
-						<div>Label Opacity (%) <input name="label_opacity" type="text" size="5" value="100">
-						</div>
-						<div>Label Hover Styles (CSS)<br />
-							<textarea name="label_hover_styles" style="width:90%" rows="3"></textarea>
-						</div>
-						<div>Window Styles (CSS)<br />
-							<textarea name="window_styles" style="width:90%" rows="3"></textarea>
-						</div>
-						<div>
-							<input type="button" name="save_markerstyle_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarkerStyle(document['edit-markerstyle-form']);">
-						</div>
-					</div>
-				</td>
-				<td width="200px">
-					<div id="edit-markerstyle-tips">Tips<br/>
-						Put advice here
-					</div>
-					<div id="edit-markerstyle-actions">Edit Marker Style Actions<br/>
-						Currently no delete or expunge options
-					</div>
-				</td>
-			</tr>
-		</table>
-	</form>
+	<table>
+		<tr>
+			<td width="200px"><br />
+				<ul>
+					<li style="display:none;"><a href="javascript:BitMap.EditSession.editMarkerStyle(n);">Marker Style Name Here</a></li>
+					<li id="edit-markerstylelink-new"><b><a id="edit-markerstylelink-new-a" href="javascript:BitMap.EditSession.editMarkerStyle();">Add A New Marker Style</a></b></li>
+				</ul>
+			</td>
+			<td>
+				<div id="markerstyle-form">PUT MARKERSTYLE FORM HERE!</div>
+			</td>
+			<td width="200px">
+				<div id="edit-markerstyle-tips">Tips<br/>
+					Put advice here
+				</div>
+				<div id="edit-markerstyle-actions">Edit Marker Style Actions<br/>
+					Currently no delete or expunge options
+				</div>
+			</td>
+		</tr>
+	</table>
 </div> <!-- end of edit markerstyles form -->
 
 <!-- close all markerstyles editing -->

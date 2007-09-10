@@ -27,7 +27,15 @@ if (!empty($_REQUEST["save_markerstyle"])) {
     if( $result = $gContent->storeMarkerStyle( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('markerstyleInfo', $result->fields );
     }
+}else{
+	if ( isset( $_REQUEST["style_id"] ) ){
+		$markerstyle = $gContent->getMarkerStyleData( $_REQUEST["style_id"] );
+	}
+	$gBitSmarty->assign_by_ref('markerstyleInfo', $markerstyle->fields);
+	$gBitSystem->display('bitpackage:gmap/edit_markerstyle.tpl', NULL, 'center_only');
+	die;
 }
+
 
 if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );

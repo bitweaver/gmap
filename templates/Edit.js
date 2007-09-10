@@ -164,33 +164,31 @@ BitMap.Edit.prototype = {
 	
 	"editMarkerSets": function(){
 		BitMap.show('edit-markers-menu');
-	  //First check if there are any marker sets
-	  if (this.Map.markersets.length > 0){
-	    // We assume editMarkers has been called before and remove 
-	  	// any previously existing sets from the UI	
-	  	for (var n=0; n<this.Map.markersets.length; n++) {
-	  		if (this.Map.markersets[n]!= null){
-	    		var getElem = "edit-markerset-"+n;
-	    		if ( $(getElem) ) {
-	    			$('edit-markersets-table').removeChild($(getElem));
-	    		}
+		//First check if there are any marker sets
+		if (this.Map.markersets.length > 0){
+			// We assume editMarkers has been called before and remove 
+			// any previously existing sets from the UI	
+			for (var n=0; n<this.Map.markersets.length; n++) {
+				if (this.Map.markersets[n]!= null){
+					var getElem = "edit-markerset-"+n;
+					if ( $(getElem) ) {
+						$('edit-markersets-table').removeChild($(getElem));
+					}
+				}
 			}
-	  	}
-	    //Add a tool bar for each MarkerSet
-	    for (var n=0; n<this.Map.markersets.length; n++) {
-	  		var newMarkerSet = $('edit-markerset').cloneNode(true);
-	    	newMarkerSet.id = "edit-markerset-"+n;
-	   		newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[n].name;
-	   		newMarkerSet.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMarkerSet("+n+");";
-	   		newMarkerSet.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMarkers("+n+");";
-	    	$('edit-markersets-table').appendChild(newMarkerSet);
-	    	BitMap.show('edit-markerset-'+n);
-	    }
-	  }else{
-		//alert you must create a marker set first
-	  }
-	  BitMap.show('edit-markersets-table');
-	  BitMap.show('edit-markersets-cancel');
+			//Add a tool bar for each MarkerSet
+			for (var n=0; n<this.Map.markersets.length; n++) {
+				var newMarkerSet = $('edit-markerset').cloneNode(true);
+				newMarkerSet.id = "edit-markerset-"+n;
+				newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[n].name;
+				newMarkerSet.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMarkerSet("+n+");";
+				newMarkerSet.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMarkers("+n+");";
+				$('edit-markersets-table').appendChild(newMarkerSet);
+				BitMap.show('edit-markerset-'+n);
+			}
+		}
+		BitMap.show('edit-markersets-table');
+		BitMap.show('edit-markersets-cancel');
 	},
 	
 	
@@ -206,13 +204,7 @@ BitMap.Edit.prototype = {
 	  this.canceledit('edit-markers-menu');
 	  this.canceledit('edit-markersets-table');
 	  this.canceledit('edit-markersets-cancel');
-	/*
-	  this.canceledit('newmarkersetform'); 
-	  this.canceledit('editmarkerstylesmenu'); 
-	  this.canceledit('newmarkerstyleform'); 
-	  this.canceledit('editmarkerstylesform'); 
-	  this.canceledit('editmarkerstylescancel');
-	*/
+
 	  this.removeAssistant(); 
 	  this.canceledit('editerror');
 	},
@@ -421,41 +413,32 @@ BitMap.Edit.prototype = {
 	 *
 	 *******************/
 
-	"newMarkerStyle":function(){
-		var count = this.Map.markerstyles.length;
+	"editMarkerStyle":function(i){	
+		var style_id = ( i != null )?this.Map.markerstyles[i].style_id:null;
+
+		this.editObjectN = i;
+	
+		//hilight selected marker link - unhilight others
+		var a = (i != null)?'remove':'add';
+		BitMap.Utl.JSCSS(a, $('edit-markerstylelink-new'), 'edit-select');
+		
+		var count = this.Map.markers.length;
 		for (n=0; n<count; n++){
 			if($('edit-markerstylelink-'+n)){
-				BitMap.jscss('remove', $('edit-markerstylelink-'+n), 'edit-select');
+				a = (n==m_i)?'add':'remove';
+				BitMap.Utl.JSCSS(a, $('edit-markerstylelink-'+n), 'edit-select');
 			}
 		}
-		BitMap.jscss('add', $('edit-markerstylelink-new'), 'edit-select');
-		var form = $('edit-markerstyle-form');
-		form.style_id.value = null;
-		form.style_array_n.value = null;
-		form.reset();
+
+		
+		doSimpleXMLHttpRequest("edit_markerstyle.php", {style_id:style_id}).addCallback( bind(this.editMarkerStyleCallback, this) );
 	},
 	
-	"editMarkerStyle":function(i){
-		BitMap.jscss('remove', $('edit-markerstylelink-new'), 'edit-select');
-		var a;
-		var count = this.Map.markerstyles.length;
-		for (n=0; n<count; n++){
-			if($('edit-markerstylelink-'+n)){
-				a = (n==i)?'add':'remove';
-				BitMap.jscss(a, $('edit-markerstylelink-'+n), 'edit-select');
-			}
-		}
-		var m = this.Map.markerstyles[i];
-		//change values
-		var form = $('edit-markerstyle-form');
-		form.style_id.value = m.style_id;
-		form.style_array_n.value = i;
-		form.name.value = m.name;
-		form.marker_style_type.options[m.marker_style_type].selected = true;
-		form.label_hover_opacity.value = m.label_hover_opacity;
-		form.label_opacity.value = m.label_opacity;
-		form.label_hover_styles.value = m.label_hover_styles;
-		form.window_styles.value = m.window_styles;		
+	"editMarkerStyleCallback": function(rslt){
+		var f = $('markerstyle-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
+		BitMap.show('edit-markerstyle-table');		
 	},
 
 	"editMarkerStyles": function(){
@@ -473,18 +456,20 @@ BitMap.Edit.prototype = {
 			linksList.removeChild(links.item(n));
 		}
 		
-		$('edit-markerstylelink-new-a').href = "javascript:BitMap.EditSession.newMarkerStyle();";
+		/* I THINK THIS CAN BE DELETED -wjames5 */
+		//$('edit-markerstylelink-new-a').href = "javascript:BitMap.EditSession.editMarkerStyle();";
+		
 		//For each markerstyle, add a link
 		var firstselected = false;
 		for (var n=0; n<this.Map.markerstyles.length; n++) {
 			var m = this.Map.markerstyles[n];
-			var newMarkerstyleli = links.item(0).cloneNode(true);
-			newMarkerstyleli.id = 'edit-markerstylelink-'+n;
-			var newMarkerstyleLink = newMarkerstyleli.getElementsByTagName("a").item(0);
-			newMarkerstyleLink.href = "javascript:BitMap.EditSession.editMarkerStyle("+n+")";
-			newMarkerstyleLink.innerHTML = m.name;
-			linksList.appendChild(newMarkerstyleli);
-			newMarkerstyleli.style.display = "block";
+			var li = links.item(0).cloneNode(true);
+			li.id = 'edit-markerstylelink-'+n;
+			var a = li.getElementsByTagName("a").item(0);
+			a.href = "javascript:BitMap.EditSession.editMarkerStyle("+n+")";
+			a.innerHTML = m.name;
+			linksList.appendChild(li);
+			li.style.display = "block";
 			
 			if (firstselected != true){
 				this.editMarkerStyle(n);
@@ -492,7 +477,7 @@ BitMap.Edit.prototype = {
 			}			
 		}
 		if (firstselected == false){
-			this.newMarkerStyle();
+			this.editMarkerStyle();
 		}
 		//We assume it is not visible and make it so
 		BitMap.show('edit-markerstyle-table');
@@ -515,10 +500,10 @@ BitMap.Edit.prototype = {
 		var count = this.Map.iconstyles.length;
 		for (n=0; n<count; n++){
 			if($('edit-iconstylelink-'+n)){
-				BitMap.jscss('remove', $('edit-iconstylelink-'+n), 'edit-select');
+				BitMap.Utl.JSCSS('remove', $('edit-iconstylelink-'+n), 'edit-select');
 			}
 		}
-		BitMap.jscss('add', $('edit-iconstylelink-new'), 'edit-select');
+		BitMap.Utl.JSCSS('add', $('edit-iconstylelink-new'), 'edit-select');
 		var form = $('edit-iconstyle-form');
 		form.icon_id.value = null;
 		form.style_array_n.value = null;
@@ -526,13 +511,13 @@ BitMap.Edit.prototype = {
 	},
 	
 	"editIconStyle":function(i){
-		BitMap.jscss('remove', $('edit-iconstylelink-new'), 'edit-select');
+		BitMap.Utl.JSCSS('remove', $('edit-iconstylelink-new'), 'edit-select');
 		var a;
 		var count = this.Map.iconstyles.length;
 		for (n=0; n<count; n++){
 			if($('edit-iconstylelink-'+n)){
 				a = (n==i)?'add':'remove';
-				BitMap.jscss(a, $('edit-iconstylelink-'+n), 'edit-select');
+				BitMap.Utl.JSCSS(a, $('edit-iconstylelink-'+n), 'edit-select');
 			}
 		}
 		var m = this.Map.iconstyles[i];
@@ -663,7 +648,7 @@ BitMap.Edit.prototype = {
 	  this.cancelEditTilelayers();
 	  var count = this.Map.maptypes.length;
 	  for (n=0; n<count; n++){
-	    BitMap.jscss('remove', $('edit-maptype-'+n), 'edit-selected');
+	    BitMap.Utl.JSCSS('remove', $('edit-maptype-'+n), 'edit-selected');
 	  }
 	
 	  if( !$('edit-maptype-new') ){
@@ -675,7 +660,7 @@ BitMap.Edit.prototype = {
 	    $('edit-maptypes-menu').appendChild(newMaptype);
 	  }
 	  
-	  BitMap.jscss('add', $('edit-maptype-new'), 'edit-selected');
+	  BitMap.Utl.JSCSS('add', $('edit-maptype-new'), 'edit-selected');
 	  BitMap.hide('edit-maptype-options-actions');
 	  $('edit-maptype-new').appendChild( $('edit-maptype-options-table') );
 	  BitMap.show('edit-maptype-new');
@@ -694,7 +679,7 @@ BitMap.Edit.prototype = {
 	  //hilights the right set, unselects the others
 	  for (n=0; n<count; n++){
 	    a = (n==i)?'add':'remove';
-	    BitMap.jscss(a, $('edit-maptype-'+n), 'edit-selected');
+	    BitMap.Utl.JSCSS(a, $('edit-maptype-'+n), 'edit-selected');
 	  }
 	
 	  this.cancelNewMaptype();
@@ -724,7 +709,7 @@ BitMap.Edit.prototype = {
 	  var count = this.Map.maptypes.length;
 	  for (n=0; n<count; n++){
 	    a = (n==i)?'add':'remove';
-	    BitMap.jscss(a, $('edit-maptype-'+n), 'edit-selected');
+	    BitMap.Utl.JSCSS(a, $('edit-maptype-'+n), 'edit-selected');
 	  }
 	
 	  this.cancelEditMaptypeOptions();
@@ -772,13 +757,13 @@ BitMap.Edit.prototype = {
 	"editTilelayer": function(i){
 	  this.cancelEditCopyright();
 	  //i is the maptype_index
-	  BitMap.jscss('remove', $('edit-tilelayerlink-new'), 'edit-select');
+	  BitMap.Utl.JSCSS('remove', $('edit-tilelayerlink-new'), 'edit-select');
 	  var a;
 	  var count = this.Map.tilelayers.length;
 	  for (n=0; n<count; n++){
 	    if($('edit-tilelayerlink-'+n)){
 	    a = (n==i)?'add':'remove';
-	    BitMap.jscss(a, $('edit-tilelayerlink-'+n), 'edit-select');
+	    BitMap.Utl.JSCSS(a, $('edit-tilelayerlink-'+n), 'edit-select');
 	    }
 	  }
 	  
@@ -829,10 +814,10 @@ BitMap.Edit.prototype = {
 	  var count = this.Map.tilelayers.length;
 	  for (n=0; n<count; n++){
 	    if($('edit-tilelayerlink-'+n)){
-	    BitMap.jscss('remove', $('edit-tilelayerlink-'+n), 'edit-select');
+	    BitMap.Utl.JSCSS('remove', $('edit-tilelayerlink-'+n), 'edit-select');
 	    }
 	  }
-	  BitMap.jscss('add', $('edit-tilelayerlink-new'), 'edit-select');
+	  BitMap.Utl.JSCSS('add', $('edit-tilelayerlink-new'), 'edit-select');
 	  var form = $('edit-tilelayer-form');
 	  form.tilelayer_id.value = null;
 	  form.array_n.value = null;
@@ -844,13 +829,13 @@ BitMap.Edit.prototype = {
 
 	"editCopyright": function(i){
 	  //i is the tilelayer_index
-	  BitMap.jscss('remove', $('edit-copyrightlink-new'), 'edit-select');
+	  BitMap.Utl.JSCSS('remove', $('edit-copyrightlink-new'), 'edit-select');
 	  var a;
 	  var count = this.Map.copyrights.length;
 	  for (n=0; n<count; n++){
 	    if($('edit-copyrightlink-'+n)){
 		a = (n==i)?'add':'remove';
-	    BitMap.jscss(a, $('edit-copyrightlink-'+n), 'edit-select');
+	    BitMap.Utl.JSCSS(a, $('edit-copyrightlink-'+n), 'edit-select');
 	    }
 	  }
 	  var c = this.Map.copyrights[i];
@@ -874,10 +859,10 @@ BitMap.Edit.prototype = {
 	  var count = this.Map.copyrights.length;
 	  for (n=0; n<count; n++){
 	    if($('edit-copyrightlink-'+n)){
-	    BitMap.jscss('remove', $('edit-copyrightlink-'+n), 'edit-select');
+	    BitMap.Utl.JSCSS('remove', $('edit-copyrightlink-'+n), 'edit-select');
 	    }
 	  }
-	  BitMap.jscss('add', $('edit-copyrightlink-new'), 'edit-select');
+	  BitMap.Utl.JSCSS('add', $('edit-copyrightlink-new'), 'edit-select');
 	  //move the form to copyright being edited
 	  copyrightTable = $('edit-copyright-table');
 	  $('edit-copyrightlink-new').appendChild(copyrightTable);
@@ -955,145 +940,144 @@ BitMap.Edit.prototype = {
 
 			 
 		 "storeMap": function(f){
-		 		this.showSpinner("Saving Map...");
-				doSimpleXMLHttpRequest("edit_map.php", f).addCallback( bind(this.updateMap, this) ); 
+			this.showSpinner("Saving Map...");
+			doSimpleXMLHttpRequest("edit_map.php", f).addCallback( bind(this.updateMap, this) ); 
 		 },
 
 		 "storeMarker": function(f){
-		 		this.showSpinner("Saving Marker...");
-		 		var str = "edit_marker.php?" + queryString(f);
-				this._setIdRef = f.set_id.value;
-				this.editObjectN = this._markerIndexRef; //f.marker_array_n.value;
-				var callback = (f.marker_id.value != "")?this.updateMarker:this.addMarker;
-			  	doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+			this.showSpinner("Saving Marker...");
+			var str = "edit_marker.php?" + queryString(f);
+			this._setIdRef = f.set_id.value;
+			this.editObjectN = this._markerIndexRef; //f.marker_array_n.value;
+			var callback = (f.marker_id.value != "")?this.updateMarker:this.addMarker;
+			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 		 
 		 "removeMarker": function(f){
-		 		this.showSpinner("Removing Marker...");
-				this._setIdRef = f.set_id.value;
-				this.editMarkerId = f.marker_id.value;
-		 		var str = "edit_marker.php?set_id=" + this._setIdRef + "&marker_id=" + this.editMarkerId + "&remove_marker=true";
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
+			this.showSpinner("Removing Marker...");
+			this._setIdRef = f.set_id.value;
+			this.editMarkerId = f.marker_id.value;
+			var str = "edit_marker.php?set_id=" + this._setIdRef + "&marker_id=" + this.editMarkerId + "&remove_marker=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
 		 },
 	
 		 "expungeMarker": function(f){
-		 		this.showSpinner("Deleting Marker...");
-				this._setIdRef = f.set_id.value;
-				this.editMarkerId = f.marker_id.value;
-		 		var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
+			this.showSpinner("Deleting Marker...");
+			this._setIdRef = f.set_id.value;
+			this.editMarkerId = f.marker_id.value;
+			var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
 		 },
 	
 		 "storeMarkerSet": function(f){
-		 		this.showSpinner("Saving Markerset...");
-		 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
-				this._setIdRef = f.set_id.value;
-				var callback = (f.set_id.value != "")?this.updateMarkerSet:this.addMarkerSet;
-				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+			this.showSpinner("Saving Markerset...");
+			var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
+			this._setIdRef = f.set_id.value;
+			var callback = (f.set_id.value != "")?this.updateMarkerSet:this.addMarkerSet;
+			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 	
 		 "removeMarkerSet": function(f){
-		 		this.showSpinner("Removing Markerset...");
-				this._setIdRef = f.set_id.value;
-				var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true";
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
+			this.showSpinner("Removing Markerset...");
+			this._setIdRef = f.set_id.value;
+			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
 		 },
 	
 		 "expungeMarkerSet": function(f){
-		 		this.showSpinner("Deleting Markerset...");
-				this._setIdRef = f.set_id.value;
-				var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
+			this.showSpinner("Deleting Markerset...");
+			this._setIdRef = f.set_id.value;
+			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
 		 },
 		 
 		 "storeMarkerStyle": function(f){
-		 		this.showSpinner("Saving Markerstyle...");
-		 		var str = "edit_markerstyle.php?" + queryString(f);
-				this.editObjectN = f.style_array_n.value;
-				var callback = (f.style_id.value != "")?this.updateMarkerStyle:this.addMarkerStyle;
-				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+			this.showSpinner("Saving Markerstyle...");
+			var str = "edit_markerstyle.php?" + queryString(f);
+			var callback = (f.style_id.value != "")?this.updateMarkerStyle:this.addMarkerStyle;
+			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 
 		 "storeIconStyle": function(f){
-		 		this.showSpinner("Saving Iconstyle...");
-		 		var str = "edit_iconstyle.php?" + queryString(f);
-				this.editObjectN = f.style_array_n.value;
-				var callback = (f.icon_id.value != "")?this.updateIconStyle:this.addIconStyle;
-				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+			this.showSpinner("Saving Iconstyle...");
+			var str = "edit_iconstyle.php?" + queryString(f);
+			this.editObjectN = f.style_array_n.value;
+			var callback = (f.icon_id.value != "")?this.updateIconStyle:this.addIconStyle;
+			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 	
 		 "storeMaptype": function(f){
-		 		this.showSpinner("Saving Map...");
-				this.editObjectN = f.array_n.value;
-		 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
-				var callback = (f.maptype_id.value != "")?this.updateMaptype:this.addMaptype;
-				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+			this.showSpinner("Saving Map...");
+			this.editObjectN = f.array_n.value;
+			var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
+			var callback = (f.maptype_id.value != "")?this.updateMaptype:this.addMaptype;
+			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 		 
 		 "removeMaptype": function(f){
-		 		this.showSpinner("Removing Maptype...");
-				this.editObjectN = f.array_n.value;
-				this.editSetId = f.maptype_id.value;
-		 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
+			this.showSpinner("Removing Maptype...");
+			this.editObjectN = f.array_n.value;
+			this.editSetId = f.maptype_id.value;
+			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
 		 },
 		 
 		 "expungeMaptype": function(f){
-		 		this.showSpinner("Deleting Maptype...");
-				this.editObjectN = f.array_n.value;
-				this.editSetId = f.maptype_id.value;
-		 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
+			this.showSpinner("Deleting Maptype...");
+			this.editObjectN = f.array_n.value;
+			this.editSetId = f.maptype_id.value;
+			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
 		 },
 
 		 "storeTilelayer": function(f){
-		 		this.showSpinner("Saving Tilelayer...");
-		 		var str = "edit_tilelayer.php?" + queryString(f);
-				this.editSetId = f.maptype_id.value;
-				this.editObjectN = f.array_n.value;
-				var callback = (f.tilelayer_id.value != "")?this.updateTilelayer:this.addTilelayer;
-			  	doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+			this.showSpinner("Saving Tilelayer...");
+			var str = "edit_tilelayer.php?" + queryString(f);
+			this.editSetId = f.maptype_id.value;
+			this.editObjectN = f.array_n.value;
+			var callback = (f.tilelayer_id.value != "")?this.updateTilelayer:this.addTilelayer;
+			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 		 
 		 "removeTilelayer": function(f){
-		 		this.showSpinner("Removing Tilelayer...");
-				this.editSetId = f.set_id.value;
-				this.editTilelayerId = f.tilelayer_id.value;
-		 		var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true";
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
+			this.showSpinner("Removing Tilelayer...");
+			this.editSetId = f.set_id.value;
+			this.editTilelayerId = f.tilelayer_id.value;
+			var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
 		 },
 	
 		 "expungeTilelayer": function(f){
-		 		this.showSpinner("Deleting Tilelayer...");
-				this.editSetId = f.set_id.value;
-				this.editTilelayerId = f.tilelayer_id.value;
-		 		var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true";
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
+			this.showSpinner("Deleting Tilelayer...");
+			this.editSetId = f.set_id.value;
+			this.editTilelayerId = f.tilelayer_id.value;
+			var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
 		 },
 
 		 "storeCopyright": function(f){
-		 		this.showSpinner("Saving Copyright...");
-		 		var str = "edit_copyright.php?" + queryString(f);
-				this.editSetId = f.tilelayer_id.value;
-				this.editObjectN = f.array_n.value;
-				var callback = (f.copyright_id.value != "")?this.updateCopyright:this.addCopyright;
-			  	doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+			this.showSpinner("Saving Copyright...");
+			var str = "edit_copyright.php?" + queryString(f);
+			this.editSetId = f.tilelayer_id.value;
+			this.editObjectN = f.array_n.value;
+			var callback = (f.copyright_id.value != "")?this.updateCopyright:this.addCopyright;
+			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
 		 
 		 "removeCopyright": function(f){
-		 		this.showSpinner("Removing Copyright...");
-				this.editSetId = f.set_id.value;
-				this.editCopyrightId = f.copyright_id.value;
-		 		var str = "edit_copyright.php?set_id=" + this.editSetId + "&copyright_id=" + this.editCopyrightId + "&remove_copyright=true";
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
+			this.showSpinner("Removing Copyright...");
+			this.editSetId = f.set_id.value;
+			this.editCopyrightId = f.copyright_id.value;
+			var str = "edit_copyright.php?set_id=" + this.editSetId + "&copyright_id=" + this.editCopyrightId + "&remove_copyright=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
 		 },
 	
 		 "expungeCopyright": function(f){
-		 		this.showSpinner("Deleting Copyright...");
-				this.editSetId = f.set_id.value;
-				this.editCopyrightId = f.copyright_id.value;
-		 		var str = "edit_copyright.php?copyright_id=" + this.editCopyrightId + "&expunge_copyright=true";
-				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
+			this.showSpinner("Deleting Copyright...");
+			this.editSetId = f.set_id.value;
+			this.editCopyrightId = f.copyright_id.value;
+			var str = "edit_copyright.php?copyright_id=" + this.editCopyrightId + "&expunge_copyright=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
 		 },
 		 
 		 
