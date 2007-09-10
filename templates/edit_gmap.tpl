@@ -15,17 +15,9 @@
 		  {include file='bitpackage:gmap/gmap_sidepanel.tpl'}
 		  {include file="bitpackage:gmap/map_inc.tpl"}
 	    </div>
-		<div>
-			<a id="emap" href="javascript:BitMap.EditSession.editMap({$mapInfo.gmap_id});">Edit Map</a> | 
-			<a id="emaptype" href="javascript:BitMap.EditSession.editMaptypes();">Edit Maptypes</a> |
-			<a id="emarker" href="javascript:BitMap.EditSession.editMarkerSets();">Edit Markers</a> | 
-			<a id="epolyline" href="javascript:BitMap.EditSession.editPolylines();">Edit Polylines</a> | 
-			<a id="epolygon" href="javascript:BitMap.EditSession.editPolygons();">Edit Polygons</a>
-		</div>
 		{* this is a container for our forms - we ajax them in *}
 	    <div id="gmap-forms">
-			{* DEPRECATED *}
-			{* {include file="bitpackage:gmap/edit_forms.tpl"} *}
+			{include file="bitpackage:gmap/edit_forms.tpl"}
 		</div>
 		<div id="mapcontent" class="content">
 			{$gContent->mInfo.clean_data}

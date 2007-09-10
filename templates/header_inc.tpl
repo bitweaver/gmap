@@ -17,6 +17,7 @@
 		<link type="text/css" rel="stylesheet" href="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/calendar.css">
 	{/if}
 	{if $edit_map }
+		<script src="{$smarty.const.GMAP_PKG_URL}templates/Utl.JSCSS.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Edit.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>

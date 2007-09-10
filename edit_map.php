@@ -23,54 +23,15 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	//Check if this is a update or a new map
 	if (!empty($_REQUEST["save_map"])) {
 		if( $gContent->store( $_REQUEST ) ) {
-
-			//$gContent->storePreference( 'is_public', !empty( $_REQUEST['is_public'] ) ? $_REQUEST['is_public'] : NULL );
 			$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
-			$gContent->load();    
-		
-			//if store is successful we return XML				
-			$XMLContent = "<map>"
-				."<gmap_id>".$gContent->mInfo['gmap_id']."</gmap_id>"
-				."<title>".$gContent->getTitle()."</title>"
-				."<description>".$gContent->mInfo['description']."</description>"
-				."<data>".$gContent->mInfo['xml_data']."</data>"
-				."<parsed_data><![CDATA[".$gContent->mInfo['xml_parsed_data']."]]></parsed_data>"
-				."<width>".$gContent->mInfo['width']."</width>"
-				."<height>".$gContent->mInfo['height']."</height>"
-				."<lat>".$gContent->mInfo['lat']."</lat>"
-				."<lng>".$gContent->mInfo['lng']."</lng>"
-				."<zoom>".$gContent->mInfo['zoom']."</zoom>"
-				."<maptype>".$gContent->mInfo['maptype']."</maptype>"
-				."<zoom_control>".$gContent->mInfo['zoom_control']."</zoom_control>"
-				."<maptype_control>".$gContent->mInfo['maptype_control']."</maptype_control>"
-				."<overview_control>".$gContent->mInfo['overview_control']."</overview_control>"
-				."<scale>".$gContent->mInfo['scale']."</scale>"
-				."<allow_comments>".(($gContent->getPreference('allow_comments') == 'y')?"y":"n")."</allow_comments>"
-				."</map>";
-
-			//since we are returning xml we must report so in the header
-			//we also need to tell the browser not to cache the page
-			//see: http://mapki.com/index.php?title=Dynamic_XML
-			// Date in the past
-			header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
-			// always modified
-			header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-			// HTTP/1.1
-			header("Cache-Control: no-store, no-cache, must-revalidate");
-			header("Cache-Control: post-check=0, pre-check=0", false);
-			// HTTP/1.0
-			header("Pragma: no-cache");
-			//XML Header
-			header("content-type:text/xml");
-			
-			print_r('<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>');
-			print_r($XMLContent);									
-			die;
+			$gContent->load();
+			$gBitSmarty->assign_by_ref('mapInfo', $gContent->mInfo);
+			$gBitSystem->display('bitpackage:gmap/edit_map_xml.tpl', null, 'xml');
 		}else{
-		  echo $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+			$gBitSystem->setFormatHeader( 'center_only' );
+			$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 		}
 	}else{
-	
 		$gContent->invokeServices( 'content_edit_function' );
 		
 		$map = $gContent->mInfo;
@@ -108,9 +69,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 
 		$gBitSmarty->assign_by_ref('mapInfo', $map);
 		$gBitSmarty->assign_by_ref('mapTypes', $gContent->mMapTypes);
-		echo $gBitSmarty->fetch( 'bitpackage:gmap/edit_map.tpl' );
+		$gBitSystem->display('bitpackage:gmap/edit_map.tpl', null, 'center_only');
 	}
 }else{
-	echo $gBitSmarty->fetch('bitpackage:gmap/error_nokey.tpl');
+	$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', null, 'center_only');
 }
 ?>

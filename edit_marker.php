@@ -11,81 +11,61 @@ require_once('../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
-// Now check permissions to access this page
-$gBitSystem->verifyPermission('p_gmap_edit' );
+// Check permission to create or edit a marker
+$gBitSystem->verifyPermission('p_gmarker_create' );
 
-// Get the map for specified gmap_id
+// Get the marker for specified gmarker_id
 require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );
+
+// If a marker_id or content_id is passed in then check for ownership or admin
+if (!empty($_REQUEST['marker_id']) || !empty($_REQUEST['content_id'])) {
+	$markerEdit = FALSE;
+	if ( $gContent->isOwner() || $gBitUser->hasPermission( 'p_gmarker_edit' ) ){
+		$markerEdit = TRUE;
+	}
+	if ( $markerEdit = FALSE ){
+		//@TODO - this prolly needs to check if its an ajax call or not
+		$gBitSystem->fatalError( tra( "You do not have permission to edit this marker!" ));
+	}
+}
+
 
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
-
 if (!empty($_REQUEST["save_marker"])) {
     if( $gContent->store( $_REQUEST ) ) {		
-		//$gContent->storePreference( 'is_public', !empty( $_REQUEST['is_public'] ) ? $_REQUEST['is_public'] : NULL );
 		$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
-		$gContent->load();    
-    
-		//if store is successful we return XML
-		$mRet = "<marker>"
-			."<id>".$gContent->mInfo['marker_id']."</id>"
-			."<title>".$gContent->mInfo['title']."</title>"
-			."<marker_type>".$gContent->mInfo['marker_type']."</marker_type>"
-			."<lat>".$gContent->mInfo['lat']."</lat>"
-			."<lng>".$gContent->mInfo['lng']."</lng>"
-			."<data>".$gContent->mInfo['xml_data']."</data>"
-			."<parsed_data><![CDATA[".$gContent->mInfo['xml_parsed_data']."]]></parsed_data>"
-			."<label>".$gContent->mInfo['label_data']."</label>"
-			."<photo_url>".$gContent->mInfo['photo_url']."</photo_url>"
-			."<z>".$gContent->mInfo['zindex']."</z>"
-			."<allow_comments>".(($gContent->getPreference('allow_comments') == 'y')?"y":"n")."</allow_comments>"
-			."</marker>";
-
-		//@todo replace in xml when I know what I am doing
-		//	."<data>".$gContent->parseData()."</data>"
+		$gContent->load();
+		$gBitSmarty->assign_by_ref('markerInfo', $gContent->mInfo);
+		$gBitSystem->display('bitpackage:gmap/edit_marker_xml.tpl', NULL, 'xml');
 	}else{
-	//@todo - return some sort of store failure message in the xml
-	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
-}
-						
+		$gBitSystem->setFormatHeader( 'center_only' );
+		$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+	}
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_marker"])) {
     if( $gContent->removeFromSet( $_REQUEST ) ) {
-				//if store is successful we return XML
-				$mRet = "<remove>success</remove>";
-
-		}else{
+		$gBitSmarty->assign_by_ref('removeSucces', true);
+		$gBitSystem->display('bitpackage:gmap/edit_marker_xml.tpl', NULL, 'xml');
+	}else{
 		//@todo - return some sort of remove failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+		$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
     }
 }elseif (!empty($_REQUEST["expunge_marker"])) {
     if( $gContent->expunge() ) {
-				//if store is successful we return XML
-				$mRet = "<remove>success</remove>";
-
-		}else{
-		//@todo - return some sort of remove failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+		$gBitSmarty->assign_by_ref('expungeSucces', true);
+		$gBitSystem->display('bitpackage:gmap/edit_marker_xml.tpl', NULL, 'xml');
+	}else{
+		$gBitSystem->setFormatHeader( 'center_only' );
+		$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
     }
+}else{
+	$gContent->invokeServices( 'content_edit_function' );
+	$marker = $gContent->mInfo;
+	if (isset($_REQUEST["set_id"])){
+		$marker['set_id'] = $_REQUEST["set_id"];
+	}
+	$gBitSmarty->assign_by_ref('markerInfo', $marker);
+	$gBitSystem->display( 'bitpackage:gmap/edit_marker.tpl', NULL, 'center_only' );
 }
-
-//since we are returning xml we must report so in the header
-//we also need to tell the browser not to cache the page
-//see: http://mapki.com/index.php?title=Dynamic_XML
-// Date in the past
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
-// always modified
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-// HTTP/1.1
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-// HTTP/1.0
-header("Pragma: no-cache");
-//XML Header
-header("content-type:text/xml");
-     		
-print_r($mRet);
-
-die;
-
 ?>

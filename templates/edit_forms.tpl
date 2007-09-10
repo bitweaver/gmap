@@ -1,82 +1,22 @@
 <div>
-  <a id="emap" href="javascript:BitMap.EditSession.editMap();">Edit Map</a> | 
+	<a id="emap" href="javascript:BitMap.EditSession.editMap({$mapInfo.gmap_id});">Edit Map</a> | 
 	<a id="emaptype" href="javascript:BitMap.EditSession.editMaptypes();">Edit Maptypes</a> |
-  <a id="emarker" href="javascript:BitMap.EditSession.editMarkerSets();">Edit Markers</a> | 
-  <a id="epolyline" href="javascript:BitMap.EditSession.editPolylines();">Edit Polylines</a> | 
-  <a id="epolygon" href="javascript:BitMap.EditSession.editPolygons();">Edit Polygons</a>
+	<a id="emarker" href="javascript:BitMap.EditSession.editMarkerSets();">Edit Markers</a> | 
+	<a id="epolyline" href="javascript:BitMap.EditSession.editPolylines();">Edit Polylines</a> | 
+	<a id="epolygon" href="javascript:BitMap.EditSession.editPolygons();">Edit Polygons</a>
 </div>
 
 
-<!-------------------------
+{*	------------------------
 	-   Map Editing Form
-	------------------------->
-
-<!--map editing form -->
-<div id="edit-map-table" style="display:none;">
-  <div class="edit-titlebar">
-    <table class="bar">
-    	<tr>
-        <td>
-			    <span class="setname">Map Properties</span>
-        </td>
-		</tr>
-    </table>
-  </div>
-    <form action="javascript:;" name="edit-map-form" id="edit-map-form">
-			<input name="save_map" type="hidden" size="25" value="true">
-		  <input name="gmap_id" type="hidden" size="25" value="">
-			<table class="data">
-        	<tr><td width="180px">Title</td>
-					<td><input name="title" type="text" size="40" value=""></td></tr>
-        	<tr><td>Description</td><td><input name="map_desc" type="text" size="40" value=""></td></tr>
-        	<tr>
-				<td>Center Latitude</td>
-				<td><input name="geo[lat]" type="text" size="40" value=""></td>
-			</tr>
-        	<tr>
-				<td>Center Longitude</td>
-				<td><input name="geo[lng]" type="text" size="40" value=""></td>
-			</tr>
-			<tr><td></td><td><a name="map_assist_btn" title="click a center!" href="javascript:BitMap.EditSession.addAssistant('map');">( Use Locating Assistant )</a></td></tr>
-        	<tr><td>Width (use '0' for auto)</td><td><input name="map_w" type="text" size="12" value=""></td></tr>
-        	<tr><td>Height (use '0' for auto)</td><td><input name="map_h" type="text" size="12" value=""></td></tr>
-        	<tr><td>Zoom Level</td><td><input name="map_z" type="text" size="12" value=""></td></tr>
-        	<tr><td>Show Controls</td><td><select name="map_showcont">
-              <option value="s" >Small</option>
-              <option value="l" >Large</option>
-              <option value="z" >Zoom Only</option>
-              <option value="n" >None</option>
-              </select></td></tr>
-        	<tr><td>Show Scale</td><td><select name="map_showscale">
-              <option value="false" >No</option>
-              <option value="true" >Yes</option>
-              </select></td></tr>
-        	<tr><td>Show Map Type Buttons</td><td><select name="map_showtypecont">
-              <option value="false" >No</option>
-              <option value="true" >Yes</option>
-              </select></td></tr>
-        	<tr><td>Default Map Type</td><td><select name="maptype">
-              <option value="0" >Street Map</option>
-              <option value="-1" >Satellite</option>
-              <option value="-2" >Hybrid</option>
-       			</select></td></tr>
-       		<tr><td>Allow Comments</td>
-				<td><input type="checkbox" name="allow_comments" value="y" checked="checked"/></td>
-			</tr>
-			<tr><td>Page Text</td><td><textarea name="edit" style="width:90%;" rows="20">textbox</textarea></td></tr>
-			<tr><td></td><td><input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap(document['edit-map-form']);"> 
-					<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit('edit-map-table');"></td>
-					</tr>
-			</table>
-    </form>
-</div>	
-<!--end map editing form -->
+	-	we ajax the contents in
+	------------------------ *}
+<div id="map-form" style="display:none;"></div>
 
 
-
-<!-------------------------
+{* 	------------------------
 	-   Maptype Editing Form
-	------------------------->
+	------------------------ *}
 
 <!-- maptype editing menu -->
 <div id="edit-maptypes-menu" style="display:none;">
@@ -358,11 +298,6 @@
 
 <!-- edit markers form -->
 <div id="edit-markers-table" class="edit-datatable" style="display:none;">
-    <form action="javascript:;" name="edit-marker-form" id="edit-marker-form" >
-		<input name="save_marker" type="hidden" value="true">
-		<input name="marker_id" type="hidden" value="marker_id">
-		<input name="marker_array_n" type="hidden" value="n">
-		<input name="set_id" type="hidden" value="set_id">
 		<table>
 			<tr>
 				<td width="200px">Markers:<br/>
@@ -372,27 +307,7 @@
 					</ul>
 				</td>
 				<td>
-					<div class="tplform">
-						<div>Type <select name="marker_type">
-														<option value="0" >Normal</option>
-														<option value="1" >Auto-Photo</option>
-														</select></div>
-						<div>Latitutde &nbsp;<input size="50" name="geo[lat]" type="text" value=""><br/>
-							 Longitude <input size="50" name="geo[lng]" type="text" value=""><br/>
-							 <a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a></div>
-						<div>Title<br/>
-							 <input size="50" name="title" type="text" value="a title"></div>
-						<div>Label Title<br/>
-							 <textarea name="marker_labeltext" rows="1"></textarea></div>
-						<div>Window Text<br/>
-							 <textarea name="edit" rows="10"></textarea></div>
-						<div>Photo URL<br/>
-							 <input size="50" name="photo_url" type="text" value=""></div>
-						<div>Allow Comments &nbsp;<input type="checkbox" name="allow_comments" value="y" {if $gContent->getPreference('allow_comments') eq 'y'}checked="checked"{/if} /></div>
-						<div>
-							<input type="button" name="save_marker_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarker(document['edit-marker-form']);">
-						</div>
-					</div>
+					<div id="marker-form">PUT MARKER FORM HERE!</div>
 				</td>
 				<td width="200px">
 					<div id="edit-marker-tips">Tips<br/>
@@ -406,8 +321,7 @@
 				</td>
 			</tr>
 		</table>
-		<input type="button" name="closemarkerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditMarkers()"></br>
-    </form>
+	<input type="button" name="closemarkerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditMarkers()"></br>
 </div> 
 <!-- edit of edit markers form -->
 
