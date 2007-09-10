@@ -4,60 +4,60 @@ BitMap.BIT_ROOT_URL = '{$smarty.const.BIT_ROOT_URL}';
 BitMap.MapData.push({ldelim}
   browser:"{$browserInfo.browser}",
   {if !$geo_edit_serv && !$map_list}
-  id:{if $gContent->mInfo.gmap_id}{$gContent->mInfo.gmap_id}{else}null{/if},
-  title:"{$gContent->mInfo.title|addslashes}",
-  description:"{$gContent->mInfo.description}",
-  data:"{$gContent->mInfo.data}",
-  parsed_data:"{$gContent->mInfo.parsed_data}",
+  id:{if $mapInfo.gmap_id}{$mapInfo.gmap_id}{else}null{/if},
+  title:"{$mapInfo.title|addslashes}",
+  description:"{$mapInfo.description}",
+  data:"{$mapInfo.data}",
+  parsed_data:"{$mapInfo.parsed_data}",
   allow_comments:'{if $gContent->getPreference("allow_comments") eq "y"}y{else}n{/if}',
   {/if}
   mapdiv:'{$smarty.const.ACTIVE_PACKAGE}-map',
-  width:{if $gContent->mInfo.width}{$gContent->mInfo.width}{elseif $gBitSystem->getConfig("gmap_width")}{$gBitSystem->getConfig("gmap_width")}{else}0{/if},
-  height:{if $geo_edit_serv}400{elseif $gContent->mInfo.height}{$gContent->mInfo.height}{elseif $gBitSystem->getConfig("gmap_height")}{$gBitSystem->getConfig("gmap_height")}{else}0{/if},
-  lat:{if $gContent->mInfo.lat}{$gContent->mInfo.lat}{elseif $gBitSystem->getConfig("gmap_lat")}{$gBitSystem->getConfig("gmap_lat")}{else}0{/if},
-  lng:{if $gContent->mInfo.lng}{$gContent->mInfo.lng}{elseif $gBitSystem->getConfig("gmap_lng")}{$gBitSystem->getConfig("gmap_lng")}{else}0{/if},
-  zoom:{if $gContent->mInfo.zoom}{$gContent->mInfo.zoom}{elseif $gBitSystem->getConfig("gmap_zoom")}{$gBitSystem->getConfig("gmap_zoom")}{else}2{/if},
-  scale:{if $gContent->mInfo.scale}{$gContent->mInfo.scale}{elseif $gBitSystem->getConfig("gmap_scale")}{$gBitSystem->getConfig("gmap_scale")}{else}false{/if}, /*true,false*/
-  maptype:{if $gContent->mInfo.maptype}{$gContent->mInfo.maptype}{elseif $gBitSystem->getConfig("gmap_maptype")}{$gBitSystem->getConfig("gmap_maptype")}{else}0{/if},
-  maptype_control:{if $gContent->mInfo.maptype_control}{$gContent->mInfo.maptype_control}{elseif $gBitSystem->getConfig("gmap_maptype_control")}{$gBitSystem->getConfig("gmap_maptype_control")}{else}true{/if}, /*true,false*/
-  zoom_control:'{if $gContent->mInfo.zoom_control}{$gContent->mInfo.zoom_control}{elseif $gBitSystem->getConfig("gmap_zoom_control")}{$gBitSystem->getConfig("gmap_zoom_control")}{else}s{/if}', /*s,l,z,n*/
-  overview_control:{if $gContent->mInfo.overview_control}{$gContent->mInfo.overview_control}{elseif $gBitSystem->getConfig("gmap_overview_control")}{$gBitSystem->getConfig("gmap_overview_control")}{else}true{/if}, /*true,false*/
+  width:{if $mapInfo.width}{$mapInfo.width}{elseif $gBitSystem->getConfig("gmap_width")}{$gBitSystem->getConfig("gmap_width")}{else}0{/if},
+  height:{if $geo_edit_serv}400{elseif $mapInfo.height}{$mapInfo.height}{elseif $gBitSystem->getConfig("gmap_height")}{$gBitSystem->getConfig("gmap_height")}{else}0{/if},
+  lat:{if $mapInfo.lat}{$mapInfo.lat}{elseif $gBitSystem->getConfig("gmap_lat")}{$gBitSystem->getConfig("gmap_lat")}{else}0{/if},
+  lng:{if $mapInfo.lng}{$mapInfo.lng}{elseif $gBitSystem->getConfig("gmap_lng")}{$gBitSystem->getConfig("gmap_lng")}{else}0{/if},
+  zoom:{if $mapInfo.zoom}{$mapInfo.zoom}{elseif $gBitSystem->getConfig("gmap_zoom")}{$gBitSystem->getConfig("gmap_zoom")}{else}2{/if},
+  scale:{if $mapInfo.scale}{$mapInfo.scale}{elseif $gBitSystem->getConfig("gmap_scale")}{$gBitSystem->getConfig("gmap_scale")}{else}false{/if}, /*true,false*/
+  maptype:{if $mapInfo.maptype}{$mapInfo.maptype}{elseif $gBitSystem->getConfig("gmap_maptype")}{$gBitSystem->getConfig("gmap_maptype")}{else}0{/if},
+  maptype_control:{if $mapInfo.maptype_control}{$mapInfo.maptype_control}{elseif $gBitSystem->getConfig("gmap_maptype_control")}{$gBitSystem->getConfig("gmap_maptype_control")}{else}true{/if}, /*true,false*/
+  zoom_control:'{if $mapInfo.zoom_control}{$mapInfo.zoom_control}{elseif $gBitSystem->getConfig("gmap_zoom_control")}{$gBitSystem->getConfig("gmap_zoom_control")}{else}s{/if}', /*s,l,z,n*/
+  overview_control:{if $mapInfo.overview_control}{$mapInfo.overview_control}{elseif $gBitSystem->getConfig("gmap_overview_control")}{$gBitSystem->getConfig("gmap_overview_control")}{else}true{/if}, /*true,false*/
   
   Maptypes:[
-  {if count($gContent->mMapTypes) > 0}{section name=maptypes loop=$gContent->mMapTypes}
+  {if count($maptypesInfo) > 0}{section name=n loop=$maptypesInfo}
   {ldelim}
-		maptype_id:{$gContent->mMapTypes[maptypes].maptype_id},
-		name:"{$gContent->mMapTypes[maptypes].name}",
-		shortname:"{$gContent->mMapTypes[maptypes].shortname}",
-		description:"{$gContent->mMapTypes[maptypes].description}",
-		minzoom:{$gContent->mMapTypes[maptypes].minzoom},
-		maxzoom:{$gContent->mMapTypes[maptypes].maxzoom},
-		errormsg:"{$gContent->mMapTypes[maptypes].errormsg}"
+		maptype_id:{$maptypesInfo[n].maptype_id},
+		name:"{$maptypesInfo[n].name}",
+		shortname:"{$maptypesInfo[n].shortname}",
+		description:"{$maptypesInfo[n].description}",
+		minzoom:{$maptypesInfo[n].minzoom},
+		maxzoom:{$maptypesInfo[n].maxzoom},
+		errormsg:"{$maptypesInfo[n].errormsg}"
   {rdelim},
   {/section}{/if}],
 
   Tilelayers:[
-  {if count($gContent->mTilelayers) > 0}{section name=tilelayers loop=$gContent->mTilelayers}
+  {if count($tilelayersInfo) > 0}{section name=tilelayers loop=$tilelayersInfo}
   {ldelim}
-		tilelayer_id:{$gContent->mTilelayers[tilelayers].tilelayer_id},
-		tiles_name:"{$gContent->mTilelayers[tilelayers].tiles_name}",
-		tiles_minzoom:{$gContent->mTilelayers[tilelayers].tiles_minzoom},
-		tiles_maxzoom:{$gContent->mTilelayers[tilelayers].tiles_maxzoom},
-		ispng:{$gContent->mTilelayers[tilelayers].ispng},
-		tilesurl:"{$gContent->mTilelayers[tilelayers].tilesurl}",
-		opacity:{$gContent->mTilelayers[tilelayers].opacity},
-		maptype_id:{$gContent->mTilelayers[tilelayers].maptype_id}
+		tilelayer_id:{$tilelayersInfo[tilelayers].tilelayer_id},
+		tiles_name:"{$tilelayersInfo[tilelayers].tiles_name}",
+		tiles_minzoom:{$tilelayersInfo[tilelayers].tiles_minzoom},
+		tiles_maxzoom:{$tilelayersInfo[tilelayers].tiles_maxzoom},
+		ispng:{$tilelayersInfo[tilelayers].ispng},
+		tilesurl:"{$tilelayersInfo[tilelayers].tilesurl}",
+		opacity:{$tilelayersInfo[tilelayers].opacity},
+		maptype_id:{$tilelayersInfo[tilelayers].maptype_id}
   {rdelim},
   {/section}{/if}],
 
   Copyrights:[
-  {if count($gContent->mCopyrights) > 0}{section name=copyrights loop=$gContent->mCopyrights}
+  {if count($copyrightsInfo) > 0}{section name=n loop=$copyrightsInfo}
   {ldelim}
-		copyright_id:{$gContent->mCopyrights[copyrights].copyright_id},
-		copyright_minzoom:{$gContent->mCopyrights[copyrights].copyright_minzoom},
-		bounds:[{$gContent->mCopyrights[copyrights].bounds}],
-		notice:"{$gContent->mCopyrights[copyrights].notice}",
-		tilelayer_id:{$gContent->mCopyrights[copyrights].tilelayer_id}
+		copyright_id:{$copyrightsInfo[n].copyright_id},
+		copyright_minzoom:{$copyrightsInfo[n].copyright_minzoom},
+		bounds:[{$copyrightsInfo[n].bounds}],
+		notice:"{$copyrightsInfo[n].notice}",
+		tilelayer_id:{$copyrightsInfo[n].tilelayer_id}
   {rdelim},
   {/section}{/if}],
 	
@@ -87,99 +87,99 @@ BitMap.MapData.push({ldelim}
 		{rdelim},
 	{/if}{/section}{elseif $serviceHash && $serviceHash.lat != NULL}
   {ldelim}
-		lat:{if $gContent}{$gContent->mInfo.lat}{else if $serviceHash}{$serviceHash.lat}{/if},
-		lng:{if $gContent}{$gContent->mInfo.lng}{else if $serviceHash}{$serviceHash.lng}{/if}
+		lat:{if $gContent}{$mapInfo.lat}{else if $serviceHash}{$serviceHash.lat}{/if},
+		lng:{if $gContent}{$mapInfo.lng}{else if $serviceHash}{$serviceHash.lng}{/if}
 	{rdelim},
-	{elseif count($gContent->mMapMarkers) > 0}{section name=marker_n loop=$gContent->mMapMarkers}
+	{elseif count($markersInfo) > 0}{section name=n loop=$markersInfo}
   {ldelim}
-		content_id:{$gContent->mMapMarkers[marker_n].content_id},
-		marker_id: {$gContent->mMapMarkers[marker_n].marker_id},
-		marker_type: {$gContent->mMapMarkers[marker_n].marker_type},
-		title: "{$gContent->mMapMarkers[marker_n].title|addslashes}",
-		lat: {$gContent->mMapMarkers[marker_n].lat},
-		lng: {$gContent->mMapMarkers[marker_n].lng},
-		data: '{$gContent->mMapMarkers[marker_n].data}',
-		parsed_data: '{$gContent->mMapMarkers[marker_n].parsed_data}',
-		label_data: '{$gContent->mMapMarkers[marker_n].label_data}',
-		photo_url: '{$gContent->mMapMarkers[marker_n].photo_url}',
+		content_id:{$markersInfo[n].content_id},
+		marker_id: {$markersInfo[n].marker_id},
+		marker_type: {$markersInfo[n].marker_type},
+		title: "{$markersInfo[n].title|addslashes}",
+		lat: {$markersInfo[n].lat},
+		lng: {$markersInfo[n].lng},
+		data: '{$markersInfo[n].data}',
+		parsed_data: '{$markersInfo[n].parsed_data}',
+		label_data: '{$markersInfo[n].label_data}',
+		photo_url: '{$markersInfo[n].photo_url}',
 
-		created:{$gContent->mMapMarkers[marker_n].created},
-		last_modified:{$gContent->mMapMarkers[marker_n].last_modified},
-		modifier_real_name:'{$gContent->mMapMarkers[marker_n].modifier_real_name}',
-		modifier_user_id:{$gContent->mMapMarkers[marker_n].modifier_user_id},
-		creator_real_name:'{$gContent->mMapMarkers[marker_n].creator_real_name}',
-		creator_user_id:{$gContent->mMapMarkers[marker_n].user_id},
+		created:{$markersInfo[n].created},
+		last_modified:{$markersInfo[n].last_modified},
+		modifier_real_name:'{$markersInfo[n].modifier_real_name}',
+		modifier_user_id:{$markersInfo[n].modifier_user_id},
+		creator_real_name:'{$markersInfo[n].creator_real_name}',
+		creator_user_id:{$markersInfo[n].user_id},
 
-		set_id: {$gContent->mMapMarkers[marker_n].set_id},
-		style_id: {$gContent->mMapMarkers[marker_n].style_id},
-		icon_id: {$gContent->mMapMarkers[marker_n].icon_id},
-		array_n: {$smarty.section.marker_n.index},
-		plot_on_load: {$gContent->mMapMarkers[marker_n].plot_on_load},
-		side_panel: {$gContent->mMapMarkers[marker_n].side_panel},
-		explode: {$gContent->mMapMarkers[marker_n].explode},
-		cluster: {$gContent->mMapMarkers[marker_n].cluster},
-		allow_comments:'{if $gContent->mMapMarkers[marker_n].allow_comments eq "y"}y{else}n{/if}',
-		num_comments:{if ($gContent->mMapMarkers[marker_n].allow_comments eq "y" || $gBitUser->isAdmin()) && $gContent->mMapMarkers[marker_n].num_comments }{$gContent->mMapMarkers[marker_n].num_comments}{else}null{/if}
+		set_id: {$markersInfo[n].set_id},
+		style_id: {$markersInfo[n].style_id},
+		icon_id: {$markersInfo[n].icon_id},
+		array_n: {$smarty.section.n.index},
+		plot_on_load: {$markersInfo[n].plot_on_load},
+		side_panel: {$markersInfo[n].side_panel},
+		explode: {$markersInfo[n].explode},
+		cluster: {$markersInfo[n].cluster},
+		allow_comments:'{if $markersInfo[n].allow_comments eq "y"}y{else}n{/if}',
+		num_comments:{if ($markersInfo[n].allow_comments eq "y" || $gBitUser->isAdmin()) && $markersInfo[n].num_comments }{$markersInfo[n].num_comments}{else}null{/if}
 	{rdelim},
 	{/section}{/if}],
 	
-  MarkerSets:[{if count($gContent->mMapMarkerSets) > 0}{section name=markersetdata loop=$gContent->mMapMarkerSets}
+  MarkerSets:[{if count($markersetsInfo) > 0}{section name=n loop=$markersetsInfo}
   {ldelim}
-		set_id: {$gContent->mMapMarkerSets[markersetdata].set_id},
-		name: "{$gContent->mMapMarkerSets[markersetdata].name}",
-		description: "{$gContent->mMapMarkerSets[markersetdata].description}",
-		style_id: {$gContent->mMapMarkerSets[markersetdata].style_id},
-		icon_id: {$gContent->mMapMarkerSets[markersetdata].icon_id},
-		set_type: "{$gContent->mMapMarkerSets[markersetdata].set_type}",
-		plot_on_load: {$gContent->mMapMarkerSets[markersetdata].plot_on_load},
-		side_panel: {$gContent->mMapMarkerSets[markersetdata].side_panel},
-		explode: {$gContent->mMapMarkerSets[markersetdata].explode},
-		cluster: {$gContent->mMapMarkerSets[markersetdata].cluster}
+		set_id: {$markersetsInfo[n].set_id},
+		name: "{$markersetsInfo[n].name}",
+		description: "{$markersetsInfo[n].description}",
+		style_id: {$markersetsInfo[n].style_id},
+		icon_id: {$markersetsInfo[n].icon_id},
+		set_type: "{$markersetsInfo[n].set_type}",
+		plot_on_load: {$markersetsInfo[n].plot_on_load},
+		side_panel: {$markersetsInfo[n].side_panel},
+		explode: {$markersetsInfo[n].explode},
+		cluster: {$markersetsInfo[n].cluster}
 	{rdelim},
 	{/section}{/if}],
 
-  MarkerStyles:[{if count($gContent->mMapMarkerStyles) > 0}{section name=markerstyledata loop=$gContent->mMapMarkerStyles}
+  MarkerStyles:[{if count($markerstylesInfo) > 0}{section name=n loop=$markerstylesInfo}
   {ldelim}
-		style_id: {$gContent->mMapMarkerStyles[markerstyledata].style_id},
-		name: "{$gContent->mMapMarkerStyles[markerstyledata].name}",
-		marker_style_type: {$gContent->mMapMarkerStyles[markerstyledata].marker_style_type},
-		label_hover_opacity: {$gContent->mMapMarkerStyles[markerstyledata].label_hover_opacity},
-		label_opacity: {$gContent->mMapMarkerStyles[markerstyledata].label_opacity},
-		label_hover_styles: "{$gContent->mMapMarkerStyles[markerstyledata].label_hover_styles}",
-		window_styles: "{$gContent->mMapMarkerStyles[markerstyledata].window_styles}"
+		style_id: {$markerstylesInfo[n].style_id},
+		name: "{$markerstylesInfo[n].name}",
+		marker_style_type: {$markerstylesInfo[n].marker_style_type},
+		label_hover_opacity: {$markerstylesInfo[n].label_hover_opacity},
+		label_opacity: {$markerstylesInfo[n].label_opacity},
+		label_hover_styles: "{$markerstylesInfo[n].label_hover_styles}",
+		window_styles: "{$markerstylesInfo[n].window_styles}"
 	{rdelim},
 	{/section}{/if}],
 
-  IconStyles:[{if count($gContent->mMapIconStyles) > 0}{section name=markericondata loop=$gContent->mMapIconStyles}
+  IconStyles:[{if count($iconstylesInfo) > 0}{section name=n loop=$iconstylesInfo}
   {ldelim}
-		icon_id: {$gContent->mMapIconStyles[markericondata].icon_id},
-		name: "{$gContent->mMapIconStyles[markericondata].name}",
-		icon_style_type: {$gContent->mMapIconStyles[markericondata].icon_style_type},
-		image: "{$gContent->mMapIconStyles[markericondata].image}",
-		rollover_image: "{$gContent->mMapIconStyles[markericondata].rollover_image}",
-		print_image: "{$gContent->mMapIconStyles[markericondata].print_image}",
-		moz_print_image: "{$gContent->mMapIconStyles[markericondata].moz_print_image}",
-		transparent: "{$gContent->mMapIconStyles[markericondata].transparent}",
-		shadow_image: "{$gContent->mMapIconStyles[markericondata].shadow_image}",
-		print_shadow: "{$gContent->mMapIconStyles[markericondata].print_shadow}",
-		icon_w: {$gContent->mMapIconStyles[markericondata].icon_w},
-		icon_h: {$gContent->mMapIconStyles[markericondata].icon_h},
-		shadow_w: {$gContent->mMapIconStyles[markericondata].shadow_w},
-		shadow_h: {$gContent->mMapIconStyles[markericondata].shadow_h},
-		icon_anchor_x: {$gContent->mMapIconStyles[markericondata].icon_anchor_x},
-		icon_anchor_y: {$gContent->mMapIconStyles[markericondata].icon_anchor_y},
-		shadow_anchor_x: {$gContent->mMapIconStyles[markericondata].shadow_anchor_x},
-		shadow_anchor_y: {$gContent->mMapIconStyles[markericondata].shadow_anchor_y},
-		infowindow_anchor_x: {$gContent->mMapIconStyles[markericondata].infowindow_anchor_x},
-		infowindow_anchor_y: {$gContent->mMapIconStyles[markericondata].infowindow_anchor_y}
-		{* image_map: {$gContent->mMapIconStyles[markericondata].image_map}, *}
+		icon_id: {$iconstylesInfo[n].icon_id},
+		name: "{$iconstylesInfo[n].name}",
+		icon_style_type: {$iconstylesInfo[n].icon_style_type},
+		image: "{$iconstylesInfo[n].image}",
+		rollover_image: "{$iconstylesInfo[n].rollover_image}",
+		print_image: "{$iconstylesInfo[n].print_image}",
+		moz_print_image: "{$iconstylesInfo[n].moz_print_image}",
+		transparent: "{$iconstylesInfo[n].transparent}",
+		shadow_image: "{$iconstylesInfo[n].shadow_image}",
+		print_shadow: "{$iconstylesInfo[n].print_shadow}",
+		icon_w: {$iconstylesInfo[n].icon_w},
+		icon_h: {$iconstylesInfo[n].icon_h},
+		shadow_w: {$iconstylesInfo[n].shadow_w},
+		shadow_h: {$iconstylesInfo[n].shadow_h},
+		icon_anchor_x: {$iconstylesInfo[n].icon_anchor_x},
+		icon_anchor_y: {$iconstylesInfo[n].icon_anchor_y},
+		shadow_anchor_x: {$iconstylesInfo[n].shadow_anchor_x},
+		shadow_anchor_y: {$iconstylesInfo[n].shadow_anchor_y},
+		infowindow_anchor_x: {$iconstylesInfo[n].infowindow_anchor_x},
+		infowindow_anchor_y: {$iconstylesInfo[n].infowindow_anchor_y}
+		{* image_map: {$iconstylesInfo[n].image_map}, *}
 		{* DELETE - NOLONGER AVAILABLE FROM XMAPS
-		points: "{$gContent->mMapIconStyles[markericondata].points}",
-		scale: {$gContent->mMapIconStyles[markericondata].scale},
-		outline_color: "{$gContent->mMapIconStyles[markericondata].outline_color}",
-		outline_weight: {$gContent->mMapIconStyles[markericondata].outline_weight},
-		fill_color: "{$gContent->mMapIconStyles[markericondata].fill_color}",
-		fill_opacity: {$gContent->mMapIconStyles[markericondata].fill_opacity}
+		points: "{$iconstylesInfo[n].points}",
+		scale: {$iconstylesInfo[n].scale},
+		outline_color: "{$iconstylesInfo[n].outline_color}",
+		outline_weight: {$iconstylesInfo[n].outline_weight},
+		fill_color: "{$iconstylesInfo[n].fill_color}",
+		fill_opacity: {$iconstylesInfo[n].fill_opacity}
 		*}
 	{rdelim},
 	{/section}{/if}],

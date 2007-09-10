@@ -54,7 +54,15 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		
 		$displayHash = array( 'perm_name' => 'p_gmap_view' );
 		$gContent->invokeServices( 'content_display_function', $displayHash );
-	
+		$gBitSmarty->assign( 'mapInfo', $gContent->mInfo );
+		$gBitSmarty->assign( 'maptypesInfo', $gContent->mMapTypes );
+		$gBitSmarty->assign( 'tilelayersInfo', $gContent->mTilelayers );
+		$gBitSmarty->assign( 'copyrightsInfo', $gContent->mCopyrights );
+		$gBitSmarty->assign( 'markersInfo', $gContent->mMapMarkers );
+		$gBitSmarty->assign( 'markersetsInfo', $gContent->mMapMarkerSets );
+		$gBitSmarty->assign( 'markerstylesInfo', $gContent->mMapMarkerStyles );
+		$gBitSmarty->assign( 'iconstylesInfo', $gContent->mMapIconStyles );
+
 		$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
 		
 		//set onload function in body

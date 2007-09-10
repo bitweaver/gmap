@@ -24,6 +24,14 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
 	$gBitSmarty->assign( 'loadMochiKit', TRUE );
 	$gBitSmarty->assign( 'edit_map', TRUE );
+	$gBitSmarty->assign( 'mapInfo', $gContent->mInfo );
+	$gBitSmarty->assign( 'maptypesInfo', $gContent->mMapTypes );
+	$gBitSmarty->assign( 'tilelayersInfo', $gContent->mTilelayers );
+	$gBitSmarty->assign( 'copyrightsInfo', $gContent->mCopyrights );
+	$gBitSmarty->assign( 'markersInfo', $gContent->mMapMarkers );
+	$gBitSmarty->assign( 'markersetsInfo', $gContent->mMapMarkerSets );
+	$gBitSmarty->assign( 'markerstylesInfo', $gContent->mMapMarkerStyles );
+	$gBitSmarty->assign( 'iconstylesInfo', $gContent->mMapIconStyles );
 	
 	//set onload function in body
 	$gBitSystem->mOnload[] = 'BitMap.EditMap();';
