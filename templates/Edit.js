@@ -394,25 +394,6 @@ BitMap.Edit.prototype = {
 		BitMap.show('edit-markers-table')
 	},
 	
-
-/* DEPRECATED	
-	"newMarker": function(i){
-	  //i is the set_index
-	  var count = this.Map.markers.length;
-	  for (n=0; n<count; n++){
-	    if($('edit-markerlink-'+n)){
-	    BitMap.Utl.JSCSS('remove', $('edit-markerlink-'+n), 'edit-select');
-	    }
-	  }
-	  BitMap.Utl.JSCSS('add', $('edit-markerlink-new'), 'edit-select');
-	  var form = $('edit-marker-form');
-	  form.marker_id.value = null;
-	  form.marker_array_n.value = null;
-	  form.set_id.value = this.Map.markersets[i].set_id;
-	  form.reset();
-	  BitMap.hide('edit-marker-actions');  
-	},
-*/	
 	
 	"editMarker": function(m_i, s_i){
 		var id = null
@@ -467,14 +448,336 @@ BitMap.Edit.prototype = {
 	  BitMap.hide('edit-markers-table');
 	},
 	
-	
-	
+
 	//@todo change this to editMarkerSet(n)
 	"editSet": function(n){
 		BitMap.show('setform_'+n);
 	},
 	
 	
+
+
+
+	/*******************
+	 *
+	 * MAPTYPE FORM FUNCTIONS
+	 *
+	 *******************/	
+	
+	"editMaptypes": function(){
+		BitMap.show('edit-maptypes-menu');
+	  //First check if there are any marker sets
+	  if (this.Map.maptypes.length > 0){
+	    // We assume editMarkers has been called before and remove 
+	  	// any previously existing sets from the UI	
+	  	for (var n=0; n<this.Map.maptypes.length; n++) {
+	  		if (this.Map.maptypes[n]!= null){
+	    		var getElem = "edit-maptype-"+n;
+	    		if ( $(getElem) ) {
+	    			$('edit-maptypes-table').removeChild($(getElem));
+	    		}
+			}
+	  	}
+	    //Add a tool bar for each MarkerSet
+	    for (var n=0; n<this.Map.maptypes.length; n++) {
+	  		var newMaptype = $('edit-maptype').cloneNode(true);
+	    	newMaptype.id = "edit-maptype-"+n;
+	   		newMaptype.getElementsByTagName("span").item(0).innerHTML = this.Map.maptypes[n].name;
+	   		newMaptype.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMaptypeOptions("+n+");";
+	   		newMaptype.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMaptypeTilelayers("+n+");";
+	    	$('edit-maptypes-table').appendChild(newMaptype);
+	    	BitMap.show('edit-maptype-'+n);
+	    }
+	  }else{
+		//alert you must create a maptype first
+	  }
+	  BitMap.show('edit-maptypes-table');
+	  BitMap.show('edit-maptypes-cancel');	  
+	},
+	
+	
+	"newMaptype": function(){
+	  this.cancelEditTilelayers();
+	  var count = this.Map.maptypes.length;
+	  for (n=0; n<count; n++){
+	    BitMap.jscss('remove', $('edit-maptype-'+n), 'edit-selected');
+	  }
+	
+	  if( !$('edit-maptype-new') ){
+	    var newMaptype = $('edit-maptype').cloneNode(true);
+	    newMaptype.id = "edit-maptype-new";
+	    newMaptype.getElementsByTagName("span").item(0).innerHTML = "New Maptype";
+	    var tdtags = newMaptype.getElementsByTagName("td");
+	    tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
+	    $('edit-maptypes-menu').appendChild(newMaptype);
+	  }
+	  
+	  BitMap.jscss('add', $('edit-maptype-new'), 'edit-selected');
+	  BitMap.hide('edit-maptype-options-actions');
+	  $('edit-maptype-new').appendChild( $('edit-maptype-options-table') );
+	  BitMap.show('edit-maptype-new');
+	  BitMap.show('edit-maptype-options-table');
+	  
+	  //customize the form values
+	  var form = $('edit-maptype-options-form');
+	  form.reset();
+	  form.maptype_id.value = null;
+	  form.array_n.value = null;
+	},
+
+	"editMaptypeOptions": function(i){
+	  var a;
+	  var count = this.Map.maptypes.length;
+	  //hilights the right set, unselects the others
+	  for (n=0; n<count; n++){
+	    a = (n==i)?'add':'remove';
+	    BitMap.jscss(a, $('edit-maptype-'+n), 'edit-selected');
+	  }
+	
+	  this.cancelNewMaptype();
+	  this.cancelEditTilelayers();
+	  var m = this.Map.maptypes[i];
+	  var optionsTable = $('edit-maptype-options-table');
+	  var target = $('edit-maptype-'+i);
+	  target.insertBefore(optionsTable, target.childNodes[2]);  
+	  BitMap.show('edit-maptype-options-actions');
+	  BitMap.show('edit-maptype-options-table');
+	    
+	  //customize the form values
+	  var form = $('edit-maptype-options-form');
+	  form.maptype_id.value = m.maptype_id;
+	  form.array_n.value = i;	  
+	  form.name.value = m.name;
+	  form.shortname.value = m.shortname;
+	  form.description.value = m.description;
+	  form.minzoom.value = m.minzoom;
+	  form.maxzoom.value = m.maxzoom;
+	  form.errormsg.value = m.errormsg;
+	},
+	
+	"editMaptypeTilelayers": function(i){
+	  this.cancelNewMaptype();
+	  var a;
+	  var count = this.Map.maptypes.length;
+	  for (n=0; n<count; n++){
+	    a = (n==i)?'add':'remove';
+	    BitMap.jscss(a, $('edit-maptype-'+n), 'edit-selected');
+	  }
+	
+	  this.cancelEditMaptypeOptions();
+	  var maptype_id = this.Map.maptypes[i].maptype_id;
+	  var tilelayersTable = $('edit-tilelayers-table');
+	  //Set the markerset toggle tags to closed
+	  //Set the markerset toggle tags to open on our selected set
+	  //Move Tilelayers Table to New Maptype
+	  $('edit-maptype-'+i).appendChild(tilelayersTable);
+	  //set some constants
+	  var tilelayersLinksList = tilelayersTable.getElementsByTagName("ul").item(0);
+	  var tilelayersLinks = tilelayersTable.getElementsByTagName("li");
+	  //Clear all the existing tilelayers listed  
+	  //We leave the first two, the first is the model we clone, the second if for a new tilelayer
+	  var count = tilelayersLinks.length;
+	  for (n=count-1; n>1; n--){
+	    tilelayersLinksList.removeChild(tilelayersLinks.item(n));
+	  }
+	  $('edit-tilelayerlink-new-a').href = "javascript:BitMap.EditSession.newTilelayer("+i+");";
+	  //For each tilelayer in our new maptype, add a link
+	  var firstselected = false;
+	  for (var n=0; n<this.Map.tilelayers.length; n++) {
+		var t = this.Map.tilelayers[n];
+	    if (t.maptype_id == maptype_id){
+	    	var newTilelayerli = tilelayersLinks.item(0).cloneNode(true);
+	    	newTilelayerli.id = 'edit-tilelayerlink-'+n;
+	  		var newTilelayerLink = newTilelayerli.getElementsByTagName("a").item(0);
+	      	newTilelayerLink.href = "javascript:BitMap.EditSession.editTilelayer("+n+")";
+	      	newTilelayerLink.innerHTML = t.tiles_name;
+	      	tilelayersLinksList.appendChild(newTilelayerli);
+	  		newTilelayerli.style.display = "block";
+			if (firstselected != true){
+			  this.editTilelayer(n);
+			  firstselected = true;
+			}	        
+	  	}
+	  }
+	  if (firstselected == false){
+	    this.newTilelayer(i);
+	  }
+	  //We assume it is not visible and make it so
+	  BitMap.show('edit-tilelayers-table')
+	},
+
+	"editTilelayer": function(i){
+	  this.cancelEditCopyright();
+	  //i is the maptype_index
+	  BitMap.jscss('remove', $('edit-tilelayerlink-new'), 'edit-select');
+	  var a;
+	  var count = this.Map.tilelayers.length;
+	  for (n=0; n<count; n++){
+	    if($('edit-tilelayerlink-'+n)){
+	    a = (n==i)?'add':'remove';
+	    BitMap.jscss(a, $('edit-tilelayerlink-'+n), 'edit-select');
+	    }
+	  }
+	  
+	  var t = this.Map.tilelayers[i];
+	  //change values
+	  var form = $('edit-tilelayer-form');
+	  form.tilelayer_id.value = t.tilelayer_id;
+	  form.array_n.value = i;
+	  form.maptype_id.value = this.Map.tilelayers[i].maptype_id;
+
+	  form.tiles_name.value = t.tiles_name;
+	  form.tiles_minzoom.value = t.tiles_minzoom;
+	  form.tiles_maxzoom.value = t.tiles_maxzoom;
+	  form.ispng.value = t.ispng;
+	  form.tilesurl.value = t.tilesurl;
+	  form.opacity.value = t.opacity;
+
+	  //make menu of copyrights
+	  //Clear all the existing copyrights listed  
+	  var count = this.Map.copyrights.length;
+	  for (n=0; n<count; n++){
+	  	if ($("edit-copyrightlink-"+n)){
+	    	$('edit-copyright-menu').removeChild($("edit-copyrightlink-"+n));
+	    }
+	  }
+	  $('edit-copyrightlink-new-a').href = "javascript:BitMap.EditSession.newCopyright("+i+");";
+	  //for each copyright
+	  for (var n=0; n<count; n++) {
+		var c = this.Map.copyrights[n];
+	    if (c.tilelayer_id == t.tilelayer_id){
+		  //get the model menu and clone it
+		  newCopyrightMenu = $('edit-copyrightlink').cloneNode(true);
+		  //update the values
+		  newCopyrightMenu.id = "edit-copyrightlink-"+n;
+		  newCopyrightLink = newCopyrightMenu.getElementsByTagName("a").item(0);
+		  newCopyrightLink.href = "javascript:BitMap.EditSession.editCopyright("+n+")";
+		  newCopyrightLink.innerHTML = c.notice;
+		  //add it to the copyrights menu
+		  $('edit-copyright-menu').appendChild(newCopyrightMenu);
+	  	  newCopyrightMenu.style.display = "block";
+		}
+	  }
+	  BitMap.show('edit-tilelayer-actions');
+	},
+
+	"newTilelayer": function(i){
+	  //i is the maptype_index
+	  var count = this.Map.tilelayers.length;
+	  for (n=0; n<count; n++){
+	    if($('edit-tilelayerlink-'+n)){
+	    BitMap.jscss('remove', $('edit-tilelayerlink-'+n), 'edit-select');
+	    }
+	  }
+	  BitMap.jscss('add', $('edit-tilelayerlink-new'), 'edit-select');
+	  var form = $('edit-tilelayer-form');
+	  form.tilelayer_id.value = null;
+	  form.array_n.value = null;
+	  form.maptype_id.value = this.Map.maptypes[i].maptype_id;
+	  form.reset();
+	  BitMap.hide('edit-tilelayer-actions');  
+	},
+
+
+	"editCopyright": function(i){
+	  //i is the tilelayer_index
+	  BitMap.jscss('remove', $('edit-copyrightlink-new'), 'edit-select');
+	  var a;
+	  var count = this.Map.copyrights.length;
+	  for (n=0; n<count; n++){
+	    if($('edit-copyrightlink-'+n)){
+		a = (n==i)?'add':'remove';
+	    BitMap.jscss(a, $('edit-copyrightlink-'+n), 'edit-select');
+	    }
+	  }
+	  var c = this.Map.copyrights[i];
+	  //move the form to copyright being edited
+	  copyrightTable = $('edit-copyright-table');
+	  $('edit-copyrightlink-'+i).appendChild(copyrightTable);
+	  var form = $('edit-copyright-form');
+	  //change values
+	  form.copyright_id.value = c.copyright_id;
+	  form.array_n.value = i;
+	  form.tilelayer_id.value = c.tilelayer_id;
+	  form.copyright_minzoom.value = c.copyright_minzoom;
+	  form.notice.value = c.notice;
+	  form.bounds.value = c.bounds;
+	  BitMap.show('edit-copyright-table');
+	},
+
+	
+	"newCopyright": function(i){
+	  //i is the tilelayer_index
+	  var count = this.Map.copyrights.length;
+	  for (n=0; n<count; n++){
+	    if($('edit-copyrightlink-'+n)){
+	    BitMap.jscss('remove', $('edit-copyrightlink-'+n), 'edit-select');
+	    }
+	  }
+	  BitMap.jscss('add', $('edit-copyrightlink-new'), 'edit-select');
+	  //move the form to copyright being edited
+	  copyrightTable = $('edit-copyright-table');
+	  $('edit-copyrightlink-new').appendChild(copyrightTable);
+	  var form = $('edit-copyright-form');
+	  form.copyright_id.value = null;
+	  form.array_n.value = null;
+	  form.tilelayer_id.value = this.Map.tilelayers[i].tilelayer_id;
+	  form.reset();
+	  BitMap.show('edit-copyright-table');
+	},	
+
+
+
+	
+	"cancelEditMaptypes": function(){
+	  //rescue our form tables lest we destroy them by accident
+	  var elm = $('edit-copyright-table');
+	  document.body.appendChild(elm);
+	  this.canceledit('edit-tilelayers-table');
+	  var elm = $('edit-tilelayers-table');
+	  document.body.appendChild(elm);
+	  this.canceledit('edit-maptype-options-table');
+	  var elm = $('edit-maptype-options-table');
+	  document.body.appendChild(elm);
+	  this.canceledit('edit-maptypes-menu');
+	  this.canceledit('edit-maptypes-table');
+	  this.canceledit('edit-maptypes-cancel');
+	  this.canceledit('editerror');
+	},
+
+	"cancelEditMaptypeOptions": function(){
+	  this.cancelNewMaptype();
+	  this.canceledit('edit-maptype-options-table');
+	  this.canceledit('editerror');
+	},
+	
+	"cancelNewMaptype": function(){
+	  if( $('edit-maptype-new') ){ BitMap.hide('edit-maptype-new'); }
+	},
+	
+	"cancelNewTilelayer": function(){
+	  this.canceledit('edit-tilelayer-new');
+	},
+		
+	"cancelEditTilelayers": function(){
+	  BitMap.hide('edit-tilelayers-table');
+	},
+
+	"cancelNewCopyright": function(){
+	  var elm = $('edit-copyright-table');
+	  document.body.appendChild(elm);
+	  BitMap.hide('edit-copyright-table');
+	},
+		
+	"cancelEditCopyright": function(){
+	  var elm = $('edit-copyright-table');
+	  document.body.appendChild(elm);
+	  BitMap.hide('edit-copyright-table');
+	},
+
+
+
+
 	
 	/*******************
 	 *
@@ -541,10 +844,85 @@ BitMap.Edit.prototype = {
 				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
 		 },
 	
+		 "storeMaptype": function(f){
+		 		this.showSpinner("Saving Map...");
+				this.editObjectN = f.array_n.value;
+		 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
+				var callback = (f.maptype_id.value != "")?this.updateMaptype:this.addMaptype;
+				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+		 },
+		 
+		 "removeMaptype": function(f){
+		 		this.showSpinner("Removing Maptype...");
+				this.editObjectN = f.array_n.value;
+				this.editSetId = f.maptype_id.value;
+		 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
+				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
+		 },
+		 
+		 "expungeMaptype": function(f){
+		 		this.showSpinner("Deleting Maptype...");
+				this.editObjectN = f.array_n.value;
+				this.editSetId = f.maptype_id.value;
+		 		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
+				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
+		 },
+
+		 "storeTilelayer": function(f){
+		 		this.showSpinner("Saving Tilelayer...");
+		 		var str = "edit_tilelayer.php?" + queryString(f);
+				this.editSetId = f.maptype_id.value;
+				this.editObjectN = f.array_n.value;
+				var callback = (f.tilelayer_id.value != "")?this.updateTilelayer:this.addTilelayer;
+			  	doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+		 },
+		 
+		 "removeTilelayer": function(f){
+		 		this.showSpinner("Removing Tilelayer...");
+				this.editSetId = f.set_id.value;
+				this.editTilelayerId = f.tilelayer_id.value;
+		 		var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true";
+				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
+		 },
+	
+		 "expungeTilelayer": function(f){
+		 		this.showSpinner("Deleting Tilelayer...");
+				this.editSetId = f.set_id.value;
+				this.editTilelayerId = f.tilelayer_id.value;
+		 		var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true";
+				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
+		 },
+
+		 "storeCopyright": function(f){
+		 		this.showSpinner("Saving Copyright...");
+		 		var str = "edit_copyright.php?" + queryString(f);
+				this.editSetId = f.tilelayer_id.value;
+				this.editObjectN = f.array_n.value;
+				var callback = (f.copyright_id.value != "")?this.updateCopyright:this.addCopyright;
+			  	doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+		 },
+		 
+		 "removeCopyright": function(f){
+		 		this.showSpinner("Removing Copyright...");
+				this.editSetId = f.set_id.value;
+				this.editCopyrightId = f.copyright_id.value;
+		 		var str = "edit_copyright.php?set_id=" + this.editSetId + "&copyright_id=" + this.editCopyrightId + "&remove_copyright=true";
+				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
+		 },
+	
+		 "expungeCopyright": function(f){
+		 		this.showSpinner("Deleting Copyright...");
+				this.editSetId = f.set_id.value;
+				this.editCopyrightId = f.copyright_id.value;
+		 		var str = "edit_copyright.php?copyright_id=" + this.editCopyrightId + "&expunge_copyright=true";
+				doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
+		 },
+		 
+		 
 	
 	/*******************
 	 *
-	 * POST XML Map Functions
+	 * POST Edit Callbacks
 	 *
 	 *******************/	 
 		 
@@ -917,6 +1295,300 @@ BitMap.Edit.prototype = {
 		this.editMarkers();
 	},
 		
+
+
+		 "addMaptype": function(rslt){
+	     	var xml = rslt.responseXML;	
+			// create a spot for a new maptype in the data array
+			var n = this.Map.maptypes.length;
+			var m = this.Map.maptypes[n] = new Array();
+	
+			//add the xml data to the marker record
+			this.parseMaptypeXML(m, xml);
+			m.maptype_node = n;
+			
+			// attach the new map type to the map
+			/*
+			this.Map.addMaptype();
+			*/
+
+			// set the map type to active
+			/*
+			this.Map.map.setMaptype(this.Map.maptypes[n].name);
+			*/
+
+			// update the controls
+			/*
+			this.Map.map.removeControl(typecontrols);
+			this.Map.map.addControl(typecontrols);
+			*/
+			
+			this.hideSpinner("DONE!");
+			this.cancelEditMaptypes();
+			this.editMaptypes();
+			this.editMaptypeTilelayers(n);
+		 },
+	
+		 
+		 "updateMaptype": function(rslt){
+	      	var xml = rslt.responseXML;
+			var n = this.editObjectN;
+			//clear maptype in this location from the Map array of Types
+			var m = this.Map.maptypes[n] = new Array();
+	
+			//add the xml data to the marker record
+			this.parseMaptypeXML(m, xml);
+			m.maptype_node = n;
+			
+			//@todo remove the maptype from the map
+			//@todo re-add the maptype to the map			
+			// set the map type to active
+			//this.Map.map.setMaptype( this.Map.maptypes[this.Map.maptypes[n].name] );
+			
+			// update the maptype
+			this.hideSpinner("DONE!");
+			this.editMaptypeTilelayers(n);		
+		 },
+	
+		"parseMaptypeXML": function(m, xml){
+			// assign map type values data array				
+			var id = xml.documentElement.getElementsByTagName('maptype_id');			
+			m.maptype_id = parseInt( id[0].firstChild.nodeValue );
+			var nm = xml.documentElement.getElementsByTagName('name');			
+			m.name = nm[0].firstChild.nodeValue;
+			var snm = xml.documentElement.getElementsByTagName('shortname');			
+			m.shortname = snm[0].firstChild.nodeValue;
+			var ds = xml.documentElement.getElementsByTagName('description');			
+			m.description = ds[0].firstChild.nodeValue;	  		
+			var minz = xml.documentElement.getElementsByTagName('minzoom');
+			m.minzoom = parseInt( minz[0].firstChild.nodeValue );
+			var mz = xml.documentElement.getElementsByTagName('maxzoom');
+			m.maxzoom = parseInt( mz[0].firstChild.nodeValue );
+			var er = xml.documentElement.getElementsByTagName('errormsg');			
+			m.errormsg = er[0].firstChild.nodeValue;
+		},
+		 
+		 "updateRemoveMaptype": function(rslt){
+			var n = this.editObjectN;
+			
+			// get maptype node value
+			var p = this.Map.maptypes[n].maptype_node;
+			
+			// remove the maptype ref form the map array of types
+			this.Map.maptypes[this.Map.maptypes[n].name] = null;
+			
+			// remove the controls
+			this.Map.map.removeControl(typecontrols);
+			
+			// remove it from the map			
+			this.Map.map.mapTypes.splice(p, 1);
+			
+			// add the controls
+			this.Map.map.addControl(typecontrols);
+			
+			// @todo we should first check if the map is on display, and then if so flip to street
+			// we flip to street mode
+			this.Map.map.setMaptype(this.Map.map.mapTypes[0]);
+			
+			// remove by id the maptype form
+			for (var j=0; j<this.Map.maptypes.length; j++){
+				if ( ( this.Map.maptypes[j] != null ) && ( this.Map.maptypes[j].maptype_id == this.editSetId ) ){
+				var getElem = "editmaptypetable_" + this.Map.maptypes[j].maptype_id;
+				if ( $(getElem) ) {
+				var extraMaptypeForm = $(getElem);
+					$('editmaptypeform').removeChild(extraMaptypeForm);
+				}
+							this.Map.maptypes[n].maptype_id = null;
+					this.Map.maptypes[n] = null;
+							
+				}
+			}			
+			this.hideSpinner("DONE!");
+		 },
+		 
+		 
+
+	"addTilelayer": function(rslt){	
+	    var xml = rslt.responseXML;
+
+		//the tilelayer data we are changing		
+		var n = this.Map.tilelayers.length;		
+		var t = this.Map.tilelayers[n] = {};
+
+		//add the xml data to the marker record
+		this.parseTilelayerXML(t, xml);
+		t.maptype_id = this.editSetId;
+
+		var s;
+		var mts = this.Map.maptypes;
+		for(a=0; a<mts.length; a++){
+			if ( ( mts[a] != null ) && ( mts[a].maptype_id == this.editSetId ) ){
+				s = a;
+				break;
+			}
+		};
+
+		//remove the related maptype
+		//re-add the maptype
+		//add the tilelayer
+		/*  *******  */
+		// probably needs a ref to parent maptype
+		/*  *******  */
+		//this.Map.addTilelayer(n);
+
+		this.hideSpinner("DONE!");
+		// update the maptypes menus
+		this.editMaptypeTilelayers(s);
+		this.editTilelayer(n);
+	},
+	
+	"updateTilelayer": function(rslt){
+	    var xml = rslt.responseXML;
+		//the marker data we are changing
+		var n = this.editObjectN;
+		var t = this.Map.tilelayers[n];
+
+		//add the xml data to the marker record
+		this.parseTilelayerXML(t, xml);
+		t.maptype_id = this.editSetId;
+
+		var s;
+		var mts = this.Map.maptypes;
+		for(a=0; a<mts.length; a++){
+			if ( ( mts[a] != null ) && ( mts[a].maptype_id == this.editSetId ) ){
+				s = a;
+				break;
+			}
+		};
+		
+		//remove the related maptype
+		//re-add the maptype
+		/*  *******  */
+		// probably needs a ref to parent maptype
+		/*  *******  */
+		//add the tilelayer
+		//this.Map.addTilelayer(n);
+		
+		this.hideSpinner("DONE!");
+		// update the maptypes menus
+		this.editMaptypeTilelayers(s);
+		this.editTilelayer(n);
+	},
+	
+	"parseTilelayerXML": function(tl, xml){
+		// assign map type values data array				
+		var id = xml.documentElement.getElementsByTagName('tilelayer_id');			
+		tl.tilelayer_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.documentElement.getElementsByTagName('tiles_name');			
+		tl.tiles_name = nm[0].firstChild.nodeValue;
+		var minz = xml.documentElement.getElementsByTagName('tiles_minzoom');
+		tl.tiles_minzoom = parseInt( minz[0].firstChild.nodeValue );
+		var mz = xml.documentElement.getElementsByTagName('tiles_maxzoom');
+		tl.tiles_maxzoom = parseInt( mz[0].firstChild.nodeValue );		
+		var png = xml.documentElement.getElementsByTagName('ispng');
+		tl.ispng = png[0].firstChild.nodeValue;
+		var url = xml.documentElement.getElementsByTagName('tilesurl');
+		tl.tilesurl = url[0].firstChild.nodeValue;
+		var op = xml.documentElement.getElementsByTagName('opacity');
+		tl.opacity = parseFloat( op[0].firstChild.nodeValue );
+	},
+
+	"updateRemoveTilelayer": function(){
+		for (var n=0; n<this.Map.tilelayers.length; n++){
+			if ( ( this.Map.tilelayers[n] != null ) && ( this.Map.maptypes[i].tilelayers[n].marker_id == this.editSetId ) ){
+				/*  *******  */
+				// remove layer from related maptype and update maptype on map
+				/*  *******  */
+				this.Map.tilelayers[n] = null;
+			}
+		}
+		this.hideSpinner("DONE!");
+		this.editMaptype(editSetId);
+		this.editTilelayers();
+	},
+
+	"addCopyright":function(rslt){
+	    var xml = rslt.responseXML;
+		//the copyright data we are adding
+		var n = this.Map.copyrights.length;
+		var c = this.Map.copyrights[n] = {};
+
+		//add the xml data to the marker record
+		this.parseCopyrightXML(c, xml);
+		c.tilelayer_id = this.editSetId;
+		var s;
+		var tls = this.Map.tilelayers;
+		for(a=0; a<tls.length; a++){
+			if ( ( tls[a] != null ) && ( tls[a].tilelayer_id == this.editSetId ) ){
+				s = a;
+				break;
+			}
+		};
+		
+		//remove the related maptype
+		//re-add the maptype
+		
+		this.hideSpinner("DONE!");
+		// update the tilelayers menus
+		this.editTilelayer(s);
+		this.editCopyright(n);
+	},
+	
+	"updateCopyright":function(rslt){
+	    var xml = rslt.responseXML;
+		//the copyright data we are changing
+		var n = this.editObjectN;
+		var c = this.Map.copyrights[n];
+
+		//add the xml data to the marker record
+		this.parseCopyrightXML(c, xml);
+		c.tilelayer_id = this.editSetId;
+
+		var s;
+		var tls = this.Map.tilelayers;
+		for(a=0; a<tls.length; a++){
+			if ( ( tls[a] != null ) && ( tls[a].tilelayer_id == this.editSetId ) ){
+				s = a;
+				break;
+			}
+		};
+		
+		//remove the related maptype
+		//re-add the maptype
+		
+		this.hideSpinner("DONE!");
+		// update the tilelayers menus
+		this.editTilelayer(s);
+		this.editCopyright(n);
+	},
+	
+	"parseCopyrightXML":function(c, xml){
+		// assign map type values data array				
+		var id = xml.documentElement.getElementsByTagName('copyright_id');			
+		c.copyright_id = parseInt( id[0].firstChild.nodeValue );
+		var minz = xml.documentElement.getElementsByTagName('copyright_minzoom');
+		c.copyright_minzoom = parseInt( minz[0].firstChild.nodeValue );
+		var bds = xml.documentElement.getElementsByTagName('bounds');
+		c.bounds = bds[0].firstChild.nodeValue;
+		var nt = xml.documentElement.getElementsByTagName('notice');
+		c.notice = nt[0].firstChild.nodeValue;
+	},
+	
+	"updateRemoveCopyright":function(){
+		var n = this.editObjectN;
+		this.Map.copyrights[n] = null;
+
+		//remove the related maptype
+		//re-add the maptype
+	
+		this.hideSpinner("DONE!");
+		this.cancelEditCopyright();
+		this.editTilelayer(s);	
+	},
+
+
+
+
 		
 	/******************
 	 *
