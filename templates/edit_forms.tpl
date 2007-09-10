@@ -36,6 +36,10 @@
         <a class="opts" href="javascript:BitMap.EditSession.editMaptypeOptions(n);">Edit Maptype Options</a> | 
         <a class="list" href="javascript:BitMap.EditSession.editMaptypeTilelayers(n);">Edit Tilelayers In This Maptype</a>
       </td>
+      <td width="20px">
+        <a title="close options editing" href="javascript:void(0);" onclick="javascript:BitMap.EditSession.cancelEditMaptypeOptions();"><img src="{$smarty.const.GMAP_PKG_URL}icons/close.gif"></a>
+        <!-- <input type="button" name="closemaptypeform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptypeOptions()"/> -->
+      </td>
     </tr>
     </table>
   </div>
@@ -86,7 +90,6 @@
 	  </td>
 	  </tr>
   </table>
-        <input type="button" name="closemaptypeform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptypeOptions()"/>
   </form>
 </div>
 <!-- end of maptype options form -->
@@ -211,7 +214,7 @@
 	
 <!-- marker editing menu -->
 <div id="edit-markers-menu" style="display:none;">
-		<a href="javascript:BitMap.EditSession.newMarkerSet();">New Marker Set</a> | 
+		<a href="javascript:BitMap.EditSession.editMarkerSet();">New Marker Set</a> | 
 		<a href="javascript:BitMap.EditSession.editMarkerStyles();">Edit Marker Styles</a> | 
 		<a href="javascript:BitMap.EditSession.editIconStyles();">Edit Marker Icons</a>
 </div>
@@ -238,60 +241,7 @@
 
 <!-- markerset options form -->
 <div id="edit-markerset-options-table" class="edit-datatable" style="display:none;">
-  <form action="javascript:;" name="edit-markerset-options-form" id="edit-markerset-options-form">
-  	<input name="set_id" type="hidden" value="n">
-    <input name="set_array_n" type="hidden" value="n">
-    <input name="save_markerset" type="hidden" value="true">
-    <table class="data">
-					<tr>
-						<td>
-              Name:<br/>
-              <input size="40" name="name" type="text" value="a name"><br/>
-              Description:<br/>
-              <input size="40" name="description" type="text" value="a description"></td>
-						<td>Marker Style:<br/>
-                <select name="style_id">
-                  					<option value="0">Google (standard)</option>
-                      				</select><br/>
-						    Icon Style:<br/>
-                <select name="icon_id">
-                                      <option value="0">Google (standard)</option>
-                                   	</select>
-						<td>Cluster:<br/>
-                <select name="cluster">
-                      					<option value="false">No</option>
-                      					<option value="true">Yes</option>
-                          				</select><br/>
-						    Plot-On-Load:<br/>
-                <select name="plot_on_load">
-                      					<option value="false">No</option>
-                      					<option value="true">Yes</option>
-                          				</select></td>
-						<td>List Set In Side Panel:<br/>
-                <select name="side_panel">
-                      					<option value="false">No</option>
-                      					<option value="true">Yes</option>
-                          				</select><br/>
-						    List Markers In Side Panel:<br/>
-                <select name="explode">
-                      					<option value="false">No</option>
-                      					<option value="true">Yes</option>
-                          				</select></td>
-            <td width="200px">
-              <div id="edit-markerset-options-tips">Tips<br/>
-                Put advice here
-              </div>
-              <div id="edit-markerset-options-actions">Edit Marker Actions<br/>
-							  <a id="setremove" href="javascript:BitMap.EditSession.removeMarkerSet(document['edit-markerset-options-form']);">remove</a> 
-							  <a id="setdelete" href="javascript:BitMap.EditSession.expungeMarkerSet(document['edit-markerset-options-form']);">delete</a><br/><br/>
-							  <a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a>
-							<div>
-            </td>
-					</tr>
-				</table>
-        <input type="button" name="savenewmarkerset" value="Save" onclick="javascript:BitMap.EditSession.storeMarkerSet(document['edit-markerset-options-form']);"/>
-        <input type="button" name="closemarkersetform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSetOptions()"/>
-			</form>
+	<div id="markerset-form">PUT MARKERSET FORM HERE!</div>
 </div>
 <!-- end of markerset options form -->
 
@@ -301,7 +251,7 @@
 		<table>
 			<tr>
 				<td width="200px">Markers:<br/>
-					<ul>
+					<ul id="edit-markers-list">
 						<li style="display:none;"><a href="javascript:BitMap.EditSession.editMarker(n);">Marker Name Here</a></li>
 						<li id="edit-markerlink-new"><b><a id="edit-markerlink-new-a" href="javascript:BitMap.EditSession.newMarker(setindex);">Add A New Marker</a></b></li>
 					</ul>

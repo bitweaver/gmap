@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 {if $markersetInfo}
 <markerset>
-	<set_id>{$markerset.Infoset_id}</set_id>
-	<name>{$markerset.Infoname}</name>
-	<description>{$markerset.Infodescription}</description>
-	<style_id>{$markerset.Infostyle_id}</style_id>
-	<icon_id>{$markerset.Infoicon_id}</icon_id>
-	<plot_on_load>{$markerset.Infoplot_on_load}</plot_on_load>
-	<side_panel>{$markerset.Infoside_panel}</side_panel>
-	<explode>{$markerset.Infoexplode}</explode>
-	<cluster>{$markerset.Infocluster}</cluster>
+	<set_id>{$markersetInfo.set_id}</set_id>
+	<name>{$markersetInfo.name}</name>
+	<description>{$markersetInfo.description}</description>
+	<style_id>{$markersetInfo.style_id}</style_id>
+	<icon_id>{$markersetInfo.icon_id}</icon_id>
+	<plot_on_load>{$markersetInfo.plot_on_load}</plot_on_load>
+	<side_panel>{$markersetInfo.side_panel}</side_panel>
+	<explode>{$markersetInfo.explode}</explode>
+	<cluster>{$markersetInfo.cluster}</cluster>
 </markerset>
 {/if}

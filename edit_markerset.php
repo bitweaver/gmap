@@ -40,7 +40,15 @@ if (!empty($_REQUEST["save_markerset"])) {
     if( $gContent->expungeMarkerSet( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('expungeSucces', true);
     }
+}else{
+	if ( isset( $_REQUEST["set_id"] ) ){
+		$markerset = $gContent->getMarkerSetData( $_REQUEST["set_id"] );
+	}
+	$gBitSmarty->assign_by_ref('markersetInfo', $markerset->fields);
+	$gBitSystem->display('bitpackage:gmap/edit_markerset.tpl', NULL, 'center_only');
+	die;
 }
+
 
 if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );

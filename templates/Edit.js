@@ -181,7 +181,7 @@ BitMap.Edit.prototype = {
 	  		var newMarkerSet = $('edit-markerset').cloneNode(true);
 	    	newMarkerSet.id = "edit-markerset-"+n;
 	   		newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[n].name;
-	   		newMarkerSet.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMarkerSetOptions("+n+");";
+	   		newMarkerSet.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMarkerSet("+n+");";
 	   		newMarkerSet.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMarkers("+n+");";
 	    	$('edit-markersets-table').appendChild(newMarkerSet);
 	    	BitMap.show('edit-markerset-'+n);
@@ -216,122 +216,84 @@ BitMap.Edit.prototype = {
 	  this.removeAssistant(); 
 	  this.canceledit('editerror');
 	},
+
+	
+	"editMarkerSet": function(i){
+		this.cancelEditMarkers();
+		
+		this._setIdRef = null;
+		
+		//set set menu highlighting
+		var a = (i != null)?'remove':'add';
+		if($('edit-markerset-new')){
+			BitMap.Utl.JSCSS(a, $('edit-markerset-new'), 'edit-selected');
+		}
+		
+		var count = this.Map.markersets.length;
+		for (n=0; n<count; n++){
+			if($('edit-markerset-'+n)){
+				a = (n==i)?'add':'remove';
+				BitMap.Utl.JSCSS(a, $('edit-markerset-'+n), 'edit-selected');
+			}
+		}
+
+		//null is a new set
+		if ( i == null ){
+			i = "new";
+			this.editObjectN = null;
+			
+			if( !$('edit-markerset-new') ){
+				var newMarkerSet = $('edit-markerset').cloneNode(true);
+				newMarkerSet.id = "edit-markerset-new";
+				newMarkerSet.getElementsByTagName("span").item(0).innerHTML = "New Marker Set";
+				var tdtags = newMarkerSet.getElementsByTagName("td");
+				tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
+				$('edit-markers-menu').appendChild(newMarkerSet);
+				
+				$('edit-markerset-new').appendChild( $('edit-markerset-options-table') );
+				BitMap.show('edit-markerset-new');
+				BitMap.show('edit-markerset-options-table');
+			}
+		}else{
+			this.editObjectN = this._setIndexRef = i;
+			this.cancelNewMarkerSet();
+			this._setIdRef = this.Map.markersets[i].set_id;
+			var optionsTable = $('edit-markerset-options-table');
+			var target = $('edit-markerset-'+i);
+			target.insertBefore(optionsTable, target.childNodes[2]);  
+		}
+	
+		//get the edit form
+		doSimpleXMLHttpRequest("edit_markerset.php", {set_id:this._setIdRef}).addCallback( bind(this.editMarkerSetCallback, this) );
+	},
 	
 	
-	"newMarkerSet": function(){
-	  this.cancelEditMarkers();
-	  var count = this.Map.markersets.length;
-	  for (n=0; n<count; n++){
-	    BitMap.Utl.JSCSS('remove', $('edit-markerset-'+n), 'edit-selected');
-	  }
+	"editMarkerSetCallback": function(rslt){
+		var f = $('markerset-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
+		if (this._setIdRef == null) { BitMap.hide('edit-markerset-options-actions'); }else{ BitMap.show('edit-markerset-options-actions'); }
+		BitMap.show('edit-markersets-table');
+		BitMap.show('edit-markerset-options-table');
+	},
 	
-	  if( !$('edit-markerset-new') ){
-	    var newMarkerSet = $('edit-markerset').cloneNode(true);
-	    newMarkerSet.id = "edit-markerset-new";
-	    newMarkerSet.getElementsByTagName("span").item(0).innerHTML = "New Marker Set";
-	    var tdtags = newMarkerSet.getElementsByTagName("td");
-	    tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
-	    $('edit-markers-menu').appendChild(newMarkerSet);
-	  }
-	  
-	  BitMap.Utl.JSCSS('add', $('edit-markerset-new'), 'edit-selected');
-	  BitMap.hide('edit-markerset-options-actions');
-	  $('edit-markerset-new').appendChild( $('edit-markerset-options-table') );
-	  BitMap.show('edit-markerset-new');
-	  BitMap.show('edit-markerset-options-table');
-	  
-	  //customize the form values
-	  var form = $('edit-markerset-options-form');
-	  form.reset();
-	  form.set_id.value = null;
-	  form.set_array_n.value = null;
-	  if ( this.Map.markerstyles.length > 0 ){
-	    var OptionN = form.style_id.options.length;
-	    for (var d=0; d<this.Map.markerstyles.length; d++){
-	      if ( this.Map.markerstyles[d] != null ){
-		    form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, this.Map.markerstyles[d].style_id );
-		    if ( this.Map.markerstyles[d].style_id == s.style_id){
-		      form.style_id.options[OptionN + d].selected=true;
-		    }
-	      }
-	  	}
-	  }
-	  if ( this.Map.iconstyles.length > 0 ){
-	    var IconN = form.icon_id.options.length;
-	  	for (var e=0; e<this.Map.iconstyles.length; e++){
-	      if ( this.Map.iconstyles[e] != null ){
-		    form.icon_id.options[IconN+e] = new Option( this.Map.iconstyles[e].name, this.Map.iconstyles[e].icon_id );
-		    if ( this.Map.iconstyles[e].icon_id == s.icon_id){
-		      form.icon_id.options[IconN+e].selected=true;
-		    }
-	      }
-	  	}
-	  }
+	
+	"cancelEditMarkerSet": function(){
+		this.cancelNewMarkerSet();
+		this.canceledit('edit-markerset-options-table');
+		this.canceledit('editerror');
+		var count = this.Map.markersets.length;
+		for (n=0; n<count; n++){
+			if($('edit-markerset-'+n)){
+				BitMap.Utl.JSCSS('remove', $('edit-markerset-'+n), 'edit-selected');
+			}
+		}
 	},
 	
 	
 	"cancelNewMarkerSet": function(){
 	  if( $('edit-markerset-new') ){ BitMap.hide('edit-markerset-new'); }
 	},
-	
-	
-	"editMarkerSetOptions": function(i){
-	  var a;
-	  var count = this.Map.markersets.length;
-	  //hilights the right set, unselects the others
-	  for (n=0; n<count; n++){
-	    a = (n==i)?'add':'remove';
-	    BitMap.Utl.JSCSS(a, $('edit-markerset-'+n), 'edit-selected');
-	  }
-	  this.cancelNewMarkerSet();
-	  this.cancelEditMarkers();
-	  var s = this.Map.markersets[i];
-	  var optionsTable = $('edit-markerset-options-table');
-	  var target = $('edit-markerset-'+i);
-	  target.insertBefore(optionsTable, target.childNodes[2]);  
-	  BitMap.show('edit-markerset-options-actions');
-	  BitMap.show('edit-markerset-options-table');
-	  //customize the form values
-	  var form = $('edit-markerset-options-form');
-	  form.set_id.value = s.set_id;
-	  form.set_array_n.value = i;
-	  form.name.value = s.name;
-	  form.description.value = s.description;
-	  if (s.plot_on_load == false){ form.plot_on_load.options[0].selected=true; }else{form.plot_on_load.options[1].selected=true;};
-	  if (s.side_panel == false){ form.side_panel.options[0].selected=true; }else{form.side_panel.options[1].selected=true;};
-	  if (s.explode == false){ form.explode.options[0].selected=true }else{form.explode.options[1].selected=true};
-	  if (s.cluster == false){ form.cluster.options[0].selected=true }else{form.cluster.options[1].selected=true};
-	  if ( this.Map.markerstyles.length > 0 && form.style_id.options.length < (this.Map.markerstyles.length + 1) ){
-		var OptionN = form.style_id.options.length;
-	  	for (var d=0; d<this.Map.markerstyles.length; d++){
-	      if ( this.Map.markerstyles[d] != null ){
-		    form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, this.Map.markerstyles[d].style_id );
-		    if ( this.Map.markerstyles[d].style_id == s.style_id){
-		        form.style_id.options[OptionN + d].selected=true;
-		    }
-	  	  }
-	  	}
-	  }
-	  if ( this.Map.iconstyles.length > 0 && form.icon_id.options.length < (this.Map.iconstyles.length + 1) ){
-	    var IconN = form.icon_id.options.length;
-	  	for (var e=0; e<this.Map.iconstyles.length; e++){
-	      if ( this.Map.iconstyles[e] != null ){
-		    form.icon_id.options[IconN+e] = new Option( this.Map.iconstyles[e].name, this.Map.iconstyles[e].icon_id );
-		    if ( this.Map.iconstyles[e].icon_id == s.icon_id){
-		      form.icon_id.options[IconN+e].selected=true;
-		    }
-	  	  }
-	  	}
-	  }
-	},
-	
-	
-	"cancelEditMarkerSetOptions": function(){
-	  this.cancelNewMarkerSet();
-	  this.canceledit('edit-markerset-options-table');
-	  this.canceledit('editerror');
-	},
-	
 	
 	"editMarkers": function(i){
 		//build a list of markers
@@ -345,53 +307,49 @@ BitMap.Edit.prototype = {
 			BitMap.Utl.JSCSS(a, $('edit-markerset-'+n), 'edit-selected');
 		}
 		//make sure the marker set options form is closed
-		this.cancelEditMarkerSetOptions();
+		this.cancelEditMarkerSet();
 
 		//get the set id of markers we are editing		
 		var set_id = this.Map.markersets[i].set_id;    
 
-		
-
-		//@TODO eventually replace building the markers list with an ajax call to a tpl - not a priority now		
 		//set some constants
 		var markerTable = $('edit-markers-table');
-		var markerLinksList = markerTable.getElementsByTagName("ul").item(0);
-		var markerLinks = markerTable.getElementsByTagName("li");
+		var markerLinksList = $('edit-markers-list');
+		var markerLinks = markerLinksList.getElementsByTagName("li");
+		
 		//Clear all the existing markers listed  
 		//We leave the first two, the first is the model we clone, the second if for a new marker
 		var count = markerLinks.length;
-			for (n=count-1; n>1; n--){
-				markerLinksList.removeChild(markerLinks.item(n));
-			}
+		for (n=count-1; n>1; n--){
+			markerLinksList.removeChild(markerLinks.item(n));
+		}
+		$('edit-markerlink-new-a').href = "javascript:BitMap.EditSession.editMarker(null, "+i+");";
 		
-			$('edit-markerlink-new-a').href = "javascript:BitMap.EditSession.editMarker(null, "+i+");";
-			//For each marker in our new set, add a link
-			var firstselected = false;
-			for (var n=0; n<this.Map.markers.length; n++) {
+		//For each marker in our set, add a link
+		var firstselected = false;
+		for (var n=0; n<this.Map.markers.length; n++) {
 			var m = this.Map.markers[n];
 			if (m.set_id == set_id){
-				var newMarkerli = markerLinks.item(0).cloneNode(true);
-				newMarkerli.id = 'edit-markerlink-'+n;
-				var newMarkerLink = newMarkerli.getElementsByTagName("a").item(0);
-				newMarkerLink.href = "javascript:BitMap.EditSession.editMarker("+n+","+i+")";
-				newMarkerLink.innerHTML = m.title;
-				markerLinksList.appendChild(newMarkerli);
-				newMarkerli.style.display = "block";
-			
+				var li = markerLinks.item(0).cloneNode(true);
+				li.id = 'edit-markerlink-'+n;
+				var link = li.getElementsByTagName("a").item(0);
+				link.href = "javascript:BitMap.EditSession.editMarker("+n+","+i+")";
+				link.innerHTML = m.title;
+				markerLinksList.appendChild(li);
+				li.style.display = "block";
 				if (firstselected != true){
 					//else ajax up a form with the info from the first marker in the list
 					this.editMarker(n, i);
 					firstselected = true;
 				}
 			}
-		}
-		
+		}		
 		if (firstselected == false){
 			//if the list is 0 - ajax up an empty form
 			this.editMarker(null, i);
 		}
 		//We assume it is not visible and make it so
-		BitMap.show('edit-markers-table')
+		BitMap.show('edit-markers-table');
 	},
 	
 	
@@ -445,15 +403,16 @@ BitMap.Edit.prototype = {
 	
 	
 	"cancelEditMarkers": function(){
-	  BitMap.hide('edit-markers-table');
+		BitMap.hide('edit-markers-table');
 	},
 	
 
-	//@todo change this to editMarkerSet(n)
+	//@TODO - I think this can be deleted -wjames5
+	/*
 	"editSet": function(n){
 		BitMap.show('setform_'+n);
 	},
-	
+	*/	
 	
 
 	/*******************
@@ -997,7 +956,7 @@ BitMap.Edit.prototype = {
 			 
 		 "storeMap": function(f){
 		 		this.showSpinner("Saving Map...");
-				doSimpleXMLHttpRequest("edit.php", f).addCallback( bind(this.updateMap, this) ); 
+				doSimpleXMLHttpRequest("edit_map.php", f).addCallback( bind(this.updateMap, this) ); 
 		 },
 
 		 "storeMarker": function(f){
@@ -1029,7 +988,6 @@ BitMap.Edit.prototype = {
 		 		this.showSpinner("Saving Markerset...");
 		 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
 				this._setIdRef = f.set_id.value;
-				this.editObjectN = f.set_array_n.value;
 				var callback = (f.set_id.value != "")?this.updateMarkerSet:this.addMarkerSet;
 				doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 		 },
@@ -1472,7 +1430,7 @@ BitMap.Edit.prototype = {
 		
 		this.hideSpinner("DONE!");
 		// update the sets menus
-		this.editMarkerSetOptions(this.editObjectN);
+		this.editMarkerSet(this.editObjectN);
 	},
 	
 	
