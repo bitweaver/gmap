@@ -193,20 +193,20 @@ BitMap.Edit.prototype = {
 	
 	
 	"cancelEditMarkerSets": function(){
-	  //rescue our form tables lest we destroy them by accident
-	  this.canceledit('edit-markers-table');
-	  var elm = $('edit-markers-table');
-	  document.body.appendChild(elm);
-	  this.canceledit('edit-markerset-options-table');
-	  var elm = $('edit-markerset-options-table');
-	  document.body.appendChild(elm);
-	  
-	  this.canceledit('edit-markers-menu');
-	  this.canceledit('edit-markersets-table');
-	  this.canceledit('edit-markersets-cancel');
-
-	  this.removeAssistant(); 
-	  this.canceledit('editerror');
+		//rescue our form tables lest we destroy them by accident
+		this.canceledit('edit-markers-table');
+		var elm = $('edit-markers-table');
+		document.body.appendChild(elm);
+		this.canceledit('edit-markerset-options-table');
+		var elm = $('edit-markerset-options-table');
+		document.body.appendChild(elm);
+		
+		this.canceledit('edit-markers-menu');
+		this.canceledit('edit-markersets-table');
+		this.canceledit('edit-markersets-cancel');
+		
+		this.removeAssistant(); 
+		this.canceledit('editerror');
 	},
 
 	
@@ -509,19 +509,6 @@ BitMap.Edit.prototype = {
 		}
 		
 		doSimpleXMLHttpRequest("edit_iconstyle.php", {icon_id:icon_id}).addCallback( bind(this.editIconStyleCallback, this) );
-		 
-		/* The following are Google icon features not implemented 
-		   because they are an annoying pain in the ass for most people.
-		   The database supports them, but the form does not.
-		   Maybe an "advanced" form is needed for anyone who
-		   might want to deal with these headaches.
-		*/
-		/*
-		form.print_image.value = m.print_image;
-		form.moz_print_image.value = m.moz_print_image;
-		form.transparent.value = m.transparent;
-		form.print_shadow.value = m.print_shadow;
-		*/		
 	},
 	
 	"editIconStyleCallback": function(rslt){

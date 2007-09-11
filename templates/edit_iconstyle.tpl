@@ -1,7 +1,27 @@
+{* 		 
+	The following are Google icon features not implemented 
+	because they are an annoying pain in the ass for most people.
+	The database supports them, but the form does not.
+	Maybe an "advanced" form is needed for anyone who
+	might want to deal with these headaches.
+	
+	print_image
+	moz_print_image
+	transparent
+	print_shadow
+*}
 {strip}
 {form action="javascript:;" enctype="multipart/form-data" id="edit-iconstyle-form"}
-<input name="icon_id" type="hidden" value="{$iconstyleInfo.icon_id}">
-<input name="save_iconstyle" type="hidden" value="true">
+	<input name="icon_id" type="hidden" value="{$iconstyleInfo.icon_id}">
+	<input name="save_iconstyle" type="hidden" value="true">
+	<div class="row">
+		{formlabel label="Type" for="marker_type"}
+			{forminput}
+				{formhelp note=""}
+			{/forminput}
+	</div>
+			
+			
 	<div>Name<br/>
 		<input name="name" type="text" style="width:90%" value="{$iconstyleInfo.name}"></div>
 		<!-- GIcon is only type supported right now - in future if other types are available this could be an option -->
