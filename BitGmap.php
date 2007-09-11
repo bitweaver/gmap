@@ -21,6 +21,11 @@ class BitGmap extends LibertyAttachable {
 			'handler_file' => 'BitGmap.php',
 			'maintainer_url' => 'http://www.bitweaver.org'
 		) );
+
+		// Permission setup
+		$this->mViewContentPerm  = 'p_gmap_view';
+		$this->mEditContentPerm  = 'p_gmap_edit';
+		$this->mAdminContentPerm = 'p_gmap_admin';
 	}
 	
 

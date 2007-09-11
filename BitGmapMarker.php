@@ -52,6 +52,11 @@ class BitGmapMarker extends LibertyAttachable {
 			'handler_file' => 'BitGmapMarker.php',
 			'maintainer_url' => 'http://www.bitweaver.org'
 		) );
+		
+		// Permission setup
+		$this->mViewContentPerm  = 'p_marker_view';
+		$this->mEditContentPerm  = 'p_marker_edit';
+		$this->mAdminContentPerm = 'p_marker_admin';
 	}
 
 
