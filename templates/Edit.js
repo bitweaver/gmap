@@ -492,7 +492,8 @@ BitMap.Edit.prototype = {
 	 * ICON STYLE FORM FUNCTIONS
 	 *
 	 *******************/
-
+	 
+	/*
 	"newIconStyle":function(){
 		var count = this.Map.iconstyles.length;
 		for (n=0; n<count; n++){
@@ -518,29 +519,26 @@ BitMap.Edit.prototype = {
 			}
 		}
 		var m = this.Map.iconstyles[i];
-		//change values
-		var form = $('edit-iconstyle-form');
-		form.icon_id.value = m.icon_id;
-		form.style_array_n.value = i;
-		form.name.value = m.name;
-		/* form currently does not have a select since there is only one type available
-		 * in the future if other icon types become available then this could be used
-		 */
-		//form.icon_style_type.options[m.icon_style_type].selected = true;		
-		form.icon_image.value = m.image;		
-		form.rollover_image.value = m.rollover_image;
-		form.icon_w.value = m.icon_w;
-		form.icon_h.value = m.icon_h;
-		form.icon_anchor_x.value = m.icon_anchor_x;
-		form.icon_anchor_y.value = m.icon_anchor_y;
-		form.shadow_image.value = m.shadow_image;
-		form.shadow_w.value = m.shadow_w;
-		form.shadow_h.value = m.shadow_h;
-		form.shadow_anchor_x.value = m.shadow_anchor_x;
-		form.shadow_anchor_y.value = m.shadow_anchor_y;
-		form.infowindow_anchor_x.value = m.infowindow_anchor_x;
-		form.infowindow_anchor_y.value = m.infowindow_anchor_y;		
+	},
+	*/
+
+	"editIconStyle":function(i){	
+		var icon_id = ( i != null )?this.Map.iconstyles[i].icon_id:null;
+		this.editObjectN = i;
+	
+		//hilight selected icon link - unhilight others
+		var a = (i != null)?'remove':'add';
+		BitMap.Utl.JSCSS(a, $('edit-iconstylelink-new'), 'edit-select');
+		var count = this.Map.iconstyles.length;
+		for (n=0; n<count; n++){
+			if($('edit-iconstylelink-'+n)){
+				a = (n==i)?'add':'remove';
+				BitMap.Utl.JSCSS(a, $('edit-iconstylelink-'+n), 'edit-select');
+			}
+		}
 		
+		doSimpleXMLHttpRequest("edit_iconstyle.php", {icon_id:icon_id}).addCallback( bind(this.editIconStyleCallback, this) );
+		 
 		/* The following are Google icon features not implemented 
 		   because they are an annoying pain in the ass for most people.
 		   The database supports them, but the form does not.
@@ -553,6 +551,13 @@ BitMap.Edit.prototype = {
 		form.transparent.value = m.transparent;
 		form.print_shadow.value = m.print_shadow;
 		*/		
+	},
+	
+	"editIconStyleCallback": function(rslt){
+		var f = $('iconstyle-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
+		BitMap.show('edit-iconstyle-table');		
 	},
 
 	"editIconStyles": function(){
@@ -570,7 +575,7 @@ BitMap.Edit.prototype = {
 			linksList.removeChild(links.item(n));
 		}
 		
-		$('edit-iconstylelink-new-a').href = "javascript:BitMap.EditSession.newIconStyle();";
+		//$('edit-iconstylelink-new-a').href = "javascript:BitMap.EditSession.editIconStyle(null);";
 		//For each iconstyle, add a link
 		var firstselected = false;
 		for (var n=0; n<this.Map.iconstyles.length; n++) {
@@ -589,7 +594,7 @@ BitMap.Edit.prototype = {
 			}			
 		}
 		if (firstselected == false){
-			this.newIconStyle();
+			this.editIconStyle();
 		}
 		//We assume it is not visible and make it so
 		BitMap.show('edit-iconstyle-table');
@@ -982,9 +987,8 @@ BitMap.Edit.prototype = {
 		 "storeIconStyle": function(f){
 			this.showSpinner("Saving Iconstyle...");
 			var str = "edit_iconstyle.php?" + queryString(f);
-			this.editObjectN = f.style_array_n.value;
-			var callback = (f.icon_id.value != "")?this.updateIconStyle:this.addIconStyle;
-			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+			//var callback = (f.icon_id.value != "")?this.updateIconStyle:this.addIconStyle;
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateIconStyle, this) ); 
 		 },
 	
 		 "storeMaptype": function(f){
@@ -1539,7 +1543,7 @@ BitMap.Edit.prototype = {
 		
 	
 	
-	
+/*	
 	"addIconStyle": function(rslt){
 		var xml = rslt.responseXML;
 	
@@ -1590,15 +1594,21 @@ BitMap.Edit.prototype = {
 		// update the styles menus
 		this.editIconStyles();
 	},
-	
+*/	
 	
 		
 	"updateIconStyle": function(rslt){
-		var xml = rslt.responseXML;
-		
-		//get the style we are updating
-		var i = this.Map.iconstyles[this.editObjectN];
-		
+	    var xml = rslt.responseXML;
+		var n = this.editObjectN;
+		var i;
+	    if ( n != null){
+			//the iconstyles data we are changing
+			i = this.Map.iconstyles[n];
+	    }else{
+			n = this.Map.iconstyles.length;
+			i = this.Map.iconstyles[n] = [];
+	    }
+	    
 		// assign iconsstyle values to data array
 		var id = xml.documentElement.getElementsByTagName('icon_id');
 		i.icon_id = parseInt( id[0].firstChild.nodeValue );
@@ -1633,31 +1643,33 @@ BitMap.Edit.prototype = {
 		var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
 		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
 
+		//update the icon
+		if (i.icon_style_type == 0) {
+			this.Map.defineGIcon(n);
+		}
+		
+	    if ( this.editObjectN != null){
+			//update all markers
+			var a = this.Map.markers;
+			
+			//if the length of the array is > 0
+			if (a.length > 0){
+				//loop through the array
+				for(var n=0; n<a.length; n++){
+					//if the array item is not Null
+					if (a[n]!= null && a[n].marker != null && a[n].icon_id == i.icon_id){
+						//unload the marker
+						this.Map.map.removeOverlay( a[n].marker );
+						//define the marker
+						this.addMarker(n);
+					}
+				}
+			}
+		}
+		
 		this.hideSpinner("DONE!");
 		// update the styles menus
 		this.editIconStyles();
-		
-		//update the icon
-		if (i.icon_style_type == 0) {
-			this.Map.defineGIcon(this.editObjectN);
-		}
-		
-		//update all markers
-		var a = this.Map.markers;
-		
-		//if the length of the array is > 0
-		if (a.length > 0){
-			//loop through the array
-			for(var n=0; n<a.length; n++){
-				//if the array item is not Null
-				if (a[n]!= null && a[n].marker != null && a[n].icon_id == i.icon_id){
-					//unload the marker
-					this.Map.map.removeOverlay( a[n].marker );
-					//define the marker
-					this.addMarker(n);
-				}
-			}
-		}		
 	},
 	
 

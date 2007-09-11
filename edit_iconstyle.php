@@ -27,6 +27,13 @@ if (!empty($_REQUEST["save_iconstyle"])) {
     if( $result = $gContent->storeIconStyle( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('iconstyleInfo', $result->fields );    
     }
+}else{
+	if ( isset( $_REQUEST["icon_id"] ) ){
+		$iconstyle = $gContent->getIconStyleData( $_REQUEST["icon_id"] );
+	}
+	$gBitSmarty->assign_by_ref('iconstyleInfo', $iconstyle->fields);
+	$gBitSystem->display('bitpackage:gmap/edit_iconstyle.tpl', NULL, 'center_only');
+	die;
 }
 
 if ( count($gContent->mErrors) > 0 ){

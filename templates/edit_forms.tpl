@@ -334,81 +334,27 @@
 
 <!-- edit iconstyles form -->
 <div id="edit-iconstyle-table" class="edit-datatable" style="display:none;">
-    <form action="javascript:;" name="edit-iconstyle-form" id="edit-iconstyle-form" >
-		<input name="icon_id" type="hidden" value="icon_id">
-		<input name="style_array_n" type="hidden" value="n">
-		<input name="save_iconstyle" type="hidden" value="true">
-		<table>
-			<tr>
-				<td width="200px"><br />
-					<ul>
-						<li style="display:none;"><a href="javascript:BitMap.EditSession.editIconStyle(n);">Icon Style Name Here</a></li>
-						<li id="edit-iconstylelink-new"><b><a id="edit-iconstylelink-new-a" href="javascript:BitMap.EditSession.newIconStyle();">Add A New Icon Style</a></b></li>
-					</ul>
-				</td>
-				<td>
-					<div class="tplform">
-						<div>Name<br/>
-							<input name="name" type="text" style="width:90%" value=""></div>
-							<!-- GIcon is only type supported right now - in future if other types are available this could be an option -->
-							<input name="icon_style_type" type="hidden" value="0">
-						<p>
-							<h4>Icon Image Settings</h4>
-							<div>Path to Image <br/>
-								<input name="icon_image" type="text" style="width:90%" value="icons/flat_color_pins/205.png"></div>
-							<div>Path to Rollover Image <br/>
-								<input name="rollover_image" type="text" style="width:90%" value="icons/flat_color_pins/090.png"></div>
-						</p>
-						<p>
-							<div>Icon Width<br/>
-								<input name="icon_w" type="text" size="5" value="20"></div>
-							<div>Icon Height<br/>
-								<input name="icon_h" type="text" size="5" value="34"></div>
-						</p>
-						<p>
-							<div>Icon Anchor X<br/>
-								<input name="icon_anchor_x" type="text" size="5" value="9"></div>
-							<div>Icon Anchor Y<br/>
-								<input name="icon_anchor_y" type="text" size="5" value="34"></div>
-						</p>
-						<p>
-							<h4>Shadow Image Settings</h4>
-							<div>Shadow Image <br/>
-								<input name="shadow_image" type="text"  style="width:90%" value="http://www.google.com/mapfiles/shadow50.png"></div>
-						</p>
-						<p>
-							<div>Shadow Width <br/>
-								<input name="shadow_w" type="text" size="5" value="37"></div>
-							<div>Shadow Height <br/>
-								<input name="shadow_h" type="text" size="5" value="34"></div>
-							<div>Shadow Anchor X<br/>
-								<input name="shadow_anchor_x" type="text" size="5" value="18"></div>
-							<div>Shadow Anchor Y<br/>
-								<input name="shadow_anchor_y" type="text" size="5" value="25"></div>
-						</p>
-						<p>
-							<h4>InfoWindow Postion Settings</h4>
-							<div>Window Anchor X<br/>
-								<input name="infowindow_anchor_x" type="text" size="5" value="9"></div>
-							<div>Window Anchor Y<br/>
-								<input name="infowindow_anchor_y" type="text" size="5" value="2"></div>
-						</p>
-						<div>
-							<input type="button" name="save_iconstyle_btn" value="Save" onclick="javascript:BitMap.EditSession.storeIconStyle(document['edit-iconstyle-form']);">
-						</div>
-					</div>
-				</td>
-				<td width="200px">
-					<div id="edit-iconstyle-tips">Tips<br/>
-						Put advice here
-					</div>
-					<div id="edit-iconstyle-actions">Edit Icon Style Actions<br/>
-						Currently no delete or expunge options
-					</div>
-				</td>
-			</tr>
-		</table>
-	</form>
+	<table>
+		<tr>
+			<td width="200px"><br />
+				<ul>
+					<li style="display:none;"><a href="javascript:BitMap.EditSession.editIconStyle(n);">Icon Style Name Here</a></li>
+					<li id="edit-iconstylelink-new"><b><a id="edit-iconstylelink-new-a" href="javascript:BitMap.EditSession.editIconStyle(null);">Add A New Icon Style</a></b></li>
+				</ul>
+			</td>
+			<td>
+				<div id="iconstyle-form">PUT ICONSTYLE FORM HERE!</div>
+			</td>
+			<td width="200px">
+				<div id="edit-iconstyle-tips">Tips<br/>
+					Put advice here
+				</div>
+				<div id="edit-iconstyle-actions">Edit Icon Style Actions<br/>
+					Currently no delete or expunge options
+				</div>
+			</td>
+		</tr>
+	</table>
 </div> <!-- end of edit iconstyles form -->
 
 <!-- close all iconstyles editing -->
