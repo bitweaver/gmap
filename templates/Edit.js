@@ -492,35 +492,6 @@ BitMap.Edit.prototype = {
 	 * ICON STYLE FORM FUNCTIONS
 	 *
 	 *******************/
-	 
-	/*
-	"newIconStyle":function(){
-		var count = this.Map.iconstyles.length;
-		for (n=0; n<count; n++){
-			if($('edit-iconstylelink-'+n)){
-				BitMap.Utl.JSCSS('remove', $('edit-iconstylelink-'+n), 'edit-select');
-			}
-		}
-		BitMap.Utl.JSCSS('add', $('edit-iconstylelink-new'), 'edit-select');
-		var form = $('edit-iconstyle-form');
-		form.icon_id.value = null;
-		form.style_array_n.value = null;
-		form.reset();
-	},
-	
-	"editIconStyle":function(i){
-		BitMap.Utl.JSCSS('remove', $('edit-iconstylelink-new'), 'edit-select');
-		var a;
-		var count = this.Map.iconstyles.length;
-		for (n=0; n<count; n++){
-			if($('edit-iconstylelink-'+n)){
-				a = (n==i)?'add':'remove';
-				BitMap.Utl.JSCSS(a, $('edit-iconstylelink-'+n), 'edit-select');
-			}
-		}
-		var m = this.Map.iconstyles[i];
-	},
-	*/
 
 	"editIconStyle":function(i){	
 		var icon_id = ( i != null )?this.Map.iconstyles[i].icon_id:null;
@@ -1539,64 +1510,8 @@ BitMap.Edit.prototype = {
 			}
 		}
 	},
-	
-		
-	
-	
-/*	
-	"addIconStyle": function(rslt){
-		var xml = rslt.responseXML;
-	
-		// create a spot for a new iconstyle in the data array
-		var n = this.Map.iconstyles.length;
-		this.Map.iconstyles[n] = new Array();
-		var i = this.Map.iconstyles[n];
-		// assign iconstyle values to data array			
-		var id = xml.documentElement.getElementsByTagName('icon_id');
-		i.icon_id = parseInt( id[0].firstChild.nodeValue );
-		var nm = xml.documentElement.getElementsByTagName('name');
-		i.name = nm[0].firstChild.nodeValue;
-		var tp = xml.documentElement.getElementsByTagName('icon_style_type');
-		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
-		var ig = xml.documentElement.getElementsByTagName('image');
-		i.image = ig[0].firstChild.nodeValue;
-		var rig = xml.documentElement.getElementsByTagName('rollover_image');
-		i.rollover_image = rig[0].firstChild.nodeValue;
-		var icw = xml.documentElement.getElementsByTagName('icon_w');
-		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
-		var ich = xml.documentElement.getElementsByTagName('icon_h');
-		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
-		var is = xml.documentElement.getElementsByTagName('shadow_image');			
-		i.shadow_image = is[0].firstChild.nodeValue;
-		var isw = xml.documentElement.getElementsByTagName('shadow_w');
-		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
-		var ish = xml.documentElement.getElementsByTagName('shadow_h');
-		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
-		var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
-		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
-		var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
-		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
-		var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
-		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
-		var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
-		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
-		var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
-		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
-		var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
-		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
 
-		//make the icon available
-		if (i.icon_style_type == 0) {
-			this.Map.defineGIcon(n);
-		}
-		
-		this.hideSpinner("DONE!");
-		// update the styles menus
-		this.editIconStyles();
-	},
-*/	
 	
-		
 	"updateIconStyle": function(rslt){
 	    var xml = rslt.responseXML;
 		var n = this.editObjectN;
