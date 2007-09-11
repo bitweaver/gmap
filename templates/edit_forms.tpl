@@ -158,7 +158,7 @@
             <div id="edit-copyright-menu">
             	Copyright Notices for this Tilelayer
 				<div id="edit-copyrightlink-new">
-					<b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.newCopyright(setindex);">Add A New Copyright</a></b>
+					<b><a id="edit-copyrightlink-new-a" href="javascript:BitMap.EditSession.editCopyright(copyrightindex, tilelayerindex);">Add A New Copyright</a></b>
 				</div>
 				<div id="edit-copyrightlink" style="display:none;">
 					<a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Notice Here</a>
@@ -177,26 +177,7 @@
 
 <!-- edit copyrights form -->
 <div id="edit-copyright-table" style="display:none;">
-    <form action="javascript:;" name="edit-copyright-form" id="edit-copyright-form" >
-    <input name="save_copyright" type="hidden" value="true">
-    <input name="copyright_id" type="hidden" value="copyright_id">
-    <input name="array_n" type="hidden" value="n">
-    <input name="tilelayer_id" type="hidden" value="tilelayer_id">
-	<div>
-		Notice<br/>
-		<input name="notice" type="text" size="50" value="copyright notice"><br/>
-		
-		MinZoom<br/>
-		<input name="copyright_minzoom" type="text" size="5" value="0"><br/>
-						
-		Bounds<br/>
-		<textarea name="bounds" rows="10"></textarea>
-	</div>
-	<input type="button" name="save_copyright_btn" value="Save" onclick="javascript:BitMap.EditSession.storeCopyright(document['edit-copyright-form']);">
-	<input type="button" name="closecopyrightset" value="Close This Copyright" onclick="javascript:BitMap.EditSession.cancelEditCopyright()"></br>
-	<a name="remove_copyright_btn" title="remove from this tilelayer" href="javascript:BitMap.EditSession.removeCopyright(document.edit-copyright-form);">Remove</a> | 
-	<a name="expunge_copyright_btn" title="delete this copyright!" href="javascript:BitMap.EditSession.expungeCopyright(document.edit-copyright-form);">Delete</a>
-    </form>
+	<div id="copyright-form">PUT COPYRIGHT FORM HERE!</div>
 </div> 
 <!-- edit of edit copyrights form -->
 

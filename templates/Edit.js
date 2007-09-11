@@ -415,13 +415,11 @@ BitMap.Edit.prototype = {
 
 	"editMarkerStyle":function(i){	
 		var style_id = ( i != null )?this.Map.markerstyles[i].style_id:null;
-
 		this.editObjectN = i;
 	
 		//hilight selected marker link - unhilight others
 		var a = (i != null)?'remove':'add';
 		BitMap.Utl.JSCSS(a, $('edit-markerstylelink-new'), 'edit-select');
-		
 		var count = this.Map.markers.length;
 		for (n=0; n<count; n++){
 			if($('edit-markerstylelink-'+n)){
@@ -429,7 +427,6 @@ BitMap.Edit.prototype = {
 				BitMap.Utl.JSCSS(a, $('edit-markerstylelink-'+n), 'edit-select');
 			}
 		}
-
 		
 		doSimpleXMLHttpRequest("edit_markerstyle.php", {style_id:style_id}).addCallback( bind(this.editMarkerStyleCallback, this) );
 	},
@@ -789,7 +786,7 @@ BitMap.Edit.prototype = {
 	    	$('edit-copyright-menu').removeChild($("edit-copyrightlink-"+n));
 	    }
 	  }
-	  $('edit-copyrightlink-new-a').href = "javascript:BitMap.EditSession.newCopyright("+i+");";
+	  $('edit-copyrightlink-new-a').href = "javascript:BitMap.EditSession.editCopyright(null, "+i+");";
 	  //for each copyright
 	  for (var n=0; n<count; n++) {
 		var c = this.Map.copyrights[n];
@@ -799,7 +796,7 @@ BitMap.Edit.prototype = {
 		  //update the values
 		  newCopyrightMenu.id = "edit-copyrightlink-"+n;
 		  newCopyrightLink = newCopyrightMenu.getElementsByTagName("a").item(0);
-		  newCopyrightLink.href = "javascript:BitMap.EditSession.editCopyright("+n+")";
+		  newCopyrightLink.href = "javascript:BitMap.EditSession.editCopyright("+n+", "+i+")";
 		  newCopyrightLink.innerHTML = c.notice;
 		  //add it to the copyrights menu
 		  $('edit-copyright-menu').appendChild(newCopyrightMenu);
@@ -827,54 +824,38 @@ BitMap.Edit.prototype = {
 	},
 
 
-	"editCopyright": function(i){
-	  //i is the tilelayer_index
-	  BitMap.Utl.JSCSS('remove', $('edit-copyrightlink-new'), 'edit-select');
-	  var a;
-	  var count = this.Map.copyrights.length;
-	  for (n=0; n<count; n++){
-	    if($('edit-copyrightlink-'+n)){
-		a = (n==i)?'add':'remove';
-	    BitMap.Utl.JSCSS(a, $('edit-copyrightlink-'+n), 'edit-select');
-	    }
-	  }
-	  var c = this.Map.copyrights[i];
-	  //move the form to copyright being edited
-	  copyrightTable = $('edit-copyright-table');
-	  $('edit-copyrightlink-'+i).appendChild(copyrightTable);
-	  var form = $('edit-copyright-form');
-	  //change values
-	  form.copyright_id.value = c.copyright_id;
-	  form.array_n.value = i;
-	  form.tilelayer_id.value = c.tilelayer_id;
-	  form.copyright_minzoom.value = c.copyright_minzoom;
-	  form.notice.value = c.notice;
-	  form.bounds.value = c.bounds;
-	  BitMap.show('edit-copyright-table');
+	"editCopyright": function(c_i, t_i){
+		var c_id = ( c_i != null )?this.Map.copyrights[c_i].copyright_id:null;
+		var t_id = this.Map.tilelayers[t_i].tilelayer_id;
+		this.editObjectN = c_i;
+		this._setIndexRef = t_i;
+
+		//hilight selected marker link - unhilight others
+		var a = (c_i != null)?'remove':'add';
+		BitMap.Utl.JSCSS(a, $('edit-copyrightlink-new'), 'edit-select');
+		var count = this.Map.copyrights.length;
+		for (n=0; n<count; n++){
+			if($('edit-copyrightlink-'+n)){
+				a = (n==c_i)?'add':'remove';
+				BitMap.Utl.JSCSS(a, $('edit-copyrightlink-'+n), 'edit-select');
+			}
+		}
+		
+		c_i = ( c_i != null )?c_i:'new';
+		//move the form container to copyright being edited
+		copyrightTable = $('edit-copyright-table');
+		$('edit-copyrightlink-'+c_i).appendChild(copyrightTable);
+	  
+		doSimpleXMLHttpRequest("edit_copyright.php", {copyright_id:c_id, tilelayer_id:t_id}).addCallback( bind(this.editCopyrightCallback, this) );
 	},
-
 	
-	"newCopyright": function(i){
-	  //i is the tilelayer_index
-	  var count = this.Map.copyrights.length;
-	  for (n=0; n<count; n++){
-	    if($('edit-copyrightlink-'+n)){
-	    BitMap.Utl.JSCSS('remove', $('edit-copyrightlink-'+n), 'edit-select');
-	    }
-	  }
-	  BitMap.Utl.JSCSS('add', $('edit-copyrightlink-new'), 'edit-select');
-	  //move the form to copyright being edited
-	  copyrightTable = $('edit-copyright-table');
-	  $('edit-copyrightlink-new').appendChild(copyrightTable);
-	  var form = $('edit-copyright-form');
-	  form.copyright_id.value = null;
-	  form.array_n.value = null;
-	  form.tilelayer_id.value = this.Map.tilelayers[i].tilelayer_id;
-	  form.reset();
-	  BitMap.show('edit-copyright-table');
-	},	
-
-
+	
+	"editCopyrightCallback": function(rslt){
+		var f = $('copyright-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
+		BitMap.show('edit-copyright-table');		
+	},
 
 	
 	"cancelEditMaptypes": function(){
@@ -1058,10 +1039,8 @@ BitMap.Edit.prototype = {
 		 "storeCopyright": function(f){
 			this.showSpinner("Saving Copyright...");
 			var str = "edit_copyright.php?" + queryString(f);
-			this.editSetId = f.tilelayer_id.value;
-			this.editObjectN = f.array_n.value;
-			var callback = (f.copyright_id.value != "")?this.updateCopyright:this.addCopyright;
-			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+			this._setIdRef = f.tilelayer_id.value;
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateCopyright, this) ); 
 		 },
 		 
 		 "removeCopyright": function(f){
@@ -1892,60 +1871,30 @@ BitMap.Edit.prototype = {
 		this.editMaptype(editSetId);
 		this.editTilelayers();
 	},
-
-	"addCopyright":function(rslt){
-	    var xml = rslt.responseXML;
-		//the copyright data we are adding
-		var n = this.Map.copyrights.length;
-		var c = this.Map.copyrights[n] = {};
-
-		//add the xml data to the marker record
-		this.parseCopyrightXML(c, xml);
-		c.tilelayer_id = this.editSetId;
-		var s;
-		var tls = this.Map.tilelayers;
-		for(a=0; a<tls.length; a++){
-			if ( ( tls[a] != null ) && ( tls[a].tilelayer_id == this.editSetId ) ){
-				s = a;
-				break;
-			}
-		};
-		
-		//remove the related maptype
-		//re-add the maptype
-		
-		this.hideSpinner("DONE!");
-		// update the tilelayers menus
-		this.editTilelayer(s);
-		this.editCopyright(n);
-	},
 	
 	"updateCopyright":function(rslt){
 	    var xml = rslt.responseXML;
-		//the copyright data we are changing
+	    var s = this._setIndexRef;
 		var n = this.editObjectN;
-		var c = this.Map.copyrights[n];
-
-		//add the xml data to the marker record
+		var c;
+	    if ( n != null){
+			//the copyright data we are changing
+			c = this.Map.copyrights[n];
+	    }else{
+			n = this.Map.copyrights.length;
+			c = this.Map.copyrights[n] = {};
+	    }
+		//add the xml data to the copyright record
 		this.parseCopyrightXML(c, xml);
-		c.tilelayer_id = this.editSetId;
+		c.tilelayer_id = this._setIdRef;
 
-		var s;
-		var tls = this.Map.tilelayers;
-		for(a=0; a<tls.length; a++){
-			if ( ( tls[a] != null ) && ( tls[a].tilelayer_id == this.editSetId ) ){
-				s = a;
-				break;
-			}
-		};
-		
-		//remove the related maptype
-		//re-add the maptype
+		//@TODO remove the related maptype
+		//@TODO re-add the maptype
 		
 		this.hideSpinner("DONE!");
 		// update the tilelayers menus
 		this.editTilelayer(s);
-		this.editCopyright(n);
+		this.editCopyright(n, s);
 	},
 	
 	"parseCopyrightXML":function(c, xml){
