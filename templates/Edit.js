@@ -526,9 +526,9 @@ BitMap.Edit.prototype = {
 	},
 	
 	"cancelEditIconStyles": function(){
-	  BitMap.hide('edit-iconstyles-table');
-	  BitMap.hide('edit-iconstyle-table');
-	  BitMap.hide('edit-iconstyles-cancel');
+		BitMap.hide('edit-iconstyles-table');
+		BitMap.hide('edit-iconstyle-table');
+		BitMap.hide('edit-iconstyles-cancel');
 	},
 
 
@@ -541,33 +541,33 @@ BitMap.Edit.prototype = {
 	
 	"editMaptypes": function(){
 		BitMap.show('edit-maptypes-menu');
-	  //First check if there are any marker sets
-	  if (this.Map.maptypes.length > 0){
-	    // We assume editMarkers has been called before and remove 
-	  	// any previously existing sets from the UI	
-	  	for (var n=0; n<this.Map.maptypes.length; n++) {
-	  		if (this.Map.maptypes[n]!= null){
-	    		var getElem = "edit-maptype-"+n;
-	    		if ( $(getElem) ) {
-	    			$('edit-maptypes-table').removeChild($(getElem));
-	    		}
+		//First check if there are any marker sets
+		if (this.Map.maptypes.length > 0){
+		// We assume editMarkers has been called before and remove 
+		// any previously existing sets from the UI	
+		for (var n=0; n<this.Map.maptypes.length; n++) {
+			if (this.Map.maptypes[n]!= null){
+				var getElem = "edit-maptype-"+n;
+				if ( $(getElem) ) {
+					$('edit-maptypes-table').removeChild($(getElem));
+				}
 			}
-	  	}
-	    //Add a tool bar for each MarkerSet
-	    for (var n=0; n<this.Map.maptypes.length; n++) {
-	  		var newMaptype = $('edit-maptype').cloneNode(true);
-	    	newMaptype.id = "edit-maptype-"+n;
-	   		newMaptype.getElementsByTagName("span").item(0).innerHTML = this.Map.maptypes[n].name;
-	   		newMaptype.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMaptype("+n+");";
-	   		newMaptype.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMaptypeTilelayers("+n+");";
-	    	$('edit-maptypes-table').appendChild(newMaptype);
-	    	BitMap.show('edit-maptype-'+n);
-	    }
-	  }else{
+		}
+		//Add a tool bar for each MarkerSet
+		for (var n=0; n<this.Map.maptypes.length; n++) {
+			var newMaptype = $('edit-maptype').cloneNode(true);
+			newMaptype.id = "edit-maptype-"+n;
+			newMaptype.getElementsByTagName("span").item(0).innerHTML = this.Map.maptypes[n].name;
+			newMaptype.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editMaptype("+n+");";
+			newMaptype.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editMaptypeTilelayers("+n+");";
+			$('edit-maptypes-table').appendChild(newMaptype);
+			BitMap.show('edit-maptype-'+n);
+		}
+		}else{
 		//alert you must create a maptype first
-	  }
-	  BitMap.show('edit-maptypes-table');
-	  BitMap.show('edit-maptypes-cancel');	  
+		}
+		BitMap.show('edit-maptypes-table');
+		BitMap.show('edit-maptypes-cancel');	  
 	},
 
 	
