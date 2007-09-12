@@ -146,6 +146,7 @@ $tables = array(
               , CONSTRAINT `gmaps_marker_keychain_marker_ref` FOREIGN KEY (`marker_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_markers`( `marker_id` )'
 ",
 
+//type options: 0 => Default  1 => Geodesic  2 => Encoded
 'gmaps_polylines' => "
   polyline_id I4 PRIMARY,
   user_id I4 NOTNULL,
@@ -154,6 +155,7 @@ $tables = array(
   last_modified I8 NOTNULL,
   version I4 NOTNULL,
   name C(255),
+  type I4 DEFAULT 0,
   points_data X,
   levels_data X,
   zoom_factor I4,
@@ -170,12 +172,7 @@ $tables = array(
   polyline_style_type I4 DEFAULT 0,
   color C(6) DEFAULT 'ff3300',
   weight I4 DEFAULT 2,
-  opacity F DEFAULT 1,
-  pattern c(255) DEFAULT 0,
-  segment_count I8 DEFAULT 0,
-  begin_arrow C(5) DEFAULT 'false',
-  end_arrow C(5) DEFAULT 'false',
-  arrows_every I8 DEFAULT 0
+  opacity F DEFAULT 1
 ",
 
 'gmaps_polyline_sets' => "
@@ -220,7 +217,6 @@ $tables = array(
   name C(64),
   polygon_style_type I4 DEFAULT 0,
   color C(6),
-  weight I4 DEFAULT 2,
   opacity F DEFAULT 1
 ",
 

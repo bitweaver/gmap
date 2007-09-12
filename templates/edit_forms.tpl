@@ -325,7 +325,7 @@
 </div>
 
 <div id="newpolylinesetform" class="editform" style="display:none;">
-		<h2>Add a New Polyline Set</h2>
+	<h2>Add a New Polyline Set</h2>
     <div class="table" id="editpolylinesettable_new">
     	<form action="javascript:;" name="polylinesetform_new" id="polylinesetform_new">
 				<input name="save_polylineset" type="hidden" value="true">
@@ -491,7 +491,7 @@
 
 
 <div id="newpolylineform" class="editform" style="display:none;">
-		<h2>Add a New Polyline</h2>
+	<h2>Add a New Polyline</h2>
     <div class="table" id="editpolylinetable_new">
     	<form action="javascript:;" name="polylineform_new" id="polylineform_new">
 				<input name="new_polyline" type="hidden" value="true">
@@ -638,7 +638,7 @@
 </div>
 
 <div id="newpolygonsetform" class="editform" style="display:none;">
-		<h2>Add a New Polygon Set</h2>		
+	<h2>Add a New Polygon Set</h2>		
     <div class="table" id="editpolygonsettable_new">
     	<form action="javascript:;" name="polygonsetform_new" id="polygonsetform_new">
 				<input name="save_polygonset" type="hidden" value="true">
