@@ -20,7 +20,7 @@
 
 <!-- maptype editing menu -->
 <div id="edit-maptypes-menu" style="display:none;">
-		<a href="javascript:BitMap.EditSession.newMaptype();">New Maptype</a>
+		<a href="javascript:BitMap.EditSession.editMaptype();">New Maptype</a>
 </div>
 <!-- end of maptype editing menu -->
 
@@ -31,16 +31,16 @@
   <div id="edit-maptype" class="edit-titlebar" style="display:none;">
     <table class="bar">
     	<tr>
-        <td width="200px"><span class="setname">MapType Name Here</span></td>
-      <td>
-        <a class="opts" href="javascript:BitMap.EditSession.editMaptypeOptions(n);">Edit Maptype Options</a> | 
-        <a class="list" href="javascript:BitMap.EditSession.editMaptypeTilelayers(n);">Edit Tilelayers In This Maptype</a>
-      </td>
-      <td width="20px">
-        <a title="close options editing" href="javascript:void(0);" onclick="javascript:BitMap.EditSession.cancelEditMaptypeOptions();"><img src="{$smarty.const.GMAP_PKG_URL}icons/close.gif"></a>
-        <!-- <input type="button" name="closemaptypeform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptypeOptions()"/> -->
-      </td>
-    </tr>
+			<td width="200px"><span class="setname">MapType Name Here</span></td>
+			<td>
+				<a class="opts" href="javascript:BitMap.EditSession.editMaptype(n);">Edit Maptype Options</a> | 
+				<a class="list" href="javascript:BitMap.EditSession.editMaptypeTilelayers(n);">Edit Tilelayers In This Maptype</a>
+			</td>
+			<td width="10px" style="text-align:right">
+				<a title="close options editing" href="javascript:void(0);" onclick="javascript:BitMap.EditSession.cancelEditMaptype();"><img src="{$smarty.const.GMAP_PKG_URL}icons/close.gif"></a>
+				<!-- <input type="button" name="closemaptypeform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptype()"/> -->
+			</td>
+		</tr>
     </table>
   </div>
 </div>
@@ -49,48 +49,25 @@
 
 <!-- maptype options form -->
 <div id="edit-maptype-options-table" class="edit-datatable" style="display:none;">
-  <form action="javascript:;" name="edit-maptype-options-form" id="edit-maptype-options-form">
-	<input name="array_n" type="hidden" value="">
-	<input name="save_maptype" type="hidden" value="true">
-	<input name="maptype_id" type="hidden" size="3" value="maptype_id">
 	<table>
-	  <tr>
-		<td width="200px">
-		</td>
-		<td>
-		  <div class="tplform">
-		  <div>
-			Name<br/>
-			<input name="name" type="text" size="50" value="a name"><br/>
-			Short Name<br/>
-			<input name="shortname" type="text" size="10" value="a short name"><br/>
-		  	Description<br/>
-		  	<input name="description" type="text" size="50" value="a description">
-		  </div>
-		  <div>
-			Min Zoom <input name="minzoom" type="text" size="3" value="0"><br/>
-			Max Zoom <input name="maxzoom" type="text" size="3" value="16"><br/>
-			Error Message<br/>
-			<input name="errormsg" type="text" size="50" value="">
-		  </div>
-		  <div>
-			<input type="button" name="save_maptype_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMaptype(document['edit-maptype-options-form']);">
-		  </div>
-		</div>
-	  </td>
-	  <td width="200px">
-		<div id="edit-maptype-tips">Tips<br/>
-			 Put advice here
-		</div>
-		<div id="edit-maptype-options-actions">Edit Maptype Actions<br/>
-				<a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');">show</a>
-				<a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMaptype(document['edit-maptype-options-form']);">remove</a>
-				<a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMaptype(document['edit-maptype-options-form']);">delete</a>
-		</div>
-	  </td>
-	  </tr>
-  </table>
-  </form>
+		<tr>
+			<td width="200px">
+			</td>
+			<td>
+				<div id="maptype-form">PUT MAPTYPE FORM HERE!</div>
+			</td>
+			<td width="200px">
+				<div id="edit-maptype-tips">Tips<br/>
+					Put advice here
+				</div>
+				<div id="edit-maptype-options-actions">Edit Maptype Actions<br/>
+					<a name="locate_maptype_btn" title="show on the map" href="javascript:alert('feature coming soon');">show</a>
+					<a name="remove_maptype_btn" title="remove from this map" href="javascript:BitMap.EditSession.removeMaptype(document['edit-maptype-options-form']);">remove</a>
+					<a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:BitMap.EditSession.expungeMaptype(document['edit-maptype-options-form']);">delete</a>
+				</div>
+			</td>
+		</tr>
+	</table>
 </div>
 <!-- end of maptype options form -->
 

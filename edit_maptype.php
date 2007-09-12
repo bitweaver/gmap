@@ -36,7 +36,15 @@ if (!empty($_REQUEST["save_maptype"])) {
     if( $gContent->expungeMapType( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('expungeSucces', true);
     }
+}else{
+	if ( isset( $_REQUEST["maptype_id"] ) ){
+		$maptype = $gContent->getMapTypeData( $_REQUEST["maptype_id"] );
+	}
+	$gBitSmarty->assign_by_ref('maptypeInfo', $maptype->fields);
+	$gBitSystem->display('bitpackage:gmap/edit_maptype.tpl', NULL, 'center_only');
+	die;
 }
+
 
 if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
