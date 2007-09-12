@@ -2,8 +2,8 @@
 	<a id="emap" href="javascript:BitMap.EditSession.editMap({$mapInfo.gmap_id});">Edit Map</a> | 
 	<a id="emaptype" href="javascript:BitMap.EditSession.editMaptypes();">Edit Maptypes</a> |
 	<a id="emarker" href="javascript:BitMap.EditSession.editMarkerSets();">Edit Markers</a> | 
-	<a id="epolyline" href="javascript:BitMap.EditSession.editPolylines();">Edit Polylines</a> | 
-	<a id="epolygon" href="javascript:BitMap.EditSession.editPolygons();">Edit Polygons</a>
+	<a id="epolyline" href="javascript:BitMap.EditSession.editPolylineSets();">Edit Polylines</a> | 
+	<a id="epolygon" href="javascript:BitMap.EditSession.editPolygonSets();">Edit Polygons</a>
 </div>
 
 
@@ -312,316 +312,121 @@
 
 
 
-
 <!-------------------------
 	-  Polyline Editing Forms
 	------------------------->
 
 <!--polyline editing forms -->
-<div id="editpolylinemenu" style="display:none;">
-		<a href="javascript:BitMap.EditSession.newPolyline();">New Polyline</a> | 
-		<a href="javascript:BitMap.EditSession.newPolylineSet();">New Polyline Set</a> | 
+<div id="edit-polylines-menu" style="display:none;">
+		<a href="javascript:BitMap.EditSession.editPolylineSet();">New Polyline Set</a> | 
 		<a href="javascript:BitMap.EditSession.editPolylineStyles();">Edit Polyline Styles</a> | 
 </div>
 
-<div id="newpolylinesetform" class="editform" style="display:none;">
-	<h2>Add a New Polyline Set</h2>
-    <div class="table" id="editpolylinesettable_new">
-    	<form action="javascript:;" name="polylinesetform_new" id="polylinesetform_new">
-				<input name="save_polylineset" type="hidden" value="true">
-    		<table class="data">
-					<tr>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Style</th>
-						<th>Map Display Settings</th>
-						<th>Side Panel Display Settings</th>
-						<th style="width:80px">ACTIONS</th>
-					</tr>
-					<tr class="gmapeditstrong">
-						<td><input name="name" type="text" style="width:90%" value="a name"></td>
-						<td><textarea name="description" style="width:90%" rows="2"></textarea></td>
-						<td><select name="style_id" id="style_id">
-                                    	<option value="0" >Google (standard)</option>
-                                      	</select></td>
-						<td>Plot-On-Load: <select name="plot_on_load">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select></td>
-						<td>Side: <select name="side_panel">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select><br/>
-    					List: <select name="explode">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select></td>
-						<td style="width:80px"><a name="new_polylineset_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolylineSet(document.polylinesetform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
-					</tr>
-				</table>
-    	</form>
-		</div>
-		<div id="newpolylinesetcancel" ><input type="button" name="closepolylinesetform" value="Cancel New Polyline Set" onclick="javascript:BitMap.EditSession.canceledit('newpolylinesetform'); BitMap.EditSession.canceledit('editerror');"></div>
+<!-- polylineset editing menu -->
+<div id="edit-polylinesets-table" class="edit-table" style="display:none;">
+  <h2>Polyline Sets Associated With This Map</h2>
+  <div id="edit-polylineset" class="edit-titlebar" style="display:none;">
+    <table class="bar">
+    	<tr>
+        <td width="200px"><span class="setname">Set Name Here</span></td>
+      <td>
+        <a class="opts" href="javascript:BitMap.EditSession.editPolylineSetOptions(n);">Edit Set Options</a> | 
+        <a class="list" href="javascript:BitMap.EditSession.editPolylines(n);">Edit Polylines In This Set</a>
+      </td>
+    </tr>
+    </table>
+  </div>
 </div>
-<!-- end of newpolylinesetform -->
+<!-- end of polylineset editing menu -->
 
-
-
-
-<div id="editpolylinestylesmenu" style="display:none;">
-		<a href="javascript:BitMap.EditSession.newPolylineStyle();">Add a New Polyline Style</a>
+<!-- polylineset options form -->
+<div id="edit-polylineset-options-table" class="edit-datatable" style="display:none;">
+	<div id="polylineset-form">PUT MARKERSET FORM HERE!</div>
 </div>
+<!-- end of polylineset options form -->
 
-
-<div id="newpolylinestyleform" class="editform" style="display:none;">
-		<h2>Add a New Polyline Style</h2>		
-    <div class="table" id="editpolylinestyletable_new">
-    	<form action="javascript:;" name="polylinestyleform_new" id="polylinestyleform_new">
-				<input name="save_polylinestyle" type="hidden" value="true">
-    		<table class="data gmapeditstrong">
-					<tr>
-                	<td>
-							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
-							Type <br/><select name="polyline_style_type">
-                                <option value="0">Google Default</option>
-                                <option value="1">XPolyline</option>
-                             </select><br/>
-                     	Color <br/><input name="color" type="text" size="15" value="ff3300"><br/>
-                     	Weight <br/><input name="weight" type="text" size="15" value="2"><br/>
-                     	Opacity <br/><input name="opacity" type="text" size="15" value=".75"><br/>
-						</td>
-                	<td>
-							Pattern <br/><input name="pattern" type="text" size="15" value=""><br/>
-                        Segment Count <br/><input name="segment_count" type="text" size="15" value=""><br/>
-                		Text Every <br/><input name="text_every" type="text" size="15" value="">
-						</td>
-                	<td>
-                		Begin Arrow <br/><select name="begin_arrow">
-                        				<option value="false">No</option>
-                                        <option value="true">Yes</option>
-                                    </select><br/>
-                		End Arrow <br/><select name="end_arrow">
-                                        <option value="false">No</option>
-                                        <option value="true">Yes</option>
-                                    </select><br/>
-                		Arrow Every <br/><input name="arrows_every" type="text" size="15" value=""><br/>
-						</td>
-                	<td>
-                    	Text FG Color <br/><input name="text_fgstyle_color" type="text" size="15" value="ffffff"><br/>
-                    	Text FG Weight <br/><input name="text_fgstyle_weight" type="text" size="15" value="1"><br/>
-                    	Text FG Opacity <br/><input name="text_fgstyle_opacity" type="text" size="15" value="1"><br/>
-                    	Text FG zIndex <br/><input name="text_fgstyle_zindex" type="text" size="15" value="0">
-						</td>
-                	<td>
-                    	Text BG Color <br/><input name="text_bgstyle_color" type="text" size="15" value="ff3300"><br/>
-                    	Text BG Weight <br/><input name="text_bgstyle_weight" type="text" size="15" value="2"><br/>
-                    	Text BG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
-                    	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
-						</td>
-                	<td>ACTIONS<br/><a name="new_polylinestyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolylineStyle(document.polylinestyleform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
-						</tr>
-    		</table>
-    	</form>
-  	</div>
-		<div id="newpolylinestylecancel" ><input type="button" name="closepolylinestyleform" value="Cancel New Polyline Style" onclick="javascript:BitMap.EditSession.canceledit('newpolylinestyleform'); BitMap.EditSession.canceledit('editerror');"></div>
-</div>
-<!-- end of newpolylinestyleform -->
-
-
-<div id="editpolylinestyleform" class="editform" style="display:none;">
-		<h2>Polyline Styles Associated with Polyline Sets on This Map</h2>		
-		<div class="table" id="editpolylinestyletable_n">
-			<form action="javascript:;" name="polylinestyleform_n" id="polylinestyleform_n" style="display:none;">
-				<input name="save_polylinestyle" type="hidden" value="true">
-				<input name="style_array_n" type="hidden" value="n">
-				<input name="style_id" type="hidden" value="n">
-				<table class="data" id="polylinestyleformdata_n">
-					<tr>
-                	<td>
-							Name <br/><input name="name" type="text" size="15" value="a name"><br/>
-							Type <br/><select name="polyline_style_type">
-                                <option value="0">Google Default</option>
-                                <option value="1">XPolyline</option>
-                             </select><br/>
-                     	Color <br/><input name="color" type="text" size="15" value="ff3300"><br/>
-                     	Weight <br/><input name="weight" type="text" size="15" value="2"><br/>
-                     	Opacity <br/><input name="opacity" type="text" size="15" value=".75"><br/>
-						</td>
-                	<td>
-							Pattern <br/><input name="pattern" type="text" size="15" value=""><br/>
-                        Segment Count <br/><input name="segment_count" type="text" size="15" value=""><br/>
-                		Text Every <br/><input name="text_every" type="text" size="15" value="">
-						</td>
-                	<td>
-                		Begin Arrow <br/><select name="begin_arrow">
-                        				<option value="false">No</option>
-                                        <option value="true">Yes</option>
-                                    </select><br/>
-                		End Arrow <br/><select name="end_arrow">
-                                        <option value="false">No</option>
-                                        <option value="true">Yes</option>
-                                    </select><br/>
-                		Arrow Every <br/><input name="arrows_every" type="text" size="15" value=""><br/>
-						</td>
-                	<td>
-                    	Text FG Color <br/><input name="text_fgstyle_color" type="text" size="15" value="ffffff"><br/>
-                    	Text FG Weight <br/><input name="text_fgstyle_weight" type="text" size="15" value="1"><br/>
-                    	Text FG Opacity <br/><input name="text_fgstyle_opacity" type="text" size="15" value="1"><br/>
-                    	Text FG zIndex <br/><input name="text_fgstyle_zindex" type="text" size="15" value="0">
-						</td>
-                	<td>
-                    	Text BG Color <br/><input name="text_bgstyle_color" type="text" size="15" value="ff3300"><br/>
-                    	Text BG Weight <br/><input name="text_bgstyle_weight" type="text" size="15" value="2"><br/>
-                    	Text BG Opacity <br/><input name="text_bgstyle_opacity" type="text" size="15" value="1"><br/>
-                    	Text BG xIndex <br/><input name="text_bgstyle_zindex" type="text" size="15" value="0">
-						</td>
-						<td>
-							ACTIONS<br/><a style="float:left; padding:0 .4em;" name="save_polylinestyle_btn" title="save" href="javascript:BitMap.EditSession.storePolylineStyle(document.polylinestyleform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a>
-      				</td>
-					</tr>
-				</table>
-      	</form>
-		</div>
-</div> <!-- end of editpolylinestylesform -->
-
-<div id="editpolylinestylescancel" style="display:none;"><input type="button" name="closepolylinestylesform" value="Cancel Editing Polyline Styles" onclick="javascript:BitMap.EditSession.canceledit('editpolylinestylesmenu'); BitMap.EditSession.canceledit('newpolylinestyleform'); BitMap.EditSession.canceledit('editpolylinestyleform'); BitMap.EditSession.canceledit('editpolylinestylescancel');"></div>
-<!--end polyline style editing forms -->
-
-
-
-
-<div id="newpolylineform" class="editform" style="display:none;">
-	<h2>Add a New Polyline</h2>
-    <div class="table" id="editpolylinetable_new">
-    	<form action="javascript:;" name="polylineform_new" id="polylineform_new">
-				<input name="new_polyline" type="hidden" value="true">
-    		<table class="data">
-					<tr>
-    				<th>Name </th>
-    				<th>Points Data </th>
-    				<th>Border Text <br/>only for XPolyline type</th>
-    				<th>zIndex </th>
-    				<th>Set </th>
-    				<th style="width:80px">ACTION </th>
-					</tr>
-					<tr class="gmapeditstrong">
-						<td><input name="name" type="text" style="width:90%" value="new"></td>
-						<td><textarea name="points_data" style="width:90%" rows="3"></textarea><br/>
-							<a name="polyline_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polyline', 'new');">Use Drawing Assistant</a></td>
-						<td><input name="border_text" type="text" style="width:90%" value=""></td>
-						<td><input name="zindex" type="text" size="3" value="0"></td>
-						<td><select name="set_id" id="polylineset_id">
-								<option value="n" >someset</option>
-								</select></td>
-						<td style="width:80px"><a name="new_polyline_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolyline(document.polylineform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
-					</tr>
-    		</table>
-    	</form>
-  	</div>
-		<div id="newpolylinecancel" ><input type="button" name="closepolylineform" value="Cancel New Polyline" onclick="javascript:BitMap.EditSession.canceledit('newpolylineform'); removeAssistant(); BitMap.EditSession.canceledit('editerror');"></div>
-</div> <!-- end of newpolylineform -->
-
-
-
-
-
-<div id="editpolylineform" class="editform" style="display:none;">
-		<h2>Polyline Sets Associated With This Map</h2>
+<!-- edit polylines form -->
+<div id="edit-polylines-table" class="edit-datatable" style="display:none;">
 		<table>
 			<tr>
-				<th style="width:240px">Name</th>
-				<th>Style</th>
-				<th style="width:100px">Plot-on-Load</th>
-				<th style="width:80px">List Set</th>
-				<th style="width:100px">List Markers</th>
-				<th style="width:80px">ACTIONS</th>
+				<td width="200px">Polylines:<br/>
+					<ul id="edit-polylines-list">
+						<li style="display:none;"><a href="javascript:BitMap.EditSession.editPolyline(n);">Polyline Name Here</a></li>
+						<li id="edit-polylinelink-new"><b><a id="edit-polylinelink-new-a" href="javascript:BitMap.EditSession.newPolyline(setindex);">Add A New Polyline</a></b></li>
+					</ul>
+				</td>
+				<td>
+					<div id="polyline-form">PUT POLYLINE FORM HERE!</div>
+				</td>
+				<td width="200px">
+					<div id="edit-polyline-tips">Tips<br/>
+					   Put advice here
+					</div>
+					<div id="edit-polyline-actions">Edit Polyline Actions<br/>
+						<a name="remove_polyline_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolyline(document.edit-polyline-form);">remove</a>
+						<a name="expunge_polyline_btn" title="delete the polyline!" href="javascript:BitMap.EditSession.expungePolyline(document.edit-polyline-form);">delete</a><br/>
+					</div>
+				</td>
 			</tr>
 		</table>
-		<div id="polylineset_n" style="display:none;">
-    	<form action="javascript:;" name="polylinesetform_n" id="polylinesetform_n" style="display:none;">
-				<input name="set_id" type="hidden" size="3" value="n">
-            <input name="set_array_n" type="hidden" value="n">
-  			<table class="data" id="polylinesetformdata_n">
-					<tr class="gmapeditstrong">
-    				<td style="width:240px"><b>Set Name:</b> <!-- <span id="plsetdesc">Description Here</span><br/> --></td>
-						<td><select name="style_id">
-                  				<option value="0">Google (standard)</option>
-                      			</select></td> 
-						<td style="width:100px"><select name="plot_on_load">
-                  				<option value="true">Yes</option>
-                  				<option value="false">No</option>
-                      			</select></td>
-						<td style="width:80px"><select name="side_panel">
-                  				<option value="true">Yes</option>
-                  				<option value="false">No</option>
-                      			</select></td>
-						<td style="width:100px"><select name="explode">
-                  				<option value="true">Yes</option>
-                  				<option value="false">No</option>
-                      			</select></td>
-    				<td style="width:80px">
-							<a id="plsetstore" href="javascript:BitMap.EditSession.storePolylineSet(document.polylinesetform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a> 
-  						<a id="plsetremove" href="javascript:BitMap.EditSession.removePolylineSet(document.polylinesetform_n);">remove</a> 
-  						<a id="plsetdelete" href="javascript:BitMap.EditSession.expungePolylineSet(document.polylinesetform_n);">delete</a></td>
-					</tr>
-					<tr>
-  					<td colspan="5"><a id="plsetedit" href="javascript:BitMap.EditSession.editPolylineSet('n');">Edit These Polylines</a> | 
-    					<a id="plsetadd" href="javascript:alert('feature coming soon');">Add Polylines from Archives</a></td>
-					</tr>
-  			</table>
-        </form>
-			<div id="plsetform_n" style="display:none;">
-				<h3>Polylines In This Set</h3>
-        	<table>
-					<tr>
-    				<th style="width:160px">Name </th>
-    				<th style="width:160px">Points Data </th>
-    				<th>Border Text <br/>only for XPolyline type</th>
-    				<th style="width:80px">zIndex </th>
-    				<th style="width:80px">ACTION </th>
-					</tr>
-    		</table>
-    		<div class="table" id="editpolylinetable_n">
-    			<form action="javascript:;" name="polylineform_n" id="polylineform_n" style="display:none;">
-      				<input name="save_polyline" type="hidden" value="true">
-                	<input name="set_id" type="hidden" size="3" value="n">
-            		<input name="polyline_id" type="hidden" size="3" value="n">
-						<input name="polyline_array_n" type="hidden" value="n">
-        			<table class="data" id="polylineformdata_n">
-							<tr>
-								<td style="width:160px"><input name="name" type="text" style="width:90%" value="a name"></td>
-								<td style="width:160px"><textarea name="points_data" style="width:90%" rows="3"></textarea><br/>
-									<a name="polyline_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polyline', n);">Use Drawing Assistant</a></td>
-								<td><input name="border_text" type="text" style="width:90%" value=""></td>
-								<td style="width:80px"><input name="zindex" type="text" size="3" value="0"></td>
-								<td style="width:80px">
-									<a name="save_polyline_btn" title="save" href="javascript:BitMap.EditSession.storePolyline(document.polylineform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a>
-									<a name="locate_polyline_btn" title="locate on the map" href="javascript:alert('feature coming soon');">show</a>
-									<a name="remove_polyline_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolyline(document.polylineform_n);">remove</a>
-									<a name="expunge_polyline_btn" title="delete the polyline!" href="javascript:BitMap.EditSession.expungePolyline(document.polylineform_n);">delete</a></td>
-							</tr>
-        			</table>
-    			</form>
-  		  </div>
-      	<div id="allavailpolylines_n" style="display:none;">
-    			<h3>All Polylines Available</h3>
-        		<div class="table" id="addpolylinetable_n">
-            		<form action="javascript:;" name="addpolylineform_n" id="addpolylineform_n">
-                		<div class="data">
-        						<!-- @todo this is just placeholder for table of polyline data -->
-                		</div>
-            		</form>	
-    			</div>						
+	<input type="button" name="closepolylineset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditPolylines()"></br>
+</div> 
+<!-- edit of edit polylines form -->
+
+<!-- close all polyline editing -->
+<div id="edit-polylinesets-cancel" style="display:none;">
+  <input type="button" name="closepolylineform" value="Close Polyline Editing" onclick="javascript:BitMap.EditSession.cancelEditPolylineSets();" />
+</div>
+
+
+
+<!--------------------------------
+	-  Polylinestyles Editing Forms
+	-------------------------------->
+
+<!-- polylinestyle editing menu -->
+<div id="edit-polylinestyles-table" class="edit-table" style="display:none;">
+	<h2>Polyline Styles Associated with Polyline Sets on This Map</h2>
+	<div id="edit-polylinestyles" class="edit-selected">
+		<table class="bar">
+			<tr>
+				<td><span class="setname">Polyline Styles:</span></td>
+			</tr>
+		</table>
+	</div>
+</div>
+<!-- end of polylinestyle editing menu -->
+
+<!-- edit polylinestyles form -->
+<div id="edit-polylinestyle-table" class="edit-datatable" style="display:none;">
+	<table>
+		<tr>
+			<td width="200px"><br />
+				<ul>
+					<li style="display:none;"><a href="javascript:BitMap.EditSession.editPolylineStyle(n);">Polyline Style Name Here</a></li>
+					<li id="edit-polylinestylelink-new"><b><a id="edit-polylinestylelink-new-a" href="javascript:BitMap.EditSession.editPolylineStyle();">Add A New Polyline Style</a></b></li>
+				</ul>
+			</td>
+			<td>
+				<div id="polylinestyle-form">PUT POLYLINESTYLE FORM HERE!</div>
+			</td>
+			<td width="200px">
+				<div id="edit-polylinestyle-tips">Tips<br/>
+					Put advice here
 				</div>
-			</div> <!--end of polylinesetform_n -->			
-		</div> <!-- end of polylineset_n -->
-</div> <!-- end of editpolylineform -->
+				<div id="edit-polylinestyle-actions">Edit Polyline Style Actions<br/>
+					Currently no delete or expunge options
+				</div>
+			</td>
+		</tr>
+	</table>
+</div> <!-- end of edit polylinestyles form -->
 
-<div id="editpolylinecancel" style="display:none;"><input type="button" name="closepolylineform" value="Cancel Editing Polylines" onclick="javascript:BitMap.EditSession.cancelPolylineEdit(); BitMap.EditSession.canceledit('newpolylinesetform'); BitMap.EditSession.canceledit('editerror');"></div>
-<!--end polyline editing forms -->
-
-
-
+<!-- close all polylinestyles editing -->
+<div id="edit-polylinestyles-cancel" style="display:none;">
+  <input type="button" name="closepolylinestylesform" value="Close Polyline Styles Editing" onclick="javascript:BitMap.EditSession.cancelEditPolylineStyles();" />
+</div>
+<!-- end polylinestyles editing forms -->
 
 
 

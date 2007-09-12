@@ -159,17 +159,14 @@ $tables = array(
   points_data X,
   levels_data X,
   zoom_factor I4,
-  num_levels I4,  
-  zindex I8 DEFAULT 0
+  num_levels I4
 ",
 
-//type options: 0 => Google Default
 //opacity takes a float from 0-1
 //some columns here are not used at this time
 'gmaps_polyline_styles' => "
   style_id I4 PRIMARY,
   name C(64),
-  polyline_style_type I4 DEFAULT 0,
   color C(6) DEFAULT 'ff3300',
   weight I4 DEFAULT 2,
   opacity F DEFAULT 1
@@ -207,8 +204,7 @@ $tables = array(
   circle C(5) DEFAULT 'true',
   points_data X DEFAULT 0,
   circle_center X DEFAULT 0,
-  radius F DEFAULT 0,
-  zindex I8 DEFAULT 0
+  radius F DEFAULT 0
 ",
 
 //opacity take a float from 0-1

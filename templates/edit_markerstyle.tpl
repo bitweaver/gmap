@@ -1,7 +1,6 @@
 {strip}
 {form action="javascript:;" enctype="multipart/form-data" id="edit-markerstyle-form"}
 	<input name="style_id" type="hidden" value="{$markerstyleInfo.style_id}">
-	<!-- <input name="style_array_n" type="hidden" value="n"> -->
 	<input name="save_markerstyle" type="hidden" value="true">
 	<div>Name<br/>
 		<input name="name" type="text" style="width:90%" value="{$markerstyleInfo.name}">

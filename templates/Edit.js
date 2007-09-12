@@ -181,7 +181,7 @@ BitMap.Edit.prototype = {
 		BitMap.show('edit-markers-menu');
 		//First check if there are any marker sets
 		if (this.Map.markersets.length > 0){
-			// We assume editMarkers has been called before and remove 
+			// We assume editMarkerSets has been called before and remove 
 			// any previously existing sets from the UI	
 			for (var n=0; n<this.Map.markersets.length; n++) {
 				if (this.Map.markersets[n]!= null){
@@ -283,7 +283,7 @@ BitMap.Edit.prototype = {
 	
 	
 	"cancelNewMarkerSet": function(){
-	  if( $('edit-markerset-new') ){ BitMap.hide('edit-markerset-new'); }
+		if( $('edit-markerset-new') ){ BitMap.hide('edit-markerset-new'); }
 	},
 	
 	"editMarkers": function(i){
@@ -790,10 +790,298 @@ BitMap.Edit.prototype = {
 		document.body.appendChild(elm);
 		BitMap.hide('edit-copyright-table');
 	},
+	
+
+
+	/*******************
+	 *
+	 * POLYLINE FORM FUNCTIONS
+	 *
+	 *******************/
+
+	"editPolylineSets": function(){
+		BitMap.show('edit-polylines-menu');
+		
+		if (this.Map.polylinesets.length > 0){
+			// We assume editPolylineSets has been called before and remove 
+			// any previously existing sets from the UI
+			for (var n=0; n<this.Map.polylinesets.length; n++) {
+				if (this.Map.polylinesets[n]!= null){
+					var getElem = "edit-polylineset_"+n;
+					if ( $(getElem) ) {
+						$('edit-polylinesets-table').removeChild($(getElem));
+					}
+				}
+			}
+			//Add a tool bar for each PolylineSet
+			for (var n=0; n<this.Map.polylinesets.length; n++) {
+				var set = $('edit-polylineset').cloneNode(true);
+				set.id = "edit-polylineset-"+n;
+				set.getElementsByTagName("span").item(0).innerHTML = this.Map.polylinesets[n].name;
+				set.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editPolylineSet("+n+");";
+				set.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editPolylines("+n+");";
+				$('edit-polylinesets-table').appendChild(set);
+				BitMap.show('edit-polylineset-'+n);
+			}
+		}
+		BitMap.show('edit-polylinesets-table');
+		BitMap.show('edit-polylinesets-cancel');		
+	},
+		
+	"cancelEditPolylineSets": function(){
+		//rescue our form tables lest we destroy them by accident
+		this.canceledit('edit-polylines-table');
+		var elm = $('edit-polylines-table');
+		document.body.appendChild(elm);
+		this.canceledit('edit-polylineset-options-table');
+		var elm = $('edit-polylineset-options-table');
+		document.body.appendChild(elm);
+		
+		this.canceledit('edit-polylines-menu');
+		this.canceledit('edit-polylinesets-table');
+		this.canceledit('edit-polylinesets-cancel');
+		
+		this.removeAssistant(); 
+		this.canceledit('editerror');
+	},
+	  
+	"editPolylineSet": function(i){
+		this.cancelEditPolylines();
+		//null is a new set
+		if ( i == null ){
+			this._setIdRef = null;
+			this.editObjectN = null;
+			if( !$('edit-polylineset-new') ){
+				var newPolylineSet = $('edit-polylineset').cloneNode(true);
+				newPolylineSet.id = "edit-polylineset-new";
+				newPolylineSet.getElementsByTagName("span").item(0).innerHTML = "New Polyline Set";
+				var tdtags = newPolylineSet.getElementsByTagName("td");
+				tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
+				$('edit-polylines-menu').appendChild(newPolylineSet);
+				
+				$('edit-polylineset-new').appendChild( $('edit-polylineset-options-table') );
+				BitMap.show('edit-polylineset-new');
+				BitMap.show('edit-polylineset-options-table');
+			}
+		}else{
+			this.editObjectN = this._setIndexRef = i;
+			this.cancelNewPolylineSet();
+			this._setIdRef = this.Map.polylinesets[i].set_id;
+			var optionsTable = $('edit-polylineset-options-table');
+			var target = $('edit-polylineset-'+i);
+			target.insertBefore(optionsTable, target.childNodes[2]);  
+		}
+
+		//set set menu highlighting
+		var a = (i != null)?'remove':'add';
+		if($('edit-polylineset-new')){
+			BitMap.Utl.JSCSS(a, $('edit-polylineset-new'), 'edit-selected');
+		}
+		this.toggleMenuOptsStyles( "polylineset", this.Map.polylinesets.length, i, 'edit-selected' );
+		
+		//get the edit form
+		doSimpleXMLHttpRequest("edit_polylineset.php", {set_id:this._setIdRef}).addCallback( bind(this.editPolylineSetCallback, this) );
+	},
+
+	"editPolylineSetCallback": function(rslt){
+		var f = $('polylineset-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
+		if (this._setIdRef == null) { BitMap.hide('edit-polylineset-options-actions'); }else{ BitMap.show('edit-polylineset-options-actions'); }
+		BitMap.show('edit-polylinesets-table');
+		BitMap.show('edit-polylineset-options-table');
+	},
+	
+	
+	"cancelEditPolylineSet": function(){
+		this.cancelNewPolylineSet();
+		this.canceledit('edit-polylineset-options-table');
+		this.canceledit('editerror');
+		this.toggleMenuOptsStyles( "polylineset", this.Map.polylinesets.length, null, 'edit-selected' );
+	},
+	
+	
+	"cancelNewPolylineSet": function(){
+	  if( $('edit-polylineset-new') ){ BitMap.hide('edit-polylineset-new'); }
+	},
+	
+	"editPolylines": function(i){
+		//make sure the new polyline set form is closed
+		this.cancelNewPolylineSet();
+		
+		this.toggleMenuOptsStyles( "polylineset", this.Map.polylinesets.length, i, 'edit-selected' );
+		
+		//make sure the polyline set options form is closed
+		this.cancelEditPolylineSet();
+
+		//get the set id of polylines we are editing		
+		var set_id = this.Map.polylinesets[i].set_id;    
+
+		//set some constants
+		var polylineTable = $('edit-polylines-table');
+		var polylineLinksList = $('edit-polylines-list');
+		var polylineLinks = polylineLinksList.getElementsByTagName("li");
+		
+		//Clear all the existing polylines listed  
+		//We leave the first two, the first is the model we clone, the second if for a new polyline
+		var count = polylineLinks.length;
+		for (n=count-1; n>1; n--){
+			polylineLinksList.removeChild(polylineLinks.item(n));
+		}
+		$('edit-polylinelink-new-a').href = "javascript:BitMap.EditSession.editPolyline(null, "+i+");";
+		
+		//For each polyline in our set, add a link
+		var firstselected = false;
+		for (var n=0; n<this.Map.polylines.length; n++) {
+			var m = this.Map.polylines[n];
+			if (m.set_id == set_id){
+				var li = polylineLinks.item(0).cloneNode(true);
+				li.id = 'edit-polylinelink-'+n;
+				var link = li.getElementsByTagName("a").item(0);
+				link.href = "javascript:BitMap.EditSession.editPolyline("+n+","+i+")";
+				link.innerHTML = m.title;
+				polylineLinksList.appendChild(li);
+				li.style.display = "block";
+				if (firstselected != true){
+					//else ajax up a form with the info from the first polyline in the list
+					this.editPolyline(n, i);
+					firstselected = true;
+				}
+			}
+		}		
+		if (firstselected == false){
+			//if the list is 0 - ajax up an empty form
+			this.editPolyline(null, i);
+		}
+		//We assume it is not visible and make it so
+		BitMap.show('edit-polylines-table');
+	},
+	
+	
+	"editPolyline": function(m_i, s_i){
+		var id = null
+		this._setIndexRef = s_i;
+		this._setIdRef = this.Map.polylinesets[s_i].set_id;
+		this._polylineIndexRef = m_i;
+
+		//move the form container to the correct set div
+		if ( m_i != null ){
+			var m = this.Map.polylines[m_i];
+			this._polylineIdRef = id = m.polyline_id;
+	
+			//update action links with polyline specific ref
+			/* @TODO THIS NEEDS TO BE CUSTOMIZED FOR POLYLINES
+			var formLinks = $('edit-polyline-actions').getElementsByTagName("a");
+			formLinks.item(0).href = "javascript:BitMap.MapData[0].Map.polylines["+m_i+"].gpolyline.openInfoWindowHtml(BitMap.MapData[0].Map.polylines["+m_i+"].gpolyline.my_html);";
+			*/
+			BitMap.show('edit-polyline-actions');
+		}
+		var polylinesTable = $('edit-polylines-table');
+		$('edit-polylineset-'+s_i).appendChild(polylinesTable);
+
+		//hilight selected polyline link - unhilight others
+		var a = (m_i != null)?'remove':'add';
+		BitMap.Utl.JSCSS(a, $('edit-polylinelink-new'), 'edit-select');
+		this.toggleMenuOptsStyles( "polylinelink", this.Map.polylines.length, m_i, 'edit-select' );
+		this.toggleMenuOptsStyles( "polylineset", this.Map.polylinesets.length, s_i, 'edit-selected' );
+		
+		//get the edit form
+		doSimpleXMLHttpRequest("edit_polyline.php", {polyline_id:id, set_id:this._setIdRef}).addCallback( bind(this.editPolylineCallback, this) );
+	},
+	
+	"editPolylineCallback": function(rslt){
+		var polylineForm = $('polyline-form');
+		polylineForm.innerHTML = rslt.responseText;
+		this.executeJavascript($('polylineForm'));
+		setupAllTabs();
+		BitMap.show('edit-polylines-table');		
+ 	},
+	
+	"cancelNewPolyline": function(){
+		this.canceledit('edit-polyline-new');
+	},
+	
+	"cancelEditPolylines": function(){
+		BitMap.hide('edit-polylines-table');
+	},
 
 
 
+	/*******************
+	 *
+	 * POLYLINE STYLE FORM FUNCTIONS
+	 *
+	 *******************/
 
+	"editPolylineStyle":function(i){	
+		var style_id = ( i != null )?this.Map.polylinestyles[i].style_id:null;
+		this.editObjectN = i;
+	
+		//highlight selected polyline link - unhighlight others
+		var a = (i != null)?'remove':'add';
+		BitMap.Utl.JSCSS(a, $('edit-polylinestylelink-new'), 'edit-select');
+		this.toggleMenuOptsStyles( "polylinestylelink", this.Map.polylinestyles.length, i, 'edit-select' );
+		
+		doSimpleXMLHttpRequest("edit_polylinestyle.php", {style_id:style_id}).addCallback( bind(this.editPolylineStyleCallback, this) );
+	},
+	
+	"editPolylineStyleCallback": function(rslt){
+		var f = $('polylinestyle-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
+		BitMap.show('edit-polylinestyle-table');		
+	},
+
+	"editPolylineStyles": function(){
+		BitMap.show('edit-polylinestyles-table');
+		BitMap.show('edit-polylinestyles-cancel');
+		
+		var polylinestyleTable = $('edit-polylinestyle-table');
+		//set some constants
+		var linksList = polylinestyleTable.getElementsByTagName("ul").item(0);
+		var links = polylinestyleTable.getElementsByTagName("li");
+		//Clear all the existing polylinestyles listed
+		//We leave the first two, the first is the model we clone, the second is for a new polylinestyle
+		var count = links.length;
+		for (n=count-1; n>1; n--){
+			linksList.removeChild(links.item(n));
+		}
+		
+		/* I THINK THIS CAN BE DELETED -wjames5 */
+		//$('edit-polylinestylelink-new-a').href = "javascript:BitMap.EditSession.editPolylineStyle();";
+		
+		//For each polylinestyle, add a link
+		var firstselected = false;
+		for (var n=0; n<this.Map.polylinestyles.length; n++) {
+			var m = this.Map.polylinestyles[n];
+			var li = links.item(0).cloneNode(true);
+			li.id = 'edit-polylinestylelink-'+n;
+			var a = li.getElementsByTagName("a").item(0);
+			a.href = "javascript:BitMap.EditSession.editPolylineStyle("+n+")";
+			a.innerHTML = m.name;
+			linksList.appendChild(li);
+			li.style.display = "block";
+			
+			if (firstselected != true){
+				this.editPolylineStyle(n);
+				firstselected = true;
+			}			
+		}
+		if (firstselected == false){
+			this.editPolylineStyle();
+		}
+		//We assume it is not visible and make it so
+		BitMap.show('edit-polylinestyle-table');
+	},
+
+	"cancelEditPolylineStyles": function(){
+	  BitMap.hide('edit-polylinestyles-table');
+	  BitMap.hide('edit-polylinestyle-table');
+	  BitMap.hide('edit-polylinestyles-cancel');
+	},
+	
+	
+	
 	
 	/*******************
 	 *
@@ -812,8 +1100,7 @@ BitMap.Edit.prototype = {
 		var str = "edit_marker.php?" + queryString(f);
 		this._setIdRef = f.set_id.value;
 		this.editObjectN = this._markerIndexRef;
-		var callback = (f.marker_id.value != "")?this.updateMarker:this.addMarker;
-		doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMarker, this) ); 
 	 },
 	 
 	 "removeMarker": function(f){
@@ -836,8 +1123,7 @@ BitMap.Edit.prototype = {
 		this.showSpinner("Saving Markerset...");
 		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
 		this._setIdRef = f.set_id.value;
-		var callback = (f.set_id.value != "")?this.updateMarkerSet:this.addMarkerSet;
-		doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMarkerSet, this) ); 
 	 },
 
 	 "removeMarkerSet": function(f){
@@ -932,6 +1218,56 @@ BitMap.Edit.prototype = {
 		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
 	 },
 		 
+	 "storePolyline": function(f){
+		this.showSpinner("Saving Polyline...");
+		var str = "edit_polyline.php?" + queryString(f);
+		this._setIdRef = f.set_id.value;
+		this.editObjectN = this._polylineIndexRef;
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updatePolyline, this) ); 
+	 },
+	 
+	 "removePolyline": function(f){
+		this.showSpinner("Removing Polyline...");
+		this._setIdRef = f.set_id.value;
+		this.editPolylineId = f.polyline_id.value;
+		var str = "edit_polyline.php?set_id=" + this._setIdRef + "&polyline_id=" + this.editPolylineId + "&remove_polyline=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolyline, this) ); 
+	 },
+
+	 "expungePolyline": function(f){
+		this.showSpinner("Deleting Polyline...");
+		this._setIdRef = f.set_id.value;
+		this.editPolylineId = f.polyline_id.value;
+		var str = "edit_polyline.php?polyline_id=" + this.editPolylineId + "&expunge_polyline=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolyline, this) ); 
+	 },
+
+	 "storePolylineSet": function(f){
+		this.showSpinner("Saving Polylineset...");
+		var str = "edit_polylineset.php?" + queryString(f) + "&set_type=polylines" + "&gmap_id=" + this.Map.id;
+		this._setIdRef = f.set_id.value;
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updatePolylineSet, this) ); 
+	 },
+
+	 "removePolylineSet": function(f){
+		this.showSpinner("Removing Polylineset...");
+		this._setIdRef = f.set_id.value;
+		var str = "edit_polylineset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polylineset=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolylineSet, this) ); 
+	 },
+
+	 "expungePolylineSet": function(f){
+		this.showSpinner("Deleting Polylineset...");
+		this._setIdRef = f.set_id.value;
+		var str = "edit_polylineset.php?" + "set_id=" + f.set_id.value + "&expunge_polylineset=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolylineSet, this) ); 
+	 },
+	 
+	 "storePolylineStyle": function(f){
+		this.showSpinner("Saving Polylinestyle...");
+		var str = "edit_polylinestyle.php?" + queryString(f);
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updatePolylineStyle, this) ); 
+	 },
 		 
 	
 	/*******************
@@ -1085,13 +1421,13 @@ BitMap.Edit.prototype = {
 	"updateMarker": function(rslt){
 	    var xml = rslt.responseXML.documentElement;							
 		var n_i = this.editObjectN;
-		var s_i = this_setIndexRef;
+		var s_i = this._setIndexRef;
 		var m;
-		if ( n_i != null){
-			var n = this.Map.markers.length;
-			m = this.Map.markers[n] = {};
+		if ( n_i == null){
+			n_i = this.Map.markers.length;
+			m = this.Map.markers[n_i] = {};
 		}else{
-			m = this.Map.markers[n];
+			m = this.Map.markers[n_i];
 		}
 
 		//add the xml data to the marker record
@@ -1146,8 +1482,7 @@ BitMap.Edit.prototype = {
 		var xml = rslt.responseXML.documentElement;
 		var n_i = this.editObjectN;
 		var s;
-	    if ( n_i != null){
-			//@TODO modify this to handle either this.Map.markers or bSMData sets
+	    if ( n_i == null){
 			n_i = this.Map.markersets.length;
 			this.Map.markersets[n_i] = [];
 			s= this.Map.markersets[n_i];
@@ -1184,7 +1519,7 @@ BitMap.Edit.prototype = {
 			// update the sets menus
 			this.cancelEditMarkerSets();
 			this.editMarkerSets();
-			this.editMarkers(n);		
+			this.editMarkers(n_i);		
 		}else{
 			if ( ( oldStyle != s.style_id ) || ( oldIcon != s.icon_id ) ) {
 				a = this.Map.markers;
@@ -1223,7 +1558,7 @@ BitMap.Edit.prototype = {
 		}
 		this.hideSpinner("DONE!");
 		this.editMarkers();
-		this.editSet(this._setIdRef);
+		this.editMarkerSet(this._setIdRef);
 	},
 	
 
@@ -1297,6 +1632,7 @@ BitMap.Edit.prototype = {
 		this.hideSpinner("DONE!");
 		// update the styles menus
 		this.editMarkerStyles();
+		this.editMarkerStyle(n_i);
 		
 		if ( this.editObjectN != null){
 			//update all markers
@@ -1586,8 +1922,208 @@ BitMap.Edit.prototype = {
 		this.editTilelayer(s);	
 	},
 
+	"updatePolyline": function(rslt){
+	    var xml = rslt.responseXML.documentElement;							
+		var n_i = this.editObjectN;
+		var s_i = this._setIndexRef;
+		var p;
+		if ( n_i == null){
+			var n_i = this.Map.polylines.length;
+			p = this.Map.polylines[n_i] = [];
+			p.array_n = n_i;
+		}else{
+			p = this.Map.polylines[n_i];
+		}
+		
+		//shorten var names
+		var id = xml.getElementsByTagName('polyline_id');
+		p.polyline_id = id[0].firstChild.nodeValue;
+		var nm = xml.getElementsByTagName('name');
+		p.name = nm[0].firstChild.nodeValue;
+		var dt = xml.getElementsByTagName('points_data');
+		var points_data = dt[0].firstChild.nodeValue;
+		p.points_data = points_data.split(",");
+		var bt = xml.getElementsByTagName('border_text');
+		if (bt[0].firstChild != null){p.border_text = bt[0].firstChild.nodeValue;}else{p.border_text = "";}	
+		var zi = xml.getElementsByTagName('zindex');
+		p.zindex = parseInt(zi[0].firstChild.nodeValue);			
+		
+		if ( this.editObjectN  == null){
+			p.set_id = this.Map.polylinesets[s].set_id;
+			p.style_id = this.Map.polylinesets[s].style_id;
+			p.plot_on_load = this.Map.polylinesets[s].plot_on_load;
+			p.side_panel = this.Map.polylinesets[s].side_panel;
+			p.explode = this.Map.polylinesets[s].explode;
+			p.array_n = parseInt(n);
+		}else{
+			this.Map.map.removeOverlay(p.polyline);
+		}
+		
+		//create polyline
+		this.Map.attachPolyline(n_i);
+		this.removeAssistant();
+		this.hideSpinner("DONE!");
+		this.editPolylines(s_i);
+		this.editPolyline(n_i);
+	},
 
+	"updatePolylineSet": function(rslt){
+		var xml = rslt.responseXML.documentElement;
+		var n_i = this.editObjectN;
+		var s;
+	    if ( n_i == null){
+			n_i = this.Map.polylinesets.length;
+			this.Map.polylinesets[n_i] = [];
+			s = this.Map.polylinesets[n_i];
+		}else{
+			s = this.Map.polylinesets[n_i];
+			var oldStyle = s.style_id;
+		}
 
+		//shorten var names
+		var id = xml.getElementsByTagName('set_id');			
+		s.set_id = parseInt(id[0].firstChild.nodeValue);
+		var nm = xml.getElementsByTagName('name');
+		s.name = nm[0].firstChild.nodeValue;
+		var dc = xml.getElementsByTagName('description');
+		s.description = dc[0].firstChild.nodeValue;
+		var sy = xml.getElementsByTagName('style_id');
+		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
+		var pol = xml.getElementsByTagName('plot_on_load');
+		if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
+		var sp = xml.getElementsByTagName('side_panel');
+		if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
+		var ex = xml.getElementsByTagName('explode');
+		if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
+
+		this.hideSpinner("DONE!");
+
+		if (this.editObjectN == null){
+			BitMap.hide('edit-polylineset-new');
+			// update the sets menus
+			this.cancelEditPolylineSets();
+			this.editPolylineSets();
+			this.editPolylines(n_i);
+		}else{
+			if ( oldStyle != s.style_id ) {
+				a = this.Map.polylines;
+				//if the length of the array is > 0
+				if (a.length > 0){
+					//loop through the array
+					for(var n=0; n<a.length; n++){
+						//if the array item is not Null
+						if (a[n]!= null && a[n].polyline != null && a[n].set_id == s.set_id){
+							a[n].style_id = s.style_id;
+							//unload the polyline
+							this.Map.map.removeOverlay( a[n].polyline );
+							//create polyline
+							this.attachPolyline(n);
+						}
+					}
+				}
+			}
+			// update the sets menus
+			this.editPolylineSet(this.editObjectN);
+		}
+	},
+	
+	"updatePolylineStyle": function(rslt){
+		var xml = rslt.responseXML.documentElement;
+		
+		//the style data we are changing
+		var n_i = this.editObjectN;
+	    if ( n_i != null){
+			var n_i = this.Map.polylinestyles.length;
+			this.Map.polylinestyles[n_i] = [];
+			var s = this.Map.polylinestyles[n_i];
+	    }else{
+			var s = this.Map.polylinestyles[n_i];
+		}
+
+		// assign polylinestyle values data array			
+		var id = xml.getElementsByTagName('style_id');			
+		s.style_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.getElementsByTagName('name');			
+		s.name = nm[0].firstChild.nodeValue;
+		var cl = xml.getElementsByTagName('color');			
+		s.color = cl[0].firstChild.nodeValue;
+		var wt = xml.getElementsByTagName('weight');			
+		s.weight = parseInt( wt[0].firstChild.nodeValue );
+		var op = xml.getElementsByTagName('opacity');			
+		s.opacity = op[0].firstChild.nodeValue;
+
+		this.hideSpinner("DONE!");
+		// update the styles menus
+		this.editPolylineStyles();
+		this.editPolylineStyle(n_i);
+		
+		if ( this.editObjectN != null){
+			//for each polyline
+			var a = this.Map.polylines;
+			//if the length of the array is > 0
+			if (a.length > 0){
+			//loop through the array
+				for(var n=0; n<a.length; n++){
+				//if the array item is not Null
+					if (a[n]!= null && a[n].polyline != null && a[n].style_id == s.style_id){
+							this.Map.map.removeOverlay( a[n].polyline );
+					this.Map.attachPolyline(n);
+					}
+				}
+			}
+	
+			//for each polygon
+			var b = this.Map.polygons;
+			//if the length of the array is > 0
+			if (b.length > 0){
+			//loop through the array
+				for(i=0; i<b.length; i++){
+				//if the array item is not Null
+					if (b[i]!= null && b[i].polygon != null && b[i].style_id == s.style_id){
+							this.Map.map.removeOverlay( b[i].polygon );
+						this.Map.attachPolygon(i);
+					}
+				}
+			}
+		}
+	 },	
+
+	"updateRemovePolyline": function(){
+		for (var i=0; i<this.Map.polylines.length; i++){
+			if ( Map.Polylines[i] != null && this.Map.polylines[n].polyline != null && this.Map.polylines[i].polyline_id == this.editPolylineId ){
+				this.Map.map.removeOverlay(this.Map.polylines[i].polyline);
+				this.Map.polylines[i].polyline = null;
+				this.Map.polylines[i] = null;
+			}
+		}
+		this.hideSpinner("DONE!");
+		this.editPolylines();
+		this.editPolylineSet(this._setIdRef);
+	},
+
+	//this needs special attention
+	"updateRemovePolylineSet": function(){
+	  	for (var n=0; n<this.Map.polylines.length; n++){
+	  		if ( ( this.Map.polylines[n] != null ) && ( this.Map.polylines[n].set_id == this.editSetId ) && ( this.Map.polylines[n].polyline != null ) ){
+	  			this.Map.map.removeOverlay(Map.Polylines[n].polyline);
+					this.Map.polylines[n].polyline = null;
+	  			this.Map.polylines[n] = null;
+	  		}
+	  	}
+		for (var s=0; s<Map.PolylineSets.length; s++){
+	  		if ( ( this.Map.polylinesets[s] != null ) && ( this.Map.polylinesets[s].set_id == this.editSetId ) ){
+	      		var getElem = "polylineset_"+this.Map.polylinesets[s].set_id;
+	      		if ( $(getElem) ) {
+	          		var extraPolylineForm = $(getElem);
+	      			$('editpolylineform').removeChild(extraPolylineForm);
+	      		}
+					this.Map.polylinesets[s].set_id = null;
+	  			this.Map.polylinesets[s] = null;
+	  		}
+		}
+		this.hideSpinner("DONE!");
+		this.editPolylines();
+	},
 
 		
 	/******************

@@ -21,63 +21,35 @@ $gContent = new BitGmap();
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
 
+$format = 'xml';
+
 if (!empty($_REQUEST["save_polylineset"])) {
     if( $result = $gContent->storePolylineSet( $_REQUEST ) ) {
-
-				//@todo - returned results need to include all the associated style properties as well
-				//if store is successful we return XML
-				$mRet = "<polylineset>"
-      		  ."<set_id>".$result->fields['set_id']."</set_id>"
-      		  ."<name>".$result->fields['name']."</name>"
-      		  ."<description>".$result->fields['description']."</description>"
-      		  ."<style_id>".$result->fields['style_id']."</style_id>"
-      		  ."<plot_on_load>".$result->fields['plot_on_load']."</plot_on_load>"
-      		  ."<side_panel>".$result->fields['side_panel']."</side_panel>"
-      		  ."<explode>".$result->fields['explode']."</explode>"
-						."</polylineset>";
-				
-    }else{
-		//@todo - return some sort of store failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+		$gBitSmarty->assign_by_ref('polylinesetInfo', $result->fields );
     }
-//Check if this to remove from a set, or to delete completely
+//Check if this to remove from a map, or to delete completely
 }elseif (!empty($_REQUEST["remove_polylineset"])) {
     if( $gContent->removePolylineSetFromMap( $_REQUEST ) ) {
-				//if store is successful we return XML
-				$mRet = "<remove>success</remove>";
-
-		}else{
-		//@todo - return some sort of remove failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+		$gBitSmarty->assign_by_ref('removeSucces', true);
     }
 }elseif (!empty($_REQUEST["expunge_polylineset"])) {
     if( $gContent->expungePolylineSet( $_REQUEST ) ) {
-				//if store is successful we return XML
-				$mRet = "<remove>success</remove>";
-
-		}else{
-		//@todo - return some sort of remove failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+		$gBitSmarty->assign_by_ref('expungeSucces', true);
     }
+}else{
+	if ( isset( $_REQUEST["set_id"] ) ){
+		$set = $gContent->getPolylineSetData( $_REQUEST["set_id"] );
+	}
+	$gBitSmarty->assign_by_ref('polylineInfo', $set->fields);
+	$gBitSystem->display('bitpackage:gmap/edit_polylineset.tpl', NULL, 'center_only');
+	die;
 }
 
-//since we are returning xml we must report so in the header
-//we also need to tell the browser not to cache the page
-//see: http://mapki.com/index.php?title=Dynamic_XML
-// Date in the past
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
-// always modified
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-// HTTP/1.1
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-// HTTP/1.0
-header("Pragma: no-cache");
-//XML Header
-header("content-type:text/xml");
-     		
-print_r($mRet);
 
-die;
-
-?>	
+if ( count($gContent->mErrors) > 0 ){
+	$gBitSystem->setFormatHeader( 'center_only' );
+	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+}else{
+	$gBitSystem->display('bitpackage:gmap/edit_polylineset_xml.tpl', null, $format);
+}
+?>
