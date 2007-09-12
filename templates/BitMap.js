@@ -216,7 +216,7 @@ BitMap.Map.prototype = {
 		var layers = [];
 		for (n in this.tilelayers){
 			var T = this.tilelayers[n];
-			if (T.maptype_id = M.maptype_id){				
+			if (T.maptype_id == M.maptype_id){				
 				//get copyright info
 				var copyrightCollection = new GCopyrightCollection();
 				

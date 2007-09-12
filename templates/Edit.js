@@ -1,4 +1,9 @@
-//for debugging
+/*	
+BitMap.show('editerror');
+$('editerror').innerHTML = rslt.responseText;
+*/
+
+
 BitMap.dumpProps = function(obj, parent) {
    for (var i in obj) {
       if (parent) { var msg = parent + "." + i + "\n" + obj[i]; } else { var msg = i + "\n" + obj[i]; }
@@ -10,7 +15,7 @@ BitMap.dumpProps = function(obj, parent) {
 }
 
 if (typeof(BitMap) == 'undefined') {
-    BitMap = {};
+	BitMap = {};
 }
 
 BitMap.EditMap = function(){
@@ -146,6 +151,7 @@ BitMap.Edit.prototype = {
 	},
 	
 	
+
 	
 	/*******************
 	 *
@@ -616,13 +622,12 @@ BitMap.Edit.prototype = {
 		this.toggleMenuOptsStyles( "maptype", this.Map.maptypes.length, i, 'edit-selected' );
 		
 		this.cancelEditMaptype();
-		var maptype_id = this.Map.maptypes[i].maptype_id;
-		//Move Tilelayers Table to New Maptype
-		var tilelayersTable = $('edit-tilelayers-table');
-		$('edit-maptype-'+i).appendChild(tilelayersTable);
+		var m_id = this.Map.maptypes[i].maptype_id;
 		//set some constants
-		var tilelayersLinksList = tilelayersTable.getElementsByTagName("ul").item(0);
-		var tilelayersLinks = tilelayersTable.getElementsByTagName("li");
+		var tilelayersTable = $('edit-tilelayers-table');
+		var tilelayersLinksList = $('edit-tilelayers-list');
+		var tilelayersLinks = tilelayersLinksList.getElementsByTagName("li");
+
 		//Clear all the existing tilelayers listed  
 		//We leave the first two, the first is the model we clone, the second if for a new tilelayer
 		var count = tilelayersLinks.length;
@@ -630,92 +635,35 @@ BitMap.Edit.prototype = {
 			tilelayersLinksList.removeChild(tilelayersLinks.item(n));
 		}
 		$('edit-tilelayerlink-new-a').href = "javascript:BitMap.EditSession.editTilelayer(null, "+i+");";
+
 		//For each tilelayer in our new maptype, add a link
 		var firstselected = false;
 		for (var n=0; n<this.Map.tilelayers.length; n++) {
 			var t = this.Map.tilelayers[n];
-			if (t.maptype_id == maptype_id){
-				var newTilelayerli = tilelayersLinks.item(0).cloneNode(true);
-				newTilelayerli.id = 'edit-tilelayerlink-'+n;
-				var newTilelayerLink = newTilelayerli.getElementsByTagName("a").item(0);
-				newTilelayerLink.href = "javascript:BitMap.EditSession.editTilelayer("+n+","+i+")";
-				newTilelayerLink.innerHTML = t.tiles_name;
-				tilelayersLinksList.appendChild(newTilelayerli);
-				newTilelayerli.style.display = "block";
+			if (t.maptype_id == m_id){
+				var li = tilelayersLinks.item(0).cloneNode(true);
+				li.id = 'edit-tilelayerlink-'+n;
+				var link = li.getElementsByTagName("a").item(0);
+				link.href = "javascript:BitMap.EditSession.editTilelayer("+n+","+i+")";
+				link.innerHTML = t.tiles_name;
+				tilelayersLinksList.appendChild(li);
+				li.style.display = "block";
 				if (firstselected != true){
 					this.editTilelayer(n, i);
 					firstselected = true;
 				}	        
 			}
-		}
+		}		
 		if (firstselected == false){
 			this.editTilelayer(null, i);
 		}
-		//We assume it is not visible and make it so
-		BitMap.show('edit-tilelayers-table');
 	},
-	
-	/*
-	"editTilelayer": function(i){
-	  this.cancelEditCopyright();
-	  //i is the maptype_index
-	  BitMap.Utl.JSCSS('remove', $('edit-tilelayerlink-new'), 'edit-select');
-	  this.toggleMenuOptsStyles( "tilelayerlink", this.Map.tilelayers.length, i, 'edit-select' );
-	  
-	  var t = this.Map.tilelayers[i];
 
-	  //make menu of copyrights
-	  //Clear all the existing copyrights listed  
-	  var count = this.Map.copyrights.length;
-	  for (n=0; n<count; n++){
-	  	if ($("edit-copyrightlink-"+n)){
-	    	$('edit-copyright-menu').removeChild($("edit-copyrightlink-"+n));
-	    }
-	  }
-	  $('edit-copyrightlink-new-a').href = "javascript:BitMap.EditSession.editCopyright(null, "+i+");";
-	  //for each copyright
-	  for (var n=0; n<count; n++) {
-		var c = this.Map.copyrights[n];
-	    if (c.tilelayer_id == t.tilelayer_id){
-		  //get the model menu and clone it
-		  newCopyrightMenu = $('edit-copyrightlink').cloneNode(true);
-		  //update the values
-		  newCopyrightMenu.id = "edit-copyrightlink-"+n;
-		  newCopyrightLink = newCopyrightMenu.getElementsByTagName("a").item(0);
-		  newCopyrightLink.href = "javascript:BitMap.EditSession.editCopyright("+n+", "+i+")";
-		  newCopyrightLink.innerHTML = c.notice;
-		  //add it to the copyrights menu
-		  $('edit-copyright-menu').appendChild(newCopyrightMenu);
-	  	  newCopyrightMenu.style.display = "block";
-		}
-	  }
-	  BitMap.show('edit-tilelayer-actions');
-	},
-	*/
-/*
-	"newTilelayer": function(i){
-	  //i is the maptype_index
-	  var count = this.Map.tilelayers.length;
-	  for (n=0; n<count; n++){
-	    if($('edit-tilelayerlink-'+n)){
-	    BitMap.Utl.JSCSS('remove', $('edit-tilelayerlink-'+n), 'edit-select');
-	    }
-	  }	  
-	  BitMap.Utl.JSCSS('add', $('edit-tilelayerlink-new'), 'edit-select');
-	  
-	  var form = $('edit-tilelayer-form');
-	  form.tilelayer_id.value = null;
-	  form.array_n.value = null;
-	  form.maptype_id.value = this.Map.maptypes[i].maptype_id;
-	  form.reset();
-	  BitMap.hide('edit-tilelayer-actions');  
-	},
-*/
 
 	"editTilelayer": function(t_i, m_i){
 		this.cancelEditCopyright();
 		var t_id = ( t_i != null )?this.Map.tilelayers[t_i].tilelayer_id:null;
-		var m_id = ( m_i != null )?this.Map.maptypes[m_i].maptype_id:null;
+		var m_id = this._setIdRef = ( m_i != null )?this.Map.maptypes[m_i].maptype_id:null;
 		this.editObjectN = t_i;
 		this._setIndexRef = m_i;
 
@@ -750,6 +698,9 @@ BitMap.Edit.prototype = {
 		}else{
 			BitMap.hide('edit-tilelayer-actions');
 		}
+
+		var table = $('edit-tilelayers-table');
+		$('edit-maptype-'+m_i).appendChild(table);
 	
 		var a = (t_i != null)?'remove':'add';
 		BitMap.Utl.JSCSS(a, $('edit-tilelayerlink-new'), 'edit-select');
@@ -763,7 +714,7 @@ BitMap.Edit.prototype = {
 		var f = $('tilelayer-form');
 		f.innerHTML = rslt.responseText;
 		this.executeJavascript(f);
-		BitMap.show('edit-tilelayer-table');		
+		BitMap.show('edit-tilelayers-table');		
 	},
 
 
@@ -851,149 +802,144 @@ BitMap.Edit.prototype = {
 	 *
 	 *******************/
 
-/*				
-				BitMap.show('editerror');
-				$('editerror').innerHTML = str;
-*/
-
 			 
-		 "storeMap": function(f){
-			this.showSpinner("Saving Map...");
-			doSimpleXMLHttpRequest("edit_map.php", f).addCallback( bind(this.updateMap, this) ); 
-		 },
+	 "storeMap": function(f){
+		this.showSpinner("Saving Map...");
+		doSimpleXMLHttpRequest("edit_map.php", f).addCallback( bind(this.updateMap, this) ); 
+	 },
 
-		 "storeMarker": function(f){
-			this.showSpinner("Saving Marker...");
-			var str = "edit_marker.php?" + queryString(f);
-			this._setIdRef = f.set_id.value;
-			this.editObjectN = this._markerIndexRef; //f.marker_array_n.value;
-			var callback = (f.marker_id.value != "")?this.updateMarker:this.addMarker;
-			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
-		 },
-		 
-		 "removeMarker": function(f){
-			this.showSpinner("Removing Marker...");
-			this._setIdRef = f.set_id.value;
-			this.editMarkerId = f.marker_id.value;
-			var str = "edit_marker.php?set_id=" + this._setIdRef + "&marker_id=" + this.editMarkerId + "&remove_marker=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
-		 },
-	
-		 "expungeMarker": function(f){
-			this.showSpinner("Deleting Marker...");
-			this._setIdRef = f.set_id.value;
-			this.editMarkerId = f.marker_id.value;
-			var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
-		 },
-	
-		 "storeMarkerSet": function(f){
-			this.showSpinner("Saving Markerset...");
-			var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
-			this._setIdRef = f.set_id.value;
-			var callback = (f.set_id.value != "")?this.updateMarkerSet:this.addMarkerSet;
-			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
-		 },
-	
-		 "removeMarkerSet": function(f){
-			this.showSpinner("Removing Markerset...");
-			this._setIdRef = f.set_id.value;
-			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
-		 },
-	
-		 "expungeMarkerSet": function(f){
-			this.showSpinner("Deleting Markerset...");
-			this._setIdRef = f.set_id.value;
-			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
-		 },
-		 
-		 "storeMarkerStyle": function(f){
-			this.showSpinner("Saving Markerstyle...");
-			var str = "edit_markerstyle.php?" + queryString(f);
-			var callback = (f.style_id.value != "")?this.updateMarkerStyle:this.addMarkerStyle;
-			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
-		 },
+	 "storeMarker": function(f){
+		this.showSpinner("Saving Marker...");
+		var str = "edit_marker.php?" + queryString(f);
+		this._setIdRef = f.set_id.value;
+		this.editObjectN = this._markerIndexRef; //f.marker_array_n.value;
+		var callback = (f.marker_id.value != "")?this.updateMarker:this.addMarker;
+		doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+	 },
+	 
+	 "removeMarker": function(f){
+		this.showSpinner("Removing Marker...");
+		this._setIdRef = f.set_id.value;
+		this.editMarkerId = f.marker_id.value;
+		var str = "edit_marker.php?set_id=" + this._setIdRef + "&marker_id=" + this.editMarkerId + "&remove_marker=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
+	 },
 
-		 "storeIconStyle": function(f){
-			this.showSpinner("Saving Iconstyle...");
-			var str = "edit_iconstyle.php?" + queryString(f);
-			//var callback = (f.icon_id.value != "")?this.updateIconStyle:this.addIconStyle;
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateIconStyle, this) ); 
-		 },
-	
-		 "storeMaptype": function(f){
-			this.showSpinner("Saving Map...");
-			//this.editObjectN = f.array_n.value;
-			var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
-			//var callback = (f.maptype_id.value != "")?this.updateMaptype:this.addMaptype;
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMaptype, this) ); 
-		 },
-		 
-		 "removeMaptype": function(f){
-			this.showSpinner("Removing Maptype...");
-			this.editObjectN = f.array_n.value;
-			this.editSetId = f.maptype_id.value;
-			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
-		 },
-		 
-		 "expungeMaptype": function(f){
-			this.showSpinner("Deleting Maptype...");
-			this.editObjectN = f.array_n.value;
-			this.editSetId = f.maptype_id.value;
-			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
-		 },
+	 "expungeMarker": function(f){
+		this.showSpinner("Deleting Marker...");
+		this._setIdRef = f.set_id.value;
+		this.editMarkerId = f.marker_id.value;
+		var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
+	 },
 
-		 "storeTilelayer": function(f){
-			this.showSpinner("Saving Tilelayer...");
-			var str = "edit_tilelayer.php?" + queryString(f);
-			this.editSetId = f.maptype_id.value;
-			this.editObjectN = f.array_n.value;
-			var callback = (f.tilelayer_id.value != "")?this.updateTilelayer:this.addTilelayer;
-			doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
-		 },
-		 
-		 "removeTilelayer": function(f){
-			this.showSpinner("Removing Tilelayer...");
-			this.editSetId = f.set_id.value;
-			this.editTilelayerId = f.tilelayer_id.value;
-			var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
-		 },
-	
-		 "expungeTilelayer": function(f){
-			this.showSpinner("Deleting Tilelayer...");
-			this.editSetId = f.set_id.value;
-			this.editTilelayerId = f.tilelayer_id.value;
-			var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
-		 },
+	 "storeMarkerSet": function(f){
+		this.showSpinner("Saving Markerset...");
+		var str = "edit_markerset.php?" + queryString(f) + "&set_type=markers" + "&gmap_id=" + this.Map.id;
+		this._setIdRef = f.set_id.value;
+		var callback = (f.set_id.value != "")?this.updateMarkerSet:this.addMarkerSet;
+		doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+	 },
 
-		 "storeCopyright": function(f){
-			this.showSpinner("Saving Copyright...");
-			var str = "edit_copyright.php?" + queryString(f);
-			this._setIdRef = f.tilelayer_id.value;
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateCopyright, this) ); 
-		 },
-		 
-		 "removeCopyright": function(f){
-			this.showSpinner("Removing Copyright...");
-			this.editSetId = f.set_id.value;
-			this.editCopyrightId = f.copyright_id.value;
-			var str = "edit_copyright.php?set_id=" + this.editSetId + "&copyright_id=" + this.editCopyrightId + "&remove_copyright=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
-		 },
-	
-		 "expungeCopyright": function(f){
-			this.showSpinner("Deleting Copyright...");
-			this.editSetId = f.set_id.value;
-			this.editCopyrightId = f.copyright_id.value;
-			var str = "edit_copyright.php?copyright_id=" + this.editCopyrightId + "&expunge_copyright=true";
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
-		 },
+	 "removeMarkerSet": function(f){
+		this.showSpinner("Removing Markerset...");
+		this._setIdRef = f.set_id.value;
+		var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
+	 },
+
+	 "expungeMarkerSet": function(f){
+		this.showSpinner("Deleting Markerset...");
+		this._setIdRef = f.set_id.value;
+		var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
+	 },
+	 
+	 "storeMarkerStyle": function(f){
+		this.showSpinner("Saving Markerstyle...");
+		var str = "edit_markerstyle.php?" + queryString(f);
+		var callback = (f.style_id.value != "")?this.updateMarkerStyle:this.addMarkerStyle;
+		doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+	 },
+
+	 "storeIconStyle": function(f){
+		this.showSpinner("Saving Iconstyle...");
+		var str = "edit_iconstyle.php?" + queryString(f);
+		//var callback = (f.icon_id.value != "")?this.updateIconStyle:this.addIconStyle;
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateIconStyle, this) ); 
+	 },
+
+	 "storeMaptype": function(f){
+		this.showSpinner("Saving Map...");
+		//this.editObjectN = f.array_n.value;
+		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
+		//var callback = (f.maptype_id.value != "")?this.updateMaptype:this.addMaptype;
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMaptype, this) ); 
+	 },
+	 
+	 "removeMaptype": function(f){
+		this.showSpinner("Removing Maptype...");
+		this.editObjectN = f.array_n.value;
+		this.editSetId = f.maptype_id.value;
+		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
+	 },
+	 
+	 "expungeMaptype": function(f){
+		this.showSpinner("Deleting Maptype...");
+		this.editObjectN = f.array_n.value;
+		this.editSetId = f.maptype_id.value;
+		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
+	 },
+
+	 "storeTilelayer": function(f){
+		this.showSpinner("Saving Tilelayer...");
+		var str = "edit_tilelayer.php?" + queryString(f);
+		//this.editSetId = f.maptype_id.value;
+		//this.editObjectN = f.array_n.value;
+		//var callback = (f.tilelayer_id.value != "")?this.updateTilelayer:this.addTilelayer;
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateTilelayer, this) ); 
+	 },
+	 
+	 "removeTilelayer": function(f){
+		this.showSpinner("Removing Tilelayer...");
+		this.editSetId = f.set_id.value;
+		this.editTilelayerId = f.tilelayer_id.value;
+		var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
+	 },
+
+	 "expungeTilelayer": function(f){
+		this.showSpinner("Deleting Tilelayer...");
+		this.editSetId = f.set_id.value;
+		this.editTilelayerId = f.tilelayer_id.value;
+		var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
+	 },
+
+	 "storeCopyright": function(f){
+		this.showSpinner("Saving Copyright...");
+		var str = "edit_copyright.php?" + queryString(f);
+		this._setIdRef = f.tilelayer_id.value;
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateCopyright, this) ); 
+	 },
+	 
+	 "removeCopyright": function(f){
+		this.showSpinner("Removing Copyright...");
+		this.editSetId = f.set_id.value;
+		this.editCopyrightId = f.copyright_id.value;
+		var str = "edit_copyright.php?set_id=" + this.editSetId + "&copyright_id=" + this.editCopyrightId + "&remove_copyright=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
+	 },
+
+	 "expungeCopyright": function(f){
+		this.showSpinner("Deleting Copyright...");
+		this.editSetId = f.set_id.value;
+		this.editCopyrightId = f.copyright_id.value;
+		var str = "edit_copyright.php?copyright_id=" + this.editCopyrightId + "&expunge_copyright=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
+	 },
 		 
 		 
 	
@@ -1003,140 +949,140 @@ BitMap.Edit.prototype = {
 	 *
 	 *******************/	 
 		 
-		 "updateMap": function(rslt){
-			var xml = rslt.responseXML;
-	
-			//shorten var names
-			var id = xml.documentElement.getElementsByTagName('gmap_id');
-			this.Map.id = id[0].firstChild.nodeValue;
-			var t = xml.documentElement.getElementsByTagName('title');
-			this.Map.title = t[0].firstChild.nodeValue;
-			var d = xml.documentElement.getElementsByTagName('description');
-			this.Map.description = d[0].firstChild.nodeValue;				
-			var dt = xml.documentElement.getElementsByTagName('data');
-			if ( dt[0].hasChildNodes() ){
-				this.Map.data = dt[0].firstChild.nodeValue;
-				var pdt = xml.documentElement.getElementsByTagName('parsed_data');
-				this.Map.parsed_data = pdt[0].firstChild.nodeValue;
-			}else{
-				this.Map.data = "";
-				this.Map.parsed_data = "";
-			}
-			var w = xml.documentElement.getElementsByTagName('width');
-			this.Map.width = w[0].firstChild.nodeValue;
-			var h = xml.documentElement.getElementsByTagName('height');
-			this.Map.height = h[0].firstChild.nodeValue;			
-			var lt = xml.documentElement.getElementsByTagName('lat');
-			this.Map.center.lat = parseFloat(lt[0].firstChild.nodeValue);
-			var ln = xml.documentElement.getElementsByTagName('lng');
-			this.Map.center.lng = parseFloat(ln[0].firstChild.nodeValue);
-			var z = xml.documentElement.getElementsByTagName('zoom');
-			this.Map.zoom = parseInt(z[0].firstChild.nodeValue);
-			var mt = xml.documentElement.getElementsByTagName('maptype');
-			this.Map.maptype = parseInt(mt[0].firstChild.nodeValue);
-			var sc = xml.documentElement.getElementsByTagName('zoom_control');
-			this.Map.controls.zoom_control = sc[0].firstChild.nodeValue;
-			var sm = xml.documentElement.getElementsByTagName('maptype_control');
-			this.Map.controls.maptype_control = sm[0].firstChild.nodeValue;
-			var oc = xml.documentElement.getElementsByTagName('overview_control');
-			this.Map.controls.overview_control = oc[0].firstChild.nodeValue;
-			var ss = xml.documentElement.getElementsByTagName('scale');
-			this.Map.controls.scale = ss[0].firstChild.nodeValue;
-			var com = xml.documentElement.getElementsByTagName('allow_comments');
-			this.Map.allow_comments = com[0].firstChild.nodeValue;
-	
-			//replace everything	
-			var maptile = $('mymaptitle');
-			if (maptile){maptile.innerHTML=this.Map.title;}
-			
-			var mapdesc = $('mymapdesc');
-			if (mapdesc){mapdesc.innerHTML=this.Map.description;}
-			
-			$('mapcontent').innerHTML = this.Map.parsed_data;
+	 "updateMap": function(rslt){
+		var xml = rslt.responseXML.documentElement;
 
-			var mapdiv = $(this.Map.mapdiv);
-			if (this.Map.width != '0' && this.Map.width != 0){
-			   var newWidth = this.Map.width + "px";
-			}else{
-			   var newWidth = 'auto';
-			}
-			if (this.Map.height != '0' && this.Map.height != 0){
-			   var newHeight = this.Map.height + "px";
-			}else{
-			   var newHeight = 'auto';
-			}
+		//shorten var names
+		var id = xml.getElementsByTagName('gmap_id');
+		this.Map.id = id[0].firstChild.nodeValue;
+		var t = xml.getElementsByTagName('title');
+		this.Map.title = t[0].firstChild.nodeValue;
+		var d = xml.getElementsByTagName('description');
+		this.Map.description = d[0].firstChild.nodeValue;				
+		var dt = xml.getElementsByTagName('data');
+		if ( dt[0].hasChildNodes() ){
+			this.Map.data = dt[0].firstChild.nodeValue;
+			var pdt = xml.getElementsByTagName('parsed_data');
+			this.Map.parsed_data = pdt[0].firstChild.nodeValue;
+		}else{
+			this.Map.data = "";
+			this.Map.parsed_data = "";
+		}
+		var w = xml.getElementsByTagName('width');
+		this.Map.width = w[0].firstChild.nodeValue;
+		var h = xml.getElementsByTagName('height');
+		this.Map.height = h[0].firstChild.nodeValue;			
+		var lt = xml.getElementsByTagName('lat');
+		this.Map.center.lat = parseFloat(lt[0].firstChild.nodeValue);
+		var ln = xml.getElementsByTagName('lng');
+		this.Map.center.lng = parseFloat(ln[0].firstChild.nodeValue);
+		var z = xml.getElementsByTagName('zoom');
+		this.Map.zoom = parseInt(z[0].firstChild.nodeValue);
+		var mt = xml.getElementsByTagName('maptype');
+		this.Map.maptype = parseInt(mt[0].firstChild.nodeValue);
+		var sc = xml.getElementsByTagName('zoom_control');
+		this.Map.controls.zoom_control = sc[0].firstChild.nodeValue;
+		var sm = xml.getElementsByTagName('maptype_control');
+		this.Map.controls.maptype_control = sm[0].firstChild.nodeValue;
+		var oc = xml.getElementsByTagName('overview_control');
+		this.Map.controls.overview_control = oc[0].firstChild.nodeValue;
+		var ss = xml.getElementsByTagName('scale');
+		this.Map.controls.scale = ss[0].firstChild.nodeValue;
+		var com = xml.getElementsByTagName('allow_comments');
+		this.Map.allow_comments = com[0].firstChild.nodeValue;
 
-			if (mapdiv){
-				mapdiv.style.width = newWidth; 
-				mapdiv.style.height = newHeight; 
-				this.Map.map.checkResize();
-			}
+		//replace everything	
+		var maptile = $('mymaptitle');
+		if (maptile){maptile.innerHTML=this.Map.title;}
+		
+		var mapdesc = $('mymapdesc');
+		if (mapdesc){mapdesc.innerHTML=this.Map.description;}
+		
+		$('mapcontent').innerHTML = this.Map.parsed_data;
 
-			if (this.Map.maptype < 1){
-				switch (this.Map.maptype){
-					case 0: 
-						this.Map.map.setMapType(G_NORMAL_MAP);
-						break;
-					case -1: 
-						this.Map.map.setMapType(G_SATELLITE_MAP);
-						break;
-					case -2: 
-						this.Map.map.setMapType(G_HYBRID_MAP);
-						break;
+		var mapdiv = $(this.Map.mapdiv);
+		if (this.Map.width != '0' && this.Map.width != 0){
+		   var newWidth = this.Map.width + "px";
+		}else{
+		   var newWidth = 'auto';
+		}
+		if (this.Map.height != '0' && this.Map.height != 0){
+		   var newHeight = this.Map.height + "px";
+		}else{
+		   var newHeight = 'auto';
+		}
+
+		if (mapdiv){
+			mapdiv.style.width = newWidth; 
+			mapdiv.style.height = newHeight; 
+			this.Map.map.checkResize();
+		}
+
+		if (this.Map.maptype < 1){
+			switch (this.Map.maptype){
+				case 0: 
+					this.Map.map.setMapType(G_NORMAL_MAP);
+					break;
+				case -1: 
+					this.Map.map.setMapType(G_SATELLITE_MAP);
+					break;
+				case -2: 
+					this.Map.map.setMapType(G_HYBRID_MAP);
+					break;
+			}
+		}else{
+		//insert check for maptype name in maptype array and set map to that
+			var count = this.Map.maptypes.length;
+			for (n=0; n<count; n++){
+				if (this.Map.maptypes[n].maptype_id == this.Map.maptype){
+					this.Map.map.setMapType(this.Map.maptypes[n].type);
 				}
-			}else{
-			//insert check for maptype name in maptype array and set map to that
-				var count = this.Map.maptypes.length;
-				for (n=0; n<count; n++){
-					if (this.Map.maptypes[n].maptype_id == this.Map.maptype){
-						this.Map.map.setMapType(this.Map.maptypes[n].type);
-					}
-				}
 			}
-	
-			//Add Map TYPE controls - buttons in the upper right corner
-	  		if (this.Map.controls.maptype_control == 'true'){
-	  		    this.Map.map.removeControl( this.Map.typeControl );
-				this.Map.typeControl = new GMapTypeControl();
-				this.Map.map.addControl( this.Map.typeControl );  
-	  		}else{
-	  		    this.Map.map.removeControl( this.Map.typeControl );
-	  		}
-	  		
-	  		//Add Scale controls
-	  		if (this.Map.controls.scale == 'true'){
-	  		    this.Map.map.removeControl( this.Map.scaleControl );
-				this.Map.scaleControl = new GScaleControl();
-	  		    this.Map.map.addControl( this.Map.scaleControl );
-	  		}else{
-	  		    this.Map.map.removeControl( this.Map.scaleControl );
-	  		}
-	  		
-			//Add Navigation controls
-	  		this.Map.map.removeControl( this.Map.navControls );
-			switch (this.Map.controls.zoom_control){
-				case 's': 
-					this.Map.navControls = new GSmallMapControl();
-					break;
-				case 'l': 
-					this.Map.navControls = new GLargeMapControl();
-					break;
-				case 'z': 
-					this.Map.navControls = new GSmallZoomControl();
-					break;
-				default:
-					this.Map.navControls = null;
-					break;
-			}
-			if ( this.Map.navControls != null ){
-				this.Map.map.addControl( this.Map.navControls );
-			}
-	  		
-			this.Map.map.setCenter(new GLatLng(this.Map.center.lat, this.Map.center.lng), this.Map.zoom);
-			this.hideSpinner("DONE!");
-			this.editMap();			
-		 },
-	
+		}
+
+		//Add Map TYPE controls - buttons in the upper right corner
+		if (this.Map.controls.maptype_control == 'true'){
+			this.Map.map.removeControl( this.Map.typeControl );
+			this.Map.typeControl = new GMapTypeControl();
+			this.Map.map.addControl( this.Map.typeControl );  
+		}else{
+			this.Map.map.removeControl( this.Map.typeControl );
+		}
+		
+		//Add Scale controls
+		if (this.Map.controls.scale == 'true'){
+			this.Map.map.removeControl( this.Map.scaleControl );
+			this.Map.scaleControl = new GScaleControl();
+			this.Map.map.addControl( this.Map.scaleControl );
+		}else{
+			this.Map.map.removeControl( this.Map.scaleControl );
+		}
+		
+		//Add Navigation controls
+		this.Map.map.removeControl( this.Map.navControls );
+		switch (this.Map.controls.zoom_control){
+			case 's': 
+				this.Map.navControls = new GSmallMapControl();
+				break;
+			case 'l': 
+				this.Map.navControls = new GLargeMapControl();
+				break;
+			case 'z': 
+				this.Map.navControls = new GSmallZoomControl();
+				break;
+			default:
+				this.Map.navControls = null;
+				break;
+		}
+		if ( this.Map.navControls != null ){
+			this.Map.map.addControl( this.Map.navControls );
+		}
+		
+		this.Map.map.setCenter(new GLatLng(this.Map.center.lat, this.Map.center.lng), this.Map.zoom);
+		this.hideSpinner("DONE!");
+		this.editMap();			
+	 },
+
 
 		 
 	/*******************
@@ -1146,7 +1092,7 @@ BitMap.Edit.prototype = {
 	 *******************/	 
 	
 	"addMarker": function(rslt){
-		var xml = rslt.responseXML;
+		var xml = rslt.responseXML.documentElement;
 
 		//the marker data we are changing
 		var n = this.Map.markers.length;
@@ -1183,7 +1129,7 @@ BitMap.Edit.prototype = {
 	},
 	
 	"updateMarker": function(rslt){
-	    var xml = rslt.responseXML;							
+	    var xml = rslt.responseXML.documentElement;							
 		//the marker data we are changing
 		var n = this.editObjectN;
 		var m = this.Map.markers[n];
@@ -1211,27 +1157,27 @@ BitMap.Edit.prototype = {
 	
 	"parseMarkerXML": function(m, xml){
 		//shorten var names
-		var id = xml.documentElement.getElementsByTagName('id');			
+		var id = xml.getElementsByTagName('id');			
 		m.marker_id = id[0].firstChild.nodeValue;
-		var tl = xml.documentElement.getElementsByTagName('title');
+		var tl = xml.getElementsByTagName('title');
 		m.title = tl[0].firstChild.nodeValue;			
-		var ty = xml.documentElement.getElementsByTagName('marker_type');			
+		var ty = xml.getElementsByTagName('marker_type');			
 		m.marker_type = ty[0].firstChild.nodeValue;
-		var lt = xml.documentElement.getElementsByTagName('lat');
+		var lt = xml.getElementsByTagName('lat');
 		m.lat = parseFloat(lt[0].firstChild.nodeValue);
-		var ln = xml.documentElement.getElementsByTagName('lng');
+		var ln = xml.getElementsByTagName('lng');
 		m.lng = parseFloat(ln[0].firstChild.nodeValue);
-		var dt = xml.documentElement.getElementsByTagName('data');
+		var dt = xml.getElementsByTagName('data');
 		m.data = dt[0].firstChild.nodeValue;			
-		var pdt = xml.documentElement.getElementsByTagName('parsed_data');
+		var pdt = xml.getElementsByTagName('parsed_data');
 		m.parsed_data = pdt[0].firstChild.nodeValue;
-		var l = xml.documentElement.getElementsByTagName('label');
+		var l = xml.getElementsByTagName('label');
 		m.label_data = ( l[0].firstChild != null )?l[0].firstChild.nodeValue:'';
-		var pu = xml.documentElement.getElementsByTagName('photo_url');
+		var pu = xml.getElementsByTagName('photo_url');
 		m.photo_url = ( pu[0].firstChild != null )?pu[0].firstChild.nodeValue:'';
-		//var z = xml.documentElement.getElementsByTagName('z');
+		//var z = xml.getElementsByTagName('z');
 		//m.zindex = parseInt(z[0].firstChild.nodeValue);	
-		var com = xml.documentElement.getElementsByTagName('allow_comments');
+		var com = xml.getElementsByTagName('allow_comments');
 		m.allow_comments = com[0].firstChild.nodeValue;
 	},
 		 	 
@@ -1239,7 +1185,7 @@ BitMap.Edit.prototype = {
 		 
 	
 	"addMarkerSet": function(rslt){
-		var xml = rslt.responseXML;
+		var xml = rslt.responseXML.documentElement;
 	
 		//@todo modify this to handle either this.Map.markers or bSMData sets
 		var n = this.Map.markersets.length;
@@ -1247,23 +1193,23 @@ BitMap.Edit.prototype = {
 		var s= this.Map.markersets[n];
 					
 		//shorten var names
-		var id = xml.documentElement.getElementsByTagName('set_id');			
+		var id = xml.getElementsByTagName('set_id');			
 		s.set_id = parseInt(id[0].firstChild.nodeValue);
-		var nm = xml.documentElement.getElementsByTagName('name');
+		var nm = xml.getElementsByTagName('name');
 		s.name = nm[0].firstChild.nodeValue;
-		var dc = xml.documentElement.getElementsByTagName('description');
+		var dc = xml.getElementsByTagName('description');
 		s.description = dc[0].firstChild.nodeValue;
-		var sy = xml.documentElement.getElementsByTagName('style_id');
+		var sy = xml.getElementsByTagName('style_id');
 		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
-		var ic = xml.documentElement.getElementsByTagName('icon_id');
+		var ic = xml.getElementsByTagName('icon_id');
 		s.icon_id = parseInt(ic[0].firstChild.nodeValue);
-		var pol = xml.documentElement.getElementsByTagName('plot_on_load');
+		var pol = xml.getElementsByTagName('plot_on_load');
 		if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
-		var sp = xml.documentElement.getElementsByTagName('side_panel');
+		var sp = xml.getElementsByTagName('side_panel');
 		if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
-		var ex = xml.documentElement.getElementsByTagName('explode');
+		var ex = xml.getElementsByTagName('explode');
 		if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
-		var cl = xml.documentElement.getElementsByTagName('cluster');
+		var cl = xml.getElementsByTagName('cluster');
 		if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
 		s.set_type = 'markers';
 
@@ -1280,30 +1226,30 @@ BitMap.Edit.prototype = {
 	
 	
 	"updateMarkerSet": function(rslt){
-		var xml = rslt.responseXML;
+		var xml = rslt.responseXML.documentElement;
 		
 		var s = this.Map.markersets[this.editObjectN];
 		var oldStyle = s.style_id;
 		var oldIcon = s.icon_id;
 		
 		//shorten var names
-		var id = xml.documentElement.getElementsByTagName('set_id');			
+		var id = xml.getElementsByTagName('set_id');			
 		s.set_id = parseInt(id[0].firstChild.nodeValue);
-		var nm = xml.documentElement.getElementsByTagName('name');
+		var nm = xml.getElementsByTagName('name');
 		s.name = nm[0].firstChild.nodeValue;
-		var dc = xml.documentElement.getElementsByTagName('description');
+		var dc = xml.getElementsByTagName('description');
 		s.description = dc[0].firstChild.nodeValue;
-		var sy = xml.documentElement.getElementsByTagName('style_id');
+		var sy = xml.getElementsByTagName('style_id');
 		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
-		var ic = xml.documentElement.getElementsByTagName('icon_id');
+		var ic = xml.getElementsByTagName('icon_id');
 		s.icon_id = parseInt(ic[0].firstChild.nodeValue);
-		var pol = xml.documentElement.getElementsByTagName('plot_on_load');
+		var pol = xml.getElementsByTagName('plot_on_load');
 		if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
-		var sp = xml.documentElement.getElementsByTagName('side_panel');
+		var sp = xml.getElementsByTagName('side_panel');
 		if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
-		var ex = xml.documentElement.getElementsByTagName('explode');
+		var ex = xml.getElementsByTagName('explode');
 		if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
-		var cl = xml.documentElement.getElementsByTagName('cluster');
+		var cl = xml.getElementsByTagName('cluster');
 		if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
 		
 		if ( ( oldStyle != s.style_id ) || ( oldIcon != s.icon_id ) ) {
@@ -1375,26 +1321,26 @@ BitMap.Edit.prototype = {
 
 
 	"addMarkerStyle": function(rslt){
-		var xml = rslt.responseXML;
+		var xml = rslt.responseXML.documentElement;
 		// create a spot for a new markerstyle in the data array
 		var n = this.Map.markerstyles.length;
 		this.Map.markerstyles[n] = new Array();
 		var s = this.Map.markerstyles[n];
 		
 		// assign markerstyle values data array			
-		var id = xml.documentElement.getElementsByTagName('style_id');			
+		var id = xml.getElementsByTagName('style_id');			
 		s.style_id = parseInt( id[0].firstChild.nodeValue );
-		var nm = xml.documentElement.getElementsByTagName('name');			
+		var nm = xml.getElementsByTagName('name');			
 		s.name = nm[0].firstChild.nodeValue;
-		var tp = xml.documentElement.getElementsByTagName('marker_style_type');
+		var tp = xml.getElementsByTagName('marker_style_type');
 		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
-		var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
+		var lho = xml.getElementsByTagName('label_hover_opacity');			
 		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
-		var lo = xml.documentElement.getElementsByTagName('label_opacity');			
+		var lo = xml.getElementsByTagName('label_opacity');			
 		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
-		var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
+		var lhs = xml.getElementsByTagName('label_hover_styles');			
 		s.label_hover_styles = lhs[0].firstChild.nodeValue;
-		var ws = xml.documentElement.getElementsByTagName('window_styles');			
+		var ws = xml.getElementsByTagName('window_styles');			
 		s.window_styles = ws[0].firstChild.nodeValue;
 		
 		var ttStyle = document.createElement('style');
@@ -1417,25 +1363,25 @@ BitMap.Edit.prototype = {
 	
 	
 	"updateMarkerStyle": function(rslt){
-		var xml = rslt.responseXML;
+		var xml = rslt.responseXML.documentElement;
 		//get the style we are updating
 		var s = this.Map.markerstyles[this.editObjectN];
 		var oldtp = s.marker_style_type;
 		
 		// assign markerstyle values data array			
-		var id = xml.documentElement.getElementsByTagName('style_id');			
+		var id = xml.getElementsByTagName('style_id');			
 		s.style_id = parseInt( id[0].firstChild.nodeValue );
-		var nm = xml.documentElement.getElementsByTagName('name');			
+		var nm = xml.getElementsByTagName('name');			
 		s.name = nm[0].firstChild.nodeValue;
-		var tp = xml.documentElement.getElementsByTagName('marker_style_type');
+		var tp = xml.getElementsByTagName('marker_style_type');
 		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
-		var lho = xml.documentElement.getElementsByTagName('label_hover_opacity');			
+		var lho = xml.getElementsByTagName('label_hover_opacity');			
 		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
-		var lo = xml.documentElement.getElementsByTagName('label_opacity');			
+		var lo = xml.getElementsByTagName('label_opacity');			
 		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
-		var lhs = xml.documentElement.getElementsByTagName('label_hover_styles');			
+		var lhs = xml.getElementsByTagName('label_hover_styles');			
 		s.label_hover_styles = lhs[0].firstChild.nodeValue;
-		var ws = xml.documentElement.getElementsByTagName('window_styles');			
+		var ws = xml.getElementsByTagName('window_styles');			
 		s.window_styles = ws[0].firstChild.nodeValue;
 		
 		//add the replacement styles
@@ -1474,7 +1420,7 @@ BitMap.Edit.prototype = {
 
 	
 	"updateIconStyle": function(rslt){
-	    var xml = rslt.responseXML;
+	    var xml = rslt.responseXML.documentElement;
 		var n = this.editObjectN;
 		var i;
 	    if ( n != null){
@@ -1486,37 +1432,37 @@ BitMap.Edit.prototype = {
 	    }
 	    
 		// assign iconsstyle values to data array
-		var id = xml.documentElement.getElementsByTagName('icon_id');
+		var id = xml.getElementsByTagName('icon_id');
 		i.icon_id = parseInt( id[0].firstChild.nodeValue );
-		var nm = xml.documentElement.getElementsByTagName('name');
+		var nm = xml.getElementsByTagName('name');
 		i.name = nm[0].firstChild.nodeValue;
-		var tp = xml.documentElement.getElementsByTagName('icon_style_type');
+		var tp = xml.getElementsByTagName('icon_style_type');
 		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
-		var ig = xml.documentElement.getElementsByTagName('image');
+		var ig = xml.getElementsByTagName('image');
 		i.image = ig[0].firstChild.nodeValue;
-		var rig = xml.documentElement.getElementsByTagName('rollover_image');
+		var rig = xml.getElementsByTagName('rollover_image');
 		i.rollover_image = rig[0].firstChild.nodeValue;
-		var icw = xml.documentElement.getElementsByTagName('icon_w');
+		var icw = xml.getElementsByTagName('icon_w');
 		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
-		var ich = xml.documentElement.getElementsByTagName('icon_h');
+		var ich = xml.getElementsByTagName('icon_h');
 		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
-		var is = xml.documentElement.getElementsByTagName('shadow_image');			
+		var is = xml.getElementsByTagName('shadow_image');			
 		i.shadow_image = is[0].firstChild.nodeValue;
-		var isw = xml.documentElement.getElementsByTagName('shadow_w');
+		var isw = xml.getElementsByTagName('shadow_w');
 		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
-		var ish = xml.documentElement.getElementsByTagName('shadow_h');
+		var ish = xml.getElementsByTagName('shadow_h');
 		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
-		var iax = xml.documentElement.getElementsByTagName('icon_anchor_x');			
+		var iax = xml.getElementsByTagName('icon_anchor_x');			
 		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
-		var iay = xml.documentElement.getElementsByTagName('icon_anchor_y');			
+		var iay = xml.getElementsByTagName('icon_anchor_y');			
 		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
-		var sax = xml.documentElement.getElementsByTagName('shadow_anchor_x');			
+		var sax = xml.getElementsByTagName('shadow_anchor_x');			
 		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
-		var say = xml.documentElement.getElementsByTagName('shadow_anchor_y');			
+		var say = xml.getElementsByTagName('shadow_anchor_y');			
 		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
-		var wax = xml.documentElement.getElementsByTagName('infowindow_anchor_x');			
+		var wax = xml.getElementsByTagName('infowindow_anchor_x');			
 		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
-		var way = xml.documentElement.getElementsByTagName('infowindow_anchor_y');			
+		var way = xml.getElementsByTagName('infowindow_anchor_y');			
 		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
 
 		//update the icon
@@ -1551,7 +1497,7 @@ BitMap.Edit.prototype = {
 
 
 	"updateMaptype": function(rslt){
-		var xml = rslt.responseXML;
+		var xml = rslt.responseXML.documentElement;
 		var n = ( this.editObjectN != null )?this.editObjectN:this.Map.maptypes.length;
 		var m = this.Map.maptypes[n] = [];
 		
@@ -1581,19 +1527,19 @@ BitMap.Edit.prototype = {
 	
 	"parseMaptypeXML": function(m, xml){
 		// assign map type values data array				
-		var id = xml.documentElement.getElementsByTagName('maptype_id');			
+		var id = xml.getElementsByTagName('maptype_id');			
 		m.maptype_id = parseInt( id[0].firstChild.nodeValue );
-		var nm = xml.documentElement.getElementsByTagName('name');			
+		var nm = xml.getElementsByTagName('name');			
 		m.name = nm[0].firstChild.nodeValue;
-		var snm = xml.documentElement.getElementsByTagName('shortname');			
+		var snm = xml.getElementsByTagName('shortname');			
 		m.shortname = snm[0].firstChild.nodeValue;
-		var ds = xml.documentElement.getElementsByTagName('description');			
+		var ds = xml.getElementsByTagName('description');			
 		m.description = ds[0].firstChild.nodeValue;	  		
-		var minz = xml.documentElement.getElementsByTagName('minzoom');
+		var minz = xml.getElementsByTagName('minzoom');
 		m.minzoom = parseInt( minz[0].firstChild.nodeValue );
-		var mz = xml.documentElement.getElementsByTagName('maxzoom');
+		var mz = xml.getElementsByTagName('maxzoom');
 		m.maxzoom = parseInt( mz[0].firstChild.nodeValue );
-		var er = xml.documentElement.getElementsByTagName('errormsg');			
+		var er = xml.getElementsByTagName('errormsg');			
 		m.errormsg = er[0].firstChild.nodeValue;
 	},
 	 
@@ -1628,61 +1574,23 @@ BitMap.Edit.prototype = {
 		}			
 		this.hideSpinner("DONE!");
 	},
-		 
-		 
 
-	"addTilelayer": function(rslt){	
-	    var xml = rslt.responseXML;
-
-		//the tilelayer data we are changing		
-		var n = this.Map.tilelayers.length;		
-		var t = this.Map.tilelayers[n] = {};
-
-		//add the xml data to the marker record
-		this.parseTilelayerXML(t, xml);
-		t.maptype_id = this.editSetId;
-
-		var s;
-		var mts = this.Map.maptypes;
-		for(a=0; a<mts.length; a++){
-			if ( ( mts[a] != null ) && ( mts[a].maptype_id == this.editSetId ) ){
-				s = a;
-				break;
-			}
-		};
-
-		//remove the related maptype
-		//re-add the maptype
-		//add the tilelayer
-		/*  *******  */
-		// probably needs a ref to parent maptype
-		/*  *******  */
-		//this.Map.addTilelayer(n);
-
-		this.hideSpinner("DONE!");
-		// update the maptypes menus
-		this.editMaptypeTilelayers(s);
-		this.editTilelayer(n,s);
-	},
-	
 	"updateTilelayer": function(rslt){
-	    var xml = rslt.responseXML;
+	    var xml = rslt.responseXML.documentElement;
 		//the marker data we are changing
-		var n = this.editObjectN;
-		var t = this.Map.tilelayers[n];
+		var n_i = this.editObjectN;
+	    var s_i = this._setIndexRef;
+	    if ( n_i != null){
+			//the copyright data we are changing
+			t = this.Map.tilelayers[n_i];
+	    }else{
+			n_i = this.Map.tilelayers.length;		
+			t = this.Map.tilelayers[n_i] = {};
+	    }
 
-		//add the xml data to the marker record
+		//add the xml data to the tilelayer record
 		this.parseTilelayerXML(t, xml);
-		t.maptype_id = this.editSetId;
-
-		var s;
-		var mts = this.Map.maptypes;
-		for(a=0; a<mts.length; a++){
-			if ( ( mts[a] != null ) && ( mts[a].maptype_id == this.editSetId ) ){
-				s = a;
-				break;
-			}
-		};
+		t.maptype_id = this._setIdRef;
 		
 		//remove the related maptype
 		//re-add the maptype
@@ -1694,25 +1602,25 @@ BitMap.Edit.prototype = {
 		
 		this.hideSpinner("DONE!");
 		// update the maptypes menus
-		this.editMaptypeTilelayers(s);
-		this.editTilelayer(n,s);
+		this.editMaptypeTilelayers(s_i);
+		this.editTilelayer(n_i,s_i);
 	},
 	
 	"parseTilelayerXML": function(tl, xml){
 		// assign map type values data array				
-		var id = xml.documentElement.getElementsByTagName('tilelayer_id');			
+		var id = xml.getElementsByTagName('tilelayer_id');			
 		tl.tilelayer_id = parseInt( id[0].firstChild.nodeValue );
-		var nm = xml.documentElement.getElementsByTagName('tiles_name');			
+		var nm = xml.getElementsByTagName('tiles_name');			
 		tl.tiles_name = nm[0].firstChild.nodeValue;
-		var minz = xml.documentElement.getElementsByTagName('tiles_minzoom');
+		var minz = xml.getElementsByTagName('tiles_minzoom');
 		tl.tiles_minzoom = parseInt( minz[0].firstChild.nodeValue );
-		var mz = xml.documentElement.getElementsByTagName('tiles_maxzoom');
+		var mz = xml.getElementsByTagName('tiles_maxzoom');
 		tl.tiles_maxzoom = parseInt( mz[0].firstChild.nodeValue );		
-		var png = xml.documentElement.getElementsByTagName('ispng');
+		var png = xml.getElementsByTagName('ispng');
 		tl.ispng = png[0].firstChild.nodeValue;
-		var url = xml.documentElement.getElementsByTagName('tilesurl');
+		var url = xml.getElementsByTagName('tilesurl');
 		tl.tilesurl = url[0].firstChild.nodeValue;
-		var op = xml.documentElement.getElementsByTagName('opacity');
+		var op = xml.getElementsByTagName('opacity');
 		tl.opacity = parseFloat( op[0].firstChild.nodeValue );
 	},
 
@@ -1731,7 +1639,7 @@ BitMap.Edit.prototype = {
 	},
 	
 	"updateCopyright":function(rslt){
-	    var xml = rslt.responseXML;
+	    var xml = rslt.responseXML.documentElement;
 	    var s = this._setIndexRef;
 		var n = this.editObjectN;
 		var c;
@@ -1757,13 +1665,13 @@ BitMap.Edit.prototype = {
 	
 	"parseCopyrightXML":function(c, xml){
 		// assign map type values data array				
-		var id = xml.documentElement.getElementsByTagName('copyright_id');			
+		var id = xml.getElementsByTagName('copyright_id');			
 		c.copyright_id = parseInt( id[0].firstChild.nodeValue );
-		var minz = xml.documentElement.getElementsByTagName('copyright_minzoom');
+		var minz = xml.getElementsByTagName('copyright_minzoom');
 		c.copyright_minzoom = parseInt( minz[0].firstChild.nodeValue );
-		var bds = xml.documentElement.getElementsByTagName('bounds');
+		var bds = xml.getElementsByTagName('bounds');
 		c.bounds = bds[0].firstChild.nodeValue;
-		var nt = xml.documentElement.getElementsByTagName('notice');
+		var nt = xml.getElementsByTagName('notice');
 		c.notice = nt[0].firstChild.nodeValue;
 	},
 	

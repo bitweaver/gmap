@@ -5,7 +5,7 @@
 	<input name="maptype_id" type="hidden" value="{$tilelayerInfo.maptype_id}">
 	<div>
 		Name<br/>
-		<input name="tiles_name" type="text" size="50" value="{$tilelayerInfo.name}"><br/>
+		<input name="tiles_name" type="text" size="50" value="{$tilelayerInfo.tiles_name}"><br/>
 		MinZoom<br/>
 		<input name="tiles_minzoom" type="text" size="5" value="{if $tilelayerInfo.tiles_minzoom}{$tilelayerInfo.tiles_minzoom}{else}0{/if}"><br/>
 		MaxZoom<br/>
