@@ -36,7 +36,18 @@ if (!empty($_REQUEST["save_tilelayer"])) {
     if( $gContent->expungeTilelayer( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('expungeSucces', true);
     }
+}else{
+	if ( isset( $_REQUEST["tilelayer_id"] ) ){
+		$tilelayer = $gContent->getTilelayerData( $_REQUEST["tilelayer_id"] );
+	}
+	if (isset($_REQUEST["maptype_id"])){
+		$tilelayer->fields['maptype_id'] = $_REQUEST["maptype_id"];
+	}
+	$gBitSmarty->assign_by_ref('tilelayerInfo', $tilelayer->fields);
+	$gBitSystem->display('bitpackage:gmap/edit_tilelayer.tpl', NULL, 'center_only');
+	die;
 }
+
 
 if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );

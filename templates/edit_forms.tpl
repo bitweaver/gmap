@@ -74,11 +74,6 @@
 
 <!-- edit tilelayers form -->
 <div id="edit-tilelayers-table" class="edit-datatable" style="display:none;">
-    <form action="javascript:;" name="edit-tilelayer-form" id="edit-tilelayer-form" >
-    <input name="save_tilelayer" type="hidden" value="true">
-    <input name="tilelayer_id" type="hidden" value="tilelayer_id">
-    <input name="array_n" type="hidden" value="n">
-    <input name="maptype_id" type="hidden" value="maptype_id">
     <table>
     	<tr>
         <td width="200px">Tilelayers:<br/>
@@ -88,31 +83,7 @@
             </ul>
         </td>
     	<td>
-			<div class="tplform">
-				<div>
-					Name<br/>
-					<input name="tiles_name" type="text" size="50" value="a name"><br/>			    
-					<div style="display:none;">
-						<a href="javascript:BitMap.EditSession.editCopyright(n);">Copyright Name Here</a>
-					</div>
-					MinZoom<br/>
-					<input name="tiles_minzoom" type="text" size="5" value="0"><br/>
-					MaxZoom<br/>
-					<input name="tiles_maxzoom" type="text" size="5" value="0"><br/>
-					Tiles are PNGs<br/>
-						  <select name="ispng">
-							  <option value="0" >False</option>
-							  <option value="1" >True</option>
-						  </select><br/>	
-					Tiles URL<br/>
-					<input name="tilesurl" type="text" size="50" value=""><br/>
-					Opacity (a float from 0 to 1)<br/>
-					<input name="opacity" type="text" size="5" value="1"><br/>
-				</div>
-				<div>
-					<input type="button" name="save_tilelayer_btn" value="Save" onclick="javascript:BitMap.EditSession.storeTilelayer(document['edit-tilelayer-form']);">
-				</div>
-			</div>
+			<div id="tilelayer-form"></div>
         </td>
         <td width="200px">
           <div id="edit-tilelayer-tips">Tips<br/>
@@ -125,7 +96,6 @@
         </td>
      	</tr>
     </table>
-    </form>
     <table>
     	<tr>
         <td width="200px">
