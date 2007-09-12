@@ -720,7 +720,7 @@ BitMap.Edit.prototype = {
 
 	"editCopyright": function(c_i, t_i){
 		var c_id = ( c_i != null )?this.Map.copyrights[c_i].copyright_id:null;
-		var t_id = this.Map.tilelayers[t_i].tilelayer_id;
+		var t_id = this._setIdRef = this.Map.tilelayers[t_i].tilelayer_id;
 		this.editObjectN = c_i;
 		this._setIndexRef = t_i;
 
@@ -812,7 +812,7 @@ BitMap.Edit.prototype = {
 		this.showSpinner("Saving Marker...");
 		var str = "edit_marker.php?" + queryString(f);
 		this._setIdRef = f.set_id.value;
-		this.editObjectN = this._markerIndexRef; //f.marker_array_n.value;
+		this.editObjectN = this._markerIndexRef;
 		var callback = (f.marker_id.value != "")?this.updateMarker:this.addMarker;
 		doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
 	 },
@@ -858,22 +858,18 @@ BitMap.Edit.prototype = {
 	 "storeMarkerStyle": function(f){
 		this.showSpinner("Saving Markerstyle...");
 		var str = "edit_markerstyle.php?" + queryString(f);
-		var callback = (f.style_id.value != "")?this.updateMarkerStyle:this.addMarkerStyle;
-		doSimpleXMLHttpRequest(str).addCallback( bind(callback, this) ); 
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMarkerStyle, this) ); 
 	 },
 
 	 "storeIconStyle": function(f){
 		this.showSpinner("Saving Iconstyle...");
 		var str = "edit_iconstyle.php?" + queryString(f);
-		//var callback = (f.icon_id.value != "")?this.updateIconStyle:this.addIconStyle;
 		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateIconStyle, this) ); 
 	 },
 
 	 "storeMaptype": function(f){
 		this.showSpinner("Saving Map...");
-		//this.editObjectN = f.array_n.value;
 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
-		//var callback = (f.maptype_id.value != "")?this.updateMaptype:this.addMaptype;
 		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMaptype, this) ); 
 	 },
 	 
@@ -896,9 +892,6 @@ BitMap.Edit.prototype = {
 	 "storeTilelayer": function(f){
 		this.showSpinner("Saving Tilelayer...");
 		var str = "edit_tilelayer.php?" + queryString(f);
-		//this.editSetId = f.maptype_id.value;
-		//this.editObjectN = f.array_n.value;
-		//var callback = (f.tilelayer_id.value != "")?this.updateTilelayer:this.addTilelayer;
 		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateTilelayer, this) ); 
 	 },
 	 
@@ -921,7 +914,6 @@ BitMap.Edit.prototype = {
 	 "storeCopyright": function(f){
 		this.showSpinner("Saving Copyright...");
 		var str = "edit_copyright.php?" + queryString(f);
-		this._setIdRef = f.tilelayer_id.value;
 		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateCopyright, this) ); 
 	 },
 	 
@@ -1089,72 +1081,45 @@ BitMap.Edit.prototype = {
 	 *
 	 * POST XML Marker Functions
 	 *
-	 *******************/	 
-	
-	"addMarker": function(rslt){
-		var xml = rslt.responseXML.documentElement;
-
-		//the marker data we are changing
-		var n = this.Map.markers.length;
-		
-		//this.Map.markers[n] = {};
-		var m = this.Map.markers[n] = {};
-
-		//add the xml data to the marker record
-		this.parseMarkerXML(m, xml);
-
-		var s;
-		for(a=0; a<this.Map.markersets.length; a++){
-			if ( ( this.Map.markersets[a] != null ) && ( this.Map.markersets[a].set_id == this._setIdRef ) ){
-				s = a;
-			}
-		};
-
-		m.set_id = this.Map.markersets[s].set_id;
-		m.style_id = this.Map.markersets[s].style_id;
-		m.icon_id = this.Map.markersets[s].icon_id;
-		m.plot_on_load = this.Map.markersets[s].plot_on_load;
-		m.side_panel = this.Map.markersets[s].side_panel;
-		m.explode = this.Map.markersets[s].explode;
-		m.array_n = parseInt(n);
-
-		//make the marker
-		this.Map.addMarker(n);
-
-		this.removeAssistant();
-		this.hideSpinner("DONE!");
-		// update the sets menus
-		this.editMarkers(s);
-		this.editMarker(n);
-	},
+	 *******************/
 	
 	"updateMarker": function(rslt){
 	    var xml = rslt.responseXML.documentElement;							
-		//the marker data we are changing
-		var n = this.editObjectN;
-		var m = this.Map.markers[n];
+		var n_i = this.editObjectN;
+		var s_i = this_setIndexRef;
+		var m;
+		if ( n_i != null){
+			var n = this.Map.markers.length;
+			m = this.Map.markers[n] = {};
+		}else{
+			m = this.Map.markers[n];
+		}
 
 		//add the xml data to the marker record
 		this.parseMarkerXML(m, xml);
 
-		//unload the marker
-		if ( m.gmarker ){ this.Map.map.removeOverlay( m.gmarker ) };
-		//remake the marker
-		this.Map.addMarker(n);
-		//remove the assistant if used
-		this.removeAssistant();
+		if (this.editObjectN == null){
+			m.set_id = this.Map.markersets[s_i].set_id;
+			m.style_id = this.Map.markersets[s_i].style_id;
+			m.icon_id = this.Map.markersets[s_i].icon_id;
+			m.plot_on_load = this.Map.markersets[s_i].plot_on_load;
+			m.side_panel = this.Map.markersets[s_i].side_panel;
+			m.explode = this.Map.markersets[s_i].explode;
+			m.array_n = parseInt(n_i);
+		}
 
-		var s;
-		for(a=0; a<this.Map.markersets.length; a++){
-			if ( ( this.Map.markersets[a] != null ) && ( this.Map.markersets[a].set_id == this._setIdRef ) ){
-				s = a;
-			}
-		};
+		//unload the marker if it exists
+		if ( m.gmarker ){ this.Map.map.removeOverlay( m.gmarker ) };
+		
+		//make the marker
+		this.Map.addMarker(n_i);
+		this.removeAssistant();
 		this.hideSpinner("DONE!");
-		this.editMarkers(s);
-		this.editMarker(n);
+		this.editMarkers(s_i);
+		this.editMarker(n_i);
 	},
-	
+
+
 	"parseMarkerXML": function(m, xml){
 		//shorten var names
 		var id = xml.getElementsByTagName('id');			
@@ -1179,59 +1144,24 @@ BitMap.Edit.prototype = {
 		//m.zindex = parseInt(z[0].firstChild.nodeValue);	
 		var com = xml.getElementsByTagName('allow_comments');
 		m.allow_comments = com[0].firstChild.nodeValue;
-	},
-		 	 
-	
-		 
-	
-	"addMarkerSet": function(rslt){
-		var xml = rslt.responseXML.documentElement;
-	
-		//@todo modify this to handle either this.Map.markers or bSMData sets
-		var n = this.Map.markersets.length;
-		this.Map.markersets[n] = new Array();
-		var s= this.Map.markersets[n];
-					
-		//shorten var names
-		var id = xml.getElementsByTagName('set_id');			
-		s.set_id = parseInt(id[0].firstChild.nodeValue);
-		var nm = xml.getElementsByTagName('name');
-		s.name = nm[0].firstChild.nodeValue;
-		var dc = xml.getElementsByTagName('description');
-		s.description = dc[0].firstChild.nodeValue;
-		var sy = xml.getElementsByTagName('style_id');
-		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
-		var ic = xml.getElementsByTagName('icon_id');
-		s.icon_id = parseInt(ic[0].firstChild.nodeValue);
-		var pol = xml.getElementsByTagName('plot_on_load');
-		if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
-		var sp = xml.getElementsByTagName('side_panel');
-		if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
-		var ex = xml.getElementsByTagName('explode');
-		if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
-		var cl = xml.getElementsByTagName('cluster');
-		if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
-		s.set_type = 'markers';
-
-		// clear the form				
-		 BitMap.hide('edit-markerset-new');
-		
-		this.hideSpinner("DONE!");
-		// update the sets menus
-		this.cancelEditMarkerSets();
-		this.editMarkerSets();
-		this.editMarkers(n);
-	},
-		
+	},		 	 
 	
 	
 	"updateMarkerSet": function(rslt){
 		var xml = rslt.responseXML.documentElement;
-		
-		var s = this.Map.markersets[this.editObjectN];
-		var oldStyle = s.style_id;
-		var oldIcon = s.icon_id;
-		
+		var n_i = this.editObjectN;
+		var s;
+	    if ( n_i != null){
+			//@TODO modify this to handle either this.Map.markers or bSMData sets
+			n_i = this.Map.markersets.length;
+			this.Map.markersets[n_i] = [];
+			s= this.Map.markersets[n_i];
+		}else{
+			s = this.Map.markersets[n_i];
+			var oldStyle = s.style_id;
+			var oldIcon = s.icon_id;
+		}
+
 		//shorten var names
 		var id = xml.getElementsByTagName('set_id');			
 		s.set_id = parseInt(id[0].firstChild.nodeValue);
@@ -1251,31 +1181,39 @@ BitMap.Edit.prototype = {
 		if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
 		var cl = xml.getElementsByTagName('cluster');
 		if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
-		
-		if ( ( oldStyle != s.style_id ) || ( oldIcon != s.icon_id ) ) {
-			a = this.Map.markers;
-			//if the length of the array is > 0
-			if (a.length > 0){
-				//loop through the array
-				for(var n=0; n<a.length; n++){
-					//if the array item is not Null
-					if (a[n]!= null && a[n].plot_on_load == true){
-						if (a[n].set_id == s.set_id){
-							a[n].style_id = s.style_id;
-							a[n].icon_id = s.icon_id;
-							//unload the marker
-							this.Map.map.removeOverlay( a[n].marker );
-							//define marker
-							this.Map.addMarker(n);
+
+		this.hideSpinner("DONE!");
+
+		if (this.editObjectN == null){
+			BitMap.hide('edit-markerset-new');
+			// update the sets menus
+			this.cancelEditMarkerSets();
+			this.editMarkerSets();
+			this.editMarkers(n);		
+		}else{
+			if ( ( oldStyle != s.style_id ) || ( oldIcon != s.icon_id ) ) {
+				a = this.Map.markers;
+				//if the length of the array is > 0
+				if (a.length > 0){
+					//loop through the array
+					for(var n=0; n<a.length; n++){
+						//if the array item is not Null
+						if (a[n]!= null && a[n].plot_on_load == true){
+							if (a[n].set_id == s.set_id){
+								a[n].style_id = s.style_id;
+								a[n].icon_id = s.icon_id;
+								//unload the marker
+								this.Map.map.removeOverlay( a[n].marker );
+								//define marker
+								this.Map.addMarker(n);
+							}
 						}
 					}
 				}
 			}
+			// update the sets menus
+			this.editMarkerSet(this.editObjectN);
 		}
-		
-		this.hideSpinner("DONE!");
-		// update the sets menus
-		this.editMarkerSet(this.editObjectN);
 	},
 	
 	
@@ -1293,8 +1231,7 @@ BitMap.Edit.prototype = {
 		this.editSet(this._setIdRef);
 	},
 	
-	
-	
+
 	"updateRemoveMarkerSet": function(){
 	  	for (var n=0; n<this.Map.markers.length; n++){
 	  		if ( ( this.Map.markers[n] != null ) && ( this.Map.markers[n].set_id == this._setIdRef ) && ( this.Map.markers[n].marker != null ) ){
@@ -1317,57 +1254,22 @@ BitMap.Edit.prototype = {
 		this.hideSpinner("DONE!");
 		this.editMarkers();
 	},
-		
-
-
-	"addMarkerStyle": function(rslt){
-		var xml = rslt.responseXML.documentElement;
-		// create a spot for a new markerstyle in the data array
-		var n = this.Map.markerstyles.length;
-		this.Map.markerstyles[n] = new Array();
-		var s = this.Map.markerstyles[n];
-		
-		// assign markerstyle values data array			
-		var id = xml.getElementsByTagName('style_id');			
-		s.style_id = parseInt( id[0].firstChild.nodeValue );
-		var nm = xml.getElementsByTagName('name');			
-		s.name = nm[0].firstChild.nodeValue;
-		var tp = xml.getElementsByTagName('marker_style_type');
-		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
-		var lho = xml.getElementsByTagName('label_hover_opacity');			
-		s.label_hover_opacity = parseInt( lho[0].firstChild.nodeValue );
-		var lo = xml.getElementsByTagName('label_opacity');			
-		s.label_opacity = parseInt( lo[0].firstChild.nodeValue );
-		var lhs = xml.getElementsByTagName('label_hover_styles');			
-		s.label_hover_styles = lhs[0].firstChild.nodeValue;
-		var ws = xml.getElementsByTagName('window_styles');			
-		s.window_styles = ws[0].firstChild.nodeValue;
-		
-		var ttStyle = document.createElement('style');
-		var ttStyleProperties = document.createTextNode(".tip-" + s.name + " {" + s.label_hover_styles + "}");
-		ttStyle.setAttribute ("type", "text/css");
-		ttStyle.appendChild(ttStyleProperties);
-		document.body.appendChild(ttStyle);
-		
-		var winStyle = document.createElement('style');
-		var winStyleProperties = document.createTextNode(".win-" + s.name + " {" + s.window_styles + "}");
-		winStyle.setAttribute ("type", "text/css");
-		winStyle.appendChild(winStyleProperties);
-		document.body.appendChild(winStyle);
-				
-		// update the styles menus
-		this.hideSpinner("DONE!");
-		this.editMarkerStyles();
-	},
-	
 	
 	
 	"updateMarkerStyle": function(rslt){
 		var xml = rslt.responseXML.documentElement;
-		//get the style we are updating
-		var s = this.Map.markerstyles[this.editObjectN];
-		var oldtp = s.marker_style_type;
-		
+
+		//the style data we are changing
+		var n_i = this.editObjectN;
+	    if ( n_i != null){
+			var n_i = this.Map.markerstyles.length;
+			this.Map.markerstyles[n_i] = [];
+			var s = this.Map.markerstyles[n_i];
+	    }else{
+			var s = this.Map.markerstyles[n_i];
+			var oldtp = s.marker_style_type;
+		}
+
 		// assign markerstyle values data array			
 		var id = xml.getElementsByTagName('style_id');			
 		s.style_id = parseInt( id[0].firstChild.nodeValue );
@@ -1383,7 +1285,7 @@ BitMap.Edit.prototype = {
 		s.label_hover_styles = lhs[0].firstChild.nodeValue;
 		var ws = xml.getElementsByTagName('window_styles');			
 		s.window_styles = ws[0].firstChild.nodeValue;
-		
+
 		//add the replacement styles
 		var ttStyle = document.createElement('style');
 		var ttStyleProperties = document.createTextNode(".tip-" + s.name + " {" + s.label_hover_styles + "}");
@@ -1401,18 +1303,20 @@ BitMap.Edit.prototype = {
 		// update the styles menus
 		this.editMarkerStyles();
 		
-		//update all markers
-		var a = this.Map.markers;
-		//if the length of the array is > 0
-		if (a.length > 0){
-		//loop through the array
-		for(var n=0; n<a.length; n++){
-			//if the array item is not Null
-			if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
-				//unload the marker
-				this.map.removeOverlay( a[n].marker );
-				//define new marker with new styles
-					this.addMarker(n);
+		if ( this.editObjectN != null){
+			//update all markers
+			var a = this.Map.markers;
+			//if the length of the array is > 0
+			if (a.length > 0){
+			//loop through the array
+			for(var n=0; n<a.length; n++){
+				//if the array item is not Null
+				if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
+					//unload the marker
+					this.map.removeOverlay( a[n].marker );
+					//define new marker with new styles
+						this.addMarker(n);
+					}
 				}
 			}
 		}
