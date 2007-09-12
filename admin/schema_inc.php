@@ -86,9 +86,7 @@ $tables = array(
 'gmaps_markers' => "
   marker_id I8 PRIMARY,
   content_id I4 NOTNULL,
-  marker_type I2 DEFAULT 0,
   label_data X,
-  photo_url X,
   zindex I8 DEFAULT 0,
   allow_comments C(5) DEFAULT 'true'
   CONSTRAINT ', CONSTRAINT `gmaps_markers_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
@@ -315,12 +313,11 @@ $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
 	array('p_gmap_remove', 'Can remove maps', 'editors', GMAP_PKG_NAME),
 	array('p_gmap_rollback', 'Can rollback version of a map', 'editors', GMAP_PKG_NAME),
 	array('p_gmap_admin', 'Can administrate maps', 'editors', GMAP_PKG_NAME),
-	array('p_marker_view', 'Can view map markers', 'basic', GMAP_PKG_NAME),
-	array('p_marker_view_history', 'Can view map marker history', 'basic', GMAP_PKG_NAME),
-	/* array('p_marker_create', 'Can create and edit own marker', 'registered', GMAP_PKG_NAME), */
-	array('p_marker_edit', 'Can edit markers', 'editors', GMAP_PKG_NAME),
-	array('p_marker_remove', 'Can remove map markers', 'editors', GMAP_PKG_NAME),
-	array('p_marker_rollback', 'Can rollback version of a marker', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_marker_view', 'Can view map markers', 'basic', GMAP_PKG_NAME),
+	array('p_gmap_marker_view_history', 'Can view map marker history', 'basic', GMAP_PKG_NAME),
+	array('p_gmap_marker_edit', 'Can edit markers', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_marker_remove', 'Can remove map markers', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_marker_rollback', 'Can rollback version of a marker', 'editors', GMAP_PKG_NAME),
 ) );
 
 

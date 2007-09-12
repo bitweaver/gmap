@@ -94,14 +94,12 @@ BitMap.MapData.push({ldelim}
   {ldelim}
 		content_id:{$markersInfo[n].content_id},
 		marker_id: {$markersInfo[n].marker_id},
-		marker_type: {$markersInfo[n].marker_type},
 		title: "{$markersInfo[n].title|addslashes}",
 		lat: {$markersInfo[n].lat},
 		lng: {$markersInfo[n].lng},
 		data: '{$markersInfo[n].data}',
 		parsed_data: '{$markersInfo[n].parsed_data}',
 		label_data: '{$markersInfo[n].label_data}',
-		photo_url: '{$markersInfo[n].photo_url}',
 
 		created:{$markersInfo[n].created},
 		last_modified:{$markersInfo[n].last_modified},

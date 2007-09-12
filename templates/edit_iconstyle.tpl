@@ -14,14 +14,6 @@
 {form action="javascript:;" enctype="multipart/form-data" id="edit-iconstyle-form"}
 	<input name="icon_id" type="hidden" value="{$iconstyleInfo.icon_id}">
 	<input name="save_iconstyle" type="hidden" value="true">
-	<div class="row">
-		{formlabel label="Type" for="marker_type"}
-			{forminput}
-				{formhelp note=""}
-			{/forminput}
-	</div>
-			
-			
 	<div>Name<br/>
 		<input name="name" type="text" style="width:90%" value="{$iconstyleInfo.name}"></div>
 		<!-- GIcon is only type supported right now - in future if other types are available this could be an option -->

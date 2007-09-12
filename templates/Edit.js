@@ -1,17 +1,18 @@
+//NOTE: We use Mochikit library for AJAX and substitute getElementById with '$()'
+
 /*	
 BitMap.show('editerror');
 $('editerror').innerHTML = rslt.responseText;
 */
 
-
 BitMap.dumpProps = function(obj, parent) {
-   for (var i in obj) {
-      if (parent) { var msg = parent + "." + i + "\n" + obj[i]; } else { var msg = i + "\n" + obj[i]; }
-      if (!confirm(msg)) { return; }
-      if (typeof obj[i] == "object") {
-         if (parent) { dumpProps(obj[i], parent + "." + i); } else { dumpProps(obj[i], i); }
-      }
-   }
+	for (var i in obj) {
+		if (parent) { var msg = parent + "." + i + "\n" + obj[i]; } else { var msg = i + "\n" + obj[i]; }
+		if (!confirm(msg)) { return; }
+		if (typeof obj[i] == "object") {
+			if (parent) { dumpProps(obj[i], parent + "." + i); } else { dumpProps(obj[i], i); }
+		}
+	}
 }
 
 if (typeof(BitMap) == 'undefined') {
@@ -23,11 +24,9 @@ BitMap.EditMap = function(){
 	BitMap.EditSession = new BitMap.Edit();
 	BitMap.MapData[0].Map.addOverlayListener();
 	BitMap.MapData[0].Map.attachSideMarkers();
-};
+}
 
-// We use Mochikit library for AJAX and substitute getElementById with '$()'
-// MAP EDITING FUNCTIONS
-
+// MAP EDITING PROTOTYPE and METHODS
 BitMap.Edit = function(){
 	this.SPINNER = $('spinner');
 	this.SPINNER_TEXT = $('spinner-text');
@@ -1126,8 +1125,6 @@ BitMap.Edit.prototype = {
 		m.marker_id = id[0].firstChild.nodeValue;
 		var tl = xml.getElementsByTagName('title');
 		m.title = tl[0].firstChild.nodeValue;			
-		var ty = xml.getElementsByTagName('marker_type');			
-		m.marker_type = ty[0].firstChild.nodeValue;
 		var lt = xml.getElementsByTagName('lat');
 		m.lat = parseFloat(lt[0].firstChild.nodeValue);
 		var ln = xml.getElementsByTagName('lng');
@@ -1138,8 +1135,6 @@ BitMap.Edit.prototype = {
 		m.parsed_data = pdt[0].firstChild.nodeValue;
 		var l = xml.getElementsByTagName('label');
 		m.label_data = ( l[0].firstChild != null )?l[0].firstChild.nodeValue:'';
-		var pu = xml.getElementsByTagName('photo_url');
-		m.photo_url = ( pu[0].firstChild != null )?pu[0].firstChild.nodeValue:'';
 		//var z = xml.getElementsByTagName('z');
 		//m.zindex = parseInt(z[0].firstChild.nodeValue);	
 		var com = xml.getElementsByTagName('allow_comments');

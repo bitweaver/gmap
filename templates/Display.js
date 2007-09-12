@@ -126,15 +126,17 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	    stars = starsElm.innerHTML;
 	  }
 	  var image = '';
+	  /* DEPRECATED - marker_type is no longer used - when Primary Attachments are available those will be used for creating photo markers
 	  if (M.marker_type == 1){
 			var urlSrc = Marker.photo_url;
 			var pos = urlSrc.lastIndexOf('.');
 			var str_1 = urlSrc.substring(0, pos);
 			var str_2 = urlSrc.substring(pos, urlSrc.length);
 			var medUrl = str_1 + "_medium" + str_2;
-			var targImg = /* @todo: PathToRoot here + */ urlSrc;
+			var targImg = urlSrc; // @TODO: add PathToRoot here
 			image = P(null, A({'onClick':'javascript:window.open('+targImg+')'}, IMG({'src':medUrl})));
 	  }
+	  */
 	  var d = (new Date(M.created * 1000)).toString();  
 	  var di = d.lastIndexOf('GMT');
 	  var ds = d.substring(0, di-10);  
@@ -174,6 +176,8 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	  M.gmarker.marker_style_type = 0;
 	
 		var imgLink ='';
+		
+		/* DEPRECATED - marker_type is no longer used - when Primary Attachments are available those will be used for creating photo markers
 		if (M.marker_type == 1){
 			var urlSrc = M.photo_url;
 			var pos = urlSrc.lastIndexOf('.');
@@ -182,6 +186,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			var medUrl = str_1 + "_medium" + str_2;
 			var imgLink = P(null, IMG({'src':medUrl}));
 		}
+		*/
 		
 	  var data = DIV(null, "");
 	  data.innerHTML += ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';	
@@ -207,6 +212,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	  M.gmarker.setTooltip( "<div>" + M.label_data + "</div>");
 	
 		var imgLink ='';
+		/* DEPRECATED - marker_type is no longer used - when Primary Attachments are available those will be used for creating photo markers
 		if (M.marker_type == 1){
 			var urlSrc = M.photo_url;
 			var pos = urlSrc.lastIndexOf('.');
@@ -215,7 +221,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			var medUrl = str_1 + "_medium" + str_2;
 			var imgLink = "<p><img src='"+medUrl+"'></p>"
 		}
-	
+		*/	
 	  M.gmarker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+M.title+"</h1>" + imgLink + "<p>"+M.parsed_data+"</p></div>";
 	  M.gmarker.setDetailWinHTML( M.marker.my_html );
 	  //rollover-icon: M.marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
@@ -476,6 +482,8 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				//if show set == y and show marker == y
 				var Marker = this.markers[n];
 				if ( Marker.side_panel == true && Marker.explode == true ) {
+					var imgLink = null;
+					/* DEPRECATED - marker_type is no longer used - when Primary Attachments are available those will be used for creating photo markers
 					if (Marker.marker_type == 1){
 						var urlSrc = Marker.photo_url;
 						var pos = urlSrc.lastIndexOf('.');
@@ -483,9 +491,8 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 						var str_2 = urlSrc.substring(pos, urlSrc.length); 
 						var thumbUrl = str_1 + "_thumb" + str_2;
 						var imgLink = SPAN( null, BR(), IMG({"src":thumbUrl}) );
-					}else{
-						var imgLink = null;
 					}
+					*/
 
 					//add marker to side list
 					if (Marker.allow_comments == 'y'){
