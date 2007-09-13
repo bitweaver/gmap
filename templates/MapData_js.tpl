@@ -171,82 +171,46 @@ BitMap.MapData.push({ldelim}
 		infowindow_anchor_x: {$iconstylesInfo[n].infowindow_anchor_x},
 		infowindow_anchor_y: {$iconstylesInfo[n].infowindow_anchor_y}
 		{* image_map: {$iconstylesInfo[n].image_map}, *}
-		{* DELETE - NOLONGER AVAILABLE FROM XMAPS
-		points: "{$iconstylesInfo[n].points}",
-		scale: {$iconstylesInfo[n].scale},
-		outline_color: "{$iconstylesInfo[n].outline_color}",
-		outline_weight: {$iconstylesInfo[n].outline_weight},
-		fill_color: "{$iconstylesInfo[n].fill_color}",
-		fill_opacity: {$iconstylesInfo[n].fill_opacity}
-		*}
 	{rdelim},
 	{/section}{/if}],
 
-  Polylines:[{if count($gContent->mMapPolylines) > 0}{section name=polyline_n loop=$gContent->mMapPolylines}
+  Polylines:[{if count($polylinesInfo) > 0}{section name=n loop=$polylinesInfo}
   {ldelim}
-		polyline_id: {$gContent->mMapPolylines[polyline_n].polyline_id},
-		user_id: {$gContent->mMapPolylines[polyline_n].user_id},
-		modifier_user_id: {$gContent->mMapPolylines[polyline_n].modifier_user_id},
-		created: {$gContent->mMapPolylines[polyline_n].created},
-		last_modified: {$gContent->mMapPolylines[polyline_n].last_modified},
-		version: {$gContent->mMapPolylines[polyline_n].version},
-		name: "{$gContent->mMapPolylines[polyline_n].name}",
-		points_data: new Array(),
-		points_data: [{$gContent->mMapPolylines[polyline_n].points_data}],
-		border_text: "{$gContent->mMapPolylines[polyline_n].border_text}",
-		{if $gContent->mMapPolylines[polyline_n].zindex != NULL}
-			zindex: {$gContent->mMapPolylines[polyline_n].zindex},
-		{/if}
-		set_id: {$gContent->mMapPolylines[polyline_n].set_id},
-		style_id: {$gContent->mMapPolylines[polyline_n].style_id},
-		array_n: {$smarty.section.polyline_n.index},
-		plot_on_load: {$gContent->mMapPolylines[polyline_n].plot_on_load},
-		side_panel: {$gContent->mMapPolylines[polyline_n].side_panel},
-		explode: {$gContent->mMapPolylines[polyline_n].explode},
+		polyline_id:{$polylinesInfo[n].polyline_id},
+		user_id:{$polylinesInfo[n].user_id},
+		modifier_user_id:{$polylinesInfo[n].modifier_user_id},
+		created:{$polylinesInfo[n].created},
+		last_modified:{$polylinesInfo[n].last_modified},
+		version:{$polylinesInfo[n].version},
+		name:"{$polylinesInfo[n].name}",
+		type:"{$polylinesInfo[n].type}",
+		points_data:new Array(),
+		points_data:[{$polylinesInfo[n].points_data}],
+		levels_data:"{$polylinesInfo[n].levels_data}",
+		zoom_factor:{$polylinesInfo[n].zoom_factor},
+		num_levels:{$polylinesInfo[n].num_levels},
+		set_id:{$polylinesInfo[n].set_id},
+		style_id:{$polylinesInfo[n].style_id},
+		array_n:{$smarty.section.n.index},
 	{rdelim},
 	{/section}{/if}],
 
-  PolylineSets:[{if count($gContent->mMapPolylineSets) > 0}{section name=set_n loop=$gContent->mMapPolylineSets}
+  PolylineSets:[{if count($polylinesetsInfo) > 0}{section name=n loop=$polylinesetsInfo}
   {ldelim}
-		set_id: {$gContent->mMapPolylineSets[set_n].set_id},
-		name: "{$gContent->mMapPolylineSets[set_n].name}",
-		description: "{$gContent->mMapPolylineSets[set_n].description}",
-		style_id: {$gContent->mMapPolylineSets[set_n].style_id},
-		plot_on_load: {$gContent->mMapPolylineSets[set_n].plot_on_load},
-		side_panel: {$gContent->mMapPolylineSets[set_n].side_panel},
-		explode: {$gContent->mMapPolylineSets[set_n].explode},
+		set_id: {$polylinesetsInfo[n].set_id},
+		name: "{$polylinesetsInfo[n].name}",
+		description: "{$polylinesetsInfo[n].description}",
+		style_id: {$polylinesetsInfo[n].style_id},
 	{rdelim},
 	{/section}{/if}],
 
-  PolylineStyles:[{if count($gContent->mMapPolylineStyles) > 0 }{section name=style_n loop=$gContent->mMapPolylineStyles}
+  PolylineStyles:[{if count($polylinestylesInfo) > 0 }{section name=n loop=$polylinestylesInfo}
   {ldelim}
-		style_id: {$gContent->mMapPolylineStyles[style_n].style_id},
-		name: "{$gContent->mMapPolylineStyles[style_n].name}",
-		polyline_style_type: {$gContent->mMapPolylineStyles[style_n].polyline_style_type},
-		color: "{$gContent->mMapPolylineStyles[style_n].color}",
-		weight: {$gContent->mMapPolylineStyles[style_n].weight},
-		opacity: {$gContent->mMapPolylineStyles[style_n].opacity},
-		pattern: new Array(),
-		{if $gContent->mMapPolylineStyles[style_n].pattern != NULL}
-			pattern: {$gContent->mMapPolylineStyles[style_n].pattern},
-		{/if}
-		segment_count: {$gContent->mMapPolylineStyles[style_n].segment_count},
-		text_every: {$gContent->mMapPolylineStyles[style_n].text_every},
-		begin_arrow: {$gContent->mMapPolylineStyles[style_n].begin_arrow},
-		end_arrow: {$gContent->mMapPolylineStyles[style_n].end_arrow},
-		arrows_every: {$gContent->mMapPolylineStyles[style_n].arrows_every},
-		text_fgstyle_color: "{$gContent->mMapPolylineStyles[style_n].text_fgstyle_color}",
-		text_fgstyle_weight: {$gContent->mMapPolylineStyles[style_n].text_fgstyle_weight},
-		text_fgstyle_opacity: {$gContent->mMapPolylineStyles[style_n].text_fgstyle_opacity},
-		{if $gContent->mMapPolylineStyles[style_n].text_fgstyle_zindex != NULL}
-			text_fgstyle_zindex: {$gContent->mMapPolylineStyles[style_n].text_fgstyle_zindex},
-		{/if}
-		text_bgstyle_color: "{$gContent->mMapPolylineStyles[style_n].text_bgstyle_color}",
-		text_bgstyle_weight: {$gContent->mMapPolylineStyles[style_n].text_bgstyle_weight},
-		text_bgstyle_opacity: {$gContent->mMapPolylineStyles[style_n].text_bgstyle_opacity},
-		{if $gContent->mMapPolylineStyles[style_n].text_bgstyle_zindex != NULL}
-			text_bgstyle_zindex: {$gContent->mMapPolylineStyles[style_n].text_bgstyle_zindex},
-		{/if}
+		style_id: {$polylinestylesInfo[n].style_id},
+		name: "{$polylinestylesInfo[n].name}",
+		color: "{$polylinestylesInfo[n].color}",
+		weight: {$polylinestylesInfo[n].weight},
+		opacity: {$polylinestylesInfo[n].opacity},
 	{rdelim},
 	{/section}{/if}],
 
@@ -275,9 +239,6 @@ BitMap.MapData.push({ldelim}
 		style_id: {$gContent->mMapPolygons[polygon_n].style_id},
 		polylinestyle_id: {$gContent->mMapPolygons[polygon_n].polylinestyle_id},
 		array_n: {$smarty.section.polygon_n.index},
-		plot_on_load: {$gContent->mMapPolygons[polygon_n].plot_on_load},
-		side_panel: {$gContent->mMapPolygons[polygon_n].side_panel},
-		explode: {$gContent->mMapPolygons[polygon_n].explode},
 	{rdelim},
 	{/section}{/if}],
 
@@ -299,9 +260,6 @@ BitMap.MapData.push({ldelim}
 		description: "{$gContent->mMapPolygonSets[set_n].description}",
 		style_id: {$gContent->mMapPolygonSets[set_n].style_id},
 		polylinestyle_id: {$gContent->mMapPolygonSets[set_n].polylinestyle_id},
-		plot_on_load: {$gContent->mMapPolygonSets[set_n].plot_on_load},
-		side_panel: {$gContent->mMapPolygonSets[set_n].side_panel},
-		explode: {$gContent->mMapPolygonSets[set_n].explode},
 	{rdelim},
 	{/section}{/if}]	
 {rdelim});

@@ -3,7 +3,6 @@
 <polylinestyle>
 	<style_id>{$polylinestyleInfo.style_id}</style_id>
 	<name>{$polylinestyleInfo.name}</name>
-	<polyline_style_type>{$polylinestyleInfo.polyline_style_type}</polyline_style_type>
 	<color>{$polylinestyleInfo.color}</color>
 	<weight>{$polylinestyleInfo.weight}</weight>
 	<opacity>{$polylinestyleInfo.opacity}</opacity>

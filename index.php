@@ -62,6 +62,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		$gBitSmarty->assign( 'markersetsInfo', $gContent->mMapMarkerSets );
 		$gBitSmarty->assign( 'markerstylesInfo', $gContent->mMapMarkerStyles );
 		$gBitSmarty->assign( 'iconstylesInfo', $gContent->mMapIconStyles );
+		$gBitSmarty->assign( 'polylinesInfo', $gContent->mMapPolylines );
+		$gBitSmarty->assign( 'polylinesetsInfo', $gContent->mMapPolylineSets );
+		$gBitSmarty->assign( 'polylinestylesInfo', $gContent->mMapPolylineStyles );
 
 		$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
 		

@@ -43,7 +43,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		}
 	},
 
-	//@todo - these image paths may not be universal enough, may need to get the root from kernel
+	//@TODO - these image paths may not be universal enough, may need to get the root from kernel
 	"defineGIcon": function(i){
 		var IconStyle = this.iconstyles[i];
 		IconStyle.icon = new GIcon();
@@ -243,99 +243,49 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			}
 		}
 	},
-	
+
+
 	"attachPolyline": function(n){
-		var a = this.polylines;
-		if (a[n].style_id == 0){
-			this.defineGPolyline(n);
-		}else{
-			var s;
-			var PolylineStyles = this.polylinestyles;
-			for (var b=0; b<PolylineStyles.length; b++){
-				if ( PolylineStyles[b].style_id == a[n].style_id ){
-					s = b;
+		var p = this.polylines;
+		var s_i = null;
+		if (p[n].style_id != 0){
+			var ps = this.polylinestyles;
+			var count = ps.length;
+			for (var i=0; i<count; i++){
+				if ( ps[i].style_id == p[n].style_id ){
+					s_i = i;
 				}
 			}
-			if ( PolylineStyles[s].polyline_style_type == 0){
-				this.defineGPolyline(n, s);
-			}else{
-				this.defineXPolyline(n, s);
-			}
 		}
+		this.defineGPolyline(n, s_i);
 	},
 
 
 
 	"defineGPolyline": function(n, s){
 		var a = this.polylines;
-	
-	  var pointlist = new Array();
-	  for (p = 0; p < a[n].points_data.length; p+=2 ){
-	  	var point = new GPoint(
-	  		parseFloat(a[n].points_data[p]),
-	  		parseFloat(a[n].points_data[p+1])
-	  	);
+		var pointlist = new Array();
+		for (p = 0; p < a[n].points_data.length; p+=2 ){
+		var point = new GPoint(
+			parseFloat(a[n].points_data[p]),
+			parseFloat(a[n].points_data[p+1])
+		);
 			pointlist.push(point);
-	  };
-	
+		};
+		
 		if ( s != null ){
 			var PolylineStyle = this.polylinestyles[s];	
-	    var linecolor = "#"+PolylineStyle.color;
-	    var lineweight = PolylineStyle.weight;
-	    var lineopacity = PolylineStyle.opacity;
-	  };
-	
-	  a[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
-	  this.map.addOverlay(a[n].polyline);
-	},
-
-
-//@todo not sure if this can be supported in V2, requires Xmaps Lib
-	"defineXPolyline": function(n, s){
-		var a = this.polylines;
-	
-		//make the array of points needed
-	  var pointlist = new Array();
-	  for (p = 0; p < a[n].points_data.length; p+=2 ){
-	  	var point = new GPoint(
-	  		parseFloat(a[n].points_data[p]),
-	  		parseFloat(a[n].points_data[p+1])
-	  	);
-			pointlist.push(point);
-	  };
-	
-		//if we are given a style_id we look up the styles otherwise defaults kick in
-		var PolylineStyle = this.polylinestyles[s];	
-	  var linecolor = "#"+PolylineStyle.color;
-	  var txfgcolor = "#"+PolylineStyle.text_fgstyle_color;
-	  var txbgcolor = "#"+PolylineStyle.text_bgstyle_color;
-	
-	  var linestyle = {
-			color: linecolor,
-			weight: PolylineStyle.weight,
-			opacity: PolylineStyle.opacity,
-	    /* @todo this prolly needs to be parsed as it should be comma delim
-	     * pattern: [bLStyData[s].pattern];
-			 */
-			segmentCount: PolylineStyle.segment_count,
-			beginArrow: PolylineStyle.begin_arrow,
-	    endArrow: PolylineStyle.end_arrow,
-			arrowsEvery: PolylineStyle.arrows_every,
-			text: a[n].border_text,
-			textEvery: PolylineStyle.text_every,
-			textFgStyle: { color: txfgcolor, weight: PolylineStyle.text_fgstyle_weight, opacity: PolylineStyle.text_fgstyle_opacity },
-			textBgStyle: { color: txbgcolor, weight: PolylineStyle.text_bgstyle_weight, opacity: PolylineStyle.text_bgstyle_opacity }
-	  };
-	
-	  a[n].polyline = new XPolyline(pointlist, linestyle);
-	  this.map.addOverlay(a[n].polyline);
+			var linecolor = "#"+PolylineStyle.color;
+			var lineweight = PolylineStyle.weight;
+			var lineopacity = PolylineStyle.opacity;
+		};
+		
+		a[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
+		this.map.addOverlay(a[n].polyline);
 	},
 	
 	
-	/*@todo all Polygon constructors below might have to change
-	 *      the current Polygon constructors use the Xmaps Lib
-	 *      but there may not be an Xmaps Lib for V2
-	 */  
+	/*@TODO all Polygon constructors below might have to change to use gmap polygon */  
 	"attachPolygons": function(){
 		//get the array we are working on
 		var a = this.polygons;
@@ -369,71 +319,14 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				p = c;
 			}
 		}
-		this.defineXPolygon(n, s, p);
+		this.defineGPolygon(n, s, p);
 	},
 
 
-	"defineXPolygon": function(n, s, p){
-		var fillstyle = {};
-		var linestyle = {};
-	
-		var a = this.polygons;
-	
-		//Create XPolygon styles
-	 	if (p != null){
-		  var PolygonStyle = this.polygonstyles[p];
-			var fillcolor = "#"+PolygonStyle.color;
-			fillstyle = {
-	  		color: fillcolor,
-	  		weight: PolygonStyle.weight,
-	  		opacity: PolygonStyle.opacity
-			}
-		}
-	
-	 	if (s != null){
-		  var PolylineStyle = this.polylinestyles[s];
-	    var linecolor = "#"+PolylineStyle.color;
-	    var txfgcolor = "#"+PolylineStyle.text_fgstyle_color;
-	    var txbgcolor = "#"+PolylineStyle.text_bgstyle_color;
-	    linestyle = {
-	  		color: linecolor,
-	  		weight: PolylineStyle.weight,
-	  		opacity: PolylineStyle.opacity,
-	        /* @todo this prolly needs to be parsed as it should be comma delim
-	         * pattern: [bLStyData[s].pattern];
-	    		 */
-	  		segmentCount: PolylineStyle.segment_count,
-	  		beginArrow: PolylineStyle.begin_arrow,
-	      	endArrow: PolylineStyle.end_arrow,
-	  		arrowsEvery: PolylineStyle.arrows_every,
-	  		text: a[n].border_text,
-	  		textEvery: PolylineStyle.text_every,
-	  		textFgStyle: { color: txfgcolor, weight: PolylineStyle.text_fgstyle_weight, opacity: PolylineStyle[s].text_fgstyle_opacity },
-	  		textBgStyle: { color: txbgcolor, weight: PolylineStyle.text_bgstyle_weight, opacity: PolylineStyle[s].text_bgstyle_opacity }
-	    };
-		};
-	
-		if (a[n].circle == true){
-		//if its a circle
-	  	var center = new GPoint(parseFloat(a[n].circle_center[0]), parseFloat(a[n].circle_center[1]));
-	  	var radius = new XDistance(a[n].radius, XDistance.KM);
-	  	a[n].polygon = new XPolygon.createRegularPolygonFromRadius(center, radius, 42, 0, linestyle, fillstyle);
-	  }else{
-		//if its not
-	  	var pointlist = new Array();
-	    for (q = 0; q < a[n].points_data.length; q+=2 ){
-	    	var point = new GPoint(
-	    		parseFloat(a[n].points_data[q]),
-	    		parseFloat(a[n].points_data[q+1])
-	    	);
-	  		pointlist.push(point);
-	    };
-	    a[n].polygon = new XPolygon(pointlist, linestyle, fillstyle);
-	  };
-	  this.map.addOverlay(a[n].polygon);
+	"defineGPolygon": function(n){
+		/*@TODO define this */
 	},
-	
-	
+
 	
 	//make side panel of markers
 	//works only with one map on a page

@@ -3,9 +3,11 @@
 	<polyline>
 		<polyline_id>{$polylineInfo.polyline_id}</polyline_id>
 		<name>{$polylineInfo.name}</name>
+		<type>{$polylineInfo.type}</type>
 		<points_data>{$polylineInfo.points_data}</points_data>
-		<border_text>{$polylineInfo.border_text}</border_text>
-		<zindex>{$polylineInfo.zindex}</zindex>
+		<levels_data>{$polylineInfo.levels_data}</levels_data>
+		<zoom_factor>{$polylineInfo.zoom_factor}</zoom_factor>
+		<num_levels>{$polylineInfo.num_levels}</num_levels>
 	</polyline>
 {else}
 	<status>success</status>

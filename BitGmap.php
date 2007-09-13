@@ -1152,18 +1152,24 @@ class BitGmap extends LibertyAttachable {
 			$pParamHash['polyline_store']['name'] = $pParamHash['name'];
 		}
 
+		if( !empty( $pParamHash['type'] ) ) {
+			$pParamHash['polyline_store']['type'] = $pParamHash['type'];
+		}
+
 		if( !empty( $pParamHash['points_data'] ) ) {
 			$pParamHash['polyline_store']['points_data'] = $pParamHash['points_data'];
 		}
 
-		if( !empty( $pParamHash['border_text'] ) ) {
-			$pParamHash['polyline_store']['border_text'] = $pParamHash['border_text'];
-		}else{
-			$pParamHash['polyline_store']['border_text'] = "";
+		if( !empty( $pParamHash['levels_data'] ) ) {
+			$pParamHash['polyline_store']['levels_data'] = $pParamHash['levels_data'];
 		}
 
-		if( ( !empty( $pParamHash['zindex'] ) && is_numeric( $pParamHash['line_z'] ) ) || $pParamHash['zindex'] == 0 ) {
-			$pParamHash['polyline_store']['zindex'] = $pParamHash['zindex'];
+		if( isset( $pParamHash['zoom_factor'] ) && is_numeric( $pParamHash['zoom_factor'] ) ) {
+			$pParamHash['polyline_store']['zoom_factor'] = $pParamHash['zoom_factor'];
+		}
+
+		if( isset( $pParamHash['num_levels'] ) && is_numeric( $pParamHash['num_levels'] ) ) {
+			$pParamHash['polyline_store']['num_levels'] = $pParamHash['num_levels'];
 		}
 
 		// set values for updating the polyline keychain
