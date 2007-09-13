@@ -186,9 +186,11 @@ BitMap.MapData.push({ldelim}
 		type:"{$polylinesInfo[n].type}",
 		points_data:new Array(),
 		points_data:[{$polylinesInfo[n].points_data}],
-		levels_data:"{$polylinesInfo[n].levels_data}",
-		zoom_factor:{$polylinesInfo[n].zoom_factor},
-		num_levels:{$polylinesInfo[n].num_levels},
+		{if $polylinesInfo[n].type == 2 }
+			levels_data:"{$polylinesInfo[n].levels_data}",
+			zoom_factor:{$polylinesInfo[n].zoom_factor},
+			num_levels:{$polylinesInfo[n].num_levels},
+		{/if}
 		set_id:{$polylinesInfo[n].set_id},
 		style_id:{$polylinesInfo[n].style_id},
 		array_n:{$smarty.section.n.index},

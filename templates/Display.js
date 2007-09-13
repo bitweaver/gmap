@@ -230,58 +230,58 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 
 
 	"attachPolylines": function(){
-		//get the array we are working on
-		var a = this.polylines;
-		//if the length of the array is > 0
-		if (a.length > 0){
-	  	//loop through the array
-			for(n=0; n<a.length; n++){
-	  		//if the array item is not Null
-				if (a[n]!= null && a[n].plot_on_load == true){
-					this.attachPolyline(n);
+		var pl = this.polylines;
+		var count = pl.length;
+		if (count > 0){
+			for(n=0; n<count; n++){
+				if ( pl[n] != null ){
+					this.addPolyline(n);
 				}
 			}
 		}
 	},
 
 
-	"attachPolyline": function(n){
-		var p = this.polylines;
-		var s_i = null;
-		if (p[n].style_id != 0){
-			var ps = this.polylinestyles;
-			var count = ps.length;
-			for (var i=0; i<count; i++){
-				if ( ps[i].style_id == p[n].style_id ){
-					s_i = i;
+	"addPolyline": function(i){
+		var p = this.polylines[i];
+		if ( p.type != 2 ){
+			var s_i = null;
+			if (p.style_id != 0){
+				var ps = this.polylinestyles;
+				var count = ps.length;
+				for (var n=0; n<count; n++){
+					if ( ps[n].style_id == p.style_id ){
+						s_i = n;
+					}
 				}
 			}
+			this.defineGPolyline(i, s_i);			
 		}
-		this.defineGPolyline(n, s_i);
 	},
 
 
 
-	"defineGPolyline": function(n, s){
-		var a = this.polylines;
-		var pointlist = new Array();
-		for (p = 0; p < a[n].points_data.length; p+=2 ){
-		var point = new GPoint(
-			parseFloat(a[n].points_data[p]),
-			parseFloat(a[n].points_data[p+1])
-		);
+	"defineGPolyline": function(i, s){
+		var p = this.polylines[i];
+		var pointlist = [];
+		for (n = 0; n < p.points_data.length; n+=2 ){
+			var point = new GLatLng(
+				parseFloat(p.points_data[n]),
+				parseFloat(p.points_data[n+1])
+			);
 			pointlist.push(point);
 		};
-		
+		var linecolor = null;
+		var lineweight = null;
+		var lineopacity = null;		
 		if ( s != null ){
 			var PolylineStyle = this.polylinestyles[s];	
-			var linecolor = "#"+PolylineStyle.color;
-			var lineweight = PolylineStyle.weight;
-			var lineopacity = PolylineStyle.opacity;
+			linecolor = "#"+PolylineStyle.color;
+			lineweight = PolylineStyle.weight;
+			lineopacity = PolylineStyle.opacity;
 		};
-		
-		a[n].polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
-		this.map.addOverlay(a[n].polyline);
+		p.polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
+		this.map.addOverlay(p.polyline);
 	},
 	
 	

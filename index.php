@@ -68,6 +68,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 			$gBitSmarty->assign_by_ref( 'polylinestylesInfo', $gContent->mMapPolylineStyles );
 		}
 		
+		vd($gContent->mMapPolylines);
+		die;
+		
 		//set onload function in body
 		$gBitSmarty->assign('view_map', TRUE);
 		$gBitSystem->mOnload[] = 'BitMap.Display();';

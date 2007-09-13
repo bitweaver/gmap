@@ -155,6 +155,11 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
 	var ref = this;
 	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
 	}  
+
+	if (this.polylines.length > 0){
+	var ref = this;
+	this.loopOver(ref.polylines, function(i){ref.addPolyline(i);});
+	}	
 };
 
 //a utility method we use instead of for loops

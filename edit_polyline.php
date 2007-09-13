@@ -38,9 +38,12 @@ if (!empty($_REQUEST["save_polyline"])) {
     }
 }else{
 	if ( isset( $_REQUEST["polyline_id"] ) ){
-		$set = $gContent->getPolylineData( $_REQUEST["polyline_id"] );
+		$polyline = $gContent->getPolylineData( $_REQUEST["polyline_id"] );
 	}
-	$gBitSmarty->assign_by_ref('polylineInfo', $set->fields);
+	if (isset($_REQUEST["set_id"])){
+		$polyline->fields['set_id'] = $_REQUEST["set_id"];
+	}
+	$gBitSmarty->assign_by_ref('polylineInfo', $polyline->fields);
 	$gBitSystem->display('bitpackage:gmap/edit_polyline.tpl', NULL, 'center_only');
 	die;
 }
