@@ -54,9 +54,9 @@ class BitGmapMarker extends LibertyAttachable {
 		) );
 		
 		// Permission setup
-		$this->mViewContentPerm  = 'p_marker_view';
-		$this->mEditContentPerm  = 'p_marker_edit';
-		$this->mAdminContentPerm = 'p_marker_admin';
+		$this->mViewContentPerm  = 'p_gmap_marker_view';
+		$this->mEditContentPerm  = 'p_gmap_marker_edit';
+		$this->mAdminContentPerm = 'p_gmap_admin';
 	}
 
 

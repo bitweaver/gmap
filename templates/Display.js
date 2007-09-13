@@ -255,10 +255,11 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 					}
 				}
 			}
-			this.defineGPolyline(i, s_i);			
+			this.defineGPolyline(i, s_i);
+		}else{
+			this.defineGPolylineEncoded(i);
 		}
 	},
-
 
 
 	"defineGPolyline": function(i, s){
@@ -271,19 +272,48 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			);
 			pointlist.push(point);
 		};
-		var linecolor = null;
-		var lineweight = null;
-		var lineopacity = null;		
+		var c = null;
+		var w = null;
+		var o = null;		
 		if ( s != null ){
-			var PolylineStyle = this.polylinestyles[s];	
-			linecolor = "#"+PolylineStyle.color;
-			lineweight = PolylineStyle.weight;
-			lineopacity = PolylineStyle.opacity;
+			var ps = this.polylinestyles[s];	
+			c = "#"+ps.color;
+			w = ps.weight;
+			o = ps.opacity;
 		};
-		p.polyline = new GPolyline(pointlist, linecolor, lineweight, lineopacity);
+		var opts = (p.type == 1)?{geodesic:true}:null;
+		p.polyline = new GPolyline(pointlist, c, w, o, opts);
 		this.map.addOverlay(p.polyline);
 	},
 	
+	
+	"defineGPolylineEncoded": function(i, s){
+		var p = this.polylines[i];
+		if(p.points_data!=null && p.levels_data!=null){
+			var c = null;
+			var w = null;
+			var o = null;		
+			if ( s != null ){
+				var ps = this.polylinestyles[s];	
+				c = "#"+ps.color;
+				w = ps.weight;
+				o = ps.opacity;
+			};
+			var z=(p.zoom_factor!=null)?p.zoom_factor:32;
+			var n=(p.num_levels!=null)?p.num_levels:4;
+			p.polyline = new GPolyline.fromEncoded({
+				color:c,
+				weight:w,
+				opacity:o,
+				points:p.points_data,
+				levels:p.levels_data,
+				zoomFactor:z,
+				numLevels:n
+			});
+			this.map.addOverlay(p.polyline);
+		}
+	},
+
 	
 	/*@TODO all Polygon constructors below might have to change to use gmap polygon */  
 	"attachPolygons": function(){

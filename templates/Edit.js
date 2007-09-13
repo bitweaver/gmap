@@ -2175,7 +2175,8 @@ BitMap.Edit.prototype = {
 						this.removeOverlay( ref.bTP );
 					}
 					if (ref.bTempPoints.length){
-						ref.bTP = new GPolyline(ref.bTempPoints,"#0000FF", 2, 1)
+						var opts = (f.type.options[1].selected)?{geodesic:true}:null;
+						ref.bTP = new GPolyline(ref.bTempPoints,"#0000FF", 2, 1, opts)
 						this.addOverlay( ref.bTP );
 					}
 					for(var i=0; i<ref.bTempPoints.length; i++){
