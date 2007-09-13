@@ -54,19 +54,19 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		
 		$displayHash = array( 'perm_name' => 'p_gmap_view' );
 		$gContent->invokeServices( 'content_display_function', $displayHash );
-		$gBitSmarty->assign( 'mapInfo', $gContent->mInfo );
-		$gBitSmarty->assign( 'maptypesInfo', $gContent->mMapTypes );
-		$gBitSmarty->assign( 'tilelayersInfo', $gContent->mTilelayers );
-		$gBitSmarty->assign( 'copyrightsInfo', $gContent->mCopyrights );
-		$gBitSmarty->assign( 'markersInfo', $gContent->mMapMarkers );
-		$gBitSmarty->assign( 'markersetsInfo', $gContent->mMapMarkerSets );
-		$gBitSmarty->assign( 'markerstylesInfo', $gContent->mMapMarkerStyles );
-		$gBitSmarty->assign( 'iconstylesInfo', $gContent->mMapIconStyles );
-		$gBitSmarty->assign( 'polylinesInfo', $gContent->mMapPolylines );
-		$gBitSmarty->assign( 'polylinesetsInfo', $gContent->mMapPolylineSets );
-		$gBitSmarty->assign( 'polylinestylesInfo', $gContent->mMapPolylineStyles );
-
-		$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
+		$gBitSmarty->assign_by_ref( 'mapInfo', $gContent->mInfo);
+		if ( $gContent->isValid() ){
+			$gBitSmarty->assign_by_ref( 'maptypesInfo', $gContent->mMapTypes );
+			$gBitSmarty->assign_by_ref( 'tilelayersInfo', $gContent->mTilelayers );
+			$gBitSmarty->assign_by_ref( 'copyrightsInfo', $gContent->mCopyrights );
+			$gBitSmarty->assign_by_ref( 'markersInfo', $gContent->mMapMarkers );
+			$gBitSmarty->assign_by_ref( 'markersetsInfo', $gContent->mMapMarkerSets );
+			$gBitSmarty->assign_by_ref( 'markerstylesInfo', $gContent->mMapMarkerStyles );
+			$gBitSmarty->assign_by_ref( 'iconstylesInfo', $gContent->mMapIconStyles );
+			$gBitSmarty->assign_by_ref( 'polylinesInfo', $gContent->mMapPolylines );
+			$gBitSmarty->assign_by_ref( 'polylinesetsInfo', $gContent->mMapPolylineSets );
+			$gBitSmarty->assign_by_ref( 'polylinestylesInfo', $gContent->mMapPolylineStyles );
+		}
 		
 		//set onload function in body
 		$gBitSmarty->assign('view_map', TRUE);

@@ -1244,8 +1244,8 @@ BitMap.Edit.prototype = {
 
 	 "storePolylineSet": function(f){
 		this.showSpinner("Saving Polylineset...");
-		var str = "edit_polylineset.php?" + queryString(f) + "&set_type=polylines" + "&gmap_id=" + this.Map.id;
-		this._setIdRef = f.set_id.value;
+		var str = "edit_polylineset.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
+		//this._setIdRef = f.set_id.value;
 		doSimpleXMLHttpRequest(str).addCallback( bind(this.updatePolylineSet, this) ); 
 	 },
 
@@ -1407,7 +1407,7 @@ BitMap.Edit.prototype = {
 		
 		this.Map.map.setCenter(new GLatLng(this.Map.center.lat, this.Map.center.lng), this.Map.zoom);
 		this.hideSpinner("DONE!");
-		this.editMap();			
+		this.editMap(this.Map.id);			
 	 },
 
 
@@ -1948,7 +1948,7 @@ BitMap.Edit.prototype = {
 		var zi = xml.getElementsByTagName('zindex');
 		p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 		
-		if ( this.editObjectN  == null){
+		if ( this.editObjectN == null){
 			p.set_id = this.Map.polylinesets[s].set_id;
 			p.style_id = this.Map.polylinesets[s].style_id;
 			p.plot_on_load = this.Map.polylinesets[s].plot_on_load;
@@ -1989,12 +1989,6 @@ BitMap.Edit.prototype = {
 		s.description = dc[0].firstChild.nodeValue;
 		var sy = xml.getElementsByTagName('style_id');
 		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
-		var pol = xml.getElementsByTagName('plot_on_load');
-		if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
-		var sp = xml.getElementsByTagName('side_panel');
-		if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
-		var ex = xml.getElementsByTagName('explode');
-		if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
 
 		this.hideSpinner("DONE!");
 

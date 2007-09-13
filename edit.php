@@ -16,15 +16,9 @@ $gBitSystem->verifyPermission('p_gmap_edit' );
 require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 
 //if there is no API key don't even bother
-if ($gBitSystem->isFeatureActive('gmap_api_key')){
-	//@todo this was causing a header problem when needed and when not?
-	//header("Location: ".$gContent->getDisplayUrl());
-	
-	$gBitSmarty->assign( 'loadGoogleMapsAPI', TRUE );
-	$gBitSmarty->assign( 'loadMochiKit', TRUE );
+if ($gBitSystem->isFeatureActive('gmap_api_key')){	
 	$gBitSmarty->assign( 'edit_map', TRUE );
-	$gBitSmarty->assign_by_ref('mapInfo', $gContent->mInfo);
-	
+	$gBitSmarty->assign_by_ref( 'mapInfo', $gContent->mInfo);
 	if ( $gContent->isValid() ){
 		$gBitSmarty->assign_by_ref( 'maptypesInfo', $gContent->mMapTypes );
 		$gBitSmarty->assign_by_ref( 'tilelayersInfo', $gContent->mTilelayers );
@@ -33,6 +27,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		$gBitSmarty->assign_by_ref( 'markersetsInfo', $gContent->mMapMarkerSets );
 		$gBitSmarty->assign_by_ref( 'markerstylesInfo', $gContent->mMapMarkerStyles );
 		$gBitSmarty->assign_by_ref( 'iconstylesInfo', $gContent->mMapIconStyles );
+		$gBitSmarty->assign_by_ref( 'polylinesInfo', $gContent->mMapPolylines );
+		$gBitSmarty->assign_by_ref( 'polylinesetsInfo', $gContent->mMapPolylineSets );
+		$gBitSmarty->assign_by_ref( 'polylinestylesInfo', $gContent->mMapPolylineStyles );
 	}
 	
 	//set onload function in body
