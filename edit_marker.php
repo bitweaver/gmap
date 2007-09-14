@@ -1,5 +1,12 @@
 <?php
-// Copyright (c) 2005 bitweaver Gmap
+/**
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.18 2007/09/14 01:18:54 wjames5 Exp $
+ * @package gmap
+ * @subpackage functions
+ */
+//
+
+// Copyright (c) 2005-2007 bitweaver Gmap
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
@@ -11,11 +18,15 @@ require_once('../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
-// Check permission to create or edit a marker
-$gBitSystem->verifyPermission('p_gmarker_create' );
-
 // Get the marker for specified gmarker_id
 require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );
+
+// Now check permissions to access this page
+if( $gContent->isValid() ) {
+	$gContent->verifyEditPermission();
+} else {
+	$gBitSystem->verifyPermission( 'p_gmap_marker_edit' );
+}
 
 // If a marker_id or content_id is passed in then check for ownership or admin
 if (!empty($_REQUEST['marker_id']) || !empty($_REQUEST['content_id'])) {
