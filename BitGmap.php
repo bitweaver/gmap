@@ -2418,8 +2418,28 @@ class BitGmap extends LibertyAttachable {
 	* Make sure gmap is loaded and valid
 	**/
 	function isValid() {
-		return( !empty( $this->mGmapId ) );
+		return( $this->verifyId( $this->mGmapId ) );
 	}
+
+	/**
+	 * Function that determines if this content specified permission for the current gBitUser. 
+	 * Override LibertyContent method default $pCheckGlobalPerm=FALSE to enable shared editing
+	 * See LibertyContent method for defaults
+	*/
+	function hasEditPermission( $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
+		return( $this->hasUserPermission( $this->mEditContentPerm, $pVerifyAccessControl, $pCheckGlobalPerm ) );
+	}
+
+	// === verifyEditPermission
+	/**
+	 * Function that determines if this content specified permission for the current gBitUser. 
+	 * Override LibertyContent method default $pCheckGlobalPerm=FALSE to enable shared editing
+	 * See LibertyContent method for defaults
+	*/
+	function verifyEditPermission( $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
+		return parent::verifyEditPermission( $pVerifyAccessControl, $pCheckGlobalPerm );
+	}
+
 	
 	/**
 	* Generates the URL to the gmap page

@@ -9,11 +9,14 @@ require_once('../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
-// Now check permission to edit or create a map
-$gBitSystem->verifyPermission('p_gmap_edit' );
-
 // Get the map for specified gmap_id
 require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
+
+if( $gContent->isValid() ) {
+	$gContent->verifyEditPermission();
+} else {
+	$gBitSystem->verifyPermission( 'p_gmap_edit' );
+}
 
 //if there is no API key don't even bother
 if ($gBitSystem->isFeatureActive('gmap_api_key')){	

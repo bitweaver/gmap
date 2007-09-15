@@ -9,14 +9,21 @@ require_once('../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
-// Now check permissions to access this page
-$gBitSystem->verifyPermission('bit_gm_edit_map' );
-
 // Get the map for specified gmap_id
 require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 
+// Now check permissions to access this page
+$gBitSystem->setFormatHeader( 'center_only' );
+if( $gContent->isValid() ) {
+	$gContent->verifyEditPermission();
+} else {
+	$gBitSystem->verifyPermission( 'p_gmap_edit' );
+}
+
+
 //if there is no API key don't even bother
 if ($gBitSystem->isFeatureActive('gmap_api_key')){
+	$gBitSystem->setFormatHeader( NULL );
 	//Preview mode is handled by javascript on the client side.
 	//There is no callback to the server for previewing changes.
 	
