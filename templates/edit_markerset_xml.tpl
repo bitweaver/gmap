@@ -2,8 +2,8 @@
 {if $markersetInfo}
 <markerset>
 	<set_id>{$markersetInfo.set_id}</set_id>
-	<name>{$markersetInfo.name}</name>
-	<description>{$markersetInfo.description}</description>
+	<name>{$markersetInfo.title}</name>
+	<description>{$markersetInfo.data}</description>
 	<style_id>{$markersetInfo.style_id}</style_id>
 	<icon_id>{$markersetInfo.icon_id}</icon_id>
 	<plot_on_load>{$markersetInfo.plot_on_load}</plot_on_load>

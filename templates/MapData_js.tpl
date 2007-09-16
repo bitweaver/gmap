@@ -124,8 +124,8 @@ BitMap.MapData.push({ldelim}
   MarkerSets:[{if count($markersetsInfo) > 0}{section name=n loop=$markersetsInfo}
   {ldelim}
 		set_id: {$markersetsInfo[n].set_id},
-		name: "{$markersetsInfo[n].name}",
-		description: "{$markersetsInfo[n].description}",
+		name: "{$markersetsInfo[n].title}",
+		description: "{$markersetsInfo[n].data}",
 		style_id: {$markersetsInfo[n].style_id},
 		icon_id: {$markersetsInfo[n].icon_id},
 		set_type: "{$markersetsInfo[n].set_type}",

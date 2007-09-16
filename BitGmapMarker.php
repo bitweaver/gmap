@@ -20,6 +20,7 @@
  */
 
 require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
+require_once( LIBERTY_PKG_PATH.'LibertyComment.php' );
 
 /**
 * This is used to uniquely identify the object

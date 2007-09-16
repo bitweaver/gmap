@@ -260,7 +260,7 @@ BitMap.Edit.prototype = {
 		this.toggleMenuOptsStyles( "markerset", this.Map.markersets.length, i, 'edit-selected' );
 		
 		//get the edit form
-		doSimpleXMLHttpRequest("edit_markerset.php", {set_id:this._setIdRef}).addCallback( bind(this.editMarkerSetCallback, this) );
+		doSimpleXMLHttpRequest("edit_markerset.php", {set_id:this._setIdRef, gmap_id:this.Map.id}).addCallback( bind(this.editMarkerSetCallback, this) );
 	},
 	
 	

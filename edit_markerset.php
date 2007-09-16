@@ -9,14 +9,15 @@ require_once('../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
-// Now check permissions to access this page
-$gBitSystem->verifyPermission( 'p_gmap_marker_edit' );
+// Get the markerset for specified set_id
+require_once(GMAP_PKG_PATH.'lookup_markerset_inc.php' );
 
-// Access the gmap class
-global $gContent;
-require_once( GMAP_PKG_PATH.'BitGmap.php');
-require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
-$gContent = new BitGmap();
+// Now check permissions to access the markerset
+if( $gContent->isValid() ) {
+	$gContent->verifyEditPermission();
+} else {
+	$gBitSystem->verifyPermission( 'p_gmap_markerset_edit' );
+}
 
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
@@ -24,31 +25,25 @@ $gContent = new BitGmap();
 $format = 'xml';
 
 if (!empty($_REQUEST["save_markerset"])) {
-    if( $result = $gContent->storeMarkerSet( $_REQUEST ) ) {
-	/* @todo if markersets ever are editable outside 
-	 * the context of a map side_panel, explode, cluster 
-	 * will need to be conditional
-	 */
-		$gBitSmarty->assign_by_ref('markersetInfo', $result->fields );
-    }
+    if( $gContent->store( $_REQUEST ) ) {
+		$gBitSmarty->assign_by_ref('markersetInfo', $gContent->mInfo);
+	}
 //Check if this to remove from a map, or to delete completely
 }elseif (!empty($_REQUEST["remove_markerset"])) {
-    if( $gContent->removeMarkerSetFromMap( $_REQUEST ) ) {
+    if( $gContent->removeSetFromMap( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('removeSucces', true);
-    }
-}elseif (!empty($_REQUEST["expunge_markerset"])) {
-    if( $gContent->expungeMarkerSet( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('expungeSucces', true);
-    }
-}else{
-	if ( isset( $_REQUEST["set_id"] ) ){
-		$markerset = $gContent->getMarkerSetData( $_REQUEST["set_id"] );
 	}
-	$gBitSmarty->assign_by_ref('markersetInfo', $markerset->fields);
+}elseif (!empty($_REQUEST["expunge_markerset"])) {
+    if( $gContent->expunge() ) {
+		$gBitSmarty->assign_by_ref('expungeSucces', true);
+	}
+}else{
+	$gContent->invokeServices( 'content_edit_function' );
+	$markerset = $gContent->mInfo;
+	$gBitSmarty->assign_by_ref('markersetInfo', $markerset);
 	$gBitSystem->display('bitpackage:gmap/edit_markerset.tpl', NULL, 'center_only');
 	die;
 }
-
 
 if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );

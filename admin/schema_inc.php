@@ -130,11 +130,11 @@ $tables = array(
 
 'gmaps_marker_sets' => "
   set_id I4 PRIMARY,
-  name C(64),
-  description C(255),
+  content_id I4 NOTNULL,
   style_id I4 NOTNULL,
   icon_id I4 NOTNULL
-  CONSTRAINT ', CONSTRAINT `gmaps_marker_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_marker_styles`( `style_id` )
+  CONSTRAINT ', CONSTRAINT `gmaps_marker_sets_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
+  			  , CONSTRAINT `gmaps_marker_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_marker_styles`( `style_id` )
               , CONSTRAINT `gmaps_marker_sets_icon_ref` FOREIGN KEY (`icon_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_icon_styles`( `icon_id` )'
 ",
 

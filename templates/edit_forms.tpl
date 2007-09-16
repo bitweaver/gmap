@@ -1,3 +1,5 @@
+<div id="editerror" style="display:none">ERROR HERE</div>
+
 <div>
 	<a id="emap" href="javascript:BitMap.EditSession.editMap({$mapInfo.gmap_id});">Edit Map</a> | 
 	<a id="emaptype" href="javascript:BitMap.EditSession.editMaptypes();">Edit Maptypes</a> |

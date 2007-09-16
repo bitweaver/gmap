@@ -1,6 +1,7 @@
 <?php
 
 require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
+require_once( LIBERTY_PKG_PATH.'LibertyComment.php' );
 
 define( 'BITGMAP_CONTENT_TYPE_GUID', 'bitgmap' );
 
@@ -41,11 +42,6 @@ class BitGmap extends LibertyAttachable {
 			array_push( $bindVars,  $lookupId = @BitBase::verifyId( $this->mGmapId )? $this->mGmapId : $this->mContentId );
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-/*			
-			$query = "SELECT * $selectSql
-					  FROM `".BIT_DB_PREFIX."gmaps` bm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bm.`content_id`=lc.`content_id` )  $joinSql
-					  WHERE bm.`$lookupColumn`=? $whereSql";
-*/					  
 			$query = "select bm.*, lc.*,
 					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
@@ -404,6 +400,7 @@ class BitGmap extends LibertyAttachable {
 
 	//* Gets data for a given marker set.
 	// @ todo this should probably take an array so that we can get data for a bunch of sets if we want
+	/* DEPRECATED
 	function getMarkerSetData($set_id) {
 		global $gBitSystem;
 		if ($set_id && is_numeric($set_id)) {
@@ -416,7 +413,7 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $result;
 	}
-
+	*/
 	
 	
 	//get all polyline data for given gmap_id and set_type
@@ -638,9 +635,10 @@ class BitGmap extends LibertyAttachable {
   		global $gBitSystem;
   		$ret = NULL;
   		if ($gmap_id && is_numeric($gmap_id)) {
-      	$query = "SELECT DISTINCT bms.*, bmk.*
+      	$query = "SELECT DISTINCT bms.*, bmk.*, lc.*
                 FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
 					INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` bms ON (bmk.`set_id` = bms.`set_id`)
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id` = bms.`content_id`)
                 WHERE bmk.`gmap_id` = ?
                 AND bmk.`set_type` = 'markers'
                 ORDER BY bms.`set_id` ASC";
@@ -1274,7 +1272,7 @@ class BitGmap extends LibertyAttachable {
 
 
 
-
+	/* DEPRECATED
 	function verifyMarkerSet( &$pParamHash ) {
 
 		$pParamHash['markerset_store'] = array();
@@ -1341,10 +1339,12 @@ class BitGmap extends LibertyAttachable {
 				
 		return( count( $this->mErrors ) == 0 );
 	}
+	*/
 	
 	/**
 	* This function stores a marker set
 	**/
+	/* DEPRECATED
 	function storeMarkerSet( &$pParamHash ) {
 		$return = FALSE;
 		if( $this->verifyMarkerSet( $pParamHash ) ) {
@@ -1372,7 +1372,7 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $result;
 	}
-	
+	*/
 	
 	//vertually same as verifyMarkerSet
 	function verifyPolylineSet( &$pParamHash ) {
@@ -2068,6 +2068,7 @@ class BitGmap extends LibertyAttachable {
 	/**
 	* This function deletes a marker set
 	**/
+	/* DEPRECATED
 	function expungeMarkerSet(&$pParamHash) {
 		$ret = FALSE;
 
@@ -2097,7 +2098,7 @@ class BitGmap extends LibertyAttachable {
 
 		return $ret;
 	}	
-
+	*/
 
 	/**
 	* This function deletes a polyline set
@@ -2300,7 +2301,7 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	
+	/* DEPRECATED
 	function verifyMarkerSetRemove( &$pParamHash ) {
 	
 		$pParamHash['markerset_remove'] = array();
@@ -2316,9 +2317,11 @@ class BitGmap extends LibertyAttachable {
 		return( count( $this->mErrors ) == 0 );
 				
 	}	
+	*/
 	/**
 	* This function removes a marker set from a map
 	**/
+	/* DEPRECATED
 	function removeMarkerSetFromMap(&$pParamHash) {
 		$ret = FALSE;
 
@@ -2335,7 +2338,7 @@ class BitGmap extends LibertyAttachable {
 
 		return $ret;
 	}
-
+	*/
 	
 	//@todo - this and the remove function look identical to the removeMarkerSetFromMap function - consolidate - perhaps with removeMapTypeFromMap too
 	function verifyPolylineSetRemove( &$pParamHash ) {
