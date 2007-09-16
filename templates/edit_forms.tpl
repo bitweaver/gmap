@@ -169,7 +169,23 @@
 
 <!-- markerset options form -->
 <div id="edit-markerset-options-table" class="edit-datatable" style="display:none;">
-	<div id="markerset-form">PUT MARKERSET FORM HERE!</div>
+	<table>
+		<tr>
+			<td>
+				<div id="markerset-form">PUT MARKERSET FORM HERE!</div>
+			</td>
+			<td width="200px">
+				<div id="edit-markerset-options-tips">Tips<br/>
+				Put advice here
+				</div>
+				<div id="edit-markerset-options-actions">Edit Marker Actions<br/>
+				<a id="setremove" href="javascript:BitMap.EditSession.removeMarkerSet( this.form );">remove</a> 
+				<a id="setdelete" href="javascript:BitMap.EditSession.expungeMarkerSet( this.form );">delete</a><br/><br/>
+				<a id="setaddmarkers" href="javascript:alert('feature coming soon');">Add Markers from Archives</a>
+				<div>
+			</td>
+		</tr>
+	</table>
 </div>
 <!-- end of markerset options form -->
 
