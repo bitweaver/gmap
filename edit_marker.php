@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.18 2007/09/14 01:18:54 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.19 2007/09/16 00:47:36 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -21,23 +21,11 @@ $gBitSystem->verifyPackage('gmap' );
 // Get the marker for specified gmarker_id
 require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );
 
-// Now check permissions to access this page
+// Now check permissions to access the marker
 if( $gContent->isValid() ) {
 	$gContent->verifyEditPermission();
 } else {
 	$gBitSystem->verifyPermission( 'p_gmap_marker_edit' );
-}
-
-// If a marker_id or content_id is passed in then check for ownership or admin
-if (!empty($_REQUEST['marker_id']) || !empty($_REQUEST['content_id'])) {
-	$markerEdit = FALSE;
-	if ( $gContent->isOwner() || $gBitUser->hasPermission( 'p_gmarker_edit' ) ){
-		$markerEdit = TRUE;
-	}
-	if ( $markerEdit = FALSE ){
-		$gBitSystem->setFormatHeader( 'center_only' );
-		$gBitSystem->fatalError( tra( "You do not have permission to edit this marker!" ) );
-	}
 }
 
 //most of the time we want xml back so we make it the default
@@ -72,9 +60,9 @@ if (!empty($_REQUEST["save_marker"])) {
 }
 
 if ( count($gContent->mErrors) > 0 ){
-	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
+	$gBitSystem->setFormatHeader( NULL );
 	$gBitSystem->display('bitpackage:gmap/edit_marker_xml.tpl', NULL, $format);
 }
 ?>

@@ -10,7 +10,7 @@ require_once('../bit_setup_inc.php' );
 $gBitSystem->verifyPackage('gmap' );
 
 // Now check permissions to access this page
-$gBitSystem->verifyPermission('bit_gm_edit_map' );
+$gBitSystem->verifyPermission( 'p_gmap_marker_edit' );
 
 // Access the gmap class
 global $gContent;
