@@ -490,26 +490,6 @@ class BitGmap extends LibertyAttachable {
 		return $result;
 	}
 
-
-
-	
-	//* Gets data for a given polyline set.
-	// @ todo this should probably take an array so that we can get data for a bunch of sets if we want
-	function getPolylineSetData($set_id) {
-		global $gBitSystem;
-		if ($set_id && is_numeric($set_id)) {
-			$query = "SELECT bs.*, bsk.*
-			FROM `".BIT_DB_PREFIX."gmaps_polyline_sets` bs
-			INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk ON ( bsk.`set_id` = bs.`set_id` )
-			WHERE bs.`set_id` = ?
-			AND bsk.`set_type` = 'polylines'";
-  		$result = $this->mDb->query( $query, array((int)$set_id));
-		}
-		return $result;
-	}
-
-
-
 	
 
 	//get all polygon data for given gmap_id and set_type
@@ -1254,95 +1234,6 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
-	
-	//vertually same as verifyMarkerSet
-	function verifyPolylineSet( &$pParamHash ) {
-
-		$pParamHash['polylineset_store'] = array();
-		$pParamHash['keychain_store'] = array();
-		$pParamHash['keychain_update'] = array();
-		$pParamHash['keychain_ids'] = array();
-
-		if( !empty( $pParamHash['name'] ) ) {
-			$pParamHash['polylineset_store']['name'] = $pParamHash['name'];
-		}
-
-		if( !empty( $pParamHash['description'] ) ) {
-			$pParamHash['polylineset_store']['description'] = $pParamHash['description'];
-		}
-
-		if( isset( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
-			$pParamHash['polylineset_store']['style_id'] = $pParamHash['style_id'];
-		}
-
-		// set values for updating the map set keychain	if its a new set
-		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
-			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
-			$pParamHash['keychain_ids']['gmap_id'] = $pParamHash['gmap_id'];
-		}
-
-		if( !empty( $pParamHash['plot_on_load'] ) ) {
-			$pParamHash['keychain_store']['plot_on_load'] = $pParamHash['plot_on_load'];
-			$pParamHash['keychain_update']['plot_on_load'] = $pParamHash['plot_on_load'];
-		}else{
-			$pParamHash['keychain_store']['plot_on_load'] = 'false';
-			$pParamHash['keychain_update']['plot_on_load'] = 'false';
-		}
-
-		if( !empty( $pParamHash['side_panel'] ) ) {
-			$pParamHash['keychain_store']['side_panel'] = $pParamHash['side_panel'];
-			$pParamHash['keychain_update']['side_panel'] = $pParamHash['side_panel'];
-		}else{
-			$pParamHash['keychain_store']['side_panel'] = 'false';
-			$pParamHash['keychain_update']['side_panel'] = 'false';
-		}
-
-		if( !empty( $pParamHash['explode'] ) ) {
-			$pParamHash['keychain_store']['explode'] = $pParamHash['explode'];
-			$pParamHash['keychain_update']['explode'] = $pParamHash['explode'];
-		}else{
-			$pParamHash['keychain_store']['explode'] = 'false';
-			$pParamHash['keychain_update']['explode'] = 'false';
-		}
-
-		$pParamHash['keychain_store']['cluster'] = 'false';
-		$pParamHash['keychain_update']['cluster'] = 'false';
-		$pParamHash['keychain_store']['set_type'] = 'polylines';
-		$pParamHash['keychain_ids']['set_type'] = 'polylines';
-
-		return( count( $this->mErrors ) == 0 );		
-		
-	}
-	
-	/**
-	* This function stores a polyline set
-	**/
-	function storePolylineSet( &$pParamHash ) {
-		$return = FALSE;
-		if( $this->verifyPolylineSet( $pParamHash ) ) {
-			$this->mDb->StartTrans();
-			// store the posted changes
-			if ( !empty( $pParamHash['set_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polyline_sets", $pParamHash['polylineset_store'], array( "set_id" => $pParamHash['set_id'] ) );
-				 // and we update the set keychain on map_id.
-				 $pParamHash['keychain_ids']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
-			}else{
-				 $pParamHash['set_id'] = $this->mDb->GenID( 'gmaps_polyline_sets_set_id_seq' );
-				 $pParamHash['polylineset_store']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polyline_sets", $pParamHash['polylineset_store'] );
-				 // if its a new polylineset we also get a set_id for the keychain and automaticallly associate it with a map.
-				 $pParamHash['keychain_store']['set_id'] = $pParamHash['polylineset_store']['set_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_store'] );
-			}
-			$this->mDb->CompleteTrans();
-
-			// re-query to confirm results
-			$result = $this->getPolylineSetData($pParamHash['set_id']);
-		}
-		return $result;
-	}
-
 
 
 	//@todo -  vertually same as verifyMarkerSet - consolidate
@@ -1922,41 +1813,6 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	/**
-	* This function deletes a polyline set
-	**/
-	function expungePolylineSet(&$pParamHash) {
-		$ret = FALSE;
-
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-    		$this->mDb->StartTrans();
-    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polyline_sets` 
-    			WHERE `set_id` =?";
-    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
-    		$this->mDb->CompleteTrans();
-  			
-  			// delete all references to the polyline set from the polyline keychain
-  			$this->mDb->StartTrans();
-    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polyline_keychain` 
-    			WHERE `set_id` =?";
-    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
-    		$this->mDb->CompleteTrans();
-
-  			// delete all references to the polyline set from the map sets keychain
-  			$this->mDb->StartTrans();
-    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
-    			WHERE `set_id` =?
-          		AND `set_type` = 'polylines'";					
-  			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
-  			$this->mDb->CompleteTrans();
-    		$ret = TRUE;
-		}
-
-		return $ret;
-	}	
-
-
-
 
 	/**
 	* This function deletes a polygon set
@@ -2121,44 +1977,6 @@ class BitGmap extends LibertyAttachable {
 		return $ret;
 	}
 
-
-
-	
-	//@todo - this and the remove function look identical to the removeMarkerSetFromMap function - consolidate - perhaps with removeMapTypeFromMap too
-	function verifyPolylineSetRemove( &$pParamHash ) {
-	
-		$pParamHash['polylineset_remove'] = array();
-
-		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
-			$pParamHash['polylineset_remove']['gmap_id'] = $pParamHash['gmap_id'];
-		}
-		
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-			$pParamHash['polylineset_remove']['set_id'] = $pParamHash['set_id'];
-		}
-		
-		return( count( $this->mErrors ) == 0 );
-				
-	}	
-	/**
-	* This function removes a polyline set from a map
-	**/
-	function removePolylineSetFromMap(&$pParamHash) {
-		$ret = FALSE;
-
-  		if( $this->verifyPolylineSetRemove( $pParamHash ) ) {
-  			$this->mDb->StartTrans();
-  			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
-  			WHERE `gmap_id` = ?
-  			AND `set_id` =?
-        	AND `set_type` = 'polylines'";
-  			$result = $this->mDb->query( $query, $pParamHash['polylineset_remove'] );
-  			$ret = TRUE;
-  			$this->mDb->CompleteTrans();
-  		}
-
-		return $ret;
-	}
 
 
 
