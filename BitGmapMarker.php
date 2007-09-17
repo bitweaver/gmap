@@ -73,12 +73,6 @@ class BitGmapMarker extends LibertyAttachable {
 			array_push( $bindVars,  $lookupId = @BitBase::verifyId( $this->mGmarkerId )? $this->mGmarkerId : $this->mContentId );
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-			/*
-			$query = "SELECT * $selectSql
-					  FROM `".BIT_DB_PREFIX."gmaps_markers` bmm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
-					  WHERE bmm.`$lookupColumn`=? $whereSql";
-			*/
-			
 			$query = "select bmm.*, lc.*,
 					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
@@ -193,14 +187,11 @@ class BitGmapMarker extends LibertyAttachable {
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
 			if( LibertyAttachable::expunge() ) {
 				$ret = TRUE;
-				$this->mDb->CompleteTrans();
 				
 				// delete all references to the marker from the marker keychain
-				$this->mDb->StartTrans();
 				$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_marker_keychain` WHERE `marker_id` =?";
 				$result = $this->mDb->query( $query, array( $this->mGmarkerId ) );
 				$this->mDb->CompleteTrans();
-				
 			} else {
 				$this->mDb->RollbackTrans();
 			}

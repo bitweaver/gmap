@@ -402,9 +402,13 @@ class BitGmap extends LibertyAttachable {
 	function getPolylines($gmap_id) {
 		global $gBitSystem;
 		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-
-		 	$bindVars = array((int)$gmap_id);
+		if ($gmap_id && is_numeric($gmap_id)) {		 	
+			$whereSql = '';
+			$joinSql = '';
+			$selectSql = '';
+		 	$bindVars = array((int)$gmap_id);			
+			LibertyContent::getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+			/* DEPRECATED
 			$query = "SELECT bmp.*, bps.`set_id`, bps.`style_id`, bsk.`plot_on_load`, bsk.`side_panel`, bsk.`explode`
 		 				 	  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_polyline_keychain` bpk, `".BIT_DB_PREFIX."gmaps_polylines` bmp, `".BIT_DB_PREFIX."gmaps_polyline_sets` bps
 								WHERE bsk.`gmap_id` = ?
@@ -412,22 +416,37 @@ class BitGmap extends LibertyAttachable {
 								AND bps.`set_id` = bsk.`set_id`
 								AND bpk.`set_id` = bps.`set_id`
 								AND bmp.`polyline_id` = bpk.`polyline_id`";
+			*/
+			$query = "SELECT bmm.*, lc.*, bms.*, bsk.*, 
+					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
+					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
+                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk 
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` bms ON( bms.`set_id` = bsk.`set_id` )
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_keychain` bmk ON(bmk.`set_id` = bms.`set_id`)
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_polylines` bmm ON(bmm.`polyline_id` = bmk.`polyline_id`)
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
+					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
+					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
+                WHERE bsk.`gmap_id` = ? $whereSql AND bsk.`set_type` = 'polylines'";
 
 			$result = $this->mDb->query( $query, $bindVars );
 
 			$ret = array();
-
+			
+			$comment = &new LibertyComment();
 			while ($res = $result->fetchrow()) {
 				$ret[] = $res;
+
 			};
 		};
-		return $ret;
+		return $ret;		
 	}
 
 
 
 	//* Gets data for a given polyline.
 	// @ todo this should probably take an array so that we can get data for a bunch of markers if we want
+	/* DEPRECATED
 	function getPolylineData($polyline_id) {
 		global $gBitSystem;
 		if ($polyline_id && is_numeric($polyline_id)) {
@@ -439,7 +458,7 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $result;
 	}
-
+	*/
 	
 	
 
@@ -1104,7 +1123,7 @@ class BitGmap extends LibertyAttachable {
 	//Storage of Markers is handled by the marker class in BitGmapMarker.php
 	
 	
-	
+/* DEPRECATED
 	function verifyPolyline( &$pParamHash ) {
 
 		$pParamHash['polyline_store'] = array();
@@ -1140,7 +1159,8 @@ class BitGmap extends LibertyAttachable {
 		
 		return( count( $this->mErrors ) == 0 );
 	}
-	
+*/	
+/* DEPRECATED
 	function  storePolyline( &$pParamHash ) {
 		$return = FALSE;
 		if( $this->verifyPolyline( $pParamHash ) ) {
@@ -1163,7 +1183,7 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $result;
 	}
-	
+*/
 
 
 
@@ -1764,6 +1784,7 @@ class BitGmap extends LibertyAttachable {
 	/**
 	* This function deletes a polyline and all references to it in the polyline keychain
 	**/
+	/* DEPRECATED
 	function expungePolyline(&$pParamHash) {
 		$ret = FALSE;
 
@@ -1784,7 +1805,7 @@ class BitGmap extends LibertyAttachable {
 
 		return $ret;
 	}
-	
+	*/
 
 
 	/**
@@ -1810,7 +1831,6 @@ class BitGmap extends LibertyAttachable {
 
 		return $ret;
 	}
-
 
 
 
@@ -1905,7 +1925,7 @@ class BitGmap extends LibertyAttachable {
 	
 
 
-	
+	/* DEPRECATED
 	function verifyPolylineRemove( &$pParamHash ) {
 	
 		$pParamHash['polyline_remove'] = array();
@@ -1921,9 +1941,11 @@ class BitGmap extends LibertyAttachable {
 		return( count( $this->mErrors ) == 0 );
 				
 	}	
+	*/
 	/**
 	* This function removes a polyline from a set
 	**/
+	/* DEPRECATED
 	function removePolylineFromSet(&$pParamHash) {
 		$ret = FALSE;
 		
@@ -1939,7 +1961,7 @@ class BitGmap extends LibertyAttachable {
 			
 		return $ret;
 	}
-
+*/
 
 
 

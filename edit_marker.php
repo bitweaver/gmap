@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.19 2007/09/16 00:47:36 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.20 2007/09/17 13:54:39 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -9,8 +9,6 @@
 // Copyright (c) 2005-2007 bitweaver Gmap
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
-
-//@todo consolidate the xml headers, they are all the same
 
 // Initialization
 require_once('../bit_setup_inc.php' );
@@ -28,11 +26,12 @@ if( $gContent->isValid() ) {
 	$gBitSystem->verifyPermission( 'p_gmap_marker_edit' );
 }
 
+//Preview mode is handled by javascript on the client side.
+//There is no callback to the server for previewing changes.
+
 //most of the time we want xml back so we make it the default
 $format = 'xml';
 
-//Preview mode is handled by javascript on the client side.
-//There is no callback to the server for previewing changes.
 if (!empty($_REQUEST["save_marker"])) {
     if( $gContent->store( $_REQUEST ) ) {		
 		$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );

@@ -182,13 +182,13 @@ BitMap.MapData.push({ldelim}
 		created:{$polylinesInfo[n].created},
 		last_modified:{$polylinesInfo[n].last_modified},
 		version:{$polylinesInfo[n].version},
-		name:"{$polylinesInfo[n].name}",
+		name:"{$polylinesInfo[n].title}",
 		type:"{$polylinesInfo[n].type}",
 		{if $polylinesInfo[n].type != 2 }
 			points_data:new Array(),
-			points_data:[{$polylinesInfo[n].points_data}],
+			points_data:[{$polylinesInfo[n].data}],
 		{else}
-			points_data:"{$polylinesInfo[n].points_data}",
+			points_data:"{$polylinesInfo[n].data}",
 			levels_data:"{$polylinesInfo[n].levels_data}",
 			zoom_factor:{$polylinesInfo[n].zoom_factor}32,
 			num_levels:{$polylinesInfo[n].num_levels}4,

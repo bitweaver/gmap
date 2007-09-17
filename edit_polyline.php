@@ -1,5 +1,12 @@
 <?php
-// Copyright (c) 2005 bitweaver Gmap
+/**
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.15 2007/09/17 13:54:39 wjames5 Exp $
+ * @package gmap
+ * @subpackage functions
+ */
+//
+
+// Copyright (c) 2005-2007 bitweaver Gmap
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
@@ -9,45 +16,46 @@ require_once('../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
-// Now check permissions to access this page
-$gBitSystem->verifyPermission('p_gmap_edit' );
+// Get the polyline for specified gpolyline_id
+require_once(GMAP_PKG_PATH.'lookup_polyline_inc.php' );
 
-// Access the gmap class
-global $gContent;
-require_once( GMAP_PKG_PATH.'BitGmap.php');
-require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
-$gContent = new BitGmap();
+// Now check permissions to access the polyline
+if( $gContent->isValid() ) {
+	$gContent->verifyEditPermission();
+} else {
+	$gBitSystem->verifyPermission( 'p_gmap_polyline_edit' );
+}
 
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
 
+//most of the time we want xml back so we make it the default
 $format = 'xml';
 
 if (!empty($_REQUEST["save_polyline"])) {
-    if( $result = $gContent->storePolyline( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('polylineInfo', $result->fields );
-    }
-//Check if this to remove from a map, or to delete completely
-}elseif ( !empty($_REQUEST["remove_polyline"]) ) {
-    if( $gContent->removePolylineFromSet( $_REQUEST ) ) {
+    if( $gContent->store( $_REQUEST ) ) {		
+		$gContent->load();
+		$gBitSmarty->assign_by_ref('polylineInfo', $gContent->mInfo);
+	}
+//Check if this to remove from a set, or to delete completely
+}elseif (!empty($_REQUEST["remove_polyline"])) {
+    if( $gContent->removeFromSet( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('removeSucces', true);
-    }
+	}
 }elseif (!empty($_REQUEST["expunge_polyline"])) {
-    if( $gContent->expungePolyline( $_REQUEST ) ) {
+    if( $gContent->expunge() ) {
 		$gBitSmarty->assign_by_ref('expungeSucces', true);
-    }
+	}
 }else{
-	if ( isset( $_REQUEST["polyline_id"] ) ){
-		$polyline = $gContent->getPolylineData( $_REQUEST["polyline_id"] );
-	}
+	$gContent->invokeServices( 'content_edit_function' );
+	$polyline = $gContent->mInfo;
 	if (isset($_REQUEST["set_id"])){
-		$polyline->fields['set_id'] = $_REQUEST["set_id"];
+		$polyline['set_id'] = $_REQUEST["set_id"];
 	}
-	$gBitSmarty->assign_by_ref('polylineInfo', $polyline->fields);
+	$gBitSmarty->assign_by_ref('polylineInfo', $polyline);
 	$gBitSystem->display('bitpackage:gmap/edit_polyline.tpl', NULL, 'center_only');
 	die;
 }
-
 
 if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );

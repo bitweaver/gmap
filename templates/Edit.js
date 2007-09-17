@@ -2159,7 +2159,7 @@ BitMap.Edit.prototype = {
 			var f = $('edit-polyline-form');
 			alert ('Polyline drawing assistant activated for '+ f.title.value + ' polyline. \n Click to Draw!');
 			
-			this.bModPData = f.points_data; 
+			this.bModPData = f.edit; 
 			this.bLastpoint = null;
 			this.bTempPoints = [];
 			this.bTP = false;	// = new GPolyline(this.bTempPoints,"#0000FF", 2, 1);
@@ -2186,7 +2186,7 @@ BitMap.Edit.prototype = {
 							msg += ', ' + ref.bTempPoints[i].y + ', ' + ref.bTempPoints[i].x;
 						}
 					}
-					f.points_data.value = msg;
+					f.edit.value = msg;
 				}
 			});
 		}

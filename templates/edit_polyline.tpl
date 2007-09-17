@@ -6,7 +6,7 @@
 	<div class="row">
 		{formlabel label="Name" for="name"}
 			{forminput}
-				<input name="name" type="text" style="width:90%" value="{$polylineInfo.name}">
+				<input name="title" type="text" style="width:90%" value="{$polylineInfo.title}">
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -22,9 +22,9 @@
 			{/forminput}
 	</div>
 	<div class="row">
-		{formlabel label="Data Points" for="points_data"}
+		{formlabel label="Data Points" for="edit"}
 			{forminput}
-				<textarea name="points_data" style="width:90%" rows="3">{$polylineInfo.points_data}</textarea>
+				<textarea name="edit" style="width:90%" rows="3">{$polylineInfo.data}</textarea>
 				{formhelp note=""}
 			{/forminput}
 			<a name="polyline_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polyline', n);">Use Drawing Assistant</a>

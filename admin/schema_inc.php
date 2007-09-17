@@ -87,8 +87,7 @@ $tables = array(
   marker_id I8 PRIMARY,
   content_id I4 NOTNULL,
   label_data X,
-  zindex I8 DEFAULT 0,
-  allow_comments C(5) DEFAULT 'true'
+  zindex I8 DEFAULT 0
   CONSTRAINT ', CONSTRAINT `gmaps_markers_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
 ",
 
@@ -149,17 +148,12 @@ $tables = array(
 //type options: 0 => Default  1 => Geodesic  2 => Encoded
 'gmaps_polylines' => "
   polyline_id I4 PRIMARY,
-  user_id I4 NOTNULL,
-  modifier_user_id I4 NOTNULL,
-  created I8 NOTNULL,
-  last_modified I8 NOTNULL,
-  version I4 NOTNULL,
-  name C(255),
+  content_id I4 NOTNULL,
   type I4 DEFAULT 0,
-  points_data X,
   levels_data X,
   zoom_factor I4,
   num_levels I4
+  CONSTRAINT ', CONSTRAINT `gmaps_polylines_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
 ",
 
 //opacity takes a float from 0-1
