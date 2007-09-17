@@ -359,7 +359,23 @@
 
 <!-- polylineset options form -->
 <div id="edit-polylineset-options-table" class="edit-datatable" style="display:none;">
-	<div id="polylineset-form">PUT MARKERSET FORM HERE!</div>
+	<table>
+		<tr>
+			<td>
+				<div id="polylineset-form">PUT POLYLINESET FORM HERE!</div>
+			</td>
+			<td width="200px">
+				<div id="edit-polylineset-options-tips">Tips<br/>
+				Put advice here
+				</div>
+				<div id="edit-polylineset-options-actions">Edit Polyline Actions<br/>
+				<a id="setremove" href="javascript:BitMap.EditSession.removePolylineSet( this.form );">remove</a> 
+				<a id="setdelete" href="javascript:BitMap.EditSession.expungePolylineSet( this.form );">delete</a><br/><br/>
+				<a id="setaddpolylines" href="javascript:alert('feature coming soon');">Add Polylines from Archives</a>
+				<div>
+			</td>
+		</tr>
+	</table>
 </div>
 <!-- end of polylineset options form -->
 

@@ -396,24 +396,6 @@ class BitGmap extends LibertyAttachable {
 		return $result;
 	}
 	
-
-
-	//* Gets data for a given marker set.
-	// @ todo this should probably take an array so that we can get data for a bunch of sets if we want
-	/* DEPRECATED
-	function getMarkerSetData($set_id) {
-		global $gBitSystem;
-		if ($set_id && is_numeric($set_id)) {
-			$query = "SELECT bs.*, bsk.*
-			FROM `".BIT_DB_PREFIX."gmaps_marker_sets` bs
-			INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk ON ( bsk.`set_id` = bs.`set_id` )
-			WHERE bs.`set_id` = ?
-			AND bsk.`set_type` = 'markers'";
-  		$result = $this->mDb->query( $query, array((int)$set_id));
-		}
-		return $result;
-	}
-	*/
 	
 	
 	//get all polyline data for given gmap_id and set_type
@@ -660,9 +642,10 @@ class BitGmap extends LibertyAttachable {
   		global $gBitSystem;
   		$ret = NULL;
   		if ($gmap_id && is_numeric($gmap_id)) {
-      	$query = "SELECT DISTINCT bms.*, bmk.*
+      	$query = "SELECT DISTINCT bms.*, bmk.*, lc.*
                 FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
 					INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` bms ON (bmk.`set_id` = bms.`set_id`)
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id` = bms.`content_id`)
                 WHERE bmk.`gmap_id` = ?
                 AND bmk.`set_type` = 'polylines'
                 ORDER BY bms.`set_id` ASC";
@@ -1271,108 +1254,6 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
-
-	/* DEPRECATED
-	function verifyMarkerSet( &$pParamHash ) {
-
-		$pParamHash['markerset_store'] = array();
-		$pParamHash['keychain_store'] = array();
-		$pParamHash['keychain_update'] = array();
-		$pParamHash['keychain_ids'] = array();
-		
-		if( !empty( $pParamHash['name'] ) ) {
-			$pParamHash['markerset_store']['name'] = $pParamHash['name'];
-		}
-
-		if( !empty( $pParamHash['description'] ) ) {
-			$pParamHash['markerset_store']['description'] = $pParamHash['description'];
-		}
-		
-		if( isset( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
-			$pParamHash['markerset_store']['style_id'] = $pParamHash['style_id'];
-		}
-		
-		if( isset( $pParamHash['icon_id'] ) && is_numeric( $pParamHash['icon_id'] ) ) {
-			$pParamHash['markerset_store']['icon_id'] = $pParamHash['icon_id'];
-		}
-
-		// set values for updating the map set keychain	if its a new set
-		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
-			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
-			$pParamHash['keychain_ids']['gmap_id'] = $pParamHash['gmap_id'];
-		}
-
-		if( !empty( $pParamHash['plot_on_load'] ) ) {
-			$pParamHash['keychain_store']['plot_on_load'] = $pParamHash['plot_on_load'];
-			$pParamHash['keychain_update']['plot_on_load'] = $pParamHash['plot_on_load'];
-		}else{
-			$pParamHash['keychain_store']['plot_on_load'] = 'false';
-			$pParamHash['keychain_update']['plot_on_load'] = 'false';
-		}
-
-		if( !empty( $pParamHash['side_panel'] ) ) {
-			$pParamHash['keychain_store']['side_panel'] = $pParamHash['side_panel'];
-			$pParamHash['keychain_update']['side_panel'] = $pParamHash['side_panel'];
-		}else{
-			$pParamHash['keychain_store']['side_panel'] = 'false';
-			$pParamHash['keychain_update']['side_panel'] = 'false';
-		}
-
-		if( !empty( $pParamHash['explode'] ) ) {
-			$pParamHash['keychain_store']['explode'] = $pParamHash['explode'];
-			$pParamHash['keychain_update']['explode'] = $pParamHash['explode'];
-		}else{
-			$pParamHash['keychain_store']['explode'] = 'false';
-			$pParamHash['keychain_update']['explode'] = 'false';
-		}
-
-		if( !empty( $pParamHash['cluster'] ) ) {
-			$pParamHash['keychain_store']['cluster'] = $pParamHash['cluster'];
-			$pParamHash['keychain_update']['cluster'] = $pParamHash['cluster'];
-		}else{
-			$pParamHash['keychain_store']['cluster'] = 'false';
-			$pParamHash['keychain_update']['cluster'] = 'false';
-		}
-
-		$pParamHash['keychain_store']['set_type'] = 'markers';
-		$pParamHash['keychain_ids']['set_type'] = 'markers';
-				
-		return( count( $this->mErrors ) == 0 );
-	}
-	*/
-	
-	/**
-	* This function stores a marker set
-	**/
-	/* DEPRECATED
-	function storeMarkerSet( &$pParamHash ) {
-		$return = FALSE;
-		if( $this->verifyMarkerSet( $pParamHash ) ) {
-			$this->mDb->StartTrans();
-			// store the posted changes
-			if ( !empty( $pParamHash['set_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_marker_sets", $pParamHash['markerset_store'], array( "set_id" => $pParamHash['set_id'] ) );
-				 // and we update the set keychain on map_id.
-				 $pParamHash['keychain_ids']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
-			}else{
-				 // if its a new markerset we get a new set_id and store the data
-				 $pParamHash['set_id'] = $this->mDb->GenID( 'gmaps_marker_sets_set_id_seq' );
-				 $pParamHash['markerset_store']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_marker_sets", $pParamHash['markerset_store'] );
-				 // and insert an entry in the set keychain and associate it with a map.
-				 $pParamHash['keychain_store']['set_id'] = $pParamHash['markerset_store']['set_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_store'] );
-			}
-
-			$this->mDb->CompleteTrans();
-
-			// re-query to confirm results
-			$result = $this->getMarkerSetData($pParamHash['set_id']);
-		}
-		return $result;
-	}
-	*/
 	
 	//vertually same as verifyMarkerSet
 	function verifyPolylineSet( &$pParamHash ) {
@@ -1676,31 +1557,7 @@ class BitGmap extends LibertyAttachable {
 		if( !empty( $pParamHash['infowindow_anchor_y'] ) && is_numeric( $pParamHash['infowindow_anchor_y'] ) ) {
 			$pParamHash['iconstyle_store']['infowindow_anchor_y'] = $pParamHash['infowindow_anchor_y'];
 		}
-/* DELETE XMAPS STUFF - NO LONGER SUPPORTED
-		if( !empty( $pParamHash['points'] ) || $pParamHash['points'] == 0 ) {
-			$pParamHash['iconstyle_store']['points'] = $pParamHash['points'];
-		}
 
-		if( !empty( $pParamHash['scale'] ) && is_numeric( $pParamHash['scale'] ) ) {
-			$pParamHash['iconstyle_store']['scale'] = $pParamHash['scale'];
-		}
-
-		if( !empty( $pParamHash['outline_color'] ) ) {
-			$pParamHash['iconstyle_store']['outline_color'] = $pParamHash['outline_color'];
-		}
-
-		if( !empty( $pParamHash['outline_weight'] ) && is_numeric( $pParamHash['outline_weight'] ) ) {
-			$pParamHash['iconstyle_store']['outline_weight'] = $pParamHash['outline_weight'];
-		}
-
-		if( !empty( $pParamHash['fill_color'] ) ) {
-			$pParamHash['iconstyle_store']['fill_color'] = $pParamHash['fill_color'];
-		}
-
-		if( !empty( $pParamHash['fill_opacity'] ) && is_numeric( $pParamHash['fill_opacity'] ) ) {
-			$pParamHash['iconstyle_store']['fill_opacity'] = $pParamHash['fill_opacity'];
-		}
-*/	
 		return( count( $this->mErrors ) == 0 );
 	}
 	
@@ -2064,41 +1921,6 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
-	
-	/**
-	* This function deletes a marker set
-	**/
-	/* DEPRECATED
-	function expungeMarkerSet(&$pParamHash) {
-		$ret = FALSE;
-
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-    		$this->mDb->StartTrans();
-    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_marker_sets` 
-    			WHERE `set_id` =?";
-    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
-    		$this->mDb->CompleteTrans();
-  			
-  			// delete all references to the marker set from the marker keychain
-  			$this->mDb->StartTrans();
-    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_marker_keychain` 
-    			WHERE `set_id` =?";
-    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
-    		$this->mDb->CompleteTrans();
-
-  			// delete all references to the marker set from the map sets keychain
-  			$this->mDb->StartTrans();
-    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
-    			WHERE `set_id` =?
-          		AND `set_type` = 'markers'";
-  			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
-  			$this->mDb->CompleteTrans();
-    		$ret = TRUE;
-		}
-
-		return $ret;
-	}	
-	*/
 
 	/**
 	* This function deletes a polyline set
@@ -2301,44 +2123,6 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	/* DEPRECATED
-	function verifyMarkerSetRemove( &$pParamHash ) {
-	
-		$pParamHash['markerset_remove'] = array();
-
-		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
-			$pParamHash['markerset_remove']['gmap_id'] = $pParamHash['gmap_id'];
-		}
-		
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-			$pParamHash['markerset_remove']['set_id'] = $pParamHash['set_id'];
-		}
-		
-		return( count( $this->mErrors ) == 0 );
-				
-	}	
-	*/
-	/**
-	* This function removes a marker set from a map
-	**/
-	/* DEPRECATED
-	function removeMarkerSetFromMap(&$pParamHash) {
-		$ret = FALSE;
-
-  		if( $this->verifyMarkerSetRemove( $pParamHash ) ) {
-  			$this->mDb->StartTrans();
-  			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
-  			WHERE `gmap_id` = ?
-  			AND `set_id` =?
-        	AND `set_type` = 'markers'";
-  			$result = $this->mDb->query( $query, $pParamHash['markerset_remove'] );
-  			$ret = TRUE;
-  			$this->mDb->CompleteTrans();
-  		}
-
-		return $ret;
-	}
-	*/
 	
 	//@todo - this and the remove function look identical to the removeMarkerSetFromMap function - consolidate - perhaps with removeMapTypeFromMap too
 	function verifyPolylineSetRemove( &$pParamHash ) {

@@ -174,10 +174,10 @@ $tables = array(
 
 'gmaps_polyline_sets' => "
   set_id I4 PRIMARY,
-  name C(64),
-  description C(255),
+  content_id I4 NOTNULL,
   style_id I4 NOTNULL
-  CONSTRAINT ', CONSTRAINT `gmaps_polyline_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_styles`( `style_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_polyline_sets_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
+			  , CONSTRAINT `gmaps_polyline_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_styles`( `style_id` )'
 ",
 
 'gmaps_polyline_keychain' => "

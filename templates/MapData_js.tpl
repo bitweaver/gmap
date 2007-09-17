@@ -202,8 +202,8 @@ BitMap.MapData.push({ldelim}
   PolylineSets:[{if count($polylinesetsInfo) > 0}{section name=n loop=$polylinesetsInfo}
   {ldelim}
 		set_id: {$polylinesetsInfo[n].set_id},
-		name: "{$polylinesetsInfo[n].name}",
-		description: "{$polylinesetsInfo[n].description}",
+		name: "{$polylinesetsInfo[n].title}",
+		description: "{$polylinesetsInfo[n].data}",
 		style_id: {$polylinesetsInfo[n].style_id},
 	{rdelim},
 	{/section}{/if}],

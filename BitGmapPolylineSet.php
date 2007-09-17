@@ -1,9 +1,9 @@
 <?php
 /**
- * BitGmapMarkerSet Class
+ * BitGmapPolylineSet Class
  *
  * @package gmap
- * @subpackage BitGmapMarkerSet
+ * @subpackage BitGmapPolylineSet
  *
  * @author will <will@onnyturf.com>
  *
@@ -21,38 +21,38 @@
 
 require_once( GMAP_PKG_PATH.'BitGmapOverlaySetBase.php' );
 
-define( 'BITGMAPMARKERSET_CONTENT_TYPE_GUID', 'bitgmarkerset' );
+define( 'BITGMAPPOLYLINESET_CONTENT_TYPE_GUID', 'bitgpolylineset' );
 
 
 // this is the class that contains all the functions for the package
-class BitGmapMarkerSet extends BitGmapOverlaySetBase{
+class BitGmapPolylineSet extends BitGmapOverlaySetBase{
 	/**
 	* During initialisation, be sure to call our base constructors
 	**/
-	function BitGmapMarkerSet( $pOverlaySetId=NULL, $pContentId=NULL ) {
+	function BitGmapPolylineSet( $pOverlaySetId=NULL, $pContentId=NULL ) {
 		parent::BitGmapOverlaySetBase();
 		$this->mOverlaySetId = $pOverlaySetId;
 		$this->mContentId = $pContentId;
-		$this->mContentTypeGuid = BITGMAPMARKERSET_CONTENT_TYPE_GUID;
-		$this->registerContentType( BITGMAPMARKERSET_CONTENT_TYPE_GUID, array(
-			'content_type_guid' => BITGMAPMARKERSET_CONTENT_TYPE_GUID,
-			'content_description' => 'Set of Markers for Google Map',
-			'handler_class' => 'BitGmapMarkerSet',
+		$this->mContentTypeGuid = BITGMAPPOLYLINESET_CONTENT_TYPE_GUID;
+		$this->registerContentType( BITGMAPPOLYLINESET_CONTENT_TYPE_GUID, array(
+			'content_type_guid' => BITGMAPPOLYLINESET_CONTENT_TYPE_GUID,
+			'content_description' => 'Set of Polylines for Google Map',
+			'handler_class' => 'BitGmapPolylineSet',
 			'handler_package' => 'gmap',
-			'handler_file' => 'BitGmapMarkerSet.php',
+			'handler_file' => 'BitGmapPolylineSet.php',
 			'maintainer_url' => 'http://www.bitweaver.org'
 		) );
 		
 		// Permission setup
-		$this->mViewContentPerm  = 'p_gmap_markerset_view';
-		$this->mEditContentPerm  = 'p_gmap_markerset_edit';
+		$this->mViewContentPerm  = 'p_gmap_polylineset_view';
+		$this->mEditContentPerm  = 'p_gmap_polylineset_edit';
 		$this->mAdminContentPerm = 'p_gmap_admin';
 
 		//variables created in the parent BitGmapOverlaySetBase class		
-		$this->mOverlaySetType = "markers";
-		$this->mOverlaySetTable = "gmaps_marker_sets";
-		$this->mOverlaySetKeychainTable = "gmaps_marker_keychain";
-		$this->mOverlaySetSeq = 'gmaps_marker_sets_set_id_seq';
+		$this->mOverlaySetType = "polylines";
+		$this->mOverlaySetTable = "gmaps_polyline_sets";
+		$this->mOverlaySetKeychainTable = "gmaps_polyline_keychain";
+		$this->mOverlaySetSeq = 'gmaps_polyline_sets_set_id_seq';
 	}
 
 
@@ -63,22 +63,8 @@ class BitGmapMarkerSet extends BitGmapOverlaySetBase{
 		$pParamHash['keychain_update'] = array();
 		$pParamHash['keychain_ids'] = array();
 
-		/* DEPRECATED		
-		if( !empty( $pParamHash['name'] ) ) {
-			$pParamHash['set_store']['name'] = $pParamHash['name'];
-		}
-
-		if( !empty( $pParamHash['description'] ) ) {
-			$pParamHash['set_store']['description'] = $pParamHash['description'];
-		}
-		*/
-		
 		if( isset( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
 			$pParamHash['set_store']['style_id'] = $pParamHash['style_id'];
-		}
-		
-		if( isset( $pParamHash['icon_id'] ) && is_numeric( $pParamHash['icon_id'] ) ) {
-			$pParamHash['set_store']['icon_id'] = $pParamHash['icon_id'];
 		}
 
 		// set values for updating the map set keychain	if its a new set
@@ -111,16 +97,10 @@ class BitGmapMarkerSet extends BitGmapOverlaySetBase{
 			$pParamHash['keychain_update']['explode'] = 'false';
 		}
 
-		if( !empty( $pParamHash['cluster'] ) ) {
-			$pParamHash['keychain_store']['cluster'] = $pParamHash['cluster'];
-			$pParamHash['keychain_update']['cluster'] = $pParamHash['cluster'];
-		}else{
-			$pParamHash['keychain_store']['cluster'] = 'false';
-			$pParamHash['keychain_update']['cluster'] = 'false';
-		}
-
-		$pParamHash['keychain_store']['set_type'] = 'markers';
-		$pParamHash['keychain_ids']['set_type'] = 'markers';
+		$pParamHash['keychain_store']['cluster'] = 'false';
+		$pParamHash['keychain_update']['cluster'] = 'false';
+		$pParamHash['keychain_store']['set_type'] = 'polylines';
+		$pParamHash['keychain_ids']['set_type'] = 'polylines';
 				
 		return( count( $this->mErrors ) == 0 );
 	}

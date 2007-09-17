@@ -76,9 +76,10 @@ class BitGmapOverlaySetBase extends LibertyContent {
 					  WHERE os.`$lookupColumn`=? $whereSql";
 					  
 			$result = $this->mDb->query( $query, $bindVars );
-						
+			
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
+				$this->mInfo['gmap_id'] = $pGmapId;
 				$this->mOverlaySetId = $result->fields['set_id'];
 				$this->mContentId = $result->fields['content_id'];
 			}

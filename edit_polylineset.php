@@ -9,14 +9,15 @@ require_once('../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
-// Now check permissions to access this page
-$gBitSystem->verifyPermission( 'p_gmap_edit' );
+// Get the markerset for specified set_id
+require_once(GMAP_PKG_PATH.'lookup_polylineset_inc.php' );
 
-// Access the gmap class
-global $gContent;
-require_once( GMAP_PKG_PATH.'BitGmap.php');
-require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
-$gContent = new BitGmap();
+// Now check permissions to access the polylineset
+if( $gContent->isValid() ) {
+	$gContent->verifyEditPermission();
+} else {
+	$gBitSystem->verifyPermission( 'p_gmap_polylineset_edit' );
+}
 
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
@@ -24,23 +25,22 @@ $gContent = new BitGmap();
 $format = 'xml';
 
 if (!empty($_REQUEST["save_polylineset"])) {
-    if( $result = $gContent->storePolylineSet( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('polylinesetInfo', $result->fields );
-    }
+    if( $gContent->store( $_REQUEST ) ) {
+		$gBitSmarty->assign_by_ref('polylinesetInfo', $gContent->mInfo);
+	}
 //Check if this to remove from a map, or to delete completely
 }elseif (!empty($_REQUEST["remove_polylineset"])) {
-    if( $gContent->removePolylineSetFromMap( $_REQUEST ) ) {
+    if( $gContent->removeSetFromMap( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('removeSucces', true);
-    }
-}elseif (!empty($_REQUEST["expunge_polylineset"])) {
-    if( $gContent->expungePolylineSet( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('expungeSucces', true);
-    }
-}else{
-	if ( isset( $_REQUEST["set_id"] ) ){
-		$set = $gContent->getPolylineSetData( $_REQUEST["set_id"] );
 	}
-	$gBitSmarty->assign_by_ref('polylineInfo', $set->fields);
+}elseif (!empty($_REQUEST["expunge_polylineset"])) {
+    if( $gContent->expunge() ) {
+		$gBitSmarty->assign_by_ref('expungeSucces', true);
+	}
+}else{
+	$gContent->invokeServices( 'content_edit_function' );
+	$polylineset = $gContent->mInfo;
+	$gBitSmarty->assign_by_ref('polylinesetInfo', $polylineset);
 	$gBitSystem->display('bitpackage:gmap/edit_polylineset.tpl', NULL, 'center_only');
 	die;
 }
