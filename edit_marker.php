@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.20 2007/09/17 13:54:39 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.21 2007/09/17 14:03:19 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -23,7 +23,7 @@ require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );
 if( $gContent->isValid() ) {
 	$gContent->verifyEditPermission();
 } else {
-	$gBitSystem->verifyPermission( 'p_gmap_marker_edit' );
+	$gBitSystem->verifyPermission( 'p_gmap_overlay_edit' );
 }
 
 //Preview mode is handled by javascript on the client side.

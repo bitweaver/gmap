@@ -16,7 +16,7 @@ require_once(GMAP_PKG_PATH.'lookup_markerset_inc.php' );
 if( $gContent->isValid() ) {
 	$gContent->verifyEditPermission();
 } else {
-	$gBitSystem->verifyPermission( 'p_gmap_markerset_edit' );
+	$gBitSystem->verifyPermission( 'p_gmap_overlayset_edit' );
 }
 
 //Preview mode is handled by javascript on the client side.

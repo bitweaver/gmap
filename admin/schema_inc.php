@@ -299,11 +299,16 @@ $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
 	array('p_gmap_remove', 'Can remove maps', 'editors', GMAP_PKG_NAME),
 	array('p_gmap_rollback', 'Can rollback version of a map', 'editors', GMAP_PKG_NAME),
 	array('p_gmap_admin', 'Can administrate maps', 'editors', GMAP_PKG_NAME),
-	array('p_gmap_marker_view', 'Can view map markers', 'basic', GMAP_PKG_NAME),
-	array('p_gmap_marker_view_history', 'Can view map marker history', 'basic', GMAP_PKG_NAME),
-	array('p_gmap_marker_edit', 'Can edit markers', 'registered', GMAP_PKG_NAME),
-	array('p_gmap_marker_remove', 'Can remove map markers', 'editors', GMAP_PKG_NAME),
-	array('p_gmap_marker_rollback', 'Can rollback version of a marker', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_overlay_view', 'Can view map overlays', 'basic', GMAP_PKG_NAME),
+	array('p_gmap_overlay_view_history', 'Can view map overlay history', 'basic', GMAP_PKG_NAME),
+	array('p_gmap_overlay_edit', 'Can edit overlays', 'registered', GMAP_PKG_NAME),
+	array('p_gmap_overlay_remove', 'Can remove map overlays', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_overlay_rollback', 'Can rollback version of a overlay', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_overlayset_view', 'Can view map overlay sets', 'basic', GMAP_PKG_NAME),
+	array('p_gmap_overlayset_view_history', 'Can view map overlay sets history', 'basic', GMAP_PKG_NAME),
+	array('p_gmap_overlayset_edit', 'Can edit overlay sets', 'registered', GMAP_PKG_NAME),
+	array('p_gmap_overlayset_remove', 'Can remove map overlay sets', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_overlayset_rollback', 'Can rollback version of a overlay set', 'editors', GMAP_PKG_NAME),
 ) );
 
 
