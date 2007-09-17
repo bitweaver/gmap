@@ -408,15 +408,7 @@ class BitGmap extends LibertyAttachable {
 			$selectSql = '';
 		 	$bindVars = array((int)$gmap_id);			
 			LibertyContent::getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
-			/* DEPRECATED
-			$query = "SELECT bmp.*, bps.`set_id`, bps.`style_id`, bsk.`plot_on_load`, bsk.`side_panel`, bsk.`explode`
-		 				 	  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_polyline_keychain` bpk, `".BIT_DB_PREFIX."gmaps_polylines` bmp, `".BIT_DB_PREFIX."gmaps_polyline_sets` bps
-								WHERE bsk.`gmap_id` = ?
-								AND bsk.`set_type` = 'polylines'
-								AND bps.`set_id` = bsk.`set_id`
-								AND bpk.`set_id` = bps.`set_id`
-								AND bmp.`polyline_id` = bpk.`polyline_id`";
-			*/
+
 			$query = "SELECT bmm.*, lc.*, bms.*, bsk.*, 
 					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
@@ -441,26 +433,7 @@ class BitGmap extends LibertyAttachable {
 		};
 		return $ret;		
 	}
-
-
-
-	//* Gets data for a given polyline.
-	// @ todo this should probably take an array so that we can get data for a bunch of markers if we want
-	/* DEPRECATED
-	function getPolylineData($polyline_id) {
-		global $gBitSystem;
-		if ($polyline_id && is_numeric($polyline_id)) {
-			$query = "SELECT bm.*
-			FROM `".BIT_DB_PREFIX."gmaps_polylines` bm
-			WHERE bm.polyline_id = ?";
-  		$result = $this->mDb->query( $query, array((int)$polyline_id));
-
-		}
-		return $result;
-	}
-	*/
-	
-	
+		
 
 	//get all polylines for given gmap_id and set_types
 	function getPolylineStyles($gmap_id) {
@@ -1119,74 +1092,6 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
-	
-	//Storage of Markers is handled by the marker class in BitGmapMarker.php
-	
-	
-/* DEPRECATED
-	function verifyPolyline( &$pParamHash ) {
-
-		$pParamHash['polyline_store'] = array();
-
-		if( !empty( $pParamHash['name'] ) ) {
-			$pParamHash['polyline_store']['name'] = $pParamHash['name'];
-		}
-
-		if( !empty( $pParamHash['type'] ) ) {
-			$pParamHash['polyline_store']['type'] = $pParamHash['type'];
-		}
-
-		if( !empty( $pParamHash['points_data'] ) ) {
-			$pParamHash['polyline_store']['points_data'] = $pParamHash['points_data'];
-		}
-
-		if( !empty( $pParamHash['levels_data'] ) ) {
-			$pParamHash['polyline_store']['levels_data'] = $pParamHash['levels_data'];
-		}
-
-		if( isset( $pParamHash['zoom_factor'] ) && is_numeric( $pParamHash['zoom_factor'] ) ) {
-			$pParamHash['polyline_store']['zoom_factor'] = $pParamHash['zoom_factor'];
-		}
-
-		if( isset( $pParamHash['num_levels'] ) && is_numeric( $pParamHash['num_levels'] ) ) {
-			$pParamHash['polyline_store']['num_levels'] = $pParamHash['num_levels'];
-		}
-
-		// set values for updating the polyline keychain
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-			$pParamHash['keychain_store']['set_id'] = $pParamHash['set_id'];
-		}
-		
-		return( count( $this->mErrors ) == 0 );
-	}
-*/	
-/* DEPRECATED
-	function  storePolyline( &$pParamHash ) {
-		$return = FALSE;
-		if( $this->verifyPolyline( $pParamHash ) ) {
-			$this->mDb->StartTrans();
-			// store the posted changes
-			if ( !empty( $pParamHash['polyline_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polylines", $pParamHash['polyline_store'], array( "polyline_id" => $pParamHash['polyline_id'] ) );
-			}else{
-				 $pParamHash['polyline_id'] = $this->mDb->GenID( 'gmaps_polylines_polyline_id_seq' );
-				 $pParamHash['polyline_store']['polyline_id'] = $pParamHash['polyline_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polylines", $pParamHash['polyline_store'] );
-				 // if its a new polyline we also get a set_id for the keychain and automaticallly associate it with a polyline set.
-				 $pParamHash['keychain_store']['polyline_id'] = $pParamHash['polyline_store']['polyline_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polyline_keychain", $pParamHash['keychain_store'] );
-			}
-			$this->mDb->CompleteTrans();
-
-			// re-query to confirm results
-			$result = $this->getPolylineData($pParamHash['polyline_id']);
-		}
-		return $result;
-	}
-*/
-
-
-
 
 	function verifyPolygon( &$pParamHash ) {
 
@@ -1780,33 +1685,6 @@ class BitGmap extends LibertyAttachable {
 	}	
 
 
-	
-	/**
-	* This function deletes a polyline and all references to it in the polyline keychain
-	**/
-	/* DEPRECATED
-	function expungePolyline(&$pParamHash) {
-		$ret = FALSE;
-
-		if( !empty( $pParamHash['polyline_id'] ) && is_numeric( $pParamHash['polyline_id'] ) ) {
-  		$this->mDb->StartTrans();
-  		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polylines` 
-  		WHERE `polyline_id` =?";
-  		$result = $this->mDb->query( $query, array( $pParamHash['polyline_id'] ) );
-  		$this->mDb->CompleteTrans();
-			
-			// delete all references to the polyline from the polyline keychain
-			$this->mDb->StartTrans();
-			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polyline_keychain` WHERE `polyline_id` =?";				
-			$result = $this->mDb->query( $query, array( $pParamHash['polyline_id'] ) );
-			$this->mDb->CompleteTrans();
-  		$ret = TRUE;
-		}
-
-		return $ret;
-	}
-	*/
-
 
 	/**
 	* This function deletes a polygon and all references to it in the polygon keychain
@@ -1925,46 +1803,6 @@ class BitGmap extends LibertyAttachable {
 	
 
 
-	/* DEPRECATED
-	function verifyPolylineRemove( &$pParamHash ) {
-	
-		$pParamHash['polyline_remove'] = array();
-
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-			$pParamHash['polyline_remove']['set_id'] = $pParamHash['set_id'];
-		}
-		
-		if( !empty( $pParamHash['polyline_id'] ) && is_numeric( $pParamHash['polyline_id'] ) ) {
-			$pParamHash['polyline_remove']['polyline_id'] = $pParamHash['polyline_id'];
-		}
-
-		return( count( $this->mErrors ) == 0 );
-				
-	}	
-	*/
-	/**
-	* This function removes a polyline from a set
-	**/
-	/* DEPRECATED
-	function removePolylineFromSet(&$pParamHash) {
-		$ret = FALSE;
-		
-  		if( $this->verifyPolylineRemove( $pParamHash ) ) {
-  			$this->mDb->StartTrans();
-  			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polyline_keychain` 
-  			WHERE `set_id` = ?
-  			AND `polyline_id` =?";
-  			$result = $this->mDb->query( $query, $pParamHash['polyline_remove'] );
-  			$ret = TRUE;
-  			$this->mDb->CompleteTrans();
-  		}
-			
-		return $ret;
-	}
-*/
-
-
-
 	function verifyPolygonRemove( &$pParamHash ) {
 	
 		$pParamHash['polygon_remove'] = array();
@@ -1998,7 +1836,6 @@ class BitGmap extends LibertyAttachable {
 			
 		return $ret;
 	}
-
 
 
 
