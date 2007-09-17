@@ -189,34 +189,28 @@ $tables = array(
 //@todo wj:check radius after up and running - might require an XDistance (for circle)
 'gmaps_polygons' => "
   polygon_id I4 PRIMARY,
-  user_id I4 NOTNULL,
-  modifier_user_id I4 NOTNULL,
-  created I8 NOTNULL,
-  last_modified I8 NOTNULL,
-  version I4 NOTNULL,
-  name C(64),
-  circle C(5) DEFAULT 'true',
-  points_data X DEFAULT 0,
+  content_id I4 NOTNULL,
+  type I4 DEFAULT 0,
   circle_center X DEFAULT 0,
   radius F DEFAULT 0
+  CONSTRAINT ', CONSTRAINT `gmaps_polygons_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
 ",
 
 //opacity take a float from 0-1
 'gmaps_polygon_styles' => "
   style_id I4 PRIMARY,
   name C(64),
-  polygon_style_type I4 DEFAULT 0,
   color C(6),
   opacity F DEFAULT 1
 ",
 
 'gmaps_polygon_sets' => "
   set_id I4 PRIMARY,
-  name C(64),
-  description C(255),
+  content_id I4 NOTNULL,
   style_id I4 NOTNULL,
   polylinestyle_id I4 NOTNULL
-  CONSTRAINT ', CONSTRAINT `gmaps_polygon_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polygon_styles`( `style_id` )
+  CONSTRAINT ', CONSTRAINT `gmaps_polygon_sets_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
+			  , CONSTRAINT `gmaps_polygon_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polygon_styles`( `style_id` )
               , CONSTRAINT `gmaps_polygon_sets_polylinestyle_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_styles`( `style_id` )'
 ",
 
