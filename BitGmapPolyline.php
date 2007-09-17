@@ -20,7 +20,6 @@
  */
 
 require_once( GMAP_PKG_PATH.'BitGmapOverlayBase.php' );
-//require_once( LIBERTY_PKG_PATH.'LibertyContent.php' );
 require_once( LIBERTY_PKG_PATH.'LibertyComment.php' );
 
 /**
@@ -84,21 +83,5 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 
 		return( count( $this->mErrors ) == 0 );
 	}
-
-
-	function verifyRemove( &$pParamHash ) {
-	
-		$pParamHash['overlay_remove'] = array();
-
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-			$pParamHash['overlay_remove']['set_id'] = $pParamHash['set_id'];
-		}
-		
-		if( !empty( $pParamHash['polyline_id'] ) && is_numeric( $pParamHash['polyline_id'] ) ) {
-			$pParamHash['overlay_remove']['polyline_id'] = $pParamHash['polyline_id'];
-		}
-
-		return( count( $this->mErrors ) == 0 );
-	}	
 }
 ?>
