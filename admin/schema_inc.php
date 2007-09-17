@@ -182,7 +182,7 @@ $tables = array(
               , CONSTRAINT `gmaps_polyline_keychain_polyline_ref` FOREIGN KEY (`polyline_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polylines`( `polyline_id` )'
 ",
 
-//type options: 0 => Polygon, 1 => Circle
+//type options: 0 => Polygon, 1 => Circle 2=> Encoded
 //points_data takes an array for polygon
 //circle_center for circle
 //radius for circle
@@ -192,7 +192,10 @@ $tables = array(
   content_id I4 NOTNULL,
   type I4 DEFAULT 0,
   circle_center X DEFAULT 0,
-  radius F DEFAULT 0
+  radius F DEFAULT 0,
+  levels_data X,
+  zoom_factor I4,
+  num_levels I4
   CONSTRAINT ', CONSTRAINT `gmaps_polygons_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
 ",
 

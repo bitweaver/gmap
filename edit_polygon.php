@@ -1,5 +1,12 @@
 <?php
-// Copyright (c) 2005 bitweaver Gmap
+/**
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.4 2007/09/17 22:17:58 wjames5 Exp $
+ * @package gmap
+ * @subpackage functions
+ */
+//
+
+// Copyright (c) 2005-2007 bitweaver Gmap
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
@@ -9,75 +16,52 @@ require_once('../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
-// Now check permissions to access this page
-$gBitSystem->verifyPermission('bit_gm_edit_map' );
+// Get the polygon for specified gpolygon_id
+require_once(GMAP_PKG_PATH.'lookup_polygon_inc.php' );
 
-// Access the gmap class
-global $gContent;
-require_once( GMAP_PKG_PATH.'BitGmap.php');
-require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );
-$gContent = new BitGmap();
+// Now check permissions to access the polygon
+if( $gContent->isValid() ) {
+	$gContent->verifyEditPermission();
+} else {
+	$gBitSystem->verifyPermission( 'p_gmap_overlay_edit' );
+}
 
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
 
+//most of the time we want xml back so we make it the default
+$format = 'xml';
+
 if (!empty($_REQUEST["save_polygon"])) {
-    if( $result = $gContent->storePolygon( $_REQUEST ) ) {
-
-				//if store is successful we return XML
-				$mRet = "<polygon>"
-      		    ."<polygon_id>".$result->fields['polygon_id']."</polygon_id>"
-                ."<name>".$result->fields['name']."</name>"
-                ."<circle>".$result->fields['circle']."</circle>"
-                ."<points_data>".$result->fields['points_data']."</points_data>"
-                ."<circle_center>".$result->fields['circle_center']."</circle_center>"
-                ."<radius>".$result->fields['radius']."</radius>"
-                ."<border_text>".$result->fields['border_text']."</border_text>"
-                ."<zindex>".$result->fields['zindex']."</zindex>"
-						."</polygon>";
-													
-    }else{
-		//@todo - return some sort of store failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
-    }
+    if( $gContent->store( $_REQUEST ) ) {		
+		$gContent->load();
+		$gBitSmarty->assign_by_ref('polygonInfo', $gContent->mInfo);
+	}
 //Check if this to remove from a set, or to delete completely
-}elseif ( !empty($_REQUEST["remove_polygon"]) ) {
-    if( $gContent->removePolygonFromSet( $_REQUEST ) ) {
-				//if store is successful we return XML
-				$mRet = "<remove>success</remove>";
-
-		}else{
-		//@todo - return some sort of remove failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
-    }
+}elseif (!empty($_REQUEST["remove_polygon"])) {
+    if( $gContent->removeFromSet( $_REQUEST ) ) {
+		$gBitSmarty->assign_by_ref('removeSucces', true);
+	}
 }elseif (!empty($_REQUEST["expunge_polygon"])) {
-    if( $gContent->expungePolygon( $_REQUEST ) ) {
-				//if store is successful we return XML
-				$mRet = "<remove>success</remove>";
-
-		}else{
-		//@todo - return some sort of remove failure message in the xml
-      $gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
-    }
+    if( $gContent->expunge() ) {
+		$gBitSmarty->assign_by_ref('expungeSucces', true);
+	}
+}else{
+	$gContent->invokeServices( 'content_edit_function' );
+	$polygon = $gContent->mInfo;
+	if (isset($_REQUEST["set_id"])){
+		$polygon['set_id'] = $_REQUEST["set_id"];
+	}
+	$gBitSmarty->assign_by_ref('polygonInfo', $polygon);
+	$gBitSystem->display('bitpackage:gmap/edit_polygon.tpl', NULL, 'center_only');
+	die;
 }
 
-//since we are returning xml we must report so in the header
-//we also need to tell the browser not to cache the page
-//see: http://mapki.com/index.php?title=Dynamic_XML
-// Date in the past
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); 
-// always modified
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-// HTTP/1.1
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-// HTTP/1.0
-header("Pragma: no-cache");
-//XML Header
-header("content-type:text/xml");
-     		
-print_r($mRet);
+if ( count($gContent->mErrors) > 0 ){
+	$gBitSystem->setFormatHeader( 'center_only' );
+	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
+}else{
+	$gBitSystem->display('bitpackage:gmap/edit_polygon_xml.tpl', null, $format);
+}
 
-die;
-
-?>	
+?>
