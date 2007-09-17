@@ -46,6 +46,11 @@ class BitGmapOverlaySetBase extends LibertyContent {
 	**/
 	function BitGmapOverlaySetBase() {
 		parent::LibertyContent();
+		
+		// Permission setup
+		$this->mViewContentPerm  = 'p_gmap_overlayset_view';
+		$this->mEditContentPerm  = 'p_gmap_overlayset_edit';
+		$this->mAdminContentPerm = 'p_gmap_admin';
 	}
 
 	//* Gets data for a given marker set.

@@ -43,11 +43,6 @@ class BitGmapPolylineSet extends BitGmapOverlaySetBase{
 			'maintainer_url' => 'http://www.bitweaver.org'
 		) );
 		
-		// Permission setup
-		$this->mViewContentPerm  = 'p_gmap_polylineset_view';
-		$this->mEditContentPerm  = 'p_gmap_polylineset_edit';
-		$this->mAdminContentPerm = 'p_gmap_admin';
-
 		//variables created in the parent BitGmapOverlaySetBase class		
 		$this->mOverlaySetType = "polylines";
 		$this->mOverlaySetTable = "gmaps_polyline_sets";

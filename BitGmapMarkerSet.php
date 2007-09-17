@@ -43,11 +43,6 @@ class BitGmapMarkerSet extends BitGmapOverlaySetBase{
 			'maintainer_url' => 'http://www.bitweaver.org'
 		) );
 		
-		// Permission setup
-		$this->mViewContentPerm  = 'p_gmap_markerset_view';
-		$this->mEditContentPerm  = 'p_gmap_markerset_edit';
-		$this->mAdminContentPerm = 'p_gmap_admin';
-
 		//variables created in the parent BitGmapOverlaySetBase class		
 		$this->mOverlaySetType = "markers";
 		$this->mOverlaySetTable = "gmaps_marker_sets";
