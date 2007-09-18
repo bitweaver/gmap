@@ -468,9 +468,6 @@
 <!-------------------------
 	-  Polygon Editing Forms
 	------------------------->
-<!-------------------------
-	-  Polygon Editing Forms
-	------------------------->
 
 <!--polygon editing forms -->
 <div id="edit-polygons-menu" style="display:none;">
@@ -552,79 +549,53 @@
 <!--end polygon editing forms -->
 
 
-<div id="editpolygonstylesmenu" style="display:none;">
-		<a href="javascript:BitMap.EditSession.newPolygonStyle();">Add a New Polygon Style</a>
-</div>
+<!--------------------------------
+	-  Polygonstyles Editing Forms
+	-------------------------------->
 
-
-<div id="newpolygonstyleform" class="editform" style="display:none;">
-		<h2>Add a New Polygon Style</h2>
-		<div class="table" id="editpolygonstyletable_new">
-			<form action="javascript:;" name="polygonstyleform_new" id="polygonstyleform_new">
-				<input name="save_polygonstyle" type="hidden" value="true">
-				<table class="data">
-					<tr>
-						<th>Name</th>
-						<th>Type</th>
-						<th>Color</th>
-						<th>Weight</th>
-						<th>Opacity</th>
-						<th style="width:80px">ACTIONS</th>
-					</tr>
-					<tr class="gmapeditstrong">
-						<td><input name="name" type="text" style="width:90%" value="a name"></td>
-						<td><select name="polygon_style_type">
-                                <option value="0">XPolygon</option>
-                             </select></td>
-						<td><input name="color" type="text" size="15" value="ff3300"></td>
-						<td><input name="weight" type="text" size="15" value="2"></td>
-						<td><input name="opacity" type="text" size="15" value=".75"></td>
-						<td style="width:80px"><a name="new_polygonstyle_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygonStyle(document.polygonstyleform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
-					</tr>
-				</table>
-			</form>
-		</div>
-		<div id="newpolygonstylecancel" ><input type="button" name="closepolygonstyleform" value="Cancel New Polygon Style" onclick="javascript:BitMap.EditSession.canceledit('newpolygonstyleform'); BitMap.EditSession.canceledit('editerror');"></div>
-</div>
-<!-- end of newpolygonstyleform -->
-
-
-<div id="editpolygonstyleform" class="editform" style="display:none;">
-		<h2>Polygon Styles Associated with Polygon Sets on This Map</h2>
-		<table>
+<!-- polygonstyle editing menu -->
+<div id="edit-polygonstyles-table" class="edit-table" style="display:none;">
+	<h2>Polygon Styles Associated with Polygon Sets on This Map</h2>
+	<div id="edit-polygonstyles" class="edit-selected">
+		<table class="bar">
 			<tr>
-				<th>Name</th>
-				<th style="width:120px">Type</th>
-				<th style="width:120px">Color</th>
-				<th style="width:120px">Weight</th>
-				<th style="width:120px">Opacity</th>
-				<th style="width:80px">ACTIONS</th>
+				<td><span class="setname">Polygon Styles:</span></td>
 			</tr>
 		</table>
-		<div class="table" id="editpolygonstyletable_n">
-			<form action="javascript:;" name="polygonstyleform_n" id="polygonstyleform_n" style="display:none;">
-				<input name="save_polygonstyle" type="hidden" value="true">
-				<input name="style_array_n" type="hidden" value="n">
-				<input name="style_id" type="hidden" value="n">
-				<table class="data" id="polygonstyleformdata_n">
-					<tr>
-						<td><input name="name" type="text" style="width:90%" value="a name"></td>
-						<td style="width:120px"><select name="polygon_style_type">
-                                <option value="0">XPolygon</option>
-                             </select></td>
-						<td style="width:120px"><input name="color" type="text" size="15" value="ff3300"></td>
-						<td style="width:120px"><input name="weight" type="text" size="15" value="2"></td>
-						<td style="width:120px"><input name="opacity" type="text" size="15" value=".75"></td>
-						<td style="width:80px"><a style="float:left; padding:0 .4em;" name="save_polygonstyle_btn" title="save" href="javascript:BitMap.EditSession.storePolygonStyle(document.polygonstyleform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
-      			</tr>
-				</table>
-			</form>
-		</div>
-</div> <!-- end of editpolygonstylesform -->
+	</div>
+</div>
+<!-- end of polygonstyle editing menu -->
 
-<div id="editpolygonstylescancel" style="display:none;"><input type="button" name="closepolygonstylesform" value="Cancel Editing Polygon Styles" onclick="javascript:BitMap.EditSession.canceledit('editpolygonstylesmenu'); BitMap.EditSession.canceledit('newpolygonstyleform'); BitMap.EditSession.canceledit('editpolygonstyleform'); BitMap.EditSession.canceledit('editpolygonstylescancel');"></div>
-<!--end polygon style editing forms -->
+<!-- edit polygonstyles form -->
+<div id="edit-polygonstyle-table" class="edit-datatable" style="display:none;">
+	<table>
+		<tr>
+			<td width="200px"><br />
+				<ul>
+					<li style="display:none;"><a href="javascript:BitMap.EditSession.editPolygonStyle(n);">Polygon Style Name Here</a></li>
+					<li id="edit-polygonstylelink-new"><b><a id="edit-polygonstylelink-new-a" href="javascript:BitMap.EditSession.editPolygonStyle();">Add A New Polygon Style</a></b></li>
+				</ul>
+			</td>
+			<td>
+				<div id="polygonstyle-form">PUT POLYLINESTYLE FORM HERE!</div>
+			</td>
+			<td width="200px">
+				<div id="edit-polygonstyle-tips">Tips<br/>
+					Put advice here
+				</div>
+				<div id="edit-polygonstyle-actions">Edit Polygon Style Actions<br/>
+					Currently no delete or expunge options
+				</div>
+			</td>
+		</tr>
+	</table>
+</div> <!-- end of edit polygonstyles form -->
 
+<!-- close all polygonstyles editing -->
+<div id="edit-polygonstyles-cancel" style="display:none;">
+  <input type="button" name="closepolygonstylesform" value="Close Polygon Styles Editing" onclick="javascript:BitMap.EditSession.cancelEditPolygonStyles();" />
+</div>
+<!-- end polygonstyles editing forms -->
 
 
 <div id="spinner" style="z-index:1500; position:absolute; top:50%; left:50%; margin-left:-125px; margin-top:-35px; width:250px; line-height:50px; padding:25px 0; border:3px solid #ccc; background:#fff; font-weight:bold; color:#900; text-align:center; display:none;">

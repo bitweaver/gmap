@@ -1282,6 +1282,72 @@ BitMap.Edit.prototype = {
 	},
 	
 	
+	"editPolygonStyle":function(i){	
+		var style_id = ( i != null )?this.Map.polygonstyles[i].style_id:null;
+		this.editObjectN = i;
+	
+		//highlight selected polygon link - unhighlight others
+		var a = (i != null)?'remove':'add';
+		BitMap.Utl.JSCSS(a, $('edit-polygonstylelink-new'), 'edit-select');
+		this.toggleMenuOptsStyles( "polygonstylelink", this.Map.polygonstyles.length, i, 'edit-select' );
+		
+		doSimpleXMLHttpRequest("edit_polygonstyle.php", {style_id:style_id}).addCallback( bind(this.editPolygonStyleCallback, this) );
+	},
+	
+	"editPolygonStyleCallback": function(rslt){
+		var f = $('polygonstyle-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
+		BitMap.show('edit-polygonstyle-table');		
+	},
+
+	"editPolygonStyles": function(){
+		BitMap.show('edit-polygonstyles-table');
+		BitMap.show('edit-polygonstyles-cancel');
+		
+		var polygonstyleTable = $('edit-polygonstyle-table');
+		//set some constants
+		var linksList = polygonstyleTable.getElementsByTagName("ul").item(0);
+		var links = polygonstyleTable.getElementsByTagName("li");
+		//Clear all the existing polygonstyles listed
+		//We leave the first two, the first is the model we clone, the second is for a new polygonstyle
+		var count = links.length;
+		for (n=count-1; n>1; n--){
+			linksList.removeChild(links.item(n));
+		}
+		
+		/* I THINK THIS CAN BE DELETED -wjames5 */
+		//$('edit-polygonstylelink-new-a').href = "javascript:BitMap.EditSession.editPolygonStyle();";
+		
+		//For each polygonstyle, add a link
+		var firstselected = false;
+		for (var n=0; n<this.Map.polygonstyles.length; n++) {
+			var m = this.Map.polygonstyles[n];
+			var li = links.item(0).cloneNode(true);
+			li.id = 'edit-polygonstylelink-'+n;
+			var a = li.getElementsByTagName("a").item(0);
+			a.href = "javascript:BitMap.EditSession.editPolygonStyle("+n+")";
+			a.innerHTML = m.name;
+			linksList.appendChild(li);
+			li.style.display = "block";
+			
+			if (firstselected != true){
+				this.editPolygonStyle(n);
+				firstselected = true;
+			}			
+		}
+		if (firstselected == false){
+			this.editPolygonStyle();
+		}
+		//We assume it is not visible and make it so
+		BitMap.show('edit-polygonstyle-table');
+	},
+
+	"cancelEditPolygonStyles": function(){
+	  BitMap.hide('edit-polygonstyles-table');
+	  BitMap.hide('edit-polygonstyle-table');
+	  BitMap.hide('edit-polygonstyles-cancel');
+	},
 	
 	/*******************
 	 *
@@ -1512,6 +1578,12 @@ BitMap.Edit.prototype = {
 		this._setIdRef = f.set_id.value;
 		var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&expunge_polygonset=true";
 		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) ); 
+	 },
+
+	 "storePolygonStyle": function(f){
+		this.showSpinner("Saving Polygonstyle...");
+		var str = "edit_polygonstyle.php?" + queryString(f);
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updatePolygonStyle, this) ); 
 	 },
 	 	
 	/*******************
