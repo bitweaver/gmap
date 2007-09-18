@@ -468,59 +468,88 @@
 <!-------------------------
 	-  Polygon Editing Forms
 	------------------------->
+<!-------------------------
+	-  Polygon Editing Forms
+	------------------------->
 
 <!--polygon editing forms -->
-<div id="editpolygonmenu" style="display:none;">
-		<a href="javascript:BitMap.EditSession.newPolygon();">New Polygon</a> | 
-		<a href="javascript:BitMap.EditSession.newPolygonSet();">New Polygon Set</a> | 
+<div id="edit-polygons-menu" style="display:none;">
+		<a href="javascript:BitMap.EditSession.editPolygonSet();">New Polygon Set</a> | 
 		<a href="javascript:BitMap.EditSession.editPolygonStyles();">Edit Polygon Styles</a> | 
 </div>
 
-<div id="newpolygonsetform" class="editform" style="display:none;">
-	<h2>Add a New Polygon Set</h2>		
-    <div class="table" id="editpolygonsettable_new">
-    	<form action="javascript:;" name="polygonsetform_new" id="polygonsetform_new">
-				<input name="save_polygonset" type="hidden" value="true">
-    		<table class="data">
-					<tr>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Style</th>
-						<th>Map Display Settings</th>
-						<th>Side Panel Display Settings</th>
-						<th style="width:80px">ACTIONS</th>
-					</tr>
-					<tr class="gmapeditstrong">
-						<td><input name="name" type="text" style="width:90%" value="a name"></td>
-						<td><textarea name="description" style="width:90%" rows="3"></textarea></td>
-						<td>Fill Style: <select name="style_id" id="style_id">
-                                    	<option value="0" >XPolygon (default)</option>
-                                      	</select><br/>
-							Line Style:	<select name="polylinestyle_id" id="polylinestyle_id">
-											<option value="0" >Google (default)</option>
-											</select></td>
-						<td>Plot-On-Load: <select name="plot_on_load">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select></td>
-						<td>Side: <select name="side_panel">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select><br/>
-    					List: <select name="explode">
-                      					<option value="true">Yes</option>
-                      					<option value="false">No</option>
-                          				</select></td>
-						<td style="width:80px"><a name="new_polygonset_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygonSet(document.polygonsetform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
-					</tr>
-    		</table>
-    	</form>
-		</div>
-		<div id="newpolygonsetcancel" ><input type="button" name="closepolygonsetform" value="Cancel New Polygon Set" onclick="javascript:BitMap.EditSession.canceledit('newpolygonsetform'); BitMap.EditSession.canceledit('editerror');"></div>
+<!-- polygonset editing menu -->
+<div id="edit-polygonsets-table" class="edit-table" style="display:none;">
+  <h2>Polygon Sets Associated With This Map</h2>
+  <div id="edit-polygonset" class="edit-titlebar" style="display:none;">
+    <table class="bar">
+    	<tr>
+        <td width="200px"><span class="setname">Set Name Here</span></td>
+      <td>
+        <a class="opts" href="javascript:BitMap.EditSession.editPolygonSetOptions(n);">Edit Set Options</a> | 
+        <a class="list" href="javascript:BitMap.EditSession.editPolygons(n);">Edit Polygons In This Set</a>
+      </td>
+    </tr>
+    </table>
+  </div>
 </div>
-<!-- end of newpolygonsetform -->
+<!-- end of polygonset editing menu -->
 
+<!-- polygonset options form -->
+<div id="edit-polygonset-options-table" class="edit-datatable" style="display:none;">
+	<table>
+		<tr>
+			<td>
+				<div id="polygonset-form">PUT POLYGONSET FORM HERE!</div>
+			</td>
+			<td width="200px">
+				<div id="edit-polygonset-options-tips">Tips<br/>
+				Put advice here
+				</div>
+				<div id="edit-polygonset-options-actions">Edit Polygon Actions<br/>
+				<a id="setremove" href="javascript:BitMap.EditSession.removePolygonSet( this.form );">remove</a> 
+				<a id="setdelete" href="javascript:BitMap.EditSession.expungePolygonSet( this.form );">delete</a><br/><br/>
+				<a id="setaddpolygons" href="javascript:alert('feature coming soon');">Add Polygons from Archives</a>
+				<div>
+			</td>
+		</tr>
+	</table>
+</div>
+<!-- end of polygonset options form -->
 
+<!-- edit polygons form -->
+<div id="edit-polygons-table" class="edit-datatable" style="display:none;">
+		<table>
+			<tr>
+				<td width="200px">Polygons:<br/>
+					<ul id="edit-polygons-list">
+						<li style="display:none;"><a href="javascript:BitMap.EditSession.editPolygon(n);">Polygon Name Here</a></li>
+						<li id="edit-polygonlink-new"><b><a id="edit-polygonlink-new-a" href="javascript:BitMap.EditSession.newPolygon(setindex);">Add A New Polygon</a></b></li>
+					</ul>
+				</td>
+				<td>
+					<div id="polygon-form">PUT POLYGON FORM HERE!</div>
+				</td>
+				<td width="200px">
+					<div id="edit-polygon-tips">Tips<br/>
+					   Put advice here
+					</div>
+					<div id="edit-polygon-actions">Edit Polygon Actions<br/>
+						<a name="remove_polygon_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolygon(document.edit-polygon-form);">remove</a>
+						<a name="expunge_polygon_btn" title="delete the polygon!" href="javascript:BitMap.EditSession.expungePolygon(document.edit-polygon-form);">delete</a><br/>
+					</div>
+				</td>
+			</tr>
+		</table>
+	<input type="button" name="closepolygonset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditPolygons()"></br>
+</div> 
+<!-- edit of edit polygons form -->
+
+<!-- close all polygon editing -->
+<div id="edit-polygonsets-cancel" style="display:none;">
+  <input type="button" name="closepolygonform" value="Close Polygon Editing" onclick="javascript:BitMap.EditSession.cancelEditPolygonSets();" />
+</div>
+<!--end polygon editing forms -->
 
 
 <div id="editpolygonstylesmenu" style="display:none;">
@@ -596,159 +625,6 @@
 <div id="editpolygonstylescancel" style="display:none;"><input type="button" name="closepolygonstylesform" value="Cancel Editing Polygon Styles" onclick="javascript:BitMap.EditSession.canceledit('editpolygonstylesmenu'); BitMap.EditSession.canceledit('newpolygonstyleform'); BitMap.EditSession.canceledit('editpolygonstyleform'); BitMap.EditSession.canceledit('editpolygonstylescancel');"></div>
 <!--end polygon style editing forms -->
 
-
-
-
-<div id="newpolygonform" class="editform" style="display:none;">
-		<h2>Add a New Polygon</h2>
-    <div class="table" id="editpolygontable_new">
-			<form action="javascript:;" name="polygonform_new" id="polygonform_new">
-				<input name="new_polygon" type="hidden" value="true">
-				<table class="data">
-					<tr>
-						<th>Name</th>
-						<th>Shape</th>
-						<th>Points Data</th>
-						<th>Circle Center</th>
-						<th>Radius</th>
-						<th>Border Text</th>
-						<th>zIndex</th>
-						<th>Set</th>
-						<th style="width:80px">ACTION</th>						
-					</tr>
-					<tr class="gmapeditstrong">
-						<td><input name="name" type="text" style="width:90%" value="a name"></td>
-						<td><select name="circle" >
-								<option value="false" >Polygon </option>
-								<option value="true" >Circle</option>
-								</select></td>
-						<td><textarea name="points_data" style="width:90%" rows="3"></textarea><br/>
-							<a name="polygon_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polygon', 'new');">Use Drawing Assistant</a></td>
-						<td><input name="circle_center" type="text" style="width:90%" ></td>
-						<td><input name="radius" type="text" size="8" value="0"></td>
-						<td><input name="border_text" type="text" style="width:90%" value=""></td>
-						<td><input name="zindex" type="text" size="3" value="0"></td>
-						<td><select name="set_id" id="polygonset_id">
-								<option value="n" >someset</option>
-								</select></td>
-						<td style="width:80px"><a name="new_polygon_btn" title="save" href="javascript:BitMap.EditSession.storeNewPolygon(document.polygonform_new);">{biticon ipackage="icons" iname="save" iexplain="save"}</a></td>
-					</tr>
-				</table>
-			</form>
-		</div>
-		<div id="newpolygoncancel" ><input type="button" name="closepolygonform" value="Cancel New Polygon" onclick="javascript:BitMap.EditSession.canceledit('newpolygonform'); removeAssistant(); BitMap.EditSession.canceledit('editerror');"></div>
-</div> <!-- end of newpolygonform -->
-
-
-
-
-
-<div id="editpolygonform" class="editform" style="display:none;">
-		<h2>Polygon Sets Associated With This Map</h2>
-		<table>
-			<tr>
-				<th style="width:160px">Name</th>
-				<th>Styles</th>
-				<th style="width:100px">Plot-on-Load</th>
-				<th style="width:90px">List Set</th>
-				<th style="width:100px">List Polygon</th>
-				<th style="width:80px">ACTIONS</th>
-			</tr>
-		</table>
-		<div id="polygonset_n" style="display:none;">
-    	<form action="javascript:;" name="polygonsetform_n" id="polygonsetform_n" style="display:none;">
-				<input name="set_id" type="hidden" size="3" value="n">
-            <input name="set_array_n" type="hidden" value="n">
-  			<table class="data" id="polygonsetformdata_n">
-					<tr class="gmapeditstrong">
-						<td style="width:160px"><b>Set Name</b> <!-- <span id="pgsetdesc">Description Here</span><br/> --></td>
-						<td>Fill Style: <select name="style_id">
-                  				<option value="0">XPolygon (default)</option>
-                      			</select><br/>
-							Line Style: <select name="polylinestyle_id">
-                  				<option value="0">Google (default)</option>
-                      			</select></td>
-						<td style="width:100px"><select name="plot_on_load">
-                  				<option value="true">Yes</option>
-                  				<option value="false">No</option>
-                      			</select></td>
-						<td style="width:90px"><select name="side_panel">
-                  				<option value="true">Yes</option>
-                  				<option value="false">No</option>
-                      			</select></td>
-						<td style="width:100px"><select name="explode">
-                  				<option value="true">Yes</option>
-                  				<option value="false">No</option>
-                      			</select></td>
-						<td style="width:80px">
-							<a id="pgsetstore" href="javascript:BitMap.EditSession.storePolygonSet(document.polygonsetform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a> 
-							<a id="pgsetremove" href="javascript:BitMap.EditSession.removePolygonSet(document.polygonsetform_n);">remove</a> 
-							<a id="pgsetdelete" href="javascript:BitMap.EditSession.expungePolygonSet(document.polygonsetform_n);">delete</a></td>
-					</tr>
-					<tr>
-						<td colspan="5"><a id="pgsetedit" href="javascript:BitMap.EditSession.editPolygonSet('n');">Edit These Polygons</a> | 
-							<a id="pgsetadd" href="javascript:alert('feature coming soon');">Add Polygons from Archives</a></td>
-					</tr>
-  			</table>
-        </form>
-			<div id="pgsetform_n" style="display:none;">
-				<h3>Polygons In This Set</h3>
-				<table>
-					<tr>
-						<th style="width:160px">Name</th>
-						<th style="width:80px">Shape</th>
-						<th style="width:160px">Points Data</th>
-						<th style="width:80px">Circle Center</th>
-						<th style="width:80px">Radius</th>
-						<th>Border Text</th>
-						<th style="width:80px">zIndex</th>
-						<th style="width:80px">ACTION</th>						
-					</tr>
-				</table>
-    		<div class="table" id="editpolygontable_n">
-    			<form action="javascript:;" name="polygonform_n" id="polygonform_n" style="display:none;">
-						<input name="save_polygon" type="hidden" value="true">
-						<input name="set_id" type="hidden" size="3" value="n">
-						<input name="polygon_id" type="hidden" size="3" value="n">
-						<input name="polygon_array_n" type="hidden" value="n">
-        			<table class="data" id="polygonformdata_n">
-							<tr>
-								<td style="width:160px"><input name="name" type="text" style="width:90%" value=""></td>
-								<td style="width:80px"><select name="circle" >
-										<option value="false" >Polygon </option>
-										<option value="true" >Circle</option>
-										</select></td>
-								<td style="width:160px"><textarea name="points_data" style="width:90%" rows="3"></textarea><br/>
-									<a name="polygon_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polygon', n);">Use Drawing Assistant</a></td>
-								<td style="width:80px"><input name="circle_center" type="text" style="width:90%" value="new"></td>
-								<td style="width:80px"><input name="radius" type="text" size="8" value="new"></td>
-								<td><input name="border_text" type="text" style="width:90%" value=""></td>
-								<td style="width:80px"><input name="zindex" type="text" size="3" value="0"></td>
-								<td style="width:80px">
-									<a name="save_polygon_btn" title="save" href="javascript:BitMap.EditSession.storePolygon(document.polygonform_n);">{biticon ipackage="icons" iname="save" iexplain="save"}</a>
-									<a name="locate_polygon_btn" title="locate on the map" href="javascript:alert('feature coming soon');">show</a>
-									<a name="remove_polygon_btn" title="remove from this set" href="javascript:BitMap.EditSession.removePolygon(document.polygonform_n);">remove</a>
-									<a name="expunge_polygon_btn" title="delete the polygon!" href="javascript:BitMap.EditSession.expungePolygon(document.polygonform_n);">delete</a></td>
-							</tr>
-        			</table>
-    			</form>
-  		  </div>
-      	<div id="allavailpolygons_n" style="display:none;">
-    			<h3>All Polygons Available</h3>
-        		<div class="table" id="addpolygontable_n">
-            		<form action="javascript:;" name="addpolygonform_n" id="addpolygonform_n">
-                		<div class="data">
-        						<!-- @todo this is just placeholder for table of polygon data -->
-                		</div>
-            		</form>	
-    			</div>						
-				</div>
-			</div> <!--end of polygonsetform_n -->			
-		</div> <!-- end of polygonset_n -->
-</div> <!-- end of editpolygonform -->
-
-<div id="editpolygoncancel" style="display:none;"><input type="button" name="closepolygonform" value="Cancel Editing Polygons" onclick="javascript:BitMap.EditSession.cancelPolygonEdit(); BitMap.EditSession.canceledit('newpolygonsetform'); BitMap.EditSession.canceledit('editerror');"></div>
-<!--end polygon editing forms -->
 
 
 <div id="spinner" style="z-index:1500; position:absolute; top:50%; left:50%; margin-left:-125px; margin-top:-35px; width:250px; line-height:50px; padding:25px 0; border:3px solid #ccc; background:#fff; font-weight:bold; color:#900; text-align:center; display:none;">
