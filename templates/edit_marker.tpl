@@ -45,6 +45,7 @@
 			
 			{textarea}{$markerInfo.raw}{/textarea}
 	
+			{if $gContent->hasAdminPermission()}
 			<div class="row">
 				{formlabel label="Allow Comments" for="allow_comments"}
 					{forminput}
@@ -54,13 +55,14 @@
 			</div>
 			
 			<div class="row">
-				{formlabel label="Share Editing of This Marker With Registered Users" for="share_edit"}
+				{formlabel label="Allow Registered Users To Edit" for="share_edit"}
 					{forminput}
 						<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
 						{formhelp note="Checking this box will allow any registered user to edit this marker. This is good if you want this marker to be editable like a wiki page."}
 					{/forminput}
 			</div>
-				
+			{/if}
+			
 			{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
 				
 			<div class="row submit">

@@ -1640,7 +1640,22 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $ret;
 	}
+
+	function setAllowChildren(&$pParamHash){
+		if ( isset( $pParamHash['allow_children'] ) ){
+			$this->storePermission( 3, 'p_gmap_attach_children' );
+		}else{
+			$this->removePermission( 3, 'p_gmap_attach_children' ); 
+		}
+	}
 	
+	function childrenAllowed(){
+		$ret = FALSE;
+		if ( isset( $this->mPerms['p_gmap_attach_children'] ) && $this->mPerms['p_gmap_attach_children']['group_id'] == 3 && $this->mPerms['p_gmap_attach_children']['is_revoked'] != "y"){
+			$ret = TRUE;
+		}
+		return $ret;
+	}	
 }
 
 

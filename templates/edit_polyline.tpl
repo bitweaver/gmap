@@ -51,13 +51,15 @@
 			{/forminput}
 	</div>
 	
+	{if $gContent->hasAdminPermission()}
 	<div class="row">
-		{formlabel label="Share Editing of This Polyine With Registered Users" for="share_edit"}
+		{formlabel label="Allow Registered Users To Edit" for="share_edit"}
 			{forminput}
 				<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
 				{formhelp note="Checking this box will allow any registered user to edit this polyline. This is good if you want this polyline to be editable like a wiki page."}
 			{/forminput}
 	</div>
+	{/if}
 
 	<div class="row submit">
 		<input type="button" name="save_polyline_btn" value="Save" onclick="javascript:BitMap.EditSession.storePolyline( this.form );">

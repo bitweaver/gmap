@@ -296,6 +296,7 @@ $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
 	array('p_gmap_remove', 'Can remove maps', 'editors', GMAP_PKG_NAME),
 	array('p_gmap_rollback', 'Can rollback version of a map', 'editors', GMAP_PKG_NAME),
 	array('p_gmap_admin', 'Can administrate maps', 'editors', GMAP_PKG_NAME),
+	array('p_gmap_attach_children', 'Can attach sets and such to maps, and overlays to set', 'register', GMAP_PKG_NAME),
 	array('p_gmap_overlay_view', 'Can view map overlays', 'basic', GMAP_PKG_NAME),
 	array('p_gmap_overlay_view_history', 'Can view map overlay history', 'basic', GMAP_PKG_NAME),
 	array('p_gmap_overlay_edit', 'Can edit overlays', 'registered', GMAP_PKG_NAME),

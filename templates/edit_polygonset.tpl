@@ -36,13 +36,23 @@
 			{/forminput}
 	</div>
 	
+	{if $gContent->hasAdminPermission()}
 	<div class="row">
-		{formlabel label="Share Editing of This Set With Registered Users" for="share_edit"}
+		{formlabel label="Allow Registered Users to Add Polygons To This Set" for="allow_children"}
+			{forminput}
+				<input type="checkbox" name="allow_children" value="y" {if $childrenAllowed}checked="checked"{/if} />
+				{formhelp note="Checking this box will allow any registered user to add polygons to this set."}
+			{/forminput}
+	</div>
+	
+	<div class="row">
+		{formlabel label="Allow Registered Users To Edit" for="share_edit"}
 			{forminput}
 				<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
 				{formhelp note="Checking this box will allow any registered user to edit the parameters of this set - this does not effect if they can add polygons to this set."}
 			{/forminput}
 	</div>
+	{/if}
 	
 	<div class="row submit">
 		<input type="button" name="savenewpolygonset" value="Save" onclick="javascript:BitMap.EditSession.storePolygonSet( this.form );"/>

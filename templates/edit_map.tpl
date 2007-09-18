@@ -116,6 +116,10 @@
 				{/forminput}
 		</div>
 		 *}
+
+		{textarea}{$mapInfo.raw}{/textarea}
+		 		
+		{if $gContent->hasAdminPermission()}
 		<div class="row">
 			{formlabel label="Allow Comments" for="allow_comments"}
 				{forminput}
@@ -123,17 +127,25 @@
 					{formhelp note=""}
 				{/forminput}
 		</div>
-		{textarea}{$mapInfo.raw}{/textarea}
 		
-		{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
-
 		<div class="row">
-			{formlabel label="Share Editing of This Map With Registered Users" for="share_edit"}
+			{formlabel label="Allow Registered Users to Attach Maptypes and Sets" for="allow_children"}
 				{forminput}
-					<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
-					{formhelp note="Checking this box will allow any registered user to edit the parameters of this map. This is good if you want this map to be editable like a wiki page. NOTE: This does NOT effect if users can add markers, polylines, polygons, or other data to this map."}
+					<input type="checkbox" name="allow_children" value="y" {if $childrenAllowed}checked="checked"{/if} />
+					{formhelp note="Checking this box will allow any registered user to add maptypes and sets of markers, polylines, polygons to this map. This is good if you want this map to be editable like a wiki page."}
 				{/forminput}
 		</div>
+		
+		<div class="row">
+			{formlabel label="Allow Registered Users To Edit" for="share_edit"}
+				{forminput}
+					<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
+					{formhelp note="Checking this box will allow any registered user to edit the parameters of this map, like its center point, title, body text, etc. This is good if you want this map to be editable like a wiki page. NOTE: This does NOT effect if users can add markers, polylines, polygons, or other data to this map."}
+				{/forminput}
+		</div>
+		{/if}
+		
+		{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
 		
 		<div class="row submit">
 			<input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap( this.form );" /> 

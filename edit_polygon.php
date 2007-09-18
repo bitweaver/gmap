@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.6 2007/09/18 19:18:09 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.7 2007/09/18 20:40:15 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -19,11 +19,29 @@ $gBitSystem->verifyPackage('gmap' );
 // Get the polygon for specified gpolygon_id
 require_once(GMAP_PKG_PATH.'lookup_polygon_inc.php' );
 
+$gBitSystem->setFormatHeader( 'center_only' );
+
 // Now check permissions to access the polygon
 if( $gContent->isValid() ) {
 	$gContent->verifyEditPermission();
 } else {
 	$gBitSystem->verifyPermission( 'p_gmap_overlay_edit' );
+	
+	/* if we are passed a set_id the user is trying to add an overlay to a set.
+	   if they dont have the right, then fuck it.
+	   in the future it might be nice to send this back as an alert to display 
+	   so that the form does not get erased and their work is not lost, but this 
+	   should prevent the form from even loading. -wjames5
+	*/
+	if ( isset($_REQUEST['set_id']) ){
+		require_once(GMAP_PKG_PATH.'BitGmapPolygonSet.php' );
+		$set = new BitGmapPolygonSet( $_REQUEST['set_id'] );
+		$set->load();
+		if ( $set->isValid() && !$set->hasUserPermission( 'p_gmap_attach_children' ) ){
+			$gBitSystem->fatalError( tra( "You can not add polygons to this polygon set!" ));
+			die;
+		}
+	}	
 }
 
 //Preview mode is handled by javascript on the client side.

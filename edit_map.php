@@ -12,12 +12,13 @@ $gBitSystem->verifyPackage('gmap' );
 // Get the map for specified gmap_id
 require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 
-// Now check permissions to access this page
 $gBitSystem->setFormatHeader( 'center_only' );
+
+// Now check permissions to access this page
 if( $gContent->isValid() ) {
 	$gContent->verifyEditPermission();
 } else {
-	$gBitSystem->verifyPermission( 'p_gmap_edit' );
+	$gBitSystem->verifyPermission( 'p_gmap_edit' );	
 }
 
 
@@ -32,6 +33,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		if( $gContent->store( $_REQUEST ) ) {
 			if ( $gContent->hasAdminPermission() ){
 				$gContent->setEditSharing( $_REQUEST );
+				$gContent->setAllowChildren( $_REQUEST );
 			}    
 			$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
 			$gContent->load();
@@ -78,6 +80,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		}
 
 		$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
+		$gBitSmarty->assign( 'childrenAllowed', $gContent->childrenAllowed() );
 		$gBitSmarty->assign_by_ref('mapInfo', $map);
 		$gBitSmarty->assign_by_ref('mapTypes', $gContent->mMapTypes);
 		$gBitSystem->display('bitpackage:gmap/edit_map.tpl', null, 'center_only');
