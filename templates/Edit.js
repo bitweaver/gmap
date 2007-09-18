@@ -1074,6 +1074,212 @@ BitMap.Edit.prototype = {
 	  BitMap.hide('edit-polylinestyles-cancel');
 	},
 	
+
+	/*******************
+	 *
+	 * POLYGON FORM FUNCTIONS
+	 *
+	 *******************/
+
+	"editPolygonSets": function(){
+		BitMap.show('edit-polygons-menu');
+		
+		if (this.Map.polygonsets.length > 0){
+			// We assume editPolygonSets has been called before and remove 
+			// any previously existing sets from the UI
+			for (var n=0; n<this.Map.polygonsets.length; n++) {
+				if (this.Map.polygonsets[n]!= null){
+					var getElem = "edit-polygonset_"+n;
+					if ( $(getElem) ) {
+						$('edit-polygonsets-table').removeChild($(getElem));
+					}
+				}
+			}
+			//Add a tool bar for each PolygonSet
+			for (var n=0; n<this.Map.polygonsets.length; n++) {
+				var set = $('edit-polygonset').cloneNode(true);
+				set.id = "edit-polygonset-"+n;
+				set.getElementsByTagName("span").item(0).innerHTML = this.Map.polygonsets[n].name;
+				set.getElementsByTagName("a").item(0).href = "javascript:BitMap.EditSession.editPolygonSet("+n+");";
+				set.getElementsByTagName("a").item(1).href = "javascript:BitMap.EditSession.editPolygons("+n+");";
+				$('edit-polygonsets-table').appendChild(set);
+				BitMap.show('edit-polygonset-'+n);
+			}
+		}
+		BitMap.show('edit-polygonsets-table');
+		BitMap.show('edit-polygonsets-cancel');		
+	},
+		
+	"cancelEditPolygonSets": function(){
+		//rescue our form tables lest we destroy them by accident
+		this.canceledit('edit-polygons-table');
+		var elm = $('edit-polygons-table');
+		document.body.appendChild(elm);
+		this.canceledit('edit-polygonset-options-table');
+		var elm = $('edit-polygonset-options-table');
+		document.body.appendChild(elm);
+		
+		this.canceledit('edit-polygons-menu');
+		this.canceledit('edit-polygonsets-table');
+		this.canceledit('edit-polygonsets-cancel');
+		
+		this.removeAssistant(); 
+		this.canceledit('editerror');
+	},
+	  
+	"editPolygonSet": function(i){
+		this.cancelEditPolygons();
+		//null is a new set
+		if ( i == null ){
+			this._setIdRef = null;
+			this.editObjectN = null;
+			if( !$('edit-polygonset-new') ){
+				var newPolygonSet = $('edit-polygonset').cloneNode(true);
+				newPolygonSet.id = "edit-polygonset-new";
+				newPolygonSet.getElementsByTagName("span").item(0).innerHTML = "New Polygon Set";
+				var tdtags = newPolygonSet.getElementsByTagName("td");
+				tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
+				$('edit-polygons-menu').appendChild(newPolygonSet);
+				
+				$('edit-polygonset-new').appendChild( $('edit-polygonset-options-table') );
+				BitMap.show('edit-polygonset-new');
+				BitMap.show('edit-polygonset-options-table');
+			}
+		}else{
+			this.editObjectN = this._setIndexRef = i;
+			this.cancelNewPolygonSet();
+			this._setIdRef = this.Map.polygonsets[i].set_id;
+			var optionsTable = $('edit-polygonset-options-table');
+			var target = $('edit-polygonset-'+i);
+			target.insertBefore(optionsTable, target.childNodes[2]);  
+		}
+
+		//set set menu highlighting
+		var a = (i != null)?'remove':'add';
+		if($('edit-polygonset-new')){
+			BitMap.Utl.JSCSS(a, $('edit-polygonset-new'), 'edit-selected');
+		}
+		this.toggleMenuOptsStyles( "polygonset", this.Map.polygonsets.length, i, 'edit-selected' );
+		
+		//get the edit form
+		doSimpleXMLHttpRequest("edit_polygonset.php", {set_id:this._setIdRef}).addCallback( bind(this.editPolygonSetCallback, this) );
+	},
+
+	"editPolygonSetCallback": function(rslt){
+		var f = $('polygonset-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
+		if (this._setIdRef == null) { BitMap.hide('edit-polygonset-options-actions'); }else{ BitMap.show('edit-polygonset-options-actions'); }
+		BitMap.show('edit-polygonsets-table');
+		BitMap.show('edit-polygonset-options-table');
+	},
+	
+	
+	"cancelEditPolygonSet": function(){
+		this.cancelNewPolygonSet();
+		this.canceledit('edit-polygonset-options-table');
+		this.canceledit('editerror');
+		this.toggleMenuOptsStyles( "polygonset", this.Map.polygonsets.length, null, 'edit-selected' );
+	},
+	
+	
+	"cancelNewPolygonSet": function(){
+	  if( $('edit-polygonset-new') ){ BitMap.hide('edit-polygonset-new'); }
+	},
+	
+	"editPolygons": function(i){
+		//make sure the new polygon set form is closed
+		this.cancelNewPolygonSet();
+		
+		this.toggleMenuOptsStyles( "polygonset", this.Map.polygonsets.length, i, 'edit-selected' );
+		
+		//make sure the polygon set options form is closed
+		this.cancelEditPolygonSet();
+
+		//get the set id of polygons we are editing		
+		var set_id = this.Map.polygonsets[i].set_id;    
+
+		//set some constants
+		var polygonTable = $('edit-polygons-table');
+		var polygonLinksList = $('edit-polygons-list');
+		var polygonLinks = polygonLinksList.getElementsByTagName("li");
+		
+		//Clear all the existing polygons listed  
+		//We leave the first two, the first is the model we clone, the second if for a new polygon
+		var count = polygonLinks.length;
+		for (n=count-1; n>1; n--){
+			polygonLinksList.removeChild(polygonLinks.item(n));
+		}
+		$('edit-polygonlink-new-a').href = "javascript:BitMap.EditSession.editPolygon(null, "+i+");";
+		
+		//For each polygon in our set, add a link
+		var firstselected = false;
+		for (var n=0; n<this.Map.polygons.length; n++) {
+			var p = this.Map.polygons[n];
+			if (p.set_id == set_id){
+				var li = polygonLinks.item(0).cloneNode(true);
+				li.id = 'edit-polygonlink-'+n;
+				var link = li.getElementsByTagName("a").item(0);
+				link.href = "javascript:BitMap.EditSession.editPolygon("+n+","+i+")";
+				link.innerHTML = p.name;
+				polygonLinksList.appendChild(li);
+				li.style.display = "block";
+				if (firstselected != true){
+					//else ajax up a form with the info from the first polygon in the list
+					this.editPolygon(n, i);
+					firstselected = true;
+				}
+			}
+		}		
+		if (firstselected == false){
+			//if the list is 0 - ajax up an empty form
+			this.editPolygon(null, i);
+		}
+		//We assume it is not visible and make it so
+		BitMap.show('edit-polygons-table');
+	},
+	
+	
+	"editPolygon": function(m_i, s_i){
+		var id = null
+		this._setIndexRef = s_i;
+		this._setIdRef = this.Map.polygonsets[s_i].set_id;
+		this._polygonIndexRef = m_i;
+
+		//move the form container to the correct set div
+		if ( m_i != null ){
+			var m = this.Map.polygons[m_i];
+			this._polygonIdRef = id = m.polygon_id;
+			BitMap.show('edit-polygon-actions');
+		}
+		var polygonsTable = $('edit-polygons-table');
+		$('edit-polygonset-'+s_i).appendChild(polygonsTable);
+
+		//hilight selected polygon link - unhilight others
+		var a = (m_i != null)?'remove':'add';
+		BitMap.Utl.JSCSS(a, $('edit-polygonlink-new'), 'edit-select');
+		this.toggleMenuOptsStyles( "polygonlink", this.Map.polygons.length, m_i, 'edit-select' );
+		this.toggleMenuOptsStyles( "polygonset", this.Map.polygonsets.length, s_i, 'edit-selected' );
+		
+		//get the edit form
+		doSimpleXMLHttpRequest("edit_polygon.php", {polygon_id:id, set_id:this._setIdRef}).addCallback( bind(this.editPolygonCallback, this) );
+	},
+	
+	"editPolygonCallback": function(rslt){
+		var polygonForm = $('polygon-form');
+		polygonForm.innerHTML = rslt.responseText;
+		this.executeJavascript($('polygonForm'));
+		setupAllTabs();
+		BitMap.show('edit-polygons-table');		
+ 	},
+	
+	"cancelNewPolygon": function(){
+		this.canceledit('edit-polygon-new');
+	},
+	
+	"cancelEditPolygons": function(){
+		BitMap.hide('edit-polygons-table');
+	},
 	
 	
 	
@@ -1263,7 +1469,51 @@ BitMap.Edit.prototype = {
 		doSimpleXMLHttpRequest(str).addCallback( bind(this.updatePolylineStyle, this) ); 
 	 },
 		 
-	
+	 "storePolygon": function(f){
+		this.showSpinner("Saving Polygon...");
+		var str = "edit_polygon.php?" + queryString(f);
+		this._setIdRef = f.set_id.value;
+		this.editObjectN = this._polygonIndexRef;
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updatePolygon, this) ); 
+	 },
+	 
+	 "removePolygon": function(f){
+		this.showSpinner("Removing Polygon...");
+		this._setIdRef = f.set_id.value;
+		this.editPolygonId = f.polygon_id.value;
+		var str = "edit_polygon.php?set_id=" + this._setIdRef + "&polygon_id=" + this.editPolygonId + "&remove_polygon=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygon, this) ); 
+	 },
+
+	 "expungePolygon": function(f){
+		this.showSpinner("Deleting Polygon...");
+		this._setIdRef = f.set_id.value;
+		this.editPolygonId = f.polygon_id.value;
+		var str = "edit_polygon.php?polygon_id=" + this.editPolygonId + "&expunge_polygon=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygon, this) ); 
+	 },
+
+	 "storePolygonSet": function(f){
+		this.showSpinner("Saving Polygonset...");
+		var str = "edit_polygonset.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
+		//this._setIdRef = f.set_id.value;
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updatePolygonSet, this) ); 
+	 },
+
+	 "removePolygonSet": function(f){
+		this.showSpinner("Removing Polygonset...");
+		this._setIdRef = f.set_id.value;
+		var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polygonset=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) ); 
+	 },
+
+	 "expungePolygonSet": function(f){
+		this.showSpinner("Deleting Polygonset...");
+		this._setIdRef = f.set_id.value;
+		var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&expunge_polygonset=true";
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) ); 
+	 },
+	 	
 	/*******************
 	 *
 	 * POST Edit Callbacks
@@ -1937,10 +2187,6 @@ BitMap.Edit.prototype = {
 		var dt = xml.getElementsByTagName('points_data');
 		var points_data = dt[0].firstChild.nodeValue;
 		p.points_data = points_data.split(",");
-		var bt = xml.getElementsByTagName('border_text');
-		if (bt[0].firstChild != null){p.border_text = bt[0].firstChild.nodeValue;}else{p.border_text = "";}	
-		var zi = xml.getElementsByTagName('zindex');
-		p.zindex = parseInt(zi[0].firstChild.nodeValue);			
 		
 		if ( this.editObjectN == null){
 			p.set_id = this.Map.polylinesets[s].set_id;
@@ -2113,7 +2359,203 @@ BitMap.Edit.prototype = {
 		this.editPolylines();
 	},
 
+	"updatePolygon": function(rslt){
+	    var xml = rslt.responseXML.documentElement;							
+		var n_i = this.editObjectN;
+		var s_i = this._setIndexRef;
+		var p;
+		if ( n_i == null){
+			var n_i = this.Map.polygons.length;
+			p = this.Map.polygons[n_i] = [];
+			p.array_n = n_i;
+		}else{
+			p = this.Map.polygons[n_i];
+		}
 		
+		//shorten var names
+		var id = xml.documentElement.getElementsByTagName('polygon_id');			
+		p.polygon_id = parseInt(id[0].firstChild.nodeValue);
+		var nm = xml.documentElement.getElementsByTagName('name');
+		p.name = nm[0].firstChild.nodeValue;
+		var dt = xml.documentElement.getElementsByTagName('points_data');
+		var points_data = dt[0].firstChild.nodeValue;
+		p.points_data = points_data.split(",");
+		var cc = xml.documentElement.getElementsByTagName('circle_center');
+		var circle_center = cc[0].firstChild.nodeValue;
+		p.circle_center = circle_center.split(",");
+		var rd = xml.documentElement.getElementsByTagName('radius');
+		p.radius = rd[0].firstChild.nodeValue;
+		
+		if ( this.editObjectN == null){
+			p.set_id = this.Map.polygonsets[s].set_id;
+			p.style_id = this.Map.polygonsets[s].style_id;
+			p.plot_on_load = this.Map.polygonsets[s].plot_on_load;
+			p.side_panel = this.Map.polygonsets[s].side_panel;
+			p.explode = this.Map.polygonsets[s].explode;
+			p.array_n = parseInt(n);
+		}else{
+			this.Map.map.removeOverlay(p.polygon);
+		}
+		
+		//create polygon
+		this.Map.attachPolygon(n_i);
+		this.removeAssistant();
+		this.hideSpinner("DONE!");
+		this.editPolygons(s_i);
+		this.editPolygon(n_i);
+	},
+
+	"updatePolygonSet": function(rslt){
+		var xml = rslt.responseXML.documentElement;
+		var n_i = this.editObjectN;
+		var s;
+	    if ( n_i == null){
+			n_i = this.Map.polygonsets.length;
+			this.Map.polygonsets[n_i] = [];
+			s = this.Map.polygonsets[n_i];
+		}else{
+			s = this.Map.polygonsets[n_i];
+			var oldStyle = s.style_id;
+		}
+
+		//shorten var names
+		var id = xml.getElementsByTagName('set_id');			
+		s.set_id = parseInt(id[0].firstChild.nodeValue);
+		var nm = xml.getElementsByTagName('name');
+		s.name = nm[0].firstChild.nodeValue;
+		var dc = xml.getElementsByTagName('description');
+		s.description = dc[0].firstChild.nodeValue;
+		var sy = xml.getElementsByTagName('style_id');
+		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
+		var plsy = xml.getElementsByTagName('polylinestyle_id');
+		s.polylinestyle_id = parseInt(plsy[0].firstChild.nodeValue);			
+
+		this.hideSpinner("DONE!");
+
+		if (this.editObjectN == null){
+			BitMap.hide('edit-polygonset-new');
+			// update the sets menus
+			this.cancelEditPolygonSets();
+			this.editPolygonSets();
+			this.editPolygons(n_i);
+		}else{
+			if ( oldStyle != s.style_id ) {
+				a = this.Map.polygons;
+				//if the length of the array is > 0
+				if (a.length > 0){
+					//loop through the array
+					for(var n=0; n<a.length; n++){
+						//if the array item is not Null
+						if (a[n]!= null && a[n].polygon != null && a[n].set_id == s.set_id){
+							a[n].style_id = s.style_id;
+							//unload the polygon
+							this.Map.map.removeOverlay( a[n].polygon );
+							//create polygon
+							this.attachPolygon(n);
+						}
+					}
+				}
+			}
+			// update the sets menus
+			this.editPolygonSet(this.editObjectN);
+		}
+	},
+	
+	"updatePolygonStyle": function(rslt){
+		var xml = rslt.responseXML.documentElement;
+		
+		//the style data we are changing
+		var n_i = this.editObjectN;
+	    if ( n_i != null){
+			var n_i = this.Map.polygonstyles.length;
+			this.Map.polygonstyles[n_i] = [];
+			var s = this.Map.polygonstyles[n_i];
+	    }else{
+			var s = this.Map.polygonstyles[n_i];
+		}
+
+		// assign polygonstyle values data array			
+		var id = xml.getElementsByTagName('style_id');			
+		s.style_id = parseInt( id[0].firstChild.nodeValue );
+		var nm = xml.getElementsByTagName('name');			
+		s.name = nm[0].firstChild.nodeValue;
+		var cl = xml.getElementsByTagName('color');			
+		s.color = cl[0].firstChild.nodeValue;
+		var op = xml.getElementsByTagName('opacity');			
+		s.opacity = op[0].firstChild.nodeValue;
+
+		this.hideSpinner("DONE!");
+		// update the styles menus
+		this.editPolygonStyles();
+		this.editPolygonStyle(n_i);
+		
+		if ( this.editObjectN != null){
+			//for each polygon
+			var a = this.Map.polygons;
+			//if the length of the array is > 0
+			if (a.length > 0){
+			//loop through the array
+				for(var n=0; n<a.length; n++){
+				//if the array item is not Null
+					if (a[n]!= null && a[n].polygon != null && a[n].style_id == s.style_id){
+							this.Map.map.removeOverlay( a[n].polygon );
+					this.Map.attachPolygon(n);
+					}
+				}
+			}
+	
+			//for each polygon
+			var b = this.Map.polygons;
+			//if the length of the array is > 0
+			if (b.length > 0){
+			//loop through the array
+				for(i=0; i<b.length; i++){
+				//if the array item is not Null
+					if (b[i]!= null && b[i].polygon != null && b[i].style_id == s.style_id){
+							this.Map.map.removeOverlay( b[i].polygon );
+						this.Map.attachPolygon(i);
+					}
+				}
+			}
+		}
+	 },	
+
+	"updateRemovePolygon": function(){
+		for (var i=0; i<this.Map.polygons.length; i++){
+			if ( Map.Polygons[i] != null && this.Map.polygons[n].polygon != null && this.Map.polygons[i].polygon_id == this.editPolygonId ){
+				this.Map.map.removeOverlay(this.Map.polygons[i].polygon);
+				this.Map.polygons[i].polygon = null;
+				this.Map.polygons[i] = null;
+			}
+		}
+		this.hideSpinner("DONE!");
+		this.editPolygons();
+		this.editPolygonSet(this._setIdRef);
+	},
+
+	//this needs special attention
+	"updateRemovePolygonSet": function(){
+	  	for (var n=0; n<this.Map.polygons.length; n++){
+	  		if ( ( this.Map.polygons[n] != null ) && ( this.Map.polygons[n].set_id == this.editSetId ) && ( this.Map.polygons[n].polygon != null ) ){
+	  			this.Map.map.removeOverlay(Map.Polygons[n].polygon);
+					this.Map.polygons[n].polygon = null;
+	  			this.Map.polygons[n] = null;
+	  		}
+	  	}
+		for (var s=0; s<Map.PolygonSets.length; s++){
+	  		if ( ( this.Map.polygonsets[s] != null ) && ( this.Map.polygonsets[s].set_id == this.editSetId ) ){
+	      		var getElem = "polygonset_"+this.Map.polygonsets[s].set_id;
+	      		if ( $(getElem) ) {
+	          		var extraPolygonForm = $(getElem);
+	      			$('editpolygonform').removeChild(extraPolygonForm);
+	      		}
+					this.Map.polygonsets[s].set_id = null;
+	  			this.Map.polygonsets[s] = null;
+	  		}
+		}
+		this.hideSpinner("DONE!");
+		this.editPolygons();
+	},		
 	/******************
 	 *
 	 *  Editing Tools
