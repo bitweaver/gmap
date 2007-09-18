@@ -54,10 +54,10 @@
 			</div>
 			
 			<div class="row">
-				{formlabel label="Share Editing of This Marker" for="share_edit"}
+				{formlabel label="Share Editing of This Marker With Registered Users" for="share_edit"}
 					{forminput}
-						<input type="checkbox" name="share_edit" value="y" {if $markerEditShared}checked="checked"{/if} />
-						{formhelp note=""}
+						<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
+						{formhelp note="Checking this box will allow any registered user to edit this marker. This is good if you want this marker to be editable like a wiki page."}
 					{/forminput}
 			</div>
 				

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.4 2007/09/17 22:17:58 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.5 2007/09/18 16:24:54 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -34,7 +34,9 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_polygon"])) {
     if( $gContent->store( $_REQUEST ) ) {		
-		$gContent->load();
+    	if ( $gContent->verifyAdminPermission() ){
+    		$gContent->setEditSharing( $_REQUEST );
+		}    
 		$gBitSmarty->assign_by_ref('polygonInfo', $gContent->mInfo);
 	}
 //Check if this to remove from a set, or to delete completely
@@ -52,6 +54,7 @@ if (!empty($_REQUEST["save_polygon"])) {
 	if (isset($_REQUEST["set_id"])){
 		$polygon['set_id'] = $_REQUEST["set_id"];
 	}
+	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign_by_ref('polygonInfo', $polygon);
 	$gBitSystem->display('bitpackage:gmap/edit_polygon.tpl', NULL, 'center_only');
 	die;

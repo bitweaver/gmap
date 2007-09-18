@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.16 2007/09/17 14:03:19 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.17 2007/09/18 16:24:54 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -34,7 +34,9 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_polyline"])) {
     if( $gContent->store( $_REQUEST ) ) {		
-		$gContent->load();
+    	if ( $gContent->verifyAdminPermission() ){
+    		$gContent->setEditSharing( $_REQUEST );
+		}    
 		$gBitSmarty->assign_by_ref('polylineInfo', $gContent->mInfo);
 	}
 //Check if this to remove from a set, or to delete completely
@@ -52,6 +54,7 @@ if (!empty($_REQUEST["save_polyline"])) {
 	if (isset($_REQUEST["set_id"])){
 		$polyline['set_id'] = $_REQUEST["set_id"];
 	}
+	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign_by_ref('polylineInfo', $polyline);
 	$gBitSystem->display('bitpackage:gmap/edit_polyline.tpl', NULL, 'center_only');
 	die;

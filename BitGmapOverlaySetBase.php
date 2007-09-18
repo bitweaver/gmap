@@ -192,5 +192,22 @@ class BitGmapOverlaySetBase extends LibertyContent {
 
 		return $ret;
 	}
+	
+	function setEditSharing(&$pParamHash){
+		if ( isset( $pParamHash['share_edit'] ) ){
+			$revokeSharing = FALSE;
+		}else{
+			$revokeSharing = TRUE;
+		}
+		$this->storePermission( 3, 'p_gmap_overlayset_edit', $revokeSharing );
+	}
+	
+	function isEditShared(){
+		$ret = FALSE;
+		if ( isset( $this->mPerms['p_gmap_overlayset_edit'] ) && $this->mPerms['p_gmap_overlayset_edit']['group_id'] == 3 && $this->mPerms['p_gmap_overlayset_edit']['is_revoked'] != "y"){
+			$ret = TRUE;
+		}
+		return $ret;
+	}	
 }
 ?>

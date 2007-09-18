@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.22 2007/09/18 16:03:56 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.23 2007/09/18 16:24:53 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -35,13 +35,8 @@ $format = 'xml';
 if (!empty($_REQUEST["save_marker"])) {
     if( $gContent->store( $_REQUEST ) ) {
     	if ( $gContent->verifyAdminPermission() ){
-			if ( isset( $_REQUEST['share_edit'] ) ){
-				$revokeSharing = FALSE;
-			}else{
-				$revokeSharing = TRUE;
-			}
-			$gContent->storePermission( 3, 'p_gmap_overlay_edit', $revokeSharing );
-		}
+    		$gContent->setEditSharing( $_REQUEST );
+		}    
 		$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
 		$gBitSmarty->assign_by_ref('markerInfo', $gContent->mInfo);
 	}
@@ -60,10 +55,7 @@ if (!empty($_REQUEST["save_marker"])) {
 	if (isset($_REQUEST["set_id"])){
 		$marker['set_id'] = $_REQUEST["set_id"];
 	}
-	vd($gContent->mPerms['p_gmap_overlay_edit']);
-	if ( isset( $gContent->mPerms['p_gmap_overlay_edit'] ) && $gContent->mPerms['p_gmap_overlay_edit']['group_id'] == 3 && $gContent->mPerms['p_gmap_overlay_edit']['is_revoked'] != "y"){
-		$gBitSmarty->assign( 'markerEditShared', TRUE );
-	}
+	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign_by_ref('markerInfo', $marker);
 	$gBitSystem->display('bitpackage:gmap/edit_marker.tpl', NULL, 'center_only');
 	die;

@@ -26,6 +26,9 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_markerset"])) {
     if( $gContent->store( $_REQUEST ) ) {
+    	if ( $gContent->verifyAdminPermission() ){
+    		$gContent->setEditSharing( $_REQUEST );
+		}    
 		$gBitSmarty->assign_by_ref('markersetInfo', $gContent->mInfo);
 	}
 //Check if this to remove from a map, or to delete completely
@@ -40,6 +43,7 @@ if (!empty($_REQUEST["save_markerset"])) {
 }else{
 	$gContent->invokeServices( 'content_edit_function' );
 	$markerset = $gContent->mInfo;
+	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign_by_ref('markersetInfo', $markerset);
 	$gBitSystem->display('bitpackage:gmap/edit_markerset.tpl', NULL, 'center_only');
 	die;

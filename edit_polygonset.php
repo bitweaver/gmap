@@ -26,6 +26,9 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_polygonset"])) {
     if( $gContent->store( $_REQUEST ) ) {
+    	if ( $gContent->verifyAdminPermission() ){
+    		$gContent->setEditSharing( $_REQUEST );
+		}    
 		$gBitSmarty->assign_by_ref('polygonsetInfo', $gContent->mInfo);
 	}
 //Check if this to remove from a map, or to delete completely
@@ -40,6 +43,7 @@ if (!empty($_REQUEST["save_polygonset"])) {
 }else{
 	$gContent->invokeServices( 'content_edit_function' );
 	$polygonset = $gContent->mInfo;
+	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign_by_ref('polygonsetInfo', $polygonset);
 	$gBitSystem->display('bitpackage:gmap/edit_polygonset.tpl', NULL, 'center_only');
 	die;
