@@ -195,11 +195,10 @@ class BitGmapOverlaySetBase extends LibertyContent {
 	
 	function setEditSharing(&$pParamHash){
 		if ( isset( $pParamHash['share_edit'] ) ){
-			$revokeSharing = FALSE;
+			$this->storePermission( 3, 'p_gmap_overlayset_edit' );
 		}else{
-			$revokeSharing = TRUE;
+			$this->removePermission( 3, 'p_gmap_overlayset_edit' ); 
 		}
-		$this->storePermission( 3, 'p_gmap_overlayset_edit', $revokeSharing );
 	}
 	
 	function isEditShared(){

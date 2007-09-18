@@ -1627,11 +1627,10 @@ class BitGmap extends LibertyAttachable {
 	
 	function setEditSharing(&$pParamHash){
 		if ( isset( $pParamHash['share_edit'] ) ){
-			$revokeSharing = FALSE;
+			$this->storePermission( 3, 'p_gmap_edit' );
 		}else{
-			$revokeSharing = TRUE;
+			$this->removePermission( 3, 'p_gmap_edit' ); 
 		}
-		$this->storePermission( 3, 'p_gmap_edit', $revokeSharing );
 	}
 	
 	function isEditShared(){
