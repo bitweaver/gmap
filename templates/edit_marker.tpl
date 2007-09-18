@@ -52,6 +52,14 @@
 						{formhelp note=""}
 					{/forminput}
 			</div>
+			
+			<div class="row">
+				{formlabel label="Share Editing of This Marker" for="share_edit"}
+					{forminput}
+						<input type="checkbox" name="share_edit" value="y" {if $markerEditShared}checked="checked"{/if} />
+						{formhelp note=""}
+					{/forminput}
+			</div>
 				
 			{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
 				
