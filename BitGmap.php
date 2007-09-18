@@ -1076,100 +1076,6 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
-	//@todo -  vertually same as verifyMarkerSet - consolidate
-	function verifyPolygonSet( &$pParamHash ) {
-
-		$pParamHash['polygonset_store'] = array();
-		$pParamHash['keychain_store'] = array();
-		$pParamHash['keychain_update'] = array();
-		$pParamHash['keychain_ids'] = array();
-
-		if( !empty( $pParamHash['name'] ) ) {
-			$pParamHash['polygonset_store']['name'] = $pParamHash['name'];
-		}
-
-		if( !empty( $pParamHash['description'] ) ) {
-			$pParamHash['polygonset_store']['description'] = $pParamHash['description'];
-		}
-
-		if( isset( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
-			$pParamHash['polygonset_store']['style_id'] = $pParamHash['style_id'];
-		}
-
-		if( isset( $pParamHash['polylinestyle_id'] ) && is_numeric( $pParamHash['polylinestyle_id'] ) ) {
-			$pParamHash['polygonset_store']['polylinestyle_id'] = $pParamHash['polylinestyle_id'];
-		}
-
-		// set values for updating the map set keychain	if its a new set
-		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
-			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
-			$pParamHash['keychain_ids']['gmap_id'] = $pParamHash['gmap_id'];
-		}
-
-		if( !empty( $pParamHash['plot_on_load'] ) ) {
-			$pParamHash['keychain_store']['plot_on_load'] = $pParamHash['plot_on_load'];
-			$pParamHash['keychain_update']['plot_on_load'] = $pParamHash['plot_on_load'];
-		}else{
-			$pParamHash['keychain_store']['plot_on_load'] = 'false';
-			$pParamHash['keychain_update']['plot_on_load'] = 'false';
-		}
-
-		if( !empty( $pParamHash['side_panel'] ) ) {
-			$pParamHash['keychain_store']['side_panel'] = $pParamHash['side_panel'];
-			$pParamHash['keychain_update']['side_panel'] = $pParamHash['side_panel'];
-		}else{
-			$pParamHash['keychain_store']['side_panel'] = 'false';
-			$pParamHash['keychain_update']['side_panel'] = 'false';
-		}
-
-		if( !empty( $pParamHash['explode'] ) ) {
-			$pParamHash['keychain_store']['explode'] = $pParamHash['explode'];
-			$pParamHash['keychain_update']['explode'] = $pParamHash['explode'];
-		}else{
-			$pParamHash['keychain_store']['explode'] = 'false';
-			$pParamHash['keychain_update']['explode'] = 'false';
-		}
-
-		$pParamHash['keychain_store']['cluster'] = 'false';
-		$pParamHash['keychain_update']['cluster'] = 'false';
-		$pParamHash['keychain_store']['set_type'] = 'polygons';
-		$pParamHash['keychain_ids']['set_type'] = 'polygons';
-
-		return( count( $this->mErrors ) == 0 );		
-		
-	}
-	
-	/**
-	* This function stores a polygon set
-	**/
-	function storePolygonSet( &$pParamHash ) {
-		$return = FALSE;
-		if( $this->verifyPolygonSet( $pParamHash ) ) {
-			$this->mDb->StartTrans();
-			// store the posted changes
-			if ( !empty( $pParamHash['set_id'] ) ) {
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygon_sets", $pParamHash['polygonset_store'], array( "set_id" => $pParamHash['set_id'] ) );
-				 // and we update the set keychain on map_id.
-				 $pParamHash['keychain_ids']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_update'], $pParamHash['keychain_ids'] );
-			}else{
-				 $pParamHash['set_id'] = $this->mDb->GenID( 'gmaps_polygon_sets_set_id_seq' );
-				 $pParamHash['polygonset_store']['set_id'] = $pParamHash['set_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polygon_sets", $pParamHash['polygonset_store'] );
-				 // if its a new polylineset we also get a set_id for the keychain and automaticallly associate it with a map.
-				 $pParamHash['keychain_store']['set_id'] = $pParamHash['polygonset_store']['set_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_store'] );
-			}
-			$this->mDb->CompleteTrans();
-
-			// re-query to confirm results
-			$result = $this->getPolygonSetData($pParamHash['set_id']);
-		}
-		return $result;
-	}
-
-
-
 
 	function verifyMarkerStyle( &$pParamHash ) {
 
@@ -1602,41 +1508,6 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	/**
-	* This function deletes a polygon set
-	**/
-	function expungePolygonSet(&$pParamHash) {
-		$ret = FALSE;
-
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-    		$this->mDb->StartTrans();
-    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polygon_sets` 
-    			WHERE `set_id` =?";
-    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
-    		$this->mDb->CompleteTrans();
-  			
-  			// delete all references to the polygon set from the polygon keychain
-  			$this->mDb->StartTrans();
-    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_polygon_keychain` 
-    			WHERE `set_id` =?";
-    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
-    		$this->mDb->CompleteTrans();
-
-  			// delete all references to the polygon set from the map sets keychain
-  			$this->mDb->StartTrans();
-    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
-    			WHERE `set_id` =?
-          		AND `set_type` = 'polygons'";					
-  			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
-  			$this->mDb->CompleteTrans();
-    		$ret = TRUE;
-		}
-
-		return $ret;
-	}	
-
-
-
 	//@todo all these - question - what to do if it is being used by sets? step through and delete? don't delete?:
 	/**
 	* This function deletes a marker style
@@ -1691,46 +1562,7 @@ class BitGmap extends LibertyAttachable {
 		return $ret;
 	}
 	
-
-
-	//@todo - this and the remove function look identical to the removeMarkerSetFromMap function - consolidate - perhaps with removeMapTypeFromMap too
-	function verifyPolygonSetRemove( &$pParamHash ) {
 	
-		$pParamHash['polygonset_remove'] = array();
-
-		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
-			$pParamHash['polygonset_remove']['gmap_id'] = $pParamHash['gmap_id'];
-		}
-		
-		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
-			$pParamHash['polygonset_remove']['set_id'] = $pParamHash['set_id'];
-		}
-		
-		return( count( $this->mErrors ) == 0 );
-				
-	}	
-	/**
-	* This function removes a polygon set from a map
-	**/
-	function removePolygonSetFromMap(&$pParamHash) {
-		$ret = FALSE;
-
-  		if( $this->verifyPolygonSetRemove( $pParamHash ) ) {
-  			$this->mDb->StartTrans();
-  			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
-  			WHERE `gmap_id` = ?
-  			AND `set_id` =?
-        	AND `set_type` = 'polygons'";
-  			$result = $this->mDb->query( $query, $pParamHash['polygonset_remove'] );
-  			$ret = TRUE;
-  			$this->mDb->CompleteTrans();
-  		}
-
-		return $ret;
-	}
-
-	
-
 	
 	/**
 	* Make sure gmap is loaded and valid
