@@ -79,6 +79,15 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 				{formhelp note=""}
 			{/forminput}
 	</div>
+
+	<div class="row">
+		{formlabel label="Share Editing of This Set With Registered Users" for="share_edit"}
+			{forminput}
+				<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
+				{formhelp note="Checking this box will allow any registered user to edit the parameters of this set - this does not effect if they can add markers to this set."}
+			{/forminput}
+	</div>
+
 	<div class="row submit">
 		<input type="button" name="savenewmarkerset" value="Save" onclick="javascript:BitMap.EditSession.storeMarkerSet( this.form );"/>
 		<input type="button" name="closemarkersetform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSet()"/>

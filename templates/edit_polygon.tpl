@@ -64,6 +64,15 @@
 				{formhelp note=""}
 			{/forminput}
 	</div>
+	
+	<div class="row">
+		{formlabel label="Share Editing of This Polygon With Registered Users" for="share_edit"}
+			{forminput}
+				<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
+				{formhelp note="Checking this box will allow any registered user to edit this polygon. This is good if you want this polygon to be editable like a wiki page."}
+			{/forminput}
+	</div>
+	
 	<div class="row submit">
 		<input type="button" name="save_polygon_btn" value="Save" onclick="javascript:BitMap.EditSession.storePolygon( this.form );">
 	</div>
