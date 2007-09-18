@@ -15,8 +15,6 @@ require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 // Now check permissions to access this page
 $gBitSystem->setFormatHeader( 'center_only' );
 if( $gContent->isValid() ) {
-	vd('isValid - next call verifyEditPermissions - we want to check against our mEditContentPerm which is:');
-	vd($gContent->mEditContentPerm);
 	$gContent->verifyEditPermission();
 } else {
 	$gBitSystem->verifyPermission( 'p_gmap_edit' );
