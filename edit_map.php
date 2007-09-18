@@ -15,6 +15,8 @@ require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 // Now check permissions to access this page
 $gBitSystem->setFormatHeader( 'center_only' );
 if( $gContent->isValid() ) {
+	vd('isValid - next call verifyEditPermissions - we want to check against our mEditContentPerm which is:');
+	vd($gContent->mEditContentPerm);
 	$gContent->verifyEditPermission();
 } else {
 	$gBitSystem->verifyPermission( 'p_gmap_edit' );
@@ -30,6 +32,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	//Check if this is a update or a new map
 	if (!empty($_REQUEST["save_map"])) {
 		if( $gContent->store( $_REQUEST ) ) {
+			if ( $gContent->verifyAdminPermission() ){
+				$gContent->setEditSharing( $_REQUEST );
+			}    
 			$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
 			$gContent->load();
 			$gBitSmarty->assign_by_ref('mapInfo', $gContent->mInfo);
@@ -74,6 +79,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 			}
 		}
 
+		$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 		$gBitSmarty->assign_by_ref('mapInfo', $map);
 		$gBitSmarty->assign_by_ref('mapTypes', $gContent->mMapTypes);
 		$gBitSystem->display('bitpackage:gmap/edit_map.tpl', null, 'center_only');

@@ -10,7 +10,7 @@ class BitGmap extends LibertyAttachable {
 	var $mGmapId;
 
 	function BitGmap( $pGmapId=NULL, $pContentId=NULL ) {
-		LibertyAttachable::LibertyAttachable();
+		parent::LibertyAttachable();
 		$this->mGmapId = $pGmapId;
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITGMAP_CONTENT_TYPE_GUID;
@@ -1576,20 +1576,23 @@ class BitGmap extends LibertyAttachable {
 	 * Override LibertyContent method default $pCheckGlobalPerm=FALSE to enable shared editing
 	 * See LibertyContent method for defaults
 	*/
+	/*
 	function hasEditPermission( $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
 		return( $this->hasUserPermission( $this->mEditContentPerm, $pVerifyAccessControl, $pCheckGlobalPerm ) );
 	}
-
+	*/
+	
 	// === verifyEditPermission
 	/**
 	 * Function that determines if this content specified permission for the current gBitUser. 
 	 * Override LibertyContent method default $pCheckGlobalPerm=FALSE to enable shared editing
 	 * See LibertyContent method for defaults
 	*/
+	/*
 	function verifyEditPermission( $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
 		return parent::verifyEditPermission( $pVerifyAccessControl, $pCheckGlobalPerm );
 	}
-
+	*/
 	
 	/**
 	* Generates the URL to the gmap page
@@ -1621,6 +1624,24 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $ret;
 	}
+	
+	function setEditSharing(&$pParamHash){
+		if ( isset( $pParamHash['share_edit'] ) ){
+			$revokeSharing = FALSE;
+		}else{
+			$revokeSharing = TRUE;
+		}
+		$this->storePermission( 3, 'p_gmap_edit', $revokeSharing );
+	}
+	
+	function isEditShared(){
+		$ret = FALSE;
+		if ( isset( $this->mPerms['p_gmap_edit'] ) && $this->mPerms['p_gmap_edit']['group_id'] == 3 && $this->mPerms['p_gmap_edit']['is_revoked'] != "y"){
+			$ret = TRUE;
+		}
+		return $ret;
+	}
+	
 }
 
 

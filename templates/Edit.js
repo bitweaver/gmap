@@ -1735,7 +1735,7 @@ BitMap.Edit.prototype = {
 	 *******************/
 	
 	"updateMarker": function(rslt){
-	    var xml = rslt.responseXML.documentElement;							
+	    var xml = rslt.responseXML.documentElement;
 		var n_i = this.editObjectN;
 		var s_i = this._setIndexRef;
 		var m;

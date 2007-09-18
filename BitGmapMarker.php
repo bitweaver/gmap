@@ -35,7 +35,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 	* During initialisation, be sure to call our base constructors
 	**/
 	function BitGmapMarker( $pOverlayId=NULL, $pContentId=NULL ) {
-		parent::LibertyAttachable();
+		parent::BitGmapOverlayBase();
 		$this->mOverlayId = $pOverlayId;
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITGMAPMARKER_CONTENT_TYPE_GUID;

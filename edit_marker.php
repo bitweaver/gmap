@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.23 2007/09/18 16:24:53 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.24 2007/09/18 19:00:54 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -21,6 +21,8 @@ require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );
 
 // Now check permissions to access the marker
 if( $gContent->isValid() ) {
+	vd('isValid - next call verifyEditPermissions - we want to check against our mEditContentPerm which is:');
+	vd($gContent->mEditContentPerm);
 	$gContent->verifyEditPermission();
 } else {
 	$gBitSystem->verifyPermission( 'p_gmap_overlay_edit' );
@@ -33,6 +35,17 @@ if( $gContent->isValid() ) {
 $format = 'xml';
 
 if (!empty($_REQUEST["save_marker"])) {
+	/*
+	if ( isset($_REQUEST['set_id']) ){
+		require_once(GMAP_PKG_PATH.'BitGmapMarkerSet.php' );
+		$set = new BitGmapMarkerSet( $_REQUEST['set_id'] );
+		$set->load();
+		if ( !$set->hasUserPermission( 'p_gmap_add_overlay' ) ){
+			vd( 'you cant store shit to this set sucker!' );
+			die;
+		}	
+	}
+	*/
     if( $gContent->store( $_REQUEST ) ) {
     	if ( $gContent->verifyAdminPermission() ){
     		$gContent->setEditSharing( $_REQUEST );

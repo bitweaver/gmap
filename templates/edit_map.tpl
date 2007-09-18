@@ -126,6 +126,14 @@
 		{textarea}{$mapInfo.raw}{/textarea}
 		
 		{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
+
+		<div class="row">
+			{formlabel label="Share Editing of This Map With Registered Users" for="share_edit"}
+				{forminput}
+					<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
+					{formhelp note="Checking this box will allow any registered user to edit the parameters of this map. This is good if you want this map to be editable like a wiki page. NOTE: This does NOT effect if users can add markers, polylines, polygons, or other data to this map."}
+				{/forminput}
+		</div>
 		
 		<div class="row submit">
 			<input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap( this.form );" /> 

@@ -39,7 +39,7 @@ class BitGmapOverlayBase extends LibertyAttachable {
 	* During initialisation, be sure to call our base constructors
 	**/
 	function BitGmapOverlayBase() {
-		parent::LibertyContent();
+		parent::LibertyAttachable();
 		
 		// Permission setup
 		$this->mViewContentPerm  = 'p_gmap_overlay_view';
