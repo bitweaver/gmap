@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.17 2007/09/18 16:24:54 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.18 2007/09/18 19:18:09 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -34,7 +34,7 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_polyline"])) {
     if( $gContent->store( $_REQUEST ) ) {		
-    	if ( $gContent->verifyAdminPermission() ){
+		if ( $gContent->hasAdminPermission() ){
     		$gContent->setEditSharing( $_REQUEST );
 		}    
 		$gBitSmarty->assign_by_ref('polylineInfo', $gContent->mInfo);

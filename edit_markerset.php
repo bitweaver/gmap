@@ -26,7 +26,7 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_markerset"])) {
     if( $gContent->store( $_REQUEST ) ) {
-    	if ( $gContent->verifyAdminPermission() ){
+		if ( $gContent->hasAdminPermission() ){
     		$gContent->setEditSharing( $_REQUEST );
 		}    
 		$gBitSmarty->assign_by_ref('markersetInfo', $gContent->mInfo);

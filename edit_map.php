@@ -30,7 +30,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	//Check if this is a update or a new map
 	if (!empty($_REQUEST["save_map"])) {
 		if( $gContent->store( $_REQUEST ) ) {
-			if ( $gContent->verifyAdminPermission() ){
+			if ( $gContent->hasAdminPermission() ){
 				$gContent->setEditSharing( $_REQUEST );
 			}    
 			$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.25 2007/09/18 19:02:08 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.26 2007/09/18 19:18:09 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -45,7 +45,7 @@ if (!empty($_REQUEST["save_marker"])) {
 	}
 	*/
     if( $gContent->store( $_REQUEST ) ) {
-    	if ( $gContent->verifyAdminPermission() ){
+		if ( $gContent->hasAdminPermission() ){
     		$gContent->setEditSharing( $_REQUEST );
 		}    
 		$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
