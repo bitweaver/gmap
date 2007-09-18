@@ -184,7 +184,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
   			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` 
   			WHERE `gmap_id` = ?
   			AND `set_id` =?
-        	AND `set_type` = ".$mOverlaySetType;
+        	AND `set_type` = ".$this->mOverlaySetType;
   			$result = $this->mDb->query( $query, $pParamHash['set_remove'] );
   			$ret = TRUE;
   			$this->mDb->CompleteTrans();
@@ -192,6 +192,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
 
 		return $ret;
 	}
+		
 	
 	function setEditSharing(&$pParamHash){
 		if ( isset( $pParamHash['share_edit'] ) ){

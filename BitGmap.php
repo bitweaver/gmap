@@ -299,25 +299,6 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
-
-	//* Gets data for a given marker.
-	// @ todo this should probably take an array so that we can get data for a bunch of markers if we want
-	function getMarkerData($marker_id) {
-		global $gBitSystem;
-		if ($marker_id && is_numeric($marker_id)) {
-
-			//select map and get list of sets to look up
-			$query = "SELECT bm.*
-			FROM `".BIT_DB_PREFIX."gmaps_markers` bm
-			WHERE bm.marker_id = ?";
-  		$result = $this->mDb->query( $query, array((int)$marker_id));
-
-		}
-		return $result;
-	}
-
-
-
 	//get all marker styles for a given gmap_id
 	function getMarkerStyles($gmap_id) {
 		global $gBitSystem;
@@ -549,25 +530,7 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $result;
 	}
-
-
 	
-	//* Gets data for a given polygon set.
-	// @ todo this should probably take an array so that we can get data for a bunch of sets if we want
-	function getPolygonSetData($set_id) {
-		global $gBitSystem;
-		if ($set_id && is_numeric($set_id)) {
-			$query = "SELECT bs.*, bsk.*
-			FROM `".BIT_DB_PREFIX."gmaps_polygon_sets` bs
-			INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk ON ( bsk.`set_id` = bs.`set_id` )
-			WHERE bs.set_id = ?
-			AND bsk.`set_type` = 'polygons'";
-  		$result = $this->mDb->query( $query, array((int)$set_id));
-		}
-		return $result;
-	}
-
-
 	
 	function getMarkerSetsDetails($gmap_id) {
   		global $gBitSystem;
@@ -651,134 +614,6 @@ class BitGmap extends LibertyAttachable {
 		global $gBitSystem;
 		$ret = NULL;
 		$query = "SELECT bmt.* FROM `".BIT_DB_PREFIX."gmaps_maptypes` bmt";
-		$result = $this->mDb->query( $query );
-		$ret = array();
-		while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		return $ret;
-	}
-
-
-
-	//returns array of all markers and associated set info
-	//@todo this needs to be reworked as it does not get associated marker data from the content table
-	//@tod0 should also be moved into the marker class
-	function getAllMarkerSets() {
-		global $gBitSystem;
-		$ret = NULL;
-		$query = "SELECT bms.*, bsk.`set_type`, bsk.`gmap_id`, bmm.*
-					FROM `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` bms ON ( bmk.`set_id` = bms.`set_id` )
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_markers` bmm ON ( bmm.`marker_id` = bmk.`marker_id` )
-					LEFT OUTER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk
-					ON ( bsk.`set_id` = bms.`set_id`
-					AND bsk.`set_type` = 'markers')
-              	ORDER BY bms.`set_id` ASC, bmm.`marker_id` ASC";
-
-		$result = $this->mDb->query( $query );
-		$ret = array();
-		while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		return $ret;
-	}
-
-
-
-	//returns array of all markers
-	//@todo this needs to be reworked as it does not get associated marker data from the content table
-	//@tod0 should also be moved into the marker class
-	function getAllMarkers() {
-		global $gBitSystem;
-		$ret = NULL;
-		$query = "SELECT bmk.`set_id`, bmm.*
-					FROM `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk, `".BIT_DB_PREFIX."gmaps_markers` bmm
-          		WHERE bmm.`marker_id` = bmk.`marker_id`
-          		ORDER BY bmm.`marker_id` ASC, bmk.`set_id` ASC";
-
-		$result = $this->mDb->query( $query );
-		$ret = array();
-		while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		return $ret;
-	}
-
-
-
-	//returns array of polyline sets
-	function getAllPolylineSets() {
-		global $gBitSystem;
-		$ret = NULL;
-		$query = "SELECT bms.*, bsk.`set_type`, bsk.`gmap_id`, bmm.*
-    			 	 	FROM `".BIT_DB_PREFIX."gmaps_polyline_keychain` bmk
-							INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` bms ON ( bmk.`set_id` = bms.`set_id` )
-              INNER JOIN `".BIT_DB_PREFIX."gmaps_polylines` bmm ON ( bmm.`polyline_id` = bmk.`polyline_id` )
-              LEFT OUTER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk
-							ON ( bsk.`set_id` = bms.`set_id`
-							AND bsk.`set_type` = 'polylines')
-              ORDER BY bms.`set_id` ASC, bmm.`polyline_id` ASC";
-
-		$result = $this->mDb->query( $query );
-		$ret = array();
-		while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		return $ret;
-	}
-
-
-	//returns array of polylines
-	function getAllPolylines() {
-		global $gBitSystem;
-		$ret = NULL;
-		$query = "SELECT bmk.`set_id`, bmm.*
-					 	  FROM `".BIT_DB_PREFIX."gmaps_polyline_keychain` bmk, `".BIT_DB_PREFIX."gmaps_polylines` bmm
-          		WHERE bmm.`polyline_id` = bmk.`polyline_id`
-          		ORDER BY bmm.`polyline_id` ASC, bmk.`set_id` ASC";
-
-		$result = $this->mDb->query( $query );
-		$ret = array();
-		while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		return $ret;
-	}
-
-
-
-	//returns array of polygon sets
-	function getAllPolygonSets() {
-		global $gBitSystem;
-		$ret = NULL;
-		$query = "SELECT bms.*, bsk.`set_type`, bsk.`gmap_id`, bmm.*
-    			 	 	FROM `".BIT_DB_PREFIX."gmaps_polygon_keychain` bmk
-							INNER JOIN `".BIT_DB_PREFIX."gmaps_polygon_sets` bms ON ( bmk.`set_id` = bms.`set_id` )
-              INNER JOIN `".BIT_DB_PREFIX."gmaps_polygons` bmm ON ( bmm.`polygon_id` = bmk.`polygon_id` )
-              LEFT OUTER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk
-							ON ( bsk.`set_id` = bms.`set_id`
-							AND `set_type` = 'polygons')
-              ORDER BY bms.`set_id` ASC, bmm.`polygon_id` ASC";
-
-		$result = $this->mDb->query( $query );
-		$ret = array();
-		while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		return $ret;
-	}
-
-
-	//returns array of polygons
-	function getAllPolygons() {
-		global $gBitSystem;
-		$ret = NULL;
-		$query = "SELECT bmk.`set_id`, bmm.*
-					 	  FROM `".BIT_DB_PREFIX."gmaps_polygon_keychain` bmk, `".BIT_DB_PREFIX."gmaps_polygons` bmm
-          		WHERE bmm.`polygon_id` = bmk.`polygon_id`
-          		ORDER BY bmm.`polygon_id` ASC, bmk.`set_id` ASC";
-
 		$result = $this->mDb->query( $query );
 		$ret = array();
 		while ($res = $result->fetchrow()) {
