@@ -132,5 +132,74 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		
 		return( count( $this->mErrors ) == 0 );
 	}
+	
+	//returns array of marker data and associated style and icon style ids for given gmap_id and set_type
+	//copied over from BitGmap::getMarkers
+	function getList( &$pListHash ) {
+		global $gBitUser, $gBitSystem;
+		
+		$this->prepGetList( $pListHash );
+		
+		$ret = NULL;
+		
+		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+		array_push( $bindVars, $this->mContentTypeGuid );
+		
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+
+		if( @$this->verifyId( $pListHash['gmap_id'] ) ) {
+			$selectSql .= ", bsk.`set_id`, bsk.`style_id`, bsk.`icon_id` ";
+			
+			$joinSql .= " `".BIT_DB_PREFIX."gmaps_marker_keychain` gmk ON (gm.`marker_id` = gmk.`marker_id`) "; 
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` gms ON (gmk.`set_id` = gms.`set_id`) ";
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON( gms.`set_id` = gsk.`set_id`) ";
+			
+			$whereSql .= " AND bsk.`gmap_id` = ? AND bsk.`set_type` = 'markers'";			
+			array_push( $bindVars, (int)$pListHash['gmap_id'] );
+		}
+			
+		$pListHash['sort_mode'] = 'date_added_desc';
+		$sortModePrefix = 'gm.';
+		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] );
+
+		$query = "SELECT bmm.*, lc.*, bms.*, bsk.*, 
+				  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
+				  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
+				  FROM `".BIT_DB_PREFIX."gmaps_markers` gm 
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( gm.`content_id`=lc.`content_id` ) $joinSql
+					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
+					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
+				  WHERE lc.`content_type_guid` = ? $whereSql
+				  ORDER BY $sort_mode";
+
+		$result = $this->mDb->query($query,$bindVars,$pListHash['max_records'],$pListHash['offset']);
+		$cant = $this->mDb->getOne($query_cant,$bindVars);
+		
+		$comment = &new LibertyComment();
+		while ($res = $result->fetchrow()) {
+		
+			//need something like this - but need to get the prefs in the query
+			$res['allow_comments'] = "n";
+			if( $this->getPreference('allow_comments', null, $res['content_id']) == 'y' ) {
+				$res['allow_comments'] = "y";
+				$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
+			}
+			$res['xml_parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
+			$res['parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
+			$res['parsed_data'] = addslashes($res['parsed_data']);
+			$res['xml_data'] = str_replace("\n", "&#13;", $res['data']);
+			$res['data'] = addslashes($res['data']);
+			$res['data'] = str_replace("\n", "\\n", $res['data']);
+			$ret[] = $res;
+
+		}
+		
+		$pListHash["data"] = $ret;
+		$pListHash["cant"] = $cant;
+
+		LibertyContent::postGetList( $pListHash );
+
+		return $pListHash;
+	}	
 }
 ?>
