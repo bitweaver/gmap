@@ -147,17 +147,44 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		
 		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-		if( @$this->verifyId( $pListHash['gmap_id'] ) ) {
+		if( @$this->verifyId( $pListHash['gmap_id'] ) || isset( $pListHash['set_id'] )) {
 			$selectSql .= ", bsk.`set_id`, bsk.`style_id`, bsk.`icon_id` ";
 			
 			$joinSql .= " `".BIT_DB_PREFIX."gmaps_marker_keychain` gmk ON (gm.`marker_id` = gmk.`marker_id`) "; 
 			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` gms ON (gmk.`set_id` = gms.`set_id`) ";
 			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON( gms.`set_id` = gsk.`set_id`) ";
 			
-			$whereSql .= " AND bsk.`gmap_id` = ? AND bsk.`set_type` = 'markers'";			
+			$whereSql .= " AND gsk.`set_type` = 'markers' ";		
+		}
+
+		if ( isset( $pListHash['set_id'] ) ){
+			if (!is_array( $pListHash['set_id'] ) && is_numeric( $pListHash['set_id'] ) ){
+				$sets = array( $pListHash['set_id'] );
+			}elseif (is_array( $pListHash['set_id'] ) ){
+				$sets = $pListHash['set_id'];
+			}
+			$hasOne = FALSE;
+			foreach( $set as $value ){
+				if ( @$this->verifyId( $value ) ){
+					if ( $hasOne != TRUE ){
+						$whereSql .= " AND ( gmk.`set_id` = ? "; 
+						$hasOne = TRUE;
+					}else{
+						$whereSql .= " OR gmk.`set_id` = ? "; 
+					}
+					array_push( $bindVars, (int)$value );
+				}
+			}
+			if ($hasOne == TRUE){
+				$whereSql .= " ) "; 
+			}
+		}
+		
+		if( @$this->verifyId( $pListHash['gmap_id'] ) ) {
+			$whereSql .= " AND gsk.`gmap_id` = ? "; 
 			array_push( $bindVars, (int)$pListHash['gmap_id'] );
 		}
-			
+		
 		$pListHash['sort_mode'] = 'date_added_desc';
 		$sortModePrefix = 'gm.';
 		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] );
