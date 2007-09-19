@@ -138,7 +138,7 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 		$sortModePrefix = 'lc.';
 		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] );
 
-		$query = "SELECT lc.*, gm.*, 
+		$query = "SELECT lc.*, gp.*, 
 				  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
 				  FROM `".BIT_DB_PREFIX."gmaps_polylines` gp 

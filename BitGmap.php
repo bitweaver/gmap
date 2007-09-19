@@ -80,7 +80,11 @@ class BitGmap extends LibertyAttachable {
 					$markersList = $marker->getList( $joinHash );
 					$this->mMapMarkers = $markersList['data'];
 					
-					$this->mMapMarkerSets = $this->getMarkerSetsDetails($lookupId);
+					require_once( GMAP_PKG_PATH.'BitGmapMarkerSet.php' );
+					$markerSet = new BitGmapMarkerSet();
+					$markerSetsList = $markerSet->getList( $joinHash );
+					$this->mMapMarkerSets = $markerSetsList['data'];
+					
 					$this->mMapMarkerStyles = $this->getMarkerStyles($lookupId);
 					$this->mMapIconStyles = $this->getIconStyles($lookupId);
 
@@ -89,7 +93,11 @@ class BitGmap extends LibertyAttachable {
 					$polylinesList = $polyline->getList( $joinHash );
 					$this->mMapPolylines = $polylinesList['data'];
 					
-					$this->mMapPolylineSets = $this->getPolylineSetsDetails($lookupId);
+					require_once( GMAP_PKG_PATH.'BitGmapPolylineSet.php' );
+					$polylineSet = new BitGmapPolylineSet();
+					$polylineSetsList = $polylineSet->getList( $joinHash );
+					$this->mMapPolylineSets = $polylineSetsList['data'];
+					
 					$this->mMapPolylineStyles = $this->getPolylineStyles($lookupId);
 
 					require_once( GMAP_PKG_PATH.'BitGmapPolygon.php' );
@@ -97,7 +105,11 @@ class BitGmap extends LibertyAttachable {
 					$polygonsList = $polygon->getList( $joinHash );
 					$this->mMapPolygons = $polygonsList['data'];
 					
-					$this->mMapPolygonSets = $this->getPolygonSetsDetails($lookupId);
+					require_once( GMAP_PKG_PATH.'BitGmapPolygonSet.php' );
+					$polygonSet = new BitGmapPolygonSet();
+					$polygonSetsList = $polygonSet->getList( $joinHash );
+					$this->mMapPolygonSets = $polygonSetsList['data'];
+					
 					$this->mMapPolygonStyles = $this->getPolygonStyles($lookupId);
 				}
 			}
@@ -421,80 +433,6 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $result;
 	}
-	
-	
-	function getMarkerSetsDetails($gmap_id) {
-  		global $gBitSystem;
-  		$ret = NULL;
-  		if ($gmap_id && is_numeric($gmap_id)) {
-      	$query = "SELECT DISTINCT bms.*, bmk.*, lc.*
-                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` bms ON (bmk.`set_id` = bms.`set_id`)
-					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id` = bms.`content_id`)
-                WHERE bmk.`gmap_id` = ?
-                AND bmk.`set_type` = 'markers'
-                ORDER BY bms.`set_id` ASC";
-							
-			$result = $this->mDb->query( $query, array((int)$gmap_id) );
-
-			$ret = array();
-
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		};
-		return $ret;
-	}
-
-
-
-	function getPolylineSetsDetails($gmap_id) {
-  		global $gBitSystem;
-  		$ret = NULL;
-  		if ($gmap_id && is_numeric($gmap_id)) {
-      	$query = "SELECT DISTINCT bms.*, bmk.*, lc.*
-                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` bms ON (bmk.`set_id` = bms.`set_id`)
-					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id` = bms.`content_id`)
-                WHERE bmk.`gmap_id` = ?
-                AND bmk.`set_type` = 'polylines'
-                ORDER BY bms.`set_id` ASC";
-							
-			$result = $this->mDb->query( $query, array((int)$gmap_id) );
-
-			$ret = array();
-
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		};
-		return $ret;
-	}
-
-
-
-	function getPolygonSetsDetails($gmap_id) {
-  		global $gBitSystem;
-  		$ret = NULL;
-  		if ($gmap_id && is_numeric($gmap_id)) {
-      	$query = "SELECT DISTINCT bms.*, bmk.*
-                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_polygon_sets` bms ON (bmk.`set_id` = bms.`set_id`)
-                WHERE bmk.`gmap_id` = ?
-                AND bmk.`set_type` = 'polygons'
-                ORDER BY bms.`set_id` ASC";
-							
-			$result = $this->mDb->query( $query, array((int)$gmap_id) );
-
-			$ret = array();
-
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		};
-		return $ret;
-	}
-
 	
 	
 	

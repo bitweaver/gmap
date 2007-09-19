@@ -193,6 +193,63 @@ class BitGmapOverlaySetBase extends LibertyContent {
 		return $ret;
 	}
 		
+
+	function getList( &$pListHash ) {
+		global $gBitUser, $gBitSystem;
+		
+		$this->prepGetList( $pListHash );
+		
+		$ret = NULL;
+		
+		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+		array_push( $bindVars, $this->mContentTypeGuid );
+		
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+  		
+		if( @$this->verifyId( $pListHash['gmap_id'] ) ) {
+			$selectSql .= ", gsk.* ";
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gsk.`set_id` = gos.`set_id`)";
+			$whereSql .= " AND gsk.`set_type` = '".$this->mOverlaySetType."' AND gsk.`gmap_id` = ? "; 
+			array_push( $bindVars, (int)$pListHash['gmap_id'] );
+		}
+
+		$sortModePrefix = 'lc.';
+		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] );
+  		
+      	$query = "SELECT DISTINCT gos.*, lc.*,
+					uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
+					uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
+				FROM `".BIT_DB_PREFIX.$this->mOverlaySetTable."` gos 
+				INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( gos.`content_id`=lc.`content_id` ) $joinSql
+				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
+				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
+				WHERE lc.`content_type_guid` = ? $whereSql
+                ORDER BY gos.`set_id` ASC";
+
+		$query_cant = "
+			SELECT COUNT( * )
+		    FROM `".BIT_DB_PREFIX.$this->mOverlaySetTable."` gos 
+				INNER JOIN      `".BIT_DB_PREFIX."liberty_content`       lc ON lc.`content_id` = gos.`content_id`
+				INNER JOIN		`".BIT_DB_PREFIX."users_users`			 uu ON uu.`user_id`			   = lc.`user_id`
+				$joinSql
+			WHERE lc.`content_type_guid` = ? $whereSql ";
+
+		$result = $this->mDb->query($query,$bindVars,$pListHash['max_records'],$pListHash['offset']);
+		$cant = $this->mDb->getOne($query_cant,$bindVars);
+
+		while ($res = $result->fetchrow()) {
+			$res['parsed_data'] = $this->parseData( $res['data'], $res['format_guid'] );
+			$ret[] = $res;
+		}
+		
+		$pListHash["data"] = $ret;
+		$pListHash["cant"] = $cant;
+
+		LibertyContent::postGetList( $pListHash );
+
+		return $pListHash;
+	}
+
 	
 	function setEditSharing(&$pParamHash){
 		if ( isset( $pParamHash['share_edit'] ) ){
