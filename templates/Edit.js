@@ -1649,15 +1649,26 @@ BitMap.Edit.prototype = {
 		}else{
 		   var newWidth = 'auto';
 		}
+		mapdiv.style.width = newWidth; 
 		if (this.Map.height != '0' && this.Map.height != 0){
-		   var newHeight = this.Map.height + "px";
+			var newHeight = this.Map.height + "px";
+			mapdiv.style.height = newHeight; 
 		}else{
-		   var newHeight = 'auto';
+			//auto resize stuff
+			this.Map.MR = BitMap.Utl.MapResize;
+			//set these variables to customize
+			this.Map.MR.regOffsetObjs([$('gmap-header'),$('footer')]);
+			this.Map.MR.regOffsetBonus(0);
+			this.Map.MR.regMinSize(400);
+			//these are constants dont mess with them
+			this.Map.MR.regMap(this.Map.map);
+			this.Map.MR.regMapDiv(mapdiv);
+			this.Map.MR.regPanelDiv($('gmap-sidepanel'));
+			this.Map.MR.sizeMapDiv();
+			this.Map.MR.setResizeListener();
 		}
 
 		if (mapdiv){
-			mapdiv.style.width = newWidth; 
-			mapdiv.style.height = newHeight; 
 			this.Map.map.checkResize();
 		}
 

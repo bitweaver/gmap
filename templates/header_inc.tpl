@@ -40,6 +40,8 @@
 
 		{elseif $edit_map }
     	{literal}
+    	  .formlabel {float:none !important; width:100% !important; text-align:left !important;}
+    	  .forminput {margin-left:0 !important;}
 		  #gmap-sidepanel {float:right; margin:0; padding:0; width:300px; overflow:auto;}
 		  #gmap-sidepanel-table {margin:0; padding:0;}
 		  td {vertical-align:top; padding:0px;}
