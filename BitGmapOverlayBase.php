@@ -170,55 +170,6 @@ class BitGmapOverlayBase extends LibertyAttachable {
 	}
 
 
-	//returns array of all markers and associated set info
-	/* @TODO - doubtful these do anything close to what they should do
-	 * Moved over from BitGmap - but was not in use anywhere - some sort of getList is needed
-	 * This looks like it attempted to pull set data along with it  -wjames5
-	
-	function getList() {
-		global $gBitSystem;
-		$ret = NULL;
-		$overlayKey = $this->mOverlayType.'_id';
-		$query = "SELECT bms.*, bsk.`set_type`, bsk.`gmap_id`, bmm.*
-					FROM `".BIT_DB_PREFIX.$this->mOverlaySetKeychainTable."` bmk
-					INNER JOIN `".BIT_DB_PREFIX.$this->mOverlaySetTable."` bms ON ( bmk.`set_id` = bms.`set_id` )
-					INNER JOIN `".BIT_DB_PREFIX.$this->mOverlayTable."` bmm ON ( bmm.`".$overlayKey."` = bmk.`".$overlayKey."` )
-					LEFT OUTER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk
-					ON ( bsk.`set_id` = bms.`set_id`
-					AND bsk.`set_type` = ".$this->mOverlaySetType.")
-              	ORDER BY bms.`set_id` ASC, bmm.`".$overlayKey."` ASC";
-
-		$result = $this->mDb->query( $query );
-		$ret = array();
-		while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		return $ret;
-	}
-	
-	
-	//returns array of all markers
-	function getList() {
-		global $gBitSystem;
-		$ret = NULL;
-		$overlayKey = $this->mOverlayType.'_id';
-		$query = "SELECT bmk.`set_id`, bmm.*
-					FROM `".BIT_DB_PREFIX.$this->mOverlayKeychainTable."` bmk, `".BIT_DB_PREFIX.$this->mOverlayTable."` bmm
-          		WHERE bmm.`".$overlayKey."` = bmk.`".$overlayKey."`
-          		ORDER BY bmm.`set_id` ASC, bmk.`set_id` ASC";
-
-		$result = $this->mDb->query( $query );
-		$ret = array();
-		while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		return $ret;
-	}
-	
-	
-	*/
-	
-
 	/**
 	* Generates the URL to view a polyline on a standalone page
 	* @param pMixed a hash passed in by LibertyContent:getList

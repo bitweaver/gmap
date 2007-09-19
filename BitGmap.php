@@ -84,11 +84,19 @@ class BitGmap extends LibertyAttachable {
 					$this->mMapMarkerStyles = $this->getMarkerStyles($lookupId);
 					$this->mMapIconStyles = $this->getIconStyles($lookupId);
 
-					$this->mMapPolylines = $this->getPolylines($lookupId);
+					require_once( GMAP_PKG_PATH.'BitGmapPolyline.php' );
+					$polyline = new BitGmapPolyline();
+					$polylinesList = $polyline->getList( $joinHash );
+					$this->mMapPolylines = $polylinesList['data'];
+					
 					$this->mMapPolylineSets = $this->getPolylineSetsDetails($lookupId);
 					$this->mMapPolylineStyles = $this->getPolylineStyles($lookupId);
 
-					$this->mMapPolygons = $this->getPolygons($lookupId);
+					require_once( GMAP_PKG_PATH.'BitGmapPolygon.php' );
+					$polygon = new BitGmapPolygon();
+					$polygonsList = $polygon->getList( $joinHash );
+					$this->mMapPolygons = $polygonsList['data'];
+					
 					$this->mMapPolygonSets = $this->getPolygonSetsDetails($lookupId);
 					$this->mMapPolygonStyles = $this->getPolygonStyles($lookupId);
 				}
@@ -324,44 +332,7 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $result;
 	}
-	
-	
-	
-	//get all polyline data for given gmap_id and set_type
-	function getPolylines($gmap_id) {
-		global $gBitSystem;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {		 	
-			$whereSql = '';
-			$joinSql = '';
-			$selectSql = '';
-		 	$bindVars = array((int)$gmap_id);			
-			LibertyContent::getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-			$query = "SELECT bmm.*, lc.*, bms.*, bsk.*, 
-					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
-					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
-                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk 
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` bms ON( bms.`set_id` = bsk.`set_id` )
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_keychain` bmk ON(bmk.`set_id` = bms.`set_id`)
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_polylines` bmm ON(bmm.`polyline_id` = bmk.`polyline_id`)
-					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
-					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
-					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
-                WHERE bsk.`gmap_id` = ? $whereSql AND bsk.`set_type` = 'polylines'";
-
-			$result = $this->mDb->query( $query, $bindVars );
-
-			$ret = array();
-			
-			$comment = &new LibertyComment();
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-
-			};
-		};
-		return $ret;		
-	}
 		
 
 	//get all polylines for given gmap_id and set_types
@@ -409,34 +380,6 @@ class BitGmap extends LibertyAttachable {
 
 		}
 		return $result;
-	}
-
-	
-
-	//get all polygon data for given gmap_id and set_type
-	function getPolygons($gmap_id) {
-		global $gBitSystem;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-
-		 	$bindVars = array((int)$gmap_id);
-			$query = "SELECT bmp.*, bps.`set_id`, bps.`style_id`, bps.`polylinestyle_id`, bsk.`plot_on_load`, bsk.`side_panel`, bsk.`explode`
-		 				 	  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk, `".BIT_DB_PREFIX."gmaps_polygon_keychain` bpk, `".BIT_DB_PREFIX."gmaps_polygons` bmp, `".BIT_DB_PREFIX."gmaps_polygon_sets` bps
-								WHERE bsk.`gmap_id` = ?
-								AND bsk.`set_type` = 'polygons'
-								AND bps.`set_id` = bsk.`set_id`
-								AND bpk.`set_id` = bps.`set_id`
-								AND bmp.`polygon_id` = bpk.`polygon_id`";
-
-			$result = $this->mDb->query( $query, $bindVars );
-
-			$ret = array();
-
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		};
-		return $ret;
 	}
 
 

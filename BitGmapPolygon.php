@@ -90,5 +90,94 @@ class BitGmapPolygon extends BitGmapOverlayBase {
 		
 		return( count( $this->mErrors ) == 0 );
 	}
+
+	
+	//returns array of polygon data and associated style ids for given gmap_id and/or set_id
+	function getList( &$pListHash ) {
+		global $gBitUser, $gBitSystem;
+		
+		$this->prepGetList( $pListHash );
+		
+		$ret = NULL;
+		
+		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+		array_push( $bindVars, $this->mContentTypeGuid );
+		
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
+
+		if( @$this->verifyId( $pListHash['gmap_id'] ) || isset( $pListHash['set_id'] )) {
+			$selectSql .= ", gpk.*, gps.`set_id`, gps.`style_id`, gps.`polylinestyle_id` ";
+			
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_polygon_keychain` gpk ON (gp.`polygon_id` = gpk.`polygon_id`) "; 
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_polygon_sets` gps ON (gpk.`set_id` = gps.`set_id`) ";
+		}
+
+		if ( isset( $pListHash['set_id'] ) ){
+			if (!is_array( $pListHash['set_id'] ) && is_numeric( $pListHash['set_id'] ) ){
+				$sets = array( $pListHash['set_id'] );
+			}elseif (is_array( $pListHash['set_id'] ) ){
+				$sets = $pListHash['set_id'];
+			}
+			$hasOne = FALSE;
+			foreach( $sets as $value ){
+				if ( @$this->verifyId( $value ) ){
+					if ( $hasOne != TRUE ){
+						$whereSql .= " AND ( gpk.`set_id` = ? "; 
+						$hasOne = TRUE;
+					}else{
+						$whereSql .= " OR gpk.`set_id` = ? "; 
+					}
+					array_push( $bindVars, (int)$value );
+				}
+			}
+			if ($hasOne == TRUE){
+				$whereSql .= " ) "; 
+			}
+		}
+		
+		if( @$this->verifyId( $pListHash['gmap_id'] ) ) {
+			$selectSql .= ", gsk.* ";
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON( gps.`set_id` = gsk.`set_id`) ";
+			$whereSql .= " AND gsk.`set_type` = 'polygons' AND gsk.`gmap_id` = ? "; 
+			array_push( $bindVars, (int)$pListHash['gmap_id'] );
+		}
+		
+		//$pListHash['sort_mode'] = 'date_added_desc';
+		$sortModePrefix = 'lc.';
+		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] );
+
+		$query = "SELECT lc.*, gm.*, 
+				  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
+				  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
+				  FROM `".BIT_DB_PREFIX."gmaps_polygons` gp 
+					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( gp.`content_id`=lc.`content_id` ) $joinSql
+					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
+					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
+				  WHERE lc.`content_type_guid` = ? $whereSql
+				  ORDER BY $sort_mode";
+
+		$query_cant = "
+			SELECT COUNT( * )
+		    FROM `".BIT_DB_PREFIX."gmaps_polygons` gp 
+				INNER JOIN      `".BIT_DB_PREFIX."liberty_content`       lc ON lc.`content_id` = gp.`content_id`
+				INNER JOIN		`".BIT_DB_PREFIX."users_users`			 uu ON uu.`user_id`			   = lc.`user_id`
+				$joinSql
+			WHERE lc.`content_type_guid` = ? $whereSql ";
+
+		$result = $this->mDb->query($query,$bindVars,$pListHash['max_records'],$pListHash['offset']);
+		$cant = $this->mDb->getOne($query_cant,$bindVars);
+		
+		while ($res = $result->fetchrow()) {
+			$res['parsed_data'] = $res['data'];
+			$ret[] = $res;
+		}
+		
+		$pListHash["data"] = $ret;
+		$pListHash["cant"] = $cant;
+
+		LibertyContent::postGetList( $pListHash );
+
+		return $pListHash;
+	}			
 }
 ?>

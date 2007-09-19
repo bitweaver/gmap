@@ -133,8 +133,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		return( count( $this->mErrors ) == 0 );
 	}
 	
-	//returns array of marker data and associated style and icon style ids for given gmap_id and set_type
-	//copied over from BitGmap::getMarkers
+	//returns array of marker data and associated style and icon style ids for given gmap_id and/or set_id
 	function getList( &$pListHash ) {
 		global $gBitUser, $gBitSystem;
 		
