@@ -148,13 +148,10 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
 		if( @$this->verifyId( $pListHash['gmap_id'] ) || isset( $pListHash['set_id'] )) {
-			$selectSql .= ", bsk.`set_id`, bsk.`style_id`, bsk.`icon_id` ";
+			$selectSql .= ", gmk.*, gms.`set_id`, gms.`style_id`, gms.`icon_id` ";
 			
-			$joinSql .= " `".BIT_DB_PREFIX."gmaps_marker_keychain` gmk ON (gm.`marker_id` = gmk.`marker_id`) "; 
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_keychain` gmk ON (gm.`marker_id` = gmk.`marker_id`) "; 
 			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` gms ON (gmk.`set_id` = gms.`set_id`) ";
-			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON( gms.`set_id` = gsk.`set_id`) ";
-			
-			$whereSql .= " AND gsk.`set_type` = 'markers' ";		
 		}
 
 		if ( isset( $pListHash['set_id'] ) ){
@@ -164,7 +161,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$sets = $pListHash['set_id'];
 			}
 			$hasOne = FALSE;
-			foreach( $set as $value ){
+			foreach( $sets as $value ){
 				if ( @$this->verifyId( $value ) ){
 					if ( $hasOne != TRUE ){
 						$whereSql .= " AND ( gmk.`set_id` = ? "; 
@@ -181,15 +178,17 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		}
 		
 		if( @$this->verifyId( $pListHash['gmap_id'] ) ) {
-			$whereSql .= " AND gsk.`gmap_id` = ? "; 
+			$selectSql .= ", gsk.* ";
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON( gms.`set_id` = gsk.`set_id`) ";
+			$whereSql .= " AND gsk.`set_type` = 'markers' AND gsk.`gmap_id` = ? "; 
 			array_push( $bindVars, (int)$pListHash['gmap_id'] );
 		}
 		
-		$pListHash['sort_mode'] = 'date_added_desc';
-		$sortModePrefix = 'gm.';
+		//$pListHash['sort_mode'] = 'date_added_desc';
+		$sortModePrefix = 'lc.';
 		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] );
 
-		$query = "SELECT bmm.*, lc.*, bms.*, bsk.*, 
+		$query = "SELECT lc.*, gm.*, 
 				  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 				  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
 				  FROM `".BIT_DB_PREFIX."gmaps_markers` gm 
@@ -198,6 +197,14 @@ class BitGmapMarker extends BitGmapOverlayBase {
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
 				  WHERE lc.`content_type_guid` = ? $whereSql
 				  ORDER BY $sort_mode";
+
+		$query_cant = "
+			SELECT COUNT( * )
+		    FROM `".BIT_DB_PREFIX."gmaps_markers` gm 
+				INNER JOIN      `".BIT_DB_PREFIX."liberty_content`       lc ON lc.`content_id` = gm.`content_id`
+				INNER JOIN		`".BIT_DB_PREFIX."users_users`			 uu ON uu.`user_id`			   = lc.`user_id`
+				$joinSql
+			WHERE lc.`content_type_guid` = ? $whereSql ";
 
 		$result = $this->mDb->query($query,$bindVars,$pListHash['max_records'],$pListHash['offset']);
 		$cant = $this->mDb->getOne($query_cant,$bindVars);
@@ -211,8 +218,8 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$res['allow_comments'] = "y";
 				$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
 			}
-			$res['xml_parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
-			$res['parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
+			$res['xml_parsed_data'] = $this->parseData( $res['data'], $res['format_guid'] );
+			$res['parsed_data'] = $this->parseData( $res['data'], $res['format_guid'] );
 			$res['parsed_data'] = addslashes($res['parsed_data']);
 			$res['xml_data'] = str_replace("\n", "&#13;", $res['data']);
 			$res['data'] = addslashes($res['data']);
