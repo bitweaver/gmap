@@ -73,7 +73,13 @@ class BitGmap extends LibertyAttachable {
 					$this->mTilelayers = $this->getTilelayers($lookupId);
 					$this->mCopyrights = $this->getCopyrights($lookupId);
 
-					$this->mMapMarkers = $this->getMarkers($lookupId);
+					//@TODO should prolly find a better way to deal with large numbers of markers - like when +1000
+					$joinHash = array('gmap_id' => $this->mGmapId, 'max_records' => 9999);
+					require_once( GMAP_PKG_PATH.'BitGmapMarker.php' );
+					$marker = new BitGmapMarker();
+					$markersList = $marker->getList( $joinHash );
+					$this->mMapMarkers = $markersList['data'];
+					
 					$this->mMapMarkerSets = $this->getMarkerSetsDetails($lookupId);
 					$this->mMapMarkerStyles = $this->getMarkerStyles($lookupId);
 					$this->mMapIconStyles = $this->getIconStyles($lookupId);
@@ -238,64 +244,6 @@ class BitGmap extends LibertyAttachable {
   		$result = $this->mDb->query( $query, array((int)$copyright_id));
 		}
 		return $result;
-	}
-
-
-	
-	
-	
-	//returns array of marker data and associated style and icon style ids for given gmap_id and set_type
-	function getMarkers($gmap_id) {
-		global $gBitSystem, $commentsLib;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {		 	
-			$whereSql = '';
-			$joinSql = '';
-			$selectSql = '';
-		 	$bindVars = array((int)$gmap_id);			
-			LibertyContent::getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
-
-			$query = "SELECT bmm.*, lc.*, bms.*, bsk.*, 
-					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
-					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
-                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bsk 
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` bms ON( bms.`set_id` = bsk.`set_id` )
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_keychain` bmk ON(bmk.`set_id` = bms.`set_id`)
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_markers` bmm ON(bmm.`marker_id` = bmk.`marker_id`)
-					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( bmm.`content_id`=lc.`content_id` ) $joinSql
-					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
-					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
-                WHERE bsk.`gmap_id` = ? $whereSql AND bsk.`set_type` = 'markers'";
-
-			$result = $this->mDb->query( $query, $bindVars );
-
-			$ret = array();
-			
-			$comment = &new LibertyComment();
-			while ($res = $result->fetchrow()) {
-/*
-				$res['parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
-				$res['parsed_data'] = addslashes($res['parsed_data']);
-				$res['data'] = addslashes($res['data']);
-				$res['data'] = str_replace("\n", "\\n", $res['data']);
-*/
-				//need something like this - but need to get the prefs in the query
-				$res['allow_comments'] = "n";
-				if( $this->getPreference('allow_comments', null, $res['content_id']) == 'y' ) {
-					$res['allow_comments'] = "y";
-					$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
-				}
-				$res['xml_parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
-				$res['parsed_data'] = $this->parseData( $res['data'], $this->mInfo['format_guid'] );
-				$res['parsed_data'] = addslashes($res['parsed_data']);
-				$res['xml_data'] = str_replace("\n", "&#13;", $res['data']);
-				$res['data'] = addslashes($res['data']);
-				$res['data'] = str_replace("\n", "\\n", $res['data']);
-				$ret[] = $res;
-
-			};
-		};
-		return $ret;
 	}
 
 
