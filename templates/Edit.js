@@ -1651,8 +1651,12 @@ BitMap.Edit.prototype = {
 		}
 		mapdiv.style.width = newWidth; 
 		if (this.Map.height != '0' && this.Map.height != 0){
+			window.onresize = null;
 			var newHeight = this.Map.height + "px";
 			mapdiv.style.height = newHeight; 
+			if ( $('gmap-sidepanel') != null){
+				$('gmap-sidepanel').style.height = newHeight;
+			}
 		}else{
 			//auto resize stuff
 			this.Map.MR = BitMap.Utl.MapResize;
