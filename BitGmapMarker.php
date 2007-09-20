@@ -120,10 +120,6 @@ class BitGmapMarker extends BitGmapOverlayBase {
 			$pParamHash['overlay_store']['zindex'] = $pParamHash['marker_zi'];
 		}
 		
-		if( !empty( $pParamHash['map_comm'] ) ) {
-			$pParamHash['overlay_store']['allow_comments'] = 'TRUE';
-		}
-
 		// set values for updating the marker keychain		
 		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
 			$pParamHash['keychain_store']['set_id'] = $pParamHash['set_id'];

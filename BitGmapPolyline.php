@@ -62,7 +62,7 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 		if( !empty( $pParamHash['type'] ) ) {
 			$pParamHash['overlay_store']['type'] = $pParamHash['type'];
 		}
-		
+
 		if( !empty( $pParamHash['levels_data'] ) ) {
 			$pParamHash['overlay_store']['levels_data'] = $pParamHash['levels_data'];
 		}

@@ -74,6 +74,7 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
-	$gBitSystem->display('bitpackage:gmap/edit_polylineset_xml.tpl', null, $format);
+	$gBitSystem->setFormatHeader( 'xml' );
+	$gBitSystem->display('bitpackage:gmap/edit_polylineset_xml.tpl');
 }
 ?>

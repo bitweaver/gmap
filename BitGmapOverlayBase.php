@@ -89,8 +89,10 @@ class BitGmapOverlayBase extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			if( parent::store( $pParamHash ) ) {
 				if( $this->mOverlayId ) {
-					// store the posted changes
-					$this->mDb->associateUpdate( BIT_DB_PREFIX.$this->mOverlayTable, $pParamHash['overlay_store'], array( $overlayKey => $pParamHash[$overlayKey] ) );
+					if ( !empty($pParamHash['overlay_store']) ){
+						// store the posted changes
+						$this->mDb->associateUpdate( BIT_DB_PREFIX.$this->mOverlayTable, $pParamHash['overlay_store'], array( $overlayKey => $pParamHash[$overlayKey] ) );
+					}
 				} else {
 					$pParamHash['overlay_store']['content_id'] = $this->mContentId;
 					$pParamHash['overlay_store'][$overlayKey] = $this->mDb->GenID( $this->mOverlaySeq );

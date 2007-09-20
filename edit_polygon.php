@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.7 2007/09/18 20:40:15 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.8 2007/09/20 19:44:13 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -82,7 +82,8 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
-	$gBitSystem->display('bitpackage:gmap/edit_polygon_xml.tpl', null, $format);
+	$gBitSystem->setFormatHeader( 'xml' );
+	$gBitSystem->display('bitpackage:gmap/edit_polygon_xml.tpl');
 }
 
 ?>

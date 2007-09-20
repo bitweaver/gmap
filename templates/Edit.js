@@ -46,7 +46,7 @@ BitMap.Edit = function(){
 	this.bLastpoint;
 	this.bAssistant;
 	this.bTempPoints = new Array();	//create point array
-	this.bTP; //temporary polyline
+	this.TempOverlay; 				//temporary overlay
 	this.bModForm;
 	this.bModPData; 
 	this.bModMLat;
@@ -807,7 +807,7 @@ BitMap.Edit.prototype = {
 			// any previously existing sets from the UI
 			for (var n=0; n<this.Map.polylinesets.length; n++) {
 				if (this.Map.polylinesets[n]!= null){
-					var getElem = "edit-polylineset_"+n;
+					var getElem = "edit-polylineset-"+n;
 					if ( $(getElem) ) {
 						$('edit-polylinesets-table').removeChild($(getElem));
 					}
@@ -2254,7 +2254,7 @@ BitMap.Edit.prototype = {
 	},
 
 	"updatePolyline": function(rslt){
-	    var xml = rslt.responseXML.documentElement;							
+		var xml = rslt.responseXML.documentElement;							
 		var n_i = this.editObjectN;
 		var s_i = this._setIndexRef;
 		var p;
@@ -2265,7 +2265,6 @@ BitMap.Edit.prototype = {
 		}else{
 			p = this.Map.polylines[n_i];
 		}
-		
 		//shorten var names
 		var id = xml.getElementsByTagName('polyline_id');
 		p.polyline_id = id[0].firstChild.nodeValue;
@@ -2274,7 +2273,6 @@ BitMap.Edit.prototype = {
 		var dt = xml.getElementsByTagName('points_data');
 		var points_data = dt[0].firstChild.nodeValue;
 		p.points_data = points_data.split(",");
-		
 		if ( this.editObjectN == null){
 			var s = this.Map.polylinesets[s_i];
 			p.set_id = s.set_id;
@@ -2286,9 +2284,8 @@ BitMap.Edit.prototype = {
 		}else{
 			this.Map.map.removeOverlay(p.polyline);
 		}
-		
 		//create polyline
-		this.Map.attachPolyline(n_i);
+		this.Map.addPolyline(n_i);
 		this.removeAssistant();
 		this.hideSpinner("DONE!");
 		this.editPolylines(s_i);
@@ -2695,8 +2692,7 @@ BitMap.Edit.prototype = {
 			this.bModPData = f.edit; 
 			this.bLastpoint = null;
 			this.bTempPoints = [];
-			this.bTP = false;	// = new GPolyline(this.bTempPoints,"#0000FF", 2, 1);
-			//this.Map.map.addOverlay(bTP);		//create polyline object from points and add to map
+			this.TempOverlay = false;
 			ref = this;
 			
 			this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay,point) {
@@ -2704,13 +2700,13 @@ BitMap.Edit.prototype = {
 					if(ref.bLastpoint && ref.bLastpoint.x == point.x && ref.bLastpoint.y == point.y) return;
 					ref.bLastpoint = point;
 					ref.bTempPoints.push(point);
-					if (ref.bTP){
-						this.removeOverlay( ref.bTP );
+					if (ref.TempOverlay){
+						this.removeOverlay( ref.TempOverlay );
 					}
 					if (ref.bTempPoints.length){
 						var opts = (f.type.options[1].selected)?{geodesic:true}:null;
-						ref.bTP = new GPolyline(ref.bTempPoints,"#0000FF", 2, 1, opts)
-						this.addOverlay( ref.bTP );
+						ref.TempOverlay = new GPolyline(ref.bTempPoints,"#0000FF", 2, 1, opts)
+						this.addOverlay( ref.TempOverlay );
 					}
 					for(var i=0; i<ref.bTempPoints.length; i++){
 						if (i == 0){
@@ -2727,6 +2723,7 @@ BitMap.Edit.prototype = {
 		//polygon assistant
 		if (a == 'polygon'){
 			this.bModForm = $('polygonform_'+b);
+			ref = this;
 			
 			if (this.bModForm.circle.options[this.bModForm.circle.selectedIndex].value == 'true'){
 				this.bModPData = this.bModForm.circle_center;
@@ -2743,18 +2740,17 @@ BitMap.Edit.prototype = {
 				alert ('Polygon drawing assistant activated for '+ this.bModForm.name.value + ' polygon. \n Click to draw the outline. \n\nThe final connection will automatically be \ncompleted for you, so don\'t worry about that.');
 				this.bLastpoint = null;
 				this.bTempPoints = [];
-				this.bTP = new GPolyline(this.bTempPoints);
-				this.Map.map.addOverlay(bTP);		//create polyline object from points and add to map
+				this.TempOverlay = new GPolyline(this.bTempPoints);
+				this.Map.map.addOverlay(this.TempOverlay);		//create polyline object from points and add to map
 				
 				this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay,point) {
 					if(this.bLastpoint && this.bLastpoint.x==point.x && this.bLastpoint.y==point.y) return;
 					this.bLastpoint = point;
 					
 					this.bTempPoints.push(point);
-					this.Map.map.removeOverlay(this.bTP);
-					this.bTP = new GPolyline(this.bTempPoints);
-					this.Map.map.addOverlay(this.bTP);
-					alert('in ast');
+					this.Map.map.removeOverlay(ref.TempOverlay);
+					ref.TempOverlay = new GPolyline(this.bTempPoints);
+					this.Map.map.addOverlay(ref.TempOverlay);
 					for(var i=0; i<this.bTempPoints.length; i++){
 						if (i == 0){
 							msg = this.bTempPoints[i].y + ', ' + this.bTempPoints[i].x;
@@ -2772,6 +2768,7 @@ BitMap.Edit.prototype = {
 		
 	"removeAssistant": function(){
 	    if (this.bAssistant != null){
+	    alert(this.TempOverlay);
 	        this.Map.map.removeOverlay( this.TempOverlay );
 	   	    GEvent.removeListener(this.bAssistant);
 	  		this.bAssistant = null;
