@@ -1765,12 +1765,13 @@ BitMap.Edit.prototype = {
 		this.parseMarkerXML(m, xml);
 
 		if (this.editObjectN == null){
-			m.set_id = this.Map.markersets[s_i].set_id;
-			m.style_id = this.Map.markersets[s_i].style_id;
-			m.icon_id = this.Map.markersets[s_i].icon_id;
-			m.plot_on_load = this.Map.markersets[s_i].plot_on_load;
-			m.side_panel = this.Map.markersets[s_i].side_panel;
-			m.explode = this.Map.markersets[s_i].explode;
+			var s = this.Map.markersets[s_i];
+			m.set_id = s.set_id;
+			m.style_id = s.style_id;
+			m.icon_id = s.icon_id;
+			m.plot_on_load = s.plot_on_load;
+			m.side_panel = s.side_panel;
+			m.explode = s.explode;
 			m.array_n = parseInt(n_i);
 		}
 
@@ -2275,12 +2276,13 @@ BitMap.Edit.prototype = {
 		p.points_data = points_data.split(",");
 		
 		if ( this.editObjectN == null){
-			p.set_id = this.Map.polylinesets[s].set_id;
-			p.style_id = this.Map.polylinesets[s].style_id;
-			p.plot_on_load = this.Map.polylinesets[s].plot_on_load;
-			p.side_panel = this.Map.polylinesets[s].side_panel;
-			p.explode = this.Map.polylinesets[s].explode;
-			p.array_n = parseInt(n);
+			var s = this.Map.polylinesets[s_i];
+			p.set_id = s.set_id;
+			p.style_id = s.style_id;
+			p.plot_on_load = s.plot_on_load;
+			p.side_panel = s.side_panel;
+			p.explode = s.explode;
+			p.array_n = parseInt(n_i);
 		}else{
 			this.Map.map.removeOverlay(p.polyline);
 		}
@@ -2473,12 +2475,13 @@ BitMap.Edit.prototype = {
 		p.radius = rd[0].firstChild.nodeValue;
 		
 		if ( this.editObjectN == null){
-			p.set_id = this.Map.polygonsets[s].set_id;
-			p.style_id = this.Map.polygonsets[s].style_id;
-			p.plot_on_load = this.Map.polygonsets[s].plot_on_load;
-			p.side_panel = this.Map.polygonsets[s].side_panel;
-			p.explode = this.Map.polygonsets[s].explode;
-			p.array_n = parseInt(n);
+			var s = this.Map.polygonsets[s_i];
+			p.set_id = s.set_id;
+			p.style_id = s.style_id;
+			p.plot_on_load = s.plot_on_load;
+			p.side_panel = s.side_panel;
+			p.explode = s.explode;
+			p.array_n = parseInt(n_i);
 		}else{
 			this.Map.map.removeOverlay(p.polygon);
 		}
