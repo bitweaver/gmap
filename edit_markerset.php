@@ -40,8 +40,6 @@ if( $gContent->isValid() ) {
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
 
-$format = 'xml';
-
 if (!empty($_REQUEST["save_markerset"])) {
     if( $gContent->store( $_REQUEST ) ) {
 		if ( $gContent->hasAdminPermission() ){
@@ -73,6 +71,7 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
-	$gBitSystem->display('bitpackage:gmap/edit_markerset_xml.tpl', null, $format);
+	$gBitSystem->setFormatHeader( 'xml' );
+	$gBitSystem->display('bitpackage:gmap/edit_markerset_xml.tpl');
 }
 ?>	

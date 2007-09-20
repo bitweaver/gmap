@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.27 2007/09/18 20:40:15 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.28 2007/09/20 13:43:57 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -83,7 +83,7 @@ if (!empty($_REQUEST["save_marker"])) {
 if ( count($gContent->mErrors) > 0 ){
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
-	$gBitSystem->setFormatHeader( NULL );
-	$gBitSystem->display('bitpackage:gmap/edit_marker_xml.tpl', NULL, $format);
+	$gBitSystem->setFormatHeader( 'xml' );
+	$gBitSystem->display('bitpackage:gmap/edit_marker_xml.tpl');
 }
 ?>

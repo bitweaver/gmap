@@ -121,7 +121,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
 
 				// re-query to confirm results
 				$gmapId = isset($pParamHash['keychain_store']['gmap_id'])?$pParamHash['keychain_store']['gmap_id']:NULL;
-				$result = $this->load( $gmapId );
+				$this->load( $gmapId );
 
 			} else {
 				$this->mDb->RollbackTrans();
@@ -261,6 +261,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
 	
 	function isEditShared(){
 		$ret = FALSE;
+		$this->loadPermissions();
 		if ( isset( $this->mPerms['p_gmap_overlayset_edit'] ) && $this->mPerms['p_gmap_overlayset_edit']['group_id'] == 3 && $this->mPerms['p_gmap_overlayset_edit']['is_revoked'] != "y"){
 			$ret = TRUE;
 		}
@@ -277,6 +278,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
 	
 	function childrenAllowed(){
 		$ret = FALSE;
+		$this->loadPermissions();
 		if ( isset( $this->mPerms['p_gmap_attach_children'] ) && $this->mPerms['p_gmap_attach_children']['group_id'] == 3 && $this->mPerms['p_gmap_attach_children']['is_revoked'] != "y"){
 			$ret = TRUE;
 		}

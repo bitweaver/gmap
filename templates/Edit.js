@@ -1750,7 +1750,7 @@ BitMap.Edit.prototype = {
 	 *******************/
 	
 	"updateMarker": function(rslt){
-	    var xml = rslt.responseXML.documentElement;
+		var xml = rslt.responseXML.documentElement;
 		var n_i = this.editObjectN;
 		var s_i = this._setIndexRef;
 		var m;
@@ -1822,7 +1822,6 @@ BitMap.Edit.prototype = {
 			var oldStyle = s.style_id;
 			var oldIcon = s.icon_id;
 		}
-
 		//shorten var names
 		var id = xml.getElementsByTagName('set_id');			
 		s.set_id = parseInt(id[0].firstChild.nodeValue);
@@ -2656,13 +2655,15 @@ BitMap.Edit.prototype = {
 			var f = $('edit-marker-form');
 			alert ('Marker ploting assistant activated for '+ f.title.value + ' marker. \n Click to Position!');
 			
+			ref = this;
+			
 			this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
 				if (point) {
-					if (this.TempOverlay != null) {
-						this.removeOverlay(this.TempOverlay);
+					if (ref.TempOverlay != null) {
+						ref.removeOverlay(ref.TempOverlay);
 					}
-					this.TempOverlay = new GMarker(point);
-					this.addOverlay(this.TempOverlay);
+					ref.TempOverlay = new GMarker(point);
+					this.addOverlay(ref.TempOverlay);
 					this.panTo(point);
 					f['geo[lng]'].value = point.lng();
 					f['geo[lat]'].value = point.lat();

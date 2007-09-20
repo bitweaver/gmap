@@ -100,7 +100,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$this->mInfo['title'] = addslashes($this->mInfo['title']);
 				$this->mInfo['title'] = str_replace("\n", "\\n", $this->mInfo['title']);
 */
-				parent::load();				
+				LibertyAttachable::load();
 			}
 		}
 		return( count( $this->mInfo ) );
