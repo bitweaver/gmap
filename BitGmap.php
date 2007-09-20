@@ -327,6 +327,25 @@ class BitGmap extends LibertyAttachable {
 	}
 	
 		
+	function getIconStyle( &$pStyleId ) {
+		global $gBitSystem;
+		$ret = NULL;
+		if ( $pStyleId && is_numeric( $pStyleId )) {
+
+			$bindVars = array( (int)$pStyleId );
+
+			$query = "SELECT gps.*
+          			FROM `".BIT_DB_PREFIX."gmaps_icon_styles` gps
+          			WHERE gps.`icon_id` = ?";
+
+			$result = $this->mDb->query( $query, $bindVars );
+			
+			if( $result && $result->numRows() ) {
+				$ret = $result->fields;
+			}
+		}
+		return $ret;
+	}
 
 	//get all icon styles for a given gmap_id
 	function getIconStyles($gmap_id) {
@@ -368,6 +387,25 @@ class BitGmap extends LibertyAttachable {
 	}
 
 		
+	function getPolylineStyle( &$pStyleId ) {
+		global $gBitSystem;
+		$ret = NULL;
+		if ( $pStyleId && is_numeric( $pStyleId )) {
+
+			$bindVars = array( (int)$pStyleId );
+
+			$query = "SELECT gps.*
+          			FROM `".BIT_DB_PREFIX."gmaps_polyline_styles` gps
+          			WHERE gps.`style_id` = ?";
+
+			$result = $this->mDb->query( $query, $bindVars );
+			
+			if( $result && $result->numRows() ) {
+				$ret = $result->fields;
+			}
+		}
+		return $ret;
+	}
 
 	//get all polylines for given gmap_id and set_types
 	function getPolylineStyles($gmap_id) {
@@ -416,6 +454,26 @@ class BitGmap extends LibertyAttachable {
 		return $result;
 	}
 
+
+	function getPolygonStyle( &$pStyleId ) {
+		global $gBitSystem;
+		$ret = NULL;
+		if ( $pStyleId && is_numeric( $pStyleId )) {
+
+			$bindVars = array( (int)$pStyleId );
+
+			$query = "SELECT gps.*
+          			FROM `".BIT_DB_PREFIX."gmaps_polygon_styles` gps
+          			WHERE gps.`style_id` = ?";
+
+			$result = $this->mDb->query( $query, $bindVars );
+			
+			if( $result && $result->numRows() ) {
+				$ret = $result->fields;
+			}
+		}
+		return $ret;
+	}
 
 
 	//get all polylines for given gmap_id and set_types
