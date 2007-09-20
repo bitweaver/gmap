@@ -43,7 +43,7 @@
 					{/forminput}
 			</div>
 			
-			{textarea}{$markerInfo.raw}{/textarea}
+			{textarea}{$markerInfo.data}{/textarea}
 	
 			{if $gContent->hasAdminPermission()}
 			<div class="row">
