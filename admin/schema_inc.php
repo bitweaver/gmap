@@ -46,7 +46,9 @@ $tables = array(
   description C(255),
   minzoom I4,
   maxzoom I4,
-  errormsg C(255)
+  errormsg C(255),
+  user_id I4  
+  CONSTRAINTS ', CONSTRAINT `gmaps_maptypes_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
 ",
 
 'gmaps_tilelayers' => "
@@ -109,7 +111,9 @@ $tables = array(
   shadow_anchor_y I4 DEFAULT 25,
   infowindow_anchor_x I4 DEFAULT 9,
   infowindow_anchor_y I4 DEFAULT 2,
-  image_map X DEFAULT 0	
+  image_map X DEFAULT 0,
+  user_id I4  
+  CONSTRAINTS ', CONSTRAINT `gmaps_icon_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'	
 ",
 
 //type options: 0 => GMarker, 1 => PdMarker
@@ -124,7 +128,9 @@ $tables = array(
   label_hover_opacity I4 DEFAULT 70,
   label_opacity I4 DEFAULT 100,
   label_hover_styles C(255) DEFAULT 'border:none; color:black; background-color:#ccc',
-  window_styles C(255) DEFAULT 'border:none; color:black; background-color:white'
+  window_styles C(255) DEFAULT 'border:none; color:black; background-color:white',
+  user_id I4  
+  CONSTRAINTS ', CONSTRAINT `gmaps_marker_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
 ",
 
 'gmaps_marker_sets' => "
@@ -163,7 +169,9 @@ $tables = array(
   name C(64),
   color C(6) DEFAULT 'ff3300',
   weight I4 DEFAULT 2,
-  opacity F DEFAULT 1
+  opacity F DEFAULT 1,
+  user_id I4  
+  CONSTRAINTS ', CONSTRAINT `gmaps_polyline_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
 ",
 
 'gmaps_polyline_sets' => "
@@ -204,7 +212,9 @@ $tables = array(
   style_id I4 PRIMARY,
   name C(64),
   color C(6),
-  opacity F DEFAULT 1
+  opacity F DEFAULT 1,
+  user_id I4  
+  CONSTRAINTS ', CONSTRAINT `gmaps_polygon_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
 ",
 
 'gmaps_polygon_sets' => "
