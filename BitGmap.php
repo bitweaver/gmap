@@ -192,21 +192,6 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	//* Gets data for a given maptype.
-	// @todo this should probably take an array so that we can get data for a bunch of maptypes if we want
-	function getMapTypeData($maptype_id) {
-		global $gBitSystem;
-		if ($maptype_id && is_numeric($maptype_id)) {
-			$query = "SELECT bmt.*
-			FROM `".BIT_DB_PREFIX."gmaps_maptypes` bmt
-			WHERE bmt.maptype_id = ?";
-  		$result = $this->mDb->query( $query, array((int)$maptype_id));
-		}
-		return $result;
-	}
-	
-
-
 	//get all Tilelayers data associated with maptypes associated with a given $gmap_id
 	function getTilelayers($gmap_id) {
 		global $gBitSystem;
@@ -235,15 +220,19 @@ class BitGmap extends LibertyAttachable {
 
 	
 	//* Gets data for a given tilelayer.
-	function getTilelayerData($tilelayer_id) {
+	function getTilelayer($tilelayer_id) {
 		global $gBitSystem;
 		if ($tilelayer_id && is_numeric($tilelayer_id)) {
 			$query = "SELECT bmt.*
 			FROM `".BIT_DB_PREFIX."gmaps_tilelayers` bmt
 			WHERE bmt.tilelayer_id = ?";
-  		$result = $this->mDb->query( $query, array((int)$tilelayer_id));
+	  		$result = $this->mDb->query( $query, array((int)$tilelayer_id));
+	  		
+			if( $result && $result->numRows() ) {
+				$ret = $result->fields;
+			}
 		}
-		return $result;
+		return $ret;
 	}
 
 
@@ -277,15 +266,19 @@ class BitGmap extends LibertyAttachable {
 
 	
 	//* Gets data for a given copyright.
-	function getCopyrightData($copyright_id) {
+	function getCopyright($copyright_id) {
 		global $gBitSystem;
 		if ($copyright_id && is_numeric($copyright_id)) {
 			$query = "SELECT gcr.*
 			FROM `".BIT_DB_PREFIX."gmaps_copyrights` gcr
 			WHERE gcr.copyright_id = ?";
-  		$result = $this->mDb->query( $query, array((int)$copyright_id));
+	  		$result = $this->mDb->query( $query, array((int)$copyright_id));
+
+			if( $result && $result->numRows() ) {
+				$ret = $result->fields;
+			}
 		}
-		return $result;
+		return $ret;
 	}
 
 
@@ -314,14 +307,21 @@ class BitGmap extends LibertyAttachable {
 
 	//* Gets data for a given marker style.
 	// @ todo this should probably take an array so that we can get data for a bunch of styles if we want
-	function getMarkerStyleData($style_id) {
+	function getMarkerStyle( &$pStyleId ) {
 		global $gBitSystem;
-		if ($style_id && is_numeric($style_id)) {
+		if ( $pStyleId && is_numeric( $pStyleId )) {
+		
+			$bindVars = array( (int)$pStyleId );
+		
 			$query = "SELECT bs.*
 			FROM `".BIT_DB_PREFIX."gmaps_marker_styles` bs
 			WHERE bs.style_id = ?";
-  		$result = $this->mDb->query( $query, array((int)$style_id));
+			
+			$result = $this->mDb->query( $query, $bindVars );
 
+			if( $result && $result->numRows() ) {
+				$ret = $result->fields;
+			}
 		}
 		return $result;
 	}
@@ -346,7 +346,9 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $ret;
 	}
-
+	
+	
+	
 	//get all icon styles for a given gmap_id
 	function getIconStyles($gmap_id) {
 		global $gBitSystem;
@@ -369,22 +371,6 @@ class BitGmap extends LibertyAttachable {
 		return $ret;
 	}
 
-
-
-
-	//* Gets data for a given icon style.
-	// @ todo this should probably take an array so that we can get data for a bunch of styles if we want
-	function getIconStyleData($style_id) {
-		global $gBitSystem;
-		if ($style_id && is_numeric($style_id)) {
-			$query = "SELECT bs.*
-			FROM `".BIT_DB_PREFIX."gmaps_icon_styles` bs
-			WHERE bs.icon_id = ?";
-  		$result = $this->mDb->query( $query, array((int)$style_id));
-
-		}
-		return $result;
-	}
 
 		
 	function getPolylineStyle( &$pStyleId ) {
@@ -438,23 +424,6 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
-	
-	
-	//* Gets data for a given polyline style.
-	// @ todo this should probably take an array so that we can get data for a bunch of styles if we want
-	function getPolylineStyleData($style_id) {
-		global $gBitSystem;
-		if ($style_id && is_numeric($style_id)) {
-			$query = "SELECT bs.*
-			FROM `".BIT_DB_PREFIX."gmaps_polyline_styles` bs
-			WHERE bs.`style_id` = ?";
-  		$result = $this->mDb->query( $query, array((int)$style_id));
-
-		}
-		return $result;
-	}
-
-
 	function getPolygonStyle( &$pStyleId ) {
 		global $gBitSystem;
 		$ret = NULL;
@@ -499,20 +468,6 @@ class BitGmap extends LibertyAttachable {
 		return $ret;
 	}
 
-
-
-	//* Gets data for a given polygon style.
-	// @ todo this should probably take an array so that we can get data for a bunch of styles if we want
-	function getPolygonStyleData($style_id) {
-		global $gBitSystem;
-		if ($style_id && is_numeric($style_id)) {
-			$query = "SELECT bs.*
-			FROM `".BIT_DB_PREFIX."gmaps_polygon_styles` bs
-			WHERE bs.style_id = ?";
-  		$result = $this->mDb->query( $query, array((int)$style_id));
-		}
-		return $result;
-	}
 	
 	
 	
@@ -717,7 +672,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
-			$result = $this->getMapTypeData($pParamHash['maptype_id']);
+			$result = $this->getMapType($pParamHash['maptype_id']);
 		}
 		return $result;
 	}
@@ -773,7 +728,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
-			$result = $this->getTilelayerData($pParamHash['tilelayer_id']);
+			$result = $this->getTilelayer($pParamHash['tilelayer_id']);
 		}
 		return $result;
 	}
@@ -817,7 +772,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
-			$result = $this->getCopyrightData($pParamHash['copyright_id']);
+			$result = $this->getCopyright($pParamHash['copyright_id']);
 		}
 		return $result;
 	}
@@ -873,7 +828,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
-			$result = $this->getMarkerStyleData($pParamHash['style_id']);
+			$result = $this->getMarkerStyle($pParamHash['style_id']);
 		}
 		return $result;
 	}
@@ -966,7 +921,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
-			$result = $this->getIconStyleData($pParamHash['icon_id']);
+			$result = $this->getIconStyle($pParamHash['icon_id']);
 		}
 		return $result;
 	}
@@ -1019,7 +974,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
-			$result = $this->getPolylineStyleData($pParamHash['style_id']);
+			$result = $this->getPolylineStyle($pParamHash['style_id']);
 		}
 		return $result;
 	}
@@ -1073,7 +1028,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
-			$result = $this->getPolygonStyleData($pParamHash['style_id']);
+			$result = $this->getPolygonStyle($pParamHash['style_id']);
 		}
 		return $result;
 	}

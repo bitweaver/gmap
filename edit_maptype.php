@@ -33,7 +33,7 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_maptype"])) {
     if( $result = $gContent->storeMapType( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('maptypeInfo', $result->fields );
+		$gBitSmarty->assign_by_ref('maptypeInfo', $result );
     }
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_maptype"])) {
@@ -46,9 +46,9 @@ if (!empty($_REQUEST["save_maptype"])) {
     }
 }else{
 	if ( isset( $_REQUEST["maptype_id"] ) ){
-		$maptype = $gContent->getMapTypeData( $_REQUEST["maptype_id"] );
+		$maptype = $gContent->getMapType( $_REQUEST["maptype_id"] );
 	}
-	$gBitSmarty->assign_by_ref('maptypeInfo', $maptype->fields);
+	$gBitSmarty->assign_by_ref('maptypeInfo', $maptype;
 	$gBitSystem->display('bitpackage:gmap/edit_maptype.tpl', NULL, 'center_only');
 	die;
 }

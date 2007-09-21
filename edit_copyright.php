@@ -25,7 +25,7 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_copyright"])) {
 	if( $result = $gContent->storeCopyright( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('copyrightInfo', $result->fields );
+		$gBitSmarty->assign_by_ref('copyrightInfo', $result );
 	}
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_copyright"])) {
@@ -38,12 +38,12 @@ if (!empty($_REQUEST["save_copyright"])) {
 	}
 }else{
 	if ( isset( $_REQUEST["copyright_id"] ) ){
-		$copyright = $gContent->getCopyrightData( $_REQUEST["copyright_id"] );
+		$copyright = $gContent->getCopyright( $_REQUEST["copyright_id"] );
 	}
 	if (isset($_REQUEST["tilelayer_id"])){
 		$copyright->fields['tilelayer_id'] = $_REQUEST["tilelayer_id"];
 	}
-	$gBitSmarty->assign_by_ref('copyrightInfo', $copyright->fields);
+	$gBitSmarty->assign_by_ref('copyrightInfo', $copyright);
 	$gBitSystem->display('bitpackage:gmap/edit_copyright.tpl', NULL, 'center_only');
 	die;
 }

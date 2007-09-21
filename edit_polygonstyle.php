@@ -33,13 +33,13 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_polygonstyle"])) {
     if( $result = $gContent->storePolygonStyle( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('polygonstyleInfo', $result->fields );
+		$gBitSmarty->assign_by_ref('polygonstyleInfo', $result );
     }
 }else{
 	if ( isset( $_REQUEST["style_id"] ) ){
-		$polygonstyle = $gContent->getPolygonStyleData( $_REQUEST["style_id"] );
+		$polygonstyle = $gContent->getPolygonStyle( $_REQUEST["style_id"] );
 	}
-	$gBitSmarty->assign_by_ref('polygonstyleInfo', $polygonstyle->fields);
+	$gBitSmarty->assign_by_ref('polygonstyleInfo', $polygonstyle);
 	$gBitSystem->display('bitpackage:gmap/edit_polygonstyle.tpl', NULL, 'center_only');
 	die;
 }

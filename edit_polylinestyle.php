@@ -33,13 +33,13 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_polylinestyle"])) {
     if( $result = $gContent->storePolylineStyle( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('polylinestyleInfo', $result->fields );
+		$gBitSmarty->assign_by_ref('polylinestyleInfo', $result );
     }
 }else{
 	if ( isset( $_REQUEST["style_id"] ) ){
-		$polylinestyle = $gContent->getPolylineStyleData( $_REQUEST["style_id"] );
+		$polylinestyle = $gContent->getPolylineStyle( $_REQUEST["style_id"] );
 	}
-	$gBitSmarty->assign_by_ref('polylinestyleInfo', $polylinestyle->fields);
+	$gBitSmarty->assign_by_ref('polylinestyleInfo', $polylinestyle);
 	$gBitSystem->display('bitpackage:gmap/edit_polylinestyle.tpl', NULL, 'center_only');
 	die;
 }

@@ -25,7 +25,7 @@ $format = 'xml';
 
 if (!empty($_REQUEST["save_tilelayer"])) {
     if( $result = $gContent->storeTilelayer( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('tilelayerInfo', $result->fields );
+		$gBitSmarty->assign_by_ref('tilelayerInfo', $result );
     }
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_tilelayer"])) {
@@ -38,12 +38,12 @@ if (!empty($_REQUEST["save_tilelayer"])) {
     }
 }else{
 	if ( isset( $_REQUEST["tilelayer_id"] ) ){
-		$tilelayer = $gContent->getTilelayerData( $_REQUEST["tilelayer_id"] );
+		$tilelayer = $gContent->getTilelayer( $_REQUEST["tilelayer_id"] );
 	}
 	if (isset($_REQUEST["maptype_id"])){
 		$tilelayer->fields['maptype_id'] = $_REQUEST["maptype_id"];
 	}
-	$gBitSmarty->assign_by_ref('tilelayerInfo', $tilelayer->fields);
+	$gBitSmarty->assign_by_ref('tilelayerInfo', $tilelayer);
 	$gBitSystem->display('bitpackage:gmap/edit_tilelayer.tpl', NULL, 'center_only');
 	die;
 }

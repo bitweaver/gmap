@@ -1415,6 +1415,10 @@ BitMap.Edit.prototype = {
 	 "storeIconStyle": function(f){
 		this.showSpinner("Saving Iconstyle...");
 		var str = "edit_iconstyle.php?" + queryString(f);
+		
+BitMap.show('editerror');
+$('editerror').innerHTML = str;
+		
 		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateIconStyle, this) ); 
 	 },
 
@@ -2754,7 +2758,6 @@ BitMap.Edit.prototype = {
 		
 	"removeAssistant": function(){
 	    if (this.bAssistant != null){
-	    alert(this.TempOverlay);
 	        this.Map.map.removeOverlay( this.TempOverlay );
 	   	    GEvent.removeListener(this.bAssistant);
 	  		this.bAssistant = null;
