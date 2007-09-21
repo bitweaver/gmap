@@ -350,24 +350,32 @@ class BitGmap extends LibertyAttachable {
 	
 	
 	//get all icon styles for a given gmap_id
-	function getIconStyles($gmap_id) {
+	function getIconStyles( &$pGmapId = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-			$query = "SELECT DISTINCT bis.*
-					FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."gmaps_marker_sets` bms, `".BIT_DB_PREFIX."gmaps_icon_styles` bis
-					WHERE bmk.`gmap_id` = ?
-					AND bmk.`set_type` = 'markers'
-					AND bms.`set_id` = bmk.`set_id` AND bis.`icon_id` = bms.`icon_id`";
+		
+		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+		
+		if( @$this->verifyId( $pGmapId ) ) {
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` gms ON (gms.`icon_id` = gis.`icon_id`) ";
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gms.`set_id` = gsk.`set_id`) "; 
+			$whereSql .= " WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = 'markers' ";
+			array_push( $bindVars, (int)$pGmapId );
+		}
+		
+		$query = "SELECT DISTINCT gis.* $selectSql
+				FROM `".BIT_DB_PREFIX."gmaps_icon_styles` gis
+				$joinSql
+				$whereSql";
 
-			$result = $this->mDb->query( $query, array((int)$gmap_id) );
-
-			$ret = array();
-
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
+		$result = $this->mDb->query( $query, $bindVars );
+	
+		$ret = array();
+	
+		while ($res = $result->fetchrow()) {
+			$ret[] = $res;
 		};
+			
 		return $ret;
 	}
 

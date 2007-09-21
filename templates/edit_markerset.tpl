@@ -35,6 +35,9 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 			{forminput}
 				<select name="icon_id">
 				<option value="0" {if $markersetInfo.icon_id == 0 }selected="selected"{/if}>Google (standard)</option>
+				{if count($iconStyles) > 0}{section name=ix loop=$iconStyles}
+					<option value="{$iconStyles[ix].icon_id}" {if $markersetInfo.icon_id == $iconStyles[ix].icon_id}selected="selected"{else}{/if}>{$iconStyles[ix].name}</option>
+				{/section}{/if}
 				</select>
 				{formhelp note=""}
 			{/forminput}
