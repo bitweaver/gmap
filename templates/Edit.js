@@ -2386,7 +2386,7 @@ BitMap.Edit.prototype = {
 				//if the array item is not Null
 					if (a[n]!= null && a[n].polyline != null && a[n].style_id == s.style_id){
 							this.Map.map.removeOverlay( a[n].polyline );
-					this.Map.attachPolyline(n);
+					this.Map.addPolyline(n);
 					}
 				}
 			}
@@ -2400,7 +2400,7 @@ BitMap.Edit.prototype = {
 				//if the array item is not Null
 					if (b[i]!= null && b[i].polygon != null && b[i].style_id == s.style_id){
 							this.Map.map.removeOverlay( b[i].polygon );
-						this.Map.attachPolygon(i);
+						this.Map.addPolygon(i);
 					}
 				}
 			}
@@ -2484,7 +2484,7 @@ BitMap.Edit.prototype = {
 		}
 		
 		//create polygon
-		this.Map.attachPolygon(n_i);
+		this.Map.addPolygon(n_i);
 		this.removeAssistant();
 		this.hideSpinner("DONE!");
 		this.editPolygons(s_i);
@@ -2537,7 +2537,7 @@ BitMap.Edit.prototype = {
 							//unload the polygon
 							this.Map.map.removeOverlay( a[n].polygon );
 							//create polygon
-							this.attachPolygon(n);
+							this.addPolygon(n);
 						}
 					}
 				}
@@ -2585,21 +2585,7 @@ BitMap.Edit.prototype = {
 				//if the array item is not Null
 					if (a[n]!= null && a[n].polygon != null && a[n].style_id == s.style_id){
 							this.Map.map.removeOverlay( a[n].polygon );
-					this.Map.attachPolygon(n);
-					}
-				}
-			}
-	
-			//for each polygon
-			var b = this.Map.polygons;
-			//if the length of the array is > 0
-			if (b.length > 0){
-			//loop through the array
-				for(i=0; i<b.length; i++){
-				//if the array item is not Null
-					if (b[i]!= null && b[i].polygon != null && b[i].style_id == s.style_id){
-							this.Map.map.removeOverlay( b[i].polygon );
-						this.Map.attachPolygon(i);
+					this.Map.addPolygon(n);
 					}
 				}
 			}

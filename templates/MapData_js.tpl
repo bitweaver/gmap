@@ -226,10 +226,10 @@ BitMap.MapData.push({ldelim}
 		created: {$gContent->mMapPolygons[polygon_n].created},
 		last_modified: {$gContent->mMapPolygons[polygon_n].last_modified},
 		version: {$gContent->mMapPolygons[polygon_n].version},
-		name: "{$gContent->mMapPolygons[polygon_n].name}",
-		circle: {$gContent->mMapPolygons[polygon_n].circle},
+		name: "{$gContent->mMapPolygons[polygon_n].title}",
+		circle:{if $gContent->mMapPolygons[polygon_n].circle}{$gContent->mMapPolygons[polygon_n].circle}{else}null{/if},
 		points_data: new Array(),
-		points_data: [{$gContent->mMapPolygons[polygon_n].points_data}],
+		points_data: [{$gContent->mMapPolygons[polygon_n].data}],
 		circle_center: new Array(),
 		circle_center: [{$gContent->mMapPolygons[polygon_n].circle_center}],
 		{if $gContent->mMapPolygons[polygon_n].radius != NULL}

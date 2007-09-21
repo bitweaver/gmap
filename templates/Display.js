@@ -315,46 +315,77 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	},
 
 	
-	/*@TODO all Polygon constructors below might have to change to use gmap polygon */  
 	"attachPolygons": function(){
-		//get the array we are working on
-		var a = this.polygons;
-	
-		//if the length of the array is > 0
-		if (a.length > 0){
-	  	//loop through the array
-			for(n=0; n<a.length; n++){
-	  		//if the array item is not Null
-				if (a[n]!= null){
-					this.attachPolygon(n);
+		var pg = this.polygons;
+		var count = pg.length;
+		if (count > 0){
+			for(n=0; n<count; n++){
+				if ( pg[n] != null ){
+					this.addPolygon(n);
 				}
 			}
 		}
 	},
 
 
-	"attachPolygon": function(n){
-		var s;
-		var p;
-		var Polygon = this.polygons[n];
-		var PolylineStyles = this.polylinestyles;
-		var PolygonStyles = this.polygonstyles;
-		for (var b=0; b<PolylineStyles.length; b++){
-			if ( PolylineStyles[b].style_id == Polygon.polylinestyle_id ){
-				s = b;
+	"addPolygon": function(i){
+		var p = this.polygons[i];
+		if ( p.type != 2 ){
+			var s_i = null;
+			var p_i = null;
+			if (p.style_id != 0){
+				var ps = this.polygonstyles;
+				var count = ps.length;
+				for (var n=0; n<count; n++){
+					if ( ps[n].style_id == p.style_id ){
+						s_i = n;
+					}
+				}
 			}
-		}
-		for (var c=0; c<PolygonStyles.length; c++){
-			if ( PolygonStyles[c].style_id == Polygon.style_id ){
-				p = c;
+			if (p.polylinestyle_id != 0){
+				var ps = this.polylinestyles;
+				var count = ps.length;
+				for (var n=0; n<count; n++){
+					if ( ps[n].style_id == p.polylinestyle_id ){
+						p_i = n;
+					}
+				}
 			}
+			this.defineGPolygon(i, s_i, p_i);
+		}else{
+			this.defineGPolygonEncoded(i);
 		}
-		this.defineGPolygon(n, s, p);
 	},
 
 
-	"defineGPolygon": function(n){
-		/*@TODO define this */
+	"defineGPolygon": function(i, s, l){
+		var p = this.polygons[i];
+		var pointlist = [];
+		for (n = 0; n < p.points_data.length; n+=2 ){
+			var point = new GLatLng(
+				parseFloat(p.points_data[n]),
+				parseFloat(p.points_data[n+1])
+			);
+			pointlist.push(point);
+		};
+		var fc = "#ff0000";
+		var fo = .5;
+		var c = null;
+		var w = null;
+		var o = null;
+		if ( s != null ){
+			var ps = this.polygontyles[s];	
+			fc = "#"+ps.color;
+			fo = ps.opacity;
+		};
+		if ( l != null ){
+			var ps = this.polylinestyles[l];	
+			c = "#"+ps.color;
+			w = ps.weight;
+			o = ps.opacity;
+		};
+		p.polygon = new GPolygon(pointlist,c,w,o,fc,fo);
+		this.map.addOverlay(p.polygon);
 	},
 
 	

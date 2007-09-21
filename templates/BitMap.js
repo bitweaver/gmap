@@ -160,7 +160,12 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
 	var ref = this;
 	this.loopOver(ref.polylines, function(i){ref.addPolyline(i);});
 	}	
-};
+	
+	if (this.polygons.length > 0){
+	var ref = this;
+	this.loopOver(ref.polygons, function(i){ref.addPolygon(i);});
+	}	
+}
 
 //a utility method we use instead of for loops
 BitMap.Map.prototype = {
