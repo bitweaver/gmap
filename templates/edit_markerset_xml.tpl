@@ -9,6 +9,5 @@
 	<plot_on_load>{$markersetInfo.plot_on_load}</plot_on_load>
 	<side_panel>{$markersetInfo.side_panel}</side_panel>
 	<explode>{$markersetInfo.explode}</explode>
-	<cluster>{$markersetInfo.cluster}</cluster>
 </markerset>
 {/if}

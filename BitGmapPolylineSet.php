@@ -92,8 +92,6 @@ class BitGmapPolylineSet extends BitGmapOverlaySetBase{
 			$pParamHash['keychain_update']['explode'] = 'false';
 		}
 
-		$pParamHash['keychain_store']['cluster'] = 'false';
-		$pParamHash['keychain_update']['cluster'] = 'false';
 		$pParamHash['keychain_store']['set_type'] = 'polylines';
 		$pParamHash['keychain_ids']['set_type'] = 'polylines';
 				

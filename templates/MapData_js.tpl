@@ -115,7 +115,6 @@ BitMap.MapData.push({ldelim}
 		plot_on_load: {$markersInfo[n].plot_on_load},
 		side_panel: {$markersInfo[n].side_panel},
 		explode: {$markersInfo[n].explode},
-		cluster: {$markersInfo[n].cluster},
 		allow_comments:'{if $markersInfo[n].allow_comments eq "y"}y{else}n{/if}',
 		num_comments:{if ($markersInfo[n].allow_comments eq "y" || $gBitUser->isAdmin()) && $markersInfo[n].num_comments }{$markersInfo[n].num_comments}{else}null{/if}
 	{rdelim},
@@ -132,7 +131,6 @@ BitMap.MapData.push({ldelim}
 		plot_on_load: {$markersetsInfo[n].plot_on_load},
 		side_panel: {$markersetsInfo[n].side_panel},
 		explode: {$markersetsInfo[n].explode},
-		cluster: {$markersetsInfo[n].cluster}
 	{rdelim},
 	{/section}{/if}],
 

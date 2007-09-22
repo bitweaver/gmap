@@ -1844,9 +1844,7 @@ $('editerror').innerHTML = str;
 		if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
 		var ex = xml.getElementsByTagName('explode');
 		if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
-		var cl = xml.getElementsByTagName('cluster');
-		if (cl[0].firstChild.nodeValue == 'true'){s.cluster = true;}else{s.cluster = false};
-
+		
 		this.hideSpinner("DONE!");
 
 		if (this.editObjectN == null){

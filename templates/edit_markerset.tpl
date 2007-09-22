@@ -46,16 +46,6 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 			{/forminput}
 	</div>
 	<div class="row">
-		{formlabel label="Cluster" for="cluster"}
-			{forminput}
-				<select name="cluster">
-				<option value="false" {if $markersetInfo.cluster == "false" }selected="selected"{/if}>No</option>
-				<option value="true" {if $markersetInfo.cluster == "true" }selected="selected"{/if}>Yes</option>
-				</select>
-				{formhelp note=""}
-			{/forminput}
-	</div>
-	<div class="row">
 		{formlabel label="Plot-On-Load" for="plot_on_load"}
 			{forminput}
 				<select name="plot_on_load">

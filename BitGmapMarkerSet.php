@@ -106,14 +106,6 @@ class BitGmapMarkerSet extends BitGmapOverlaySetBase{
 			$pParamHash['keychain_update']['explode'] = 'false';
 		}
 
-		if( !empty( $pParamHash['cluster'] ) ) {
-			$pParamHash['keychain_store']['cluster'] = $pParamHash['cluster'];
-			$pParamHash['keychain_update']['cluster'] = $pParamHash['cluster'];
-		}else{
-			$pParamHash['keychain_store']['cluster'] = 'false';
-			$pParamHash['keychain_update']['cluster'] = 'false';
-		}
-
 		$pParamHash['keychain_store']['set_type'] = 'markers';
 		$pParamHash['keychain_ids']['set_type'] = 'markers';
 				
