@@ -434,8 +434,8 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			var markercount = this.markers.length;
 			for ( var n=0; n<markercount; n++ ){
 				//if show set == y and show marker == y
-				var Marker = this.markers[n];
-				if ( ( Marker.side_panel == true && Marker.explode == true )  || set.plot_on_load != true ) {
+				var M = this.markers[n];
+				if ( ( M.side_panel == true && M.explode == true )  || set.plot_on_load != true ) {
 					var imgLink = null;
 					/* DEPRECATED - marker_type is no longer used - when Primary Attachments are available those will be used for creating photo markers
 					if (Marker.marker_type == 1){
@@ -448,27 +448,10 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 					}
 					*/
 
-	  				//if marker is set to init
-					if ( Marker.plot_on_load == true ) {
-						//add marker to side list
-						if (Marker.allow_comments == 'y'){
-							var newLink = A({"href":"javascript:BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html, {maxUrl:BitMap.MapData[0].Map.markers["+n+"].gmarker.my_maxurl});"}, SPAN(null, Marker.title), imgLink );
-						}else{
-							var newLink = A({"href":"javascript:BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html);"}, SPAN(null, Marker.title), imgLink );
-						}
-						var container = $('listset_' + Marker.set_id);
-						container.appendChild(newLink);
-						container.appendChild( BR() );
-					}else{
-						if (Marker.allow_comments == 'y'){
-							var newLink = A({"href":"javascript:BitMap.MapData[0].Map.addMarker("+n+"); BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html, {maxUrl:BitMap.MapData[0].Map.markers["+n+"].gmarker.my_maxurl});"}, SPAN(null, Marker.title), imgLink );
-						}else{
-							var newLink = A({"href":"javascript:BitMap.MapData[0].Map.addMarker("+n+"); BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html);"}, SPAN(null, Marker.title), imgLink );
-						}
-						var container = $('listset_' + Marker.set_id);
-						container.appendChild(newLink);
-						container.appendChild( BR() );
-					}
+					var newLink = A({"href":"javascript:BitMap.MapData[0].Map.openMarkerWindow("+n+");"}, SPAN(null, M.title), imgLink );
+					var container = $('listset_' + M.set_id);
+					container.appendChild(newLink);
+					container.appendChild( BR() );
 				}
 			}
 		}
@@ -476,6 +459,17 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		this.map.setCenter(center);
 	},
 
+	"openMarkerWindow": function(i){
+		var M = this.markers[i];
+		if ( typeof(M.gmarker) == 'undefined' ){
+			this.addMarker(i);
+		}
+		if (M.allow_comments == 'y'){
+			M.gmarker.openInfoWindow( M.gmarker.my_html, {maxUrl:M.gmarker.my_maxurl});
+		}else{
+			M.gmarker.openInfoWindow( M.gmarker.my_html );
+		}		
+	},
 
 	"clearSidepanel": function(){
 		var s = document.getElementById('gmap-sidepanel');
