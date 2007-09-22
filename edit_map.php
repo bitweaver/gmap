@@ -79,6 +79,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 			}
 		}
 
+		$mapTypes = $gContent->getMapTypes(); 
+		$gBitSmarty->assign( 'mapTypes', $mapTypes);
+		
 		$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 		$gBitSmarty->assign( 'childrenAllowed', $gContent->childrenAllowed() );
 		$gBitSmarty->assign_by_ref('mapInfo', $map);

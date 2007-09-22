@@ -167,28 +167,35 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	//get all mapTypes data associated with a given $gmap_id
-	function getMapTypes($gmap_id) {
+	//get all marker styles for a given gmap_id
+	function getMapTypes( &$pGmapId = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
+		
+		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+		
+		if( @$this->verifyId( $pGmapId ) ) {
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gmt.`maptype_id` = gsk.`set_id`) "; 
+			$whereSql .= " WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = 'maptypes' ";
+			array_push( $bindVars, (int)$pGmapId );
+		}
+		
+		$query = "SELECT DISTINCT gmt.* $selectSql
+				FROM `".BIT_DB_PREFIX."gmaps_maptypes` gmt
+				$joinSql
+				$whereSql";
 
-			$bindVars = array((int)$gmap_id, "maptypes");
-
-			$query = "SELECT bmt.*
-          			FROM `".BIT_DB_PREFIX."gmaps_maptypes` bmt, `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
-          			WHERE bmt.`maptype_id` = bmk.`set_id` AND bmk.`gmap_id` = ? AND bmk.`set_type` = ?";
-
-			$result = $this->mDb->query( $query, $bindVars );
-
-			$ret = array();
-
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		}		
+		$result = $this->mDb->query( $query, $bindVars );
+	
+		$ret = array();
+	
+		while ($res = $result->fetchrow()) {
+			$ret[] = $res;
+		};
+			
 		return $ret;
 	}
+
 
 
 
