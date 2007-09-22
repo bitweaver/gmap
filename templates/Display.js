@@ -59,7 +59,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 
 
 	"addMarker": function(i){
-		if (this.markers[i]!= null && this.markers[i].plot_on_load == true){
+		if (this.markers[i]!= null){
 			var M = this.markers[i];
 			
 			//a variable to set a marker to open on initialization
@@ -448,21 +448,26 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 					}
 					*/
 
-					//add marker to side list
-					if (Marker.allow_comments == 'y'){
-						var newLink = A({"href":"javascript:BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html, {maxUrl:BitMap.MapData[0].Map.markers["+n+"].gmarker.my_maxurl});"}, SPAN(null, Marker.title), imgLink );
-					}else{
-						var newLink = A({"href":"javascript:BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html);"}, SPAN(null, Marker.title), imgLink );
-					}
-					var container = $('listset_' + Marker.set_id);
-					container.appendChild(newLink);
-					container.appendChild( BR() );
-
 	  				//if marker is set to init
 					if ( Marker.plot_on_load == true ) {
-						//set loaded to true
+						//add marker to side list
+						if (Marker.allow_comments == 'y'){
+							var newLink = A({"href":"javascript:BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html, {maxUrl:BitMap.MapData[0].Map.markers["+n+"].gmarker.my_maxurl});"}, SPAN(null, Marker.title), imgLink );
+						}else{
+							var newLink = A({"href":"javascript:BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html);"}, SPAN(null, Marker.title), imgLink );
+						}
+						var container = $('listset_' + Marker.set_id);
+						container.appendChild(newLink);
+						container.appendChild( BR() );
 					}else{
-						//set loaded to false
+						if (Marker.allow_comments == 'y'){
+							var newLink = A({"href":"javascript:BitMap.MapData[0].Map.addMarker("+n+"); BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html, {maxUrl:BitMap.MapData[0].Map.markers["+n+"].gmarker.my_maxurl});"}, SPAN(null, Marker.title), imgLink );
+						}else{
+							var newLink = A({"href":"javascript:BitMap.MapData[0].Map.addMarker("+n+"); BitMap.MapData[0].Map.markers["+n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+n+"].gmarker.my_html);"}, SPAN(null, Marker.title), imgLink );
+						}
+						var container = $('listset_' + Marker.set_id);
+						container.appendChild(newLink);
+						container.appendChild( BR() );
 					}
 				}
 			}

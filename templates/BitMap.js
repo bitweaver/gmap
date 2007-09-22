@@ -153,7 +153,7 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
 	
 	if (this.markers.length > 0){
 	var ref = this;
-	this.loopOver(ref.markers, function(i){ref.addMarker(i);});
+	this.loopOver(ref.markers, function(i){ if(ref.markers[i].plot_on_load == true){ ref.addMarker(i);} });
 	}  
 
 	if (this.polylines.length > 0){
