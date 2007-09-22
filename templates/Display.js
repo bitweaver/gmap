@@ -399,7 +399,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		for (var n=0; n<setscount; n++){
 			var set = this.markersets[n];
 			//if show set
-			if ( set.side_panel == true ){
+			if ( set.side_panel == true || set.plot_on_load != true ){
 				$('gmap-map').style.marginRight = '300px';
 				BitMap.show('gmap-sidepanel');
 				display = true;
@@ -435,7 +435,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			for ( var n=0; n<markercount; n++ ){
 				//if show set == y and show marker == y
 				var Marker = this.markers[n];
-				if ( Marker.side_panel == true && Marker.explode == true ) {
+				if ( ( Marker.side_panel == true && Marker.explode == true )  || set.plot_on_load != true ) {
 					var imgLink = null;
 					/* DEPRECATED - marker_type is no longer used - when Primary Attachments are available those will be used for creating photo markers
 					if (Marker.marker_type == 1){
