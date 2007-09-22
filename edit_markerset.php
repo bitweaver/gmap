@@ -63,10 +63,12 @@ if (!empty($_REQUEST["save_markerset"])) {
 	require_once(GMAP_PKG_PATH.'BitGmap.php' );
 	$gmap = new BitGmap();
 	$iconStyles = $gmap->getIconStyles(); 
+	$markerStyles = $gmap->getMarkerStyles(); 
+	$gBitSmarty->assign( 'iconStyles', $iconStyles );
+	$gBitSmarty->assign( 'markerStyles', $markerStyles );
 	
 	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign( 'childrenAllowed', $gContent->childrenAllowed() );
-	$gBitSmarty->assign( 'iconStyles', $iconStyles );
 	$gBitSmarty->assign_by_ref('markersetInfo', $markerset);
 	$gBitSystem->display('bitpackage:gmap/edit_markerset.tpl', NULL, 'center_only');
 	die;

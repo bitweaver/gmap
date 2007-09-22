@@ -282,28 +282,6 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
-	//get all marker styles for a given gmap_id
-	function getMarkerStyles($gmap_id) {
-		global $gBitSystem;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-			$query = "SELECT DISTINCT bs.*
-                FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."gmaps_marker_sets` bms, `".BIT_DB_PREFIX."gmaps_marker_styles` bs
-                WHERE bmk.`gmap_id` = ?
-                AND bmk.`set_type` = 'markers'
-                AND bms.`set_id` = bmk.`set_id` AND bs.`style_id` = bms.`style_id`";
-
-			$result = $this->mDb->query( $query, array((int)$gmap_id) );
-
-			$ret = array();
-
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		};
-		return $ret;
-	}
-
 
 	//* Gets data for a given marker style.
 	// @ todo this should probably take an array so that we can get data for a bunch of styles if we want
@@ -325,6 +303,39 @@ class BitGmap extends LibertyAttachable {
 		}
 		return $result;
 	}
+
+
+
+	//get all marker styles for a given gmap_id
+	function getMarkerStyles( &$pGmapId = NULL ) {
+		global $gBitSystem;
+		$ret = NULL;
+		
+		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+		
+		if( @$this->verifyId( $pGmapId ) ) {
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` gms ON (gms.`style_id` = gis.`style_id`) ";
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gms.`set_id` = gsk.`set_id`) "; 
+			$whereSql .= " WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = 'markers' ";
+			array_push( $bindVars, (int)$pGmapId );
+		}
+		
+		$query = "SELECT DISTINCT gis.* $selectSql
+				FROM `".BIT_DB_PREFIX."gmaps_marker_styles` gis
+				$joinSql
+				$whereSql";
+
+		$result = $this->mDb->query( $query, $bindVars );
+	
+		$ret = array();
+	
+		while ($res = $result->fetchrow()) {
+			$ret[] = $res;
+		};
+			
+		return $ret;
+	}
+
 	
 		
 	function getIconStyle( &$pStyleId ) {
@@ -453,26 +464,34 @@ class BitGmap extends LibertyAttachable {
 	}
 
 
+
 	//get all polylines for given gmap_id and set_types
-	function getPolygonStyles($gmap_id) {
+	function getPolygonStyles( &$pGmapId = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-			$query = "SELECT DISTINCT bs.*
-						 	  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk, `".BIT_DB_PREFIX."gmaps_polygon_sets` bps, `".BIT_DB_PREFIX."gmaps_polygon_styles` bs
-								WHERE bmk.`gmap_id` = ?
-								AND bmk.`set_type` = 'polygons'
-								AND bps.`set_id` = bmk.`set_id` 
-								AND bs.`style_id` = bps.`style_id`";
+		
+		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+		
+		if( @$this->verifyId( $pGmapId ) ) {
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` gms ON (gms.`style_id` = gis.`style_id`) ";
+			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gms.`set_id` = gsk.`set_id`) "; 
+			$whereSql .= " WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = 'polygons' ";
+			array_push( $bindVars, (int)$pGmapId );
+		}
+		
+		$query = "SELECT DISTINCT gis.* $selectSql
+				FROM `".BIT_DB_PREFIX."gmaps_polygon_styles` gis
+				$joinSql
+				$whereSql";
 
-			$result = $this->mDb->query( $query, array((int)$gmap_id) );
-
-			$ret = array();
-
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
+		$result = $this->mDb->query( $query, $bindVars );
+	
+		$ret = array();
+	
+		while ($res = $result->fetchrow()) {
+			$ret[] = $res;
 		};
+			
 		return $ret;
 	}
 

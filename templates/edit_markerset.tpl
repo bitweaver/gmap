@@ -25,7 +25,10 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 		{formlabel label="Marker Style" for="style_id"}
 			{forminput}
 				<select name="style_id">
-					<option value="0" {if $markersetInfo.style_id == 0 }selected="selected"{/if}>Google (standard)</option>
+				<option value="0" {if $markersetInfo.style_id == 0 }selected="selected"{/if}>Google (standard)</option>
+				{if count($markerStyles) > 0}{section name=ix loop=$markerStyles}
+					<option value="{$markerStyles[ix].style_id}" {if $markersetInfo.style_id == $markerStyles[ix].style_id}selected="selected"{else}{/if}>{$markerStyles[ix].name}</option>
+				{/section}{/if}
 				</select>
 				{formhelp note=""}
 			{/forminput}
