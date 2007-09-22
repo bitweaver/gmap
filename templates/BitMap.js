@@ -148,7 +148,7 @@ BitMap.Map = function (index, mapdiv, id, title, desc, data, parsed_data, width,
 	
 	if (this.iconstyles.length > 0){
 	var ref = this;
-	this.loopOver(ref.maptypes, function(i){ref.defineGIcon(i);});
+	this.loopOver(ref.iconstyles, function(i){ref.defineGIcon(i);});
 	} 
 	
 	if (this.markers.length > 0){

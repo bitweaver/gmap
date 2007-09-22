@@ -45,15 +45,15 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 
 	//@TODO - these image paths may not be universal enough, may need to get the root from kernel
 	"defineGIcon": function(i){
-		var IconStyle = this.iconstyles[i];
-		IconStyle.icon = new GIcon();
-		IconStyle.icon.image = IconStyle.image;
-		IconStyle.icon.iconSize = new GSize(IconStyle.icon_w, IconStyle.icon_h);
-		IconStyle.icon.iconAnchor = new GPoint(IconStyle.icon_anchor_x, IconStyle.icon_anchor_y);
-		IconStyle.icon.shadow = IconStyle.shadow_image;
-		IconStyle.icon.shadowSize = new GSize(IconStyle.shadow_w, IconStyle.shadow_h);
-		IconStyle.icon.infoShadowAnchor = new GPoint(IconStyle.shadow_anchor_x, IconStyle.shadow_anchor_y);
-		IconStyle.icon.infoWindowAnchor = new GPoint(IconStyle.infowindow_anchor_x, IconStyle.infowindow_anchor_y);
+		var I = this.iconstyles[i];
+		I.icon = new GIcon();
+		I.icon.image = I.image;
+		I.icon.iconSize = new GSize(I.icon_w, I.icon_h);
+		I.icon.iconAnchor = new GPoint(I.icon_anchor_x, I.icon_anchor_y);
+		I.icon.shadow = I.shadow_image;
+		I.icon.shadowSize = new GSize(I.shadow_w, I.shadow_h);
+		I.icon.infoShadowAnchor = new GPoint(I.shadow_anchor_x, I.shadow_anchor_y);
+		I.icon.infoWindowAnchor = new GPoint(I.infowindow_anchor_x, I.infowindow_anchor_y);
 	},
 
 
