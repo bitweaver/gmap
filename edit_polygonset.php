@@ -62,6 +62,12 @@ if (!empty($_REQUEST["save_polygonset"])) {
 }else{
 	$gContent->invokeServices( 'content_edit_function' );
 	$polygonset = $gContent->mInfo;
+	require_once(GMAP_PKG_PATH.'BitGmap.php' );
+	$gmap = new BitGmap();
+	$polylineStyles = $gmap->getPolyineStyles(); 
+	$polygonStyles = $gmap->getPolygonStyles(); 
+	$gBitSmarty->assign( 'polylineStyles', $polylineStyles );
+	$gBitSmarty->assign( 'polygonStyles', $polygonStyles );
 	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign( 'childrenAllowed', $gContent->childrenAllowed() );
 	$gBitSmarty->assign_by_ref('polygonsetInfo', $polygonset);
