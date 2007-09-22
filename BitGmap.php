@@ -487,20 +487,17 @@ class BitGmap extends LibertyAttachable {
             // Polygon setup
             $polygon_joinSql = " INNER JOIN `".BIT_DB_PREFIX."gmaps_polygon_sets` pgms ON (pgms.`style_id` = gis.`style_id`) ";
             $polygon_joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` pgsk ON (pgms.`set_id` = pgsk.`set_id`) "; 
-            $polygon_whereSql .= " WHERE pgsk.`gmap_id` = ? AND pgsk.`set_type` = 'polygons' ";
+            $polygon_whereSql = " WHERE pgsk.`gmap_id` = ? AND pgsk.`set_type` = 'polygons' ";
             $bindVars[] = $pGmapId;
 
             // Polyline setup
             $polyline_joinSql = " INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` lgms ON (lgms.`style_id` = gis.`style_id`) ";
-            $polygon_joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` pgsk ON (lgms.`set_id` = lgsk.`set_id`) "; 
-            $polygon_whereSql .= " WHERE lgsk.`gmap_id` = ? AND lgsk.`set_type` = 'polylines' ";
-
-
+            $polyline_joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` lgsk ON (lgms.`set_id` = lgsk.`set_id`) "; 
+            $polyline_whereSql = " WHERE lgsk.`gmap_id` = ? AND lgsk.`set_type` = 'polylines' ";
             $bindVars[] = $pGmapId;
 
             // Build the whole sodding mess
-            $query = $query . $polygon_joinSql . $polygon_whereSql . " UNION "
-                 $query . $polyline_joinsql . $polyline_whereSql
+            $query = $query . $polygon_joinSql . $polygon_whereSql . " UNION " . $query . $polyline_joinSql . $polyline_whereSql;
         }
 
         $result = $this->mDb->query( $query, $bindVars );
