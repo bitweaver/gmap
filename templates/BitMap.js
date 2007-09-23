@@ -15,26 +15,6 @@ BitMap.hide = function (i){
 	document.getElementById(i).style.display = "none";
 };
 
-//for changing elm class properties
-//(action,domelm,class1,class2)
-BitMap.jscss = function (a,o,c1,c2){
-  switch (a){
-    case 'swap':
-      o.className=!BitMap.jscss('check',o,c1)?o.className.replace(c2,c1):o.className.replace(c1,c2);
-    break;
-    case 'add':
-      if(!BitMap.jscss('check',o,c1)){o.className+=o.className?' '+c1:c1;}
-    break;
-    case 'remove':
-      var rep=o.className.match(' '+c1)?' '+c1:c1;
-      o.className=o.className.replace(rep,'');
-    break;
-    case 'check':
-      return new RegExp('\\b'+c1+'\\b').test(o.className)
-    break;
-  }
-};
-
 BitMap.Display = function(){
   BitMap.Initialize();
   BitMap.MapData[0].Map.addOverlayListener();
