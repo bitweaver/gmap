@@ -36,6 +36,5 @@ if( $gContent->isCommentable() ) {
 
 $gBitSmarty->assign_by_ref('marker', $gContent->mInfo);
 
-echo $gBitSmarty->fetch('bitpackage:gmap/view_marker.tpl', tra('Gmap Marker') );
-//$gBitSystem->display('bitpackage:gmap/view_marker.tpl', tra('Gmap Marker') );
+$gBitSystem->display('bitpackage:gmap/view_marker.tpl', NULL, 'center_only');
 ?>
