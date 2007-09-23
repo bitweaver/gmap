@@ -1,4 +1,6 @@
 {strip}
+{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
+
 <div class="display gmarker">
 	<div class="header">
 		<h1 id="mymarkertitle">{$gContent->getTitle()}</h1>
@@ -9,9 +11,16 @@
 		<div id="markercontent" class="content">
 			{$gContent->mInfo.parsed_data}
 		</div>
-	</div> <!-- end .body -->
-</div>
+	</div><!-- end .body --> 
+</div><!-- end .display -->
+
+{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}
+
 {if $gContent->isCommentable() }
-	{include file="bitpackage:liberty/comments.tpl"}
+	{if $pre_window}
+		<div><a href="javascript:void(0);" onclick="BitMap.MapData[0].Map.map.getInfoWindow().maximize()">{if $comments != null}{$gContent.num_comments}{else}0{/if} Comment(s)</a></div>
+	{else}
+		{include file="bitpackage:liberty/comments.tpl"}
+	{/if}
 {/if}
 {/strip}

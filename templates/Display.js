@@ -155,7 +155,6 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	  var data = DIV(null, "");
 	  data.innerHTML += ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';
 	  var comments = ( M.allow_comments == 'y' )?DIV(null, DIV({'id':'comment_'+M.content_id}, null), A({'href':'javascript:void(0);', 'onclick':'BitMap.MapData[0].Map.map.getInfoWindow().maximize()'}, (M.num_comments != null)?M.num_comments:"0", " Comment(s)"), DIV({'id':'comment_'+M.content_id+'_footer'}, null)):null;
-	  //var comments = ( M.allow_comments == 'y' )?DIV(null, DIV({'id':'comment_'+M.content_id}, null), A({'href':'javascript:void(0);', 'onclick':'LibertyComment.attachForm("comment_'+M.content_id+'", "'+M.content_id+'")'}, (M.num_comments != null)?M.num_comments:"0", " Comment(s)"), DIV({'id':'comment_'+M.content_id+'_footer'}, null)):null;
 	  M.gmarker.my_html = DIV( {'style':'white-space: nowrap;'}, mytitle, creator, modifier, stars, image, data, comments);
 	  M.gmarker.my_maxurl = BitMap.BIT_ROOT_URL + "gmap/view_marker.php?marker_id=" + M.marker_id + '&comments_maxComments=999999';
 	  this.map.addOverlay(M.gmarker);
@@ -464,11 +463,23 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		if ( typeof(M.gmarker) == 'undefined' ){
 			this.addMarker(i);
 		}
-		if (M.allow_comments == 'y'){
-			M.gmarker.openInfoWindow( M.gmarker.my_html, {maxUrl:M.gmarker.my_maxurl});
+		if ( typeof(M.gmarker.full_load) == 'undefined' ){
+			this.TARGET_MARKER_INDEX = i;
+			var id = M.content_id;
+			doSimpleXMLHttpRequest("view_marker.php", {content_id:id, pre_window:true}).addCallback( bind(this.loadMarkerCallback, this) ); 
 		}else{
-			M.gmarker.openInfoWindow( M.gmarker.my_html );
-		}		
+			if (M.allow_comments == 'y'){
+				M.gmarker.openInfoWindow( M.gmarker.full_load, {maxUrl:M.gmarker.my_maxurl});
+			}else{
+				M.gmarker.openInfoWindow( M.gmarker.full_load );
+			}
+		}
+	},
+
+	"loadMarkerCallback": function(rslt){
+		this.markers[this.TARGET_MARKER_INDEX].gmarker.full_load = rslt.responseText;
+		//this.executeJavascript(markercontentdivid);
+		this.openMarkerWindow( this.TARGET_MARKER_INDEX );
 	},
 
 	"clearSidepanel": function(){

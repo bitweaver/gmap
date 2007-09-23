@@ -6,13 +6,20 @@ require_once('../bit_setup_inc.php' );
 $gBitSystem->verifyPackage('gmap' );
 
 // Now check permissions to access this page
-$gBitSystem->verifyPermission('p_marker_view' );
+$gBitSystem->verifyPermission('p_gmap_marker_view' );
 
 // Get the map for specified gmap_id
 require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );
 
+$displayHash = array( 'perm_name' => 'p_gmap_marker_view' );
+$gContent->invokeServices( 'content_display_function', $displayHash );
+
 //use Mochikit - prototype sucks
 $gBitThemes->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js' ) );
+
+if ( !empty($_REQUEST['pre_window']) ){
+	$gBitSmarty->assign('pre_window', TRUE);
+}
 
 if( $gContent->isCommentable() ) {
 	$gBitSystem->setConfig( 'comments_ajax', 'y' );
@@ -23,7 +30,7 @@ if( $gContent->isCommentable() ) {
 	$comments_vars = Array('gmap');
 	$comments_prefix_var='gmap:';
 	$comments_object_var='gmap';
-	$comments_return_url = $_SERVER['PHP_SELF']."view_marker.php?marker_id=".$gContent->mGmarkerId;
+	$comments_return_url = $_SERVER['PHP_SELF']."view_marker.php?marker_id=".$gContent->mOverlayId;
 	include_once( LIBERTY_PKG_PATH.'comments_inc.php' );
 }	
 
