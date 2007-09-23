@@ -1415,10 +1415,6 @@ BitMap.Edit.prototype = {
 	 "storeIconStyle": function(f){
 		this.showSpinner("Saving Iconstyle...");
 		var str = "edit_iconstyle.php?" + queryString(f);
-		
-BitMap.show('editerror');
-$('editerror').innerHTML = str;
-		
 		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateIconStyle, this) ); 
 	 },
 
