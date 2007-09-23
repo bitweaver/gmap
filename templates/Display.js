@@ -103,128 +103,69 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 
 
 	"defineGMarker": function(i, n){
-	  var M = this.markers[i];
-	  var p = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
-	  var myicon = (n != null)?this.iconstyles[n].icon:null;
-	  var mytitle;
-	  //add marker roll over
-	  if (typeof(M.label_data) != 'undefined' && M.label_date != null){
-	    mytitle = M.label_data;
-	  }else if (typeof(M.title) != 'undefined' && M.title != null){
-	    mytitle = M.title;
-	  }
-	  
-	  M.gmarker = new GMarker(p, {icon: myicon, title:mytitle});
-	  
-	  var mytitle = H1( {'class':'marker-title'}, M.title );
-	  var stars = '';
-	  if (typeof(document.getElementById('iwindow-stars')) != 'undefined' && M.stars_pixels != null){
-	    var starsElm = document.getElementById('iwindow-stars').cloneNode(true);
-	    var divs = starsElm.getElementsByTagName('div');
-	    divs.item(0).id = null;
-	    divs.item(1).style.width = M.stars_pixels + "px";
-	    stars = starsElm.innerHTML;
-	  }
-	  var image = '';
-	  /* DEPRECATED - marker_type is no longer used - when Primary Attachments are available those will be used for creating photo markers
-	  if (M.marker_type == 1){
-			var urlSrc = Marker.photo_url;
-			var pos = urlSrc.lastIndexOf('.');
-			var str_1 = urlSrc.substring(0, pos);
-			var str_2 = urlSrc.substring(pos, urlSrc.length);
-			var medUrl = str_1 + "_medium" + str_2;
-			var targImg = urlSrc; // @TODO: add PathToRoot here
-			image = P(null, A({'onClick':'javascript:window.open('+targImg+')'}, IMG({'src':medUrl})));
-	  }
-	  */
-	  var d = (new Date(M.created * 1000)).toString();  
-	  var di = d.lastIndexOf('GMT');
-	  var ds = d.substring(0, di-10);  
-
-	  var creator = (M.creator_real_name != '')?DIV(null, "Created by ", M.creator_real_name, " on ", ds):null;
-	  
-	  M.created_date = ds;
-	  
-	  var u = (new Date(M.last_modified * 1000)).toString();  
-	  var ui = d.lastIndexOf('GMT');
-	  var us = d.substring(0, di-10);  
-	  M.modified_date = us;
-
-	  var modifier = (M.modifier_real_name != '')?DIV(null, "Last modification by ", M.modifier_real_name, " on ", us):null;
-	  
-	  var data = DIV(null, "");
-	  data.innerHTML += ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';
-	  var comments = ( M.allow_comments == 'y' )?DIV(null, DIV({'id':'comment_'+M.content_id}, null), A({'href':'javascript:void(0);', 'onclick':'BitMap.MapData[0].Map.map.getInfoWindow().maximize()'}, (M.num_comments != null)?M.num_comments:"0", " Comment(s)"), DIV({'id':'comment_'+M.content_id+'_footer'}, null)):null;
-	  M.gmarker.my_html = DIV( {'style':'white-space: nowrap;'}, mytitle, creator, modifier, stars, image, data, comments);
-	  M.gmarker.my_maxurl = BitMap.BIT_ROOT_URL + "gmap/view_marker.php?marker_id=" + M.marker_id + '&comments_maxComments=999999';
-	  this.map.addOverlay(M.gmarker);
+		var M = this.markers[i];
+		var p = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
+		var myicon = (n != null)?this.iconstyles[n].icon:null;
+		var mytitle;
+		//add marker roll over
+		if (typeof(M.label_data) != 'undefined' && M.label_date != null){
+		mytitle = M.label_data;
+		}else if (typeof(M.title) != 'undefined' && M.title != null){
+		mytitle = M.title;
+		}		
+		M.gmarker = new GMarker(p, {icon: myicon, title:mytitle});
+		M.gmarker.index = i;
+		M.gmarker.my_maxurl = BitMap.BIT_ROOT_URL + "gmap/view_marker.php?marker_id=" + M.marker_id + '&comments_maxComments=999999';
+		this.map.addOverlay(M.gmarker);
 	},
 
 
 
 	"defineGxMarker": function(n, i, s){
 		var M = this.markers[n];
-	
-	  var point = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
+		
+		var point = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
 		var icon = null;
 		if (i != null){
 			icon = this.iconstyles[i].icon;
 		}
 		var mytip = DIV({'class':'tip-'+this.markerstyles[s].name}, M.label_data);
-	  M.gmarker = new GxMarker(point, icon, mytip);
-	  M.gmarker.marker_style_type = 0;
-	
+		M.gmarker = new GxMarker(point, icon, mytip);
+		M.gmarker.marker_style_type = 0;
+		
+		/*
 		var imgLink ='';
-		
-		/* DEPRECATED - marker_type is no longer used - when Primary Attachments are available those will be used for creating photo markers
-		if (M.marker_type == 1){
-			var urlSrc = M.photo_url;
-			var pos = urlSrc.lastIndexOf('.');
-			var str_1 = urlSrc.substring(0, pos);
-			var str_2 = urlSrc.substring(pos, urlSrc.length); 
-			var medUrl = str_1 + "_medium" + str_2;
-			var imgLink = P(null, IMG({'src':medUrl}));
-		}
+		var data = DIV(null, "");
+		data.innerHTML += ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';	
+		M.gmarker.my_html = DIV({'style':'white-space: nowrap;', 'class':'win-'+this.markerstyles[s].name}, H1({'class':markertitle}, M.title), imgLink, data);
 		*/
-		
-	  var data = DIV(null, "");
-	  data.innerHTML += ( typeof(M.parsed_data)!= 'undefined' && M.parsed_data != '')?M.parsed_data:'';	
-	  M.gmarker.my_html = DIV({'style':'white-space: nowrap;', 'class':'win-'+this.markerstyles[s].name}, H1({'class':markertitle}, M.title), imgLink, data);
-	  this.map.addOverlay(M.gmarker);
+		this.map.addOverlay(M.gmarker);
 	},
 
 
 
 	"definePdMarker": function(n, i, s){
 		var M = this.markers[n];
-	
+		
 		//PdMarker Style
-	  var point = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
+		var point = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
 		var icon = null;
 		if (i != null){
 			icon = this.iconstyles[i].icon;
 		}
-	  M.gmarker = new PdMarker(point, icon);
-	  M.gmarker.marker_style_type = 1;
-	  M.gmarker.setTooltipClass( "tip-"+this.markerstyles[s].name );
-	  M.gmarker.setDetailWinClass( "win-"+this.markerstyles[s].name );
-	  M.gmarker.setTooltip( "<div>" + M.label_data + "</div>");
-	
+		M.gmarker = new PdMarker(point, icon);
+		M.gmarker.marker_style_type = 1;
+		M.gmarker.setTooltipClass( "tip-"+this.markerstyles[s].name );
+		M.gmarker.setDetailWinClass( "win-"+this.markerstyles[s].name );
+		M.gmarker.setTooltip( "<div>" + M.label_data + "</div>");
+		
+		/* DEPRECATED - this should be made to work with new ajax loading of window content
 		var imgLink ='';
-		/* DEPRECATED - marker_type is no longer used - when Primary Attachments are available those will be used for creating photo markers
-		if (M.marker_type == 1){
-			var urlSrc = M.photo_url;
-			var pos = urlSrc.lastIndexOf('.');
-			var str_1 = urlSrc.substring(0, pos);
-			var str_2 = urlSrc.substring(pos, urlSrc.length); 
-			var medUrl = str_1 + "_medium" + str_2;
-			var imgLink = "<p><img src='"+medUrl+"'></p>"
-		}
-		*/	
-	  M.gmarker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+M.title+"</h1>" + imgLink + "<p>"+M.parsed_data+"</p></div>";
-	  M.gmarker.setDetailWinHTML( M.marker.my_html );
-	  //rollover-icon: M.marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
-	  this.map.addOverlay(M.gmarker);
+		M.gmarker.my_html = "<div style='white-space: nowrap;'><h1 class='markertitle'>"+M.title+"</h1>" + imgLink + "<p>"+M.parsed_data+"</p></div>";
+		M.gmarker.setDetailWinHTML( M.marker.my_html );
+		*/
+		//rollover-icon: M.marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
+		this.map.addOverlay(M.gmarker);
 	},
 
 
@@ -436,17 +377,6 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				var M = this.markers[n];
 				if ( ( M.side_panel == true && M.explode == true )  || set.plot_on_load != true ) {
 					var imgLink = null;
-					/* DEPRECATED - marker_type is no longer used - when Primary Attachments are available those will be used for creating photo markers
-					if (Marker.marker_type == 1){
-						var urlSrc = Marker.photo_url;
-						var pos = urlSrc.lastIndexOf('.');
-						var str_1 = urlSrc.substring(0, pos);
-						var str_2 = urlSrc.substring(pos, urlSrc.length); 
-						var thumbUrl = str_1 + "_thumb" + str_2;
-						var imgLink = SPAN( null, BR(), IMG({"src":thumbUrl}) );
-					}
-					*/
-
 					var newLink = A({"href":"javascript:BitMap.MapData[0].Map.openMarkerWindow("+n+");"}, SPAN(null, M.title), imgLink );
 					var container = $('listset_' + M.set_id);
 					container.appendChild(newLink);
@@ -463,21 +393,21 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		if ( typeof(M.gmarker) == 'undefined' ){
 			this.addMarker(i);
 		}
-		if ( typeof(M.gmarker.full_load) == 'undefined' ){
+		if ( typeof(M.gmarker.my_html) == 'undefined' ){
 			this.TARGET_MARKER_INDEX = i;
 			var id = M.content_id;
 			doSimpleXMLHttpRequest("view_marker.php", {content_id:id, pre_window:true}).addCallback( bind(this.loadMarkerCallback, this) ); 
 		}else{
 			if (M.allow_comments == 'y'){
-				M.gmarker.openInfoWindow( M.gmarker.full_load, {maxUrl:M.gmarker.my_maxurl});
+				M.gmarker.openInfoWindow( M.gmarker.my_html, {maxUrl:M.gmarker.my_maxurl});
 			}else{
-				M.gmarker.openInfoWindow( M.gmarker.full_load );
+				M.gmarker.openInfoWindow( M.gmarker.my_html );
 			}
 		}
 	},
 
 	"loadMarkerCallback": function(rslt){
-		this.markers[this.TARGET_MARKER_INDEX].gmarker.full_load = rslt.responseText;
+		this.markers[this.TARGET_MARKER_INDEX].gmarker.my_html = rslt.responseText;
 		//this.executeJavascript(markercontentdivid);
 		this.openMarkerWindow( this.TARGET_MARKER_INDEX );
 	},
