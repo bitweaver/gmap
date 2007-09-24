@@ -149,6 +149,21 @@ class BitGmapMarker extends BitGmapOverlayBase {
 			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_marker_sets` gms ON (gmk.`set_id` = gms.`set_id`) ";
 		}
 
+		if( @$this->verifyId( $pListHash['user_id'] ) ) {
+			array_push( $bindVars, (int)$pListHash['user_id'] );
+			$whereSql .= ' AND lc.`user_id` = ? ';
+		}
+		
+		// map user to login in case we used one instead of the other
+		if( !empty( $pListHash['user'] ) ) {
+			$pListHash['login'] = $pListHash['user'];
+		}
+
+		if( !empty( $pListHash['login'] ) ) {
+			array_push( $bindVars, $pListHash['login'] );
+			$whereSql .= ' AND uu.`login` = ? ';
+		}
+
 		if ( isset( $pListHash['set_id'] ) ){
 			if (!is_array( $pListHash['set_id'] ) && is_numeric( $pListHash['set_id'] ) ){
 				$sets = array( $pListHash['set_id'] );
