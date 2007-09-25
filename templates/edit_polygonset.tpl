@@ -42,7 +42,7 @@
 			{/forminput}
 	</div>
 	
-	{if $gContent->hasAdminPermission()}
+	{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 	<div class="row">
 		{formlabel label="Allow Registered Users to Add Polygons To This Set" for="allow_children"}
 			{forminput}

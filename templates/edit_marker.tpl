@@ -45,7 +45,7 @@
 			
 			{textarea}{$markerInfo.data}{/textarea}
 	
-			{if $gContent->hasAdminPermission()}
+			{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 			<div class="row">
 				{formlabel label="Allow Comments" for="allow_comments"}
 					{forminput}

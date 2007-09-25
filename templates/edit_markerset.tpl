@@ -76,7 +76,7 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 			{/forminput}
 	</div>
 
-	{if $gContent->hasAdminPermission()}
+	{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 	<div class="row">
 		{formlabel label="Allow Registered Users to Add Markers To This Set" for="allow_children"}
 			{forminput}

@@ -51,7 +51,7 @@
 			{/forminput}
 	</div>
 	
-	{if $gContent->hasAdminPermission()}
+	{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 	<div class="row">
 		{formlabel label="Allow Registered Users To Edit" for="share_edit"}
 			{forminput}
