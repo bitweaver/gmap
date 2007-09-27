@@ -66,13 +66,14 @@ class BitGmapMarker extends BitGmapOverlayBase {
 			array_push( $bindVars,  $lookupId = @BitBase::verifyId( $this->mOverlayId )? $this->mOverlayId : $this->mContentId );
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-			$query = "select ot.*, lc.*,
+			$query = "select ot.*, lc.*, ufm.*,
 					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
 					  FROM `".BIT_DB_PREFIX.$this->mOverlayTable."` ot
 						INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id` = ot.`content_id`) $joinSql
 						LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
 						LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
+						LEFT JOIN `".BIT_DB_PREFIX."users_favorites_map` ufm ON ( lc.`content_id`=ufm.`favorite_content_id` )
 					  WHERE ot.`$lookupColumn`=? $whereSql";
 					  
 			$result = $this->mDb->query( $query, $bindVars );
@@ -193,7 +194,13 @@ class BitGmapMarker extends BitGmapOverlayBase {
 			$whereSql .= " AND gsk.`set_type` = 'markers' AND gsk.`gmap_id` = ? "; 
 			array_push( $bindVars, (int)$pListHash['gmap_id'] );
 		}
-		
+
+		if ( isset( $pListHash['favorites'] ) ){
+			$selectSql .= ", ufm.* ";
+			$joinSql .= " LEFT JOIN `".BIT_DB_PREFIX."users_favorites_map` ufm ON ( lc.`content_id`=ufm.`favorite_content_id` ) ";
+			$whereSql .= " AND ufm.`favorite_content_id` IS NOT NULL ";
+		}
+
 		//$pListHash['sort_mode'] = 'date_added_desc';
 		$sortModePrefix = 'lc.';
 		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] );
