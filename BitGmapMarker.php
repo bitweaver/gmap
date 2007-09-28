@@ -92,6 +92,9 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$this->mInfo['data'] = addslashes($this->mInfo['data']);
 				$this->mInfo['data'] = str_replace("\n", "\\n", $this->mInfo['data']);
 
+				$comment = new LibertyComment();
+				$this->mInfo['num_comments'] = $comment->getNumComments($this->mInfo['content_id']);
+
 /* we can prolly get rid of this since titles don't take linebreaks. and this was messing up the json editing -wjames
 				$this->mInfo['xml_parsed_title'] = $this->parseData( $this->mInfo['title'], $this->mInfo['format_guid'] );
 				$this->mInfo['parsed_title'] = $this->parseData( $this->mInfo['title'], $this->mInfo['format_guid'] );
