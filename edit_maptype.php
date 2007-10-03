@@ -32,25 +32,25 @@ $gBitSystem->verifyPermission('p_gmap_edit' );
 $format = 'xml';
 
 if (!empty($_REQUEST["save_maptype"])) {
-    if( $result = $gContent->storeMapType( $_REQUEST ) ) {
+	if( $result = $gContent->storeMapType( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('maptypeInfo', $result );
-    }
-//Check if this to remove from a set, or to delete completely
+	}
+	//Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_maptype"])) {
-    if( $gContent->removeMapTypeFromMap( $_REQUEST ) ) {
+	if( $gContent->removeMapTypeFromMap( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('removeSucces', true);
 	}
 }elseif (!empty($_REQUEST["expunge_maptype"])) {
-    if( $gContent->expungeMapType( $_REQUEST ) ) {
+	if( $gContent->expungeMapType( $_REQUEST ) ) {
 		$gBitSmarty->assign_by_ref('expungeSucces', true);
-    }
+	}
 }else{
 	if ( isset( $_REQUEST["maptype_id"] ) ){
 		$maptype = $gContent->getMapType( $_REQUEST["maptype_id"] );
 	}
-	$gBitSmarty->assign_by_ref('maptypeInfo', $maptype;
+	$gBitSmarty->assign_by_ref('maptypeInfo', $maptype );
 	$gBitSystem->display('bitpackage:gmap/edit_maptype.tpl', NULL, 'center_only');
-	die;
+die;
 }
 
 
@@ -60,4 +60,4 @@ if ( count($gContent->mErrors) > 0 ){
 }else{
 	$gBitSystem->display('bitpackage:gmap/edit_maptype_xml.tpl', null, $format);
 }
-?>	
+?>
