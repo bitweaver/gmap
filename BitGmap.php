@@ -420,33 +420,35 @@ class BitGmap extends LibertyAttachable {
 	}
 
 	//get all polylines for given gmap_id and set_types
-	function getPolylineStyles($gmap_id) {
-		global $gBitSystem;
-		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
-		 	$bindVars = array((int)$gmap_id, $gmap_id);
-			$query = "SELECT DISTINCT bs.*
-                  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
-                         INNER JOIN `".BIT_DB_PREFIX."gmaps_polygon_sets` bgs on bmk.`set_id`  = bgs.`set_id`
-                         INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_styles` bs on bs.`style_id` = bgs.`polylinestyle_id`
-                  WHERE bmk.`gmap_id` = ?
-                  AND bmk.`set_type` = 'polygons'
-                  UNION SELECT DISTINCT bs.*
-                  FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` bmk
-                         INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` bps on bmk.`set_id`  = bps.`set_id`
-                         INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_styles` bs on bs.`style_id` = bps.`style_id`
-                  WHERE bmk.`gmap_id` = ?
-                  AND bmk.`set_type` = 'polylines'";
+    function getPolylineStyles( &$pGmapId = NULL ) {
+        global $gBitSystem;
+        $ret = NULL;
+        
+        $bindVars = array(); $joinSql = ''; $whereSql = '';
 
-			$result = $this->mDb->query( $query, $bindVars );
+        $query = "SELECT DISTINCT gis.*
+                FROM `".BIT_DB_PREFIX."gmaps_polyline_styles` gis";
+                
+        if( @$this->verifyId( $pGmapId ) ) {
+            // Polyline setup
+            $polyline_joinSql = " INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` lgms ON (lgms.`style_id` = gis.`style_id`) ";
+            $polyline_joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` lgsk ON (lgms.`set_id` = lgsk.`set_id`) "; 
+            $polyline_whereSql = " WHERE lgsk.`gmap_id` = ? AND lgsk.`set_type` = 'polylines' ";
+            $bindVars[] = $pGmapId;
 
-			$ret = array();
+            // Build the whole sodding mess
+            $query = $query . $polyline_joinSql . $polyline_whereSql . " UNION " . $query . $polyline_joinSql . $polyline_whereSql;
+        }
 
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		};
-		return $ret;
+        $result = $this->mDb->query( $query, $bindVars );
+    
+        $ret = array();
+    
+        while ($res = $result->fetchrow()) {
+            $ret[] = $res;
+        };
+            
+        return $ret;
 	}
 
 
