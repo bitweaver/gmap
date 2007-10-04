@@ -63,6 +63,10 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 			$pParamHash['overlay_store']['type'] = $pParamHash['type'];
 		}
 
+		if( !empty( $pParamHash['poly_data'] ) ) {
+			$pParamHash['overlay_store']['poly_data'] = $pParamHash['poly_data'];
+		}
+
 		if( !empty( $pParamHash['levels_data'] ) ) {
 			$pParamHash['overlay_store']['levels_data'] = $pParamHash['levels_data'];
 		}
@@ -159,8 +163,8 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 		$result = $this->mDb->query($query,$bindVars,$pListHash['max_records'],$pListHash['offset']);
 		$cant = $this->mDb->getOne($query_cant,$bindVars);
 		
-		while ($res = $result->fetchrow()) {
-			$res['parsed_data'] = $res['data'];
+		$ret = array();
+		while( $res = $result->fetchRow() ) {
 			$ret[] = $res;
 		}
 		

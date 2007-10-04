@@ -184,9 +184,9 @@ BitMap.MapData.push({ldelim}
 		type:"{$polylinesInfo[n].type}",
 		{if $polylinesInfo[n].type != 2 }
 			points_data:new Array(),
-			points_data:[{$polylinesInfo[n].data}],
+			points_data:[{$polylinesInfo[n].poly_data}],
 		{else}
-			points_data:"{$polylinesInfo[n].data}",
+			points_data:"{$polylinesInfo[n].poly_data}",
 			levels_data:"{$polylinesInfo[n].levels_data}",
 			zoom_factor:{$polylinesInfo[n].zoom_factor}32,
 			num_levels:{$polylinesInfo[n].num_levels}4,
@@ -227,7 +227,7 @@ BitMap.MapData.push({ldelim}
 		name: "{$gContent->mMapPolygons[polygon_n].title}",
 		circle:{if $gContent->mMapPolygons[polygon_n].circle}{$gContent->mMapPolygons[polygon_n].circle}{else}null{/if},
 		points_data: new Array(),
-		points_data: [{$gContent->mMapPolygons[polygon_n].data}],
+		points_data: [{$gContent->mMapPolygons[polygon_n].poly_data}],
 		circle_center: new Array(),
 		circle_center: [{$gContent->mMapPolygons[polygon_n].circle_center}],
 		{if $gContent->mMapPolygons[polygon_n].radius != NULL}

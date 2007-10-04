@@ -2673,7 +2673,7 @@ BitMap.Edit.prototype = {
 			var f = $('edit-polyline-form');
 			alert ('Polyline drawing assistant activated for '+ f.title.value + ' polyline. \n Click to Draw!');
 			
-			this.bModPData = f.edit; 
+			this.bModPData = f.poly_data; 
 			this.bLastpoint = null;
 			this.bTempPoints = [];
 			this.TempOverlay = false;
@@ -2699,51 +2699,49 @@ BitMap.Edit.prototype = {
 							msg += ', ' + ref.bTempPoints[i].y + ', ' + ref.bTempPoints[i].x;
 						}
 					}
-					f.edit.value = msg;
+					f.poly_data.value = msg;
 				}
 			});
 		}
 		
 		//polygon assistant
 		if (a == 'polygon'){
-			this.bModForm = $('polygonform_'+b);
+			var f = $('polygonform_'+b);
 			ref = this;
 			
-			if (this.bModForm.circle.options[this.bModForm.circle.selectedIndex].value == 'true'){
-				this.bModPData = this.bModForm.circle_center;
-				alert ('Circle-Center drawing assistant activated for '+ this.bModForm.name.value + ' polygon. \n Click to marker the center of your circle!');
+			if (f.circle.options[f.circle.selectedIndex].value == 'true'){
+				alert ('Circle-Center drawing assistant activated for '+ f.title.value + ' polygon. \n Click to marker the center of your circle!');
 				
 				this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
 					if (point) {
-						this.Map.map.panTo(point);
-						this.bModPData.value = point.lng() + ", " + point.lat();
+						this.panTo(point);
+						f.circle_center.value = point.lng() + ", " + point.lat();
 					}
 				});
 			}else{
-				this.bModPData = this.bModForm.points_data; 
-				alert ('Polygon drawing assistant activated for '+ this.bModForm.name.value + ' polygon. \n Click to draw the outline. \n\nThe final connection will automatically be \ncompleted for you, so don\'t worry about that.');
+				alert ('Polygon drawing assistant activated for '+ f.title.value + ' polygon. \n Click to draw the outline. \n\nThe final connection will automatically be \ncompleted for you, so don\'t worry about that.');
 				this.bLastpoint = null;
 				this.bTempPoints = [];
 				this.TempOverlay = new GPolyline(this.bTempPoints);
 				this.Map.map.addOverlay(this.TempOverlay);		//create polyline object from points and add to map
 				
 				this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay,point) {
-					if(this.bLastpoint && this.bLastpoint.x==point.x && this.bLastpoint.y==point.y) return;
-					this.bLastpoint = point;
+					if(ref.bLastpoint && ref.bLastpoint.x==point.x && ref.bLastpoint.y==point.y) return;
+					ref.bLastpoint = point;
 					
-					this.bTempPoints.push(point);
-					this.Map.map.removeOverlay(ref.TempOverlay);
-					ref.TempOverlay = new GPolyline(this.bTempPoints);
-					this.Map.map.addOverlay(ref.TempOverlay);
-					for(var i=0; i<this.bTempPoints.length; i++){
+					ref.bTempPoints.push(point);
+					this.removeOverlay(ref.TempOverlay);
+					ref.TempOverlay = new GPolyline(ref.bTempPoints);
+					this.addOverlay(ref.TempOverlay);
+					for(var i=0; i<ref.bTempPoints.length; i++){
 						if (i == 0){
-							msg = this.bTempPoints[i].y + ', ' + this.bTempPoints[i].x;
+							msg = ref.bTempPoints[i].y + ', ' + ref.bTempPoints[i].x;
 						}else{
-							msg += ', ' + this.bTempPoints[i].y + ', ' + this.bTempPoints[i].x;
+							msg += ', ' + ref.bTempPoints[i].y + ', ' + ref.bTempPoints[i].x;
 						}
 					}
 					
-					this.bModPData.value = msg;
+					f.poly_data.value = msg;
 				});
 			}
 		}

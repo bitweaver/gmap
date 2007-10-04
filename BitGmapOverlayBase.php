@@ -76,8 +76,14 @@ class BitGmapOverlayBase extends LibertyAttachable {
 				$this->mInfo = $result->fields;
 				$this->mOverlayId = $result->fields[$overlayKey];
 				$this->mContentId = $result->fields['content_id'];
-				parent::load();				
+				$this->mInfo['creator'] =( isset( $result->fields['creator_real_name'] )? $result->fields['creator_real_name'] : $result->fields['creator_user'] );
+				$this->mInfo['editor'] =( isset( $result->fields['modifier_real_name'] )? $result->fields['modifier_real_name'] : $result->fields['modifier_user'] );
+				$this->mInfo['display_url'] = $this->getDisplayUrl();
+				$this->mInfo['parsed_data'] = $this->parseData();
+				
+				LibertyAttachable::load();
 			}
+			
 		}
 		return( count( $this->mInfo ) );
 	}

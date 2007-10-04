@@ -63,6 +63,10 @@ class BitGmapPolygon extends BitGmapOverlayBase {
 			$pParamHash['overlay_store']['type'] = $pParamHash['type'];
 		}
 		
+		if( !empty( $pParamHash['poly_data'] ) ) {
+			$pParamHash['overlay_store']['poly_data'] = $pParamHash['poly_data'];
+		}
+		
 		if( !empty( $pParamHash['circle_center'] ) || $pParamHash['circle_center'] == 0 ) {
 			$pParamHash['overlay_store']['circle_center'] = $pParamHash['circle_center'];
 		}
@@ -167,8 +171,8 @@ class BitGmapPolygon extends BitGmapOverlayBase {
 		$result = $this->mDb->query($query,$bindVars,$pListHash['max_records'],$pListHash['offset']);
 		$cant = $this->mDb->getOne($query_cant,$bindVars);
 		
-		while ($res = $result->fetchrow()) {
-			$res['parsed_data'] = $res['data'];
+		$ret = array();
+		while( $res = $result->fetchRow() ) {
 			$ret[] = $res;
 		}
 		

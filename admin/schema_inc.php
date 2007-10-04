@@ -154,6 +154,7 @@ $tables = array(
 'gmaps_polylines' => "
   polyline_id I4 PRIMARY,
   content_id I4 NOTNULL,
+  poly_data X,
   type I4 DEFAULT 0,
   levels_data X,
   zoom_factor I4,
@@ -197,6 +198,7 @@ $tables = array(
 'gmaps_polygons' => "
   polygon_id I4 PRIMARY,
   content_id I4 NOTNULL,
+  poly_data X,
   type I4 DEFAULT 0,
   circle_center X DEFAULT 0,
   radius F DEFAULT 0,
