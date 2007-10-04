@@ -437,7 +437,7 @@ class BitGmap extends LibertyAttachable {
             $bindVars[] = $pGmapId;
 
             // Build the whole sodding mess
-            $query = $query . $polyline_joinSql . $polyline_whereSql . " UNION " . $query . $polyline_joinSql . $polyline_whereSql;
+            $query = $query . $polyline_joinSql . $polyline_whereSql . " UNION " . $query . $polyline_joinSql;
         }
 
         $result = $this->mDb->query( $query, $bindVars );
