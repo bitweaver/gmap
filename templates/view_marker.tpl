@@ -8,6 +8,7 @@
 		{include file="bitpackage:gmap/gmap_date_bar.tpl"}
 	</div><!-- end .header -->
 	<div class="body">
+		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
 		<div id="markercontent" class="content">
 			{$gContent->mInfo.parsed_data}
 		</div>

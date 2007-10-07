@@ -11,7 +11,7 @@ $gBitSystem->verifyPermission('p_gmap_overlay_view' );
 // Get the map for specified gmap_id
 require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );
 
-$displayHash = array( 'perm_name' => 'p_gmap_marker_view' );
+$displayHash = array( 'perm_name' => 'p_gmap_overlay_view' );
 $gContent->invokeServices( 'content_display_function', $displayHash );
 
 //use Mochikit - prototype sucks
