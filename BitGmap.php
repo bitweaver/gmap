@@ -52,7 +52,7 @@ class BitGmap extends LibertyAttachable {
 					  WHERE bm.`$lookupColumn`=? $whereSql";
 					  
 			$result = $this->mDb->query( $query, $bindVars );
-
+			
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
 				$this->mGmapId = $result->fields['gmap_id'];
