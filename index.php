@@ -35,19 +35,10 @@ $gBitSystem->verifyPermission('p_gmap_view' );
 //if there is no API key don't even bother
 if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	if (!isset($_REQUEST['gmap_id'] ) ) {
-	//@toodo how to set up this preference?
-	//    $_REQUEST['gmap_id'] = $gBitSystem->getPreference("home_gmap");
-	
-		require_once( GMAP_PKG_PATH.'BitGmap.php');
-		
-		$gmap = new BitGmap();
-		$listgmaps = $gmap->getList( $_REQUEST );
-		
-		$gBitSmarty->assign_by_ref('control', $_REQUEST["control"]);
-		$gBitSmarty->assign_by_ref('list', $listgmaps["data"]);
-		
-		// Display the template
-		$gBitSystem->display('bitpackage:gmap/list_gmaps.tpl', tra('Gmap') );
+		// @todo how to set up this preference?
+		// $_REQUEST['gmap_id'] = $gBitSystem->getPreference("home_gmap");
+		require_once( GMAP_PKG_PATH.'list_gmaps.php');
+		die;
 	}else{
 	
 		require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );

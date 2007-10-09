@@ -34,31 +34,29 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	   if so, we call histlib's method remove_all_versions for all the checked samples.
 	*/
 	if (isset($_REQUEST["submit_mult"]) && isset($_REQUEST["checked"]) && $_REQUEST["submit_mult"] == "remove_gmaps") {
-			
-	
-			// Now check permissions to remove the selected gmap
-			$gBitSystem->verifyPermission( 'bit_p_remove_gmap' );
-																																												
-			if( !empty( $_REQUEST['cancel'] ) ) {
-					// user cancelled - just continue on, doing nothing
-			} elseif( empty( $_REQUEST['confirm'] ) ) {
-					$formHash['delete'] = TRUE;
-					$formHash['submit_mult'] = 'remove_gmaps';
-					foreach( $_REQUEST["checked"] as $del ) {
-							$formHash['input'][] = '<input type="hidden" name="checked[]" value="'.$del.'"/>';
-					}
-					$gBitSystem->confirmDialog( $formHash, array( 'warning' => 'Are you sure you want to delete '.count($_REQUEST["checked"]).' gmaps?', 'error' => 'This cannot be undone!' ) );
-			} else {
-					foreach ($_REQUEST["checked"] as $deleteId) {
-							$tmpPage = new BitGmap( $deleteId );
-							if( !$tmpPage->load() || !$tmpPage->expunge() ) {
-									array_merge( $errors, array_values( $tmpPage->mErrors ) );
-							}
-					}
-					if( !empty( $errors ) ) {
-							$gBitSmarty->assign_by_ref( 'errors', $errors );
-					}
+		// Now check permissions to remove the selected gmap
+		$gBitSystem->verifyPermission( 'p_gmap_remove' );
+																																											
+		if( !empty( $_REQUEST['cancel'] ) ) {
+		// user cancelled - just continue on, doing nothing
+		} elseif( empty( $_REQUEST['confirm'] ) ) {
+			$formHash['delete'] = TRUE;
+			$formHash['submit_mult'] = 'remove_gmaps';
+			foreach( $_REQUEST["checked"] as $del ) {
+				$formHash['input'][] = '<input type="hidden" name="checked[]" value="'.$del.'"/>';
 			}
+			$gBitSystem->confirmDialog( $formHash, array( 'warning' => 'Are you sure you want to delete '.count($_REQUEST["checked"]).' gmaps?', 'error' => 'This cannot be undone!' ) );
+		} else {
+			foreach ($_REQUEST["checked"] as $deleteId) {
+				$tmpPage = new BitGmap( $deleteId );
+				if( !$tmpPage->load() || !$tmpPage->expunge() ) {
+					array_merge( $errors, array_values( $tmpPage->mErrors ) );
+				}
+			}
+			if( !empty( $errors ) ) {
+				$gBitSmarty->assign_by_ref( 'errors', $errors );
+			}
+		}
 	}
 	
 	
