@@ -248,6 +248,9 @@ foreach( array_keys( $tables ) AS $tableName ) {
 $gBitInstaller->registerPackageInfo( GMAP_PKG_NAME, array(
 	'description' => "For creating wiki-like Google Maps as well as viewing other bitweaver content (with location information) on Google Maps.",
 	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
+	'version' => '0.2',
+	'state' => 'beta',
+	'dependencies' => 'GeoPackage',
 ) );
 
 
