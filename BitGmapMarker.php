@@ -66,7 +66,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 			array_push( $bindVars,  $lookupId = @BitBase::verifyId( $this->mOverlayId )? $this->mOverlayId : $this->mContentId );
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-			$query = "select ot.*, lc.*, ufm.*,
+			$query = "select ot.*, lc.*, ufm.`favorite_content_id`, ufm.`map_position`,
 					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
 					  FROM `".BIT_DB_PREFIX.$this->mOverlayTable."` ot
@@ -75,14 +75,10 @@ class BitGmapMarker extends BitGmapOverlayBase {
 						LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
 						LEFT JOIN `".BIT_DB_PREFIX."users_favorites_map` ufm ON ( lc.`content_id`=ufm.`favorite_content_id` )
 					  WHERE ot.`$lookupColumn`=? $whereSql";
-					  
-			$result = $this->mDb->query( $query, $bindVars );
 
-			if( $result && $result->numRows() ) {
-				$this->mInfo = $result->fields;
-				$this->mOverlayId = $result->fields[$overlayKey];
-				$this->mContentId = $result->fields['content_id'];
-
+			if( $this->mInfo = $this->mDb->getRow( $query, $bindVars )){
+				$this->mOverlayId = $this->mInfo[$overlayKey]; 
+				$this->mContentId = $this->mInfo['content_id'];
 				$this->mInfo['raw'] = $this->mInfo['data'];
 				$this->mInfo['xml_parsed_data'] = $this->parseData( $this->mInfo['data'], $this->mInfo['format_guid'] );
 				$this->mInfo['parsed_data'] = $this->parseData( $this->mInfo['data'], $this->mInfo['format_guid'] );
