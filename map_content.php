@@ -18,12 +18,12 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 		if( @BitBase::verifyId( $_REQUEST['content_id'] )) {
 			//BUG: this include causes gContent to be set which messes some things up in the gmap tpls.
 			$content = LibertyBase::getLibertyObject( $_REQUEST['content_id'] );
-			//vd($content);
 			$dataHash = $content->mInfo;
 			// because content mInfo does not hand over the same info as contentList as below we need to complete the hash
 			$dataHash['display_url'] = !empty($dataHash['display_url'])?$dataHash['display_url']:$content->getDisplayUrl();
 			$dataHash['creator_user_id'] = !empty($dataHash['creator_user_id'])?$dataHash['creator_user_id']:$dataHash['user_id'];
 			$dataHash['content_description'] = !empty($dataHash['content_description'])?$dataHash['content_description']:$content->mType['content_description'];
+			$dataHash['real_name'] = !empty($dataHash['real_name'])?$dataHash['real_name']:$dataHash['creator_user'];
 			$dataHash['creator_real_name'] = !empty($dataHash['creator_real_name'])?$dataHash['creator_real_name']:$dataHash['real_name'];
 			if (empty($dataHash['modifier_real_name'])){
 				$modUser = new BitUser( $dataHash['modifier_user_id'] );
