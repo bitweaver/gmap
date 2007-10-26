@@ -83,7 +83,6 @@ $tables = array(
 ",
 
 
-//types has two options: 0 => Normal, 1 => AutoPhoto
 'gmaps_markers' => "
   marker_id I8 PRIMARY,
   content_id I4 NOTNULL,
