@@ -41,7 +41,7 @@ if (!empty($_REQUEST["save_copyright"])) {
 		$copyright = $gContent->getCopyright( $_REQUEST["copyright_id"] );
 	}
 	if (isset($_REQUEST["tilelayer_id"])){
-		$copyright->fields['tilelayer_id'] = $_REQUEST["tilelayer_id"];
+		$copyright['tilelayer_id'] = $_REQUEST["tilelayer_id"];
 	}
 	$gBitSmarty->assign_by_ref('copyrightInfo', $copyright);
 	$gBitSystem->display('bitpackage:gmap/edit_copyright.tpl', NULL, 'center_only');

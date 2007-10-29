@@ -64,7 +64,7 @@ $tables = array(
   copyright_id I4 PRIMARY,
   copyright_minzoom I4,
   bounds X,
-  notice C(32)
+  notice C(64)
 ",
 
 'gmaps_tilelayers_keychain' => "

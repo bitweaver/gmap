@@ -200,13 +200,21 @@ BitMap.Map.prototype = {
 		}
 	},
 	
+	"makeGetTileUrl": function( url ){
+		var func = function(a, b){
+					var c = 17 - b;
+					return url+"?x="+a.x+"&y="+a.y+"&zoom="+c;
+				};
+		return func;
+	},
+	
 	"addMaptype": function(i){
 		var M = this.maptypes[i];
 
 		var layers = [];
 		for (n in this.tilelayers){
 			var T = this.tilelayers[n];
-			if (T.maptype_id == M.maptype_id){				
+			if (T.maptype_id == M.maptype_id){
 				//get copyright info
 				var copyrightCollection = new GCopyrightCollection();
 				
@@ -224,23 +232,18 @@ BitMap.Map.prototype = {
 					}
 				}
 			
-				layers.push( new GTileLayer( copyrightCollection, T.minzoom, T.maxzoom ) );
-				// create GTileLayer
-				var customGetTileUrl=function(a, b){
-					var c = 17 - b;
-					return T.tilesurl+"?x="+a.x+"&y="+a.y+"&zoom="+c;
-				}
-				var t = layers.length - 1;
-				layers[t].getTileUrl = customGetTileUrl;
-
+				layers[n] = new GTileLayer( copyrightCollection, T.minzoom, T.maxzoom );
+				
+				layers[n].getTileUrl = this.makeGetTileUrl( T.tilesurl );
+				
 				if ( T.ispng == true || T.ispng == 'true' ){
-					layers[t].isPng = function(){return true;};
+					layers[n].isPng = function(){return true;};
 				}else{
-					layers[t].isPng = function(){return false;};
-				}				
+					layers[n].isPng = function(){return false;};
+				}	
 			}
 		}
-		
+
 		var opts = {};
 		opts.shortName = M.shortname?M.shortname:M.name;
 		opts.minResolution = (M.minzoom != null)?M.minzoom:0;

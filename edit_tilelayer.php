@@ -41,7 +41,7 @@ if (!empty($_REQUEST["save_tilelayer"])) {
 		$tilelayer = $gContent->getTilelayer( $_REQUEST["tilelayer_id"] );
 	}
 	if (isset($_REQUEST["maptype_id"])){
-		$tilelayer->fields['maptype_id'] = $_REQUEST["maptype_id"];
+		$tilelayer['maptype_id'] = $_REQUEST["maptype_id"];
 	}
 	$gBitSmarty->assign_by_ref('tilelayerInfo', $tilelayer);
 	$gBitSystem->display('bitpackage:gmap/edit_tilelayer.tpl', NULL, 'center_only');

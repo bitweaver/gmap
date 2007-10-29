@@ -75,7 +75,7 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 			}
 			$gBitSmarty->assign( 'listInfo', $listHash['listInfo'] );
 		}
-			
+
 		if ( $gBitSystem->isPackageActive('stars') ){			
 			//php is annoying, so 0 would be interpretted as null and not trigger the tpl this relates too.  
 			$GeoStars = array('stars_pixels' => 1, 'stars_version_pixels' => 1, 'stars_load' => 1);
