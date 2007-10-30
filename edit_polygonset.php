@@ -64,7 +64,7 @@ if (!empty($_REQUEST["save_polygonset"])) {
 	$polygonset = $gContent->mInfo;
 	require_once(GMAP_PKG_PATH.'BitGmap.php' );
 	$gmap = new BitGmap();
-	$polylineStyles = $gmap->getPolyineStyles(); 
+	$polylineStyles = $gmap->getPolylineStyles(); 
 	$polygonStyles = $gmap->getPolygonStyles(); 
 	$gBitSmarty->assign( 'polylineStyles', $polylineStyles );
 	$gBitSmarty->assign( 'polygonStyles', $polygonStyles );
