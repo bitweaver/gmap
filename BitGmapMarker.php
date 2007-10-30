@@ -68,15 +68,19 @@ class BitGmapMarker extends BitGmapOverlayBase {
 
 			$query = "select ot.*, lc.*, ufm.`favorite_content_id`, ufm.`map_position`,
 					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
-					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
+					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
+					  lf.storage_path AS `image_attachment_path` $selectSql
 					  FROM `".BIT_DB_PREFIX.$this->mOverlayTable."` ot
 						INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id` = ot.`content_id`) $joinSql
 						LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
 						LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
 						LEFT JOIN `".BIT_DB_PREFIX."users_favorites_map` ufm ON ( lc.`content_id`=ufm.`favorite_content_id` )
+						LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments` la ON( la.`content_id` = lc.`content_id` AND la.`is_primary` = 'y' )
+						LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files` lf ON( lf.`file_id` = la.`foreign_id` )
 					  WHERE ot.`$lookupColumn`=? $whereSql";
 
 			if( $this->mInfo = $this->mDb->getRow( $query, $bindVars )){
+				$this->mInfo['thumbnail_url'] = BitGmapMarker::getImageThumbnails( $this->mInfo );			
 				$this->mOverlayId = $this->mInfo[$overlayKey]; 
 				$this->mContentId = $this->mInfo['content_id'];
 				$this->mInfo['raw'] = $this->mInfo['data'];
@@ -104,6 +108,21 @@ class BitGmapMarker extends BitGmapOverlayBase {
 			}
 		}
 		return( count( $this->mInfo ) );
+	}
+
+	/**
+	* Get the URL for any given article image
+	* @param $pParamHash pass in full set of data returned from article query
+	* @return url to image
+	* @access public
+	**/
+	function getImageThumbnails( $pParamHash ) {
+		global $gBitSystem, $gThumbSizes;
+		$ret = NULL;
+		if( !empty( $pParamHash['image_attachment_path'] )) {
+			$ret = liberty_fetch_thumbnails( $pParamHash['image_attachment_path'], NULL, NULL, FALSE );
+		}
+		return $ret;
 	}
 
 
@@ -250,6 +269,6 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		LibertyContent::postGetList( $pListHash );
 
 		return $pListHash;
-	}	
+	}
 }
 ?>
