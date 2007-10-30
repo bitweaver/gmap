@@ -41,6 +41,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	//use Mochikit - prototype sucks
 	$gBitThemes->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js', 'Style.js' ) );
 
+	//force ajax attachments inclusion - we'll need it since we dont load up the js with the various forms
+	$gBitSmarty->assign( 'attachments_ajax', TRUE );
+
 	// Display the template
 	$gBitSystem->display( 'bitpackage:gmap/edit_gmap.tpl', tra('Gmap') );    		
 }else{

@@ -67,7 +67,9 @@
 				
 			<div class="row submit">
 				<input type="button" name="save_marker_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarker( this.form );">
-			</div>		
+			</div>
+			
+			{include file="bitpackage:liberty/edit_storage_list.tpl" primary_label="Marker Image"} 
 		{/jstab}
 
 		{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
@@ -78,7 +80,7 @@
 		{/jstab}
 		{/if}
 		
-		{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_tab_tpl}
+		{* {include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_tab_tpl} *}
 	{/jstabs}
 {/form}
 {/strip}

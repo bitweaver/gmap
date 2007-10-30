@@ -151,6 +151,8 @@
 			<input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap( this.form );" /> 
 			<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit( this.form );" />
 		</div>
+
+		{include file="bitpackage:liberty/edit_storage_list.tpl" primary_label="Marker Image"}		
 	{/jstab}
 	
 	{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_tab_tpl}
