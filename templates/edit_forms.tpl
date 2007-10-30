@@ -173,6 +173,8 @@
 <div id="edit-markerset-options-table" class="edit-datatable" style="display:none;">
 	<table>
 		<tr>
+			<td width="200px">
+			</td>
 			<td>
 				<div id="markerset-form">PUT MARKERSET FORM HERE!</div>
 			</td>
@@ -361,6 +363,8 @@
 <div id="edit-polylineset-options-table" class="edit-datatable" style="display:none;">
 	<table>
 		<tr>
+			<td width="200px">
+			</td>
 			<td>
 				<div id="polylineset-form">PUT POLYLINESET FORM HERE!</div>
 			</td>
@@ -496,6 +500,8 @@
 <div id="edit-polygonset-options-table" class="edit-datatable" style="display:none;">
 	<table>
 		<tr>
+			<td width="200px">
+			</td>
 			<td>
 				<div id="polygonset-form">PUT POLYGONSET FORM HERE!</div>
 			</td>
