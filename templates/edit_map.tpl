@@ -12,11 +12,11 @@
 				{/forminput}
 		</div>
 		<div class="row">
-			{formlabel label="Description" for="map_desc"}
-				{forminput}
-					<input name="map_desc" type="text" size="40" value="{$mapInfo.description}" />
-					{formhelp note=""}
-				{/forminput}
+			{formlabel label="Summary" for="summary"}
+			{forminput}
+				<input size="40" type="text" name="summary" id="summary" value="{$pageInfo.summary|escape:html}" />
+				{formhelp note="Brief description of the map. This is visible just below the title of the map."}
+			{/forminput}
 		</div>
 		<div class="row">
 			{formlabel label="Center Latitude" for="geo[lat]"}

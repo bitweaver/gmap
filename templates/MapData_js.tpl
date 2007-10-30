@@ -6,7 +6,7 @@ BitMap.MapData.push({ldelim}
   {if !$geo_edit_serv && !$map_list}
   id:{if $mapInfo.gmap_id}{$mapInfo.gmap_id}{else}null{/if},
   title:"{$mapInfo.title|addslashes}",
-  description:"{$mapInfo.description}",
+  description:"{$mapInfo.summary}",
   data:"{$mapInfo.data}",
   parsed_data:"{$mapInfo.parsed_data}",
   allow_comments:'{if $gContent->getPreference("allow_comments") eq "y"}y{else}n{/if}',

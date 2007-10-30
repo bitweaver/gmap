@@ -212,12 +212,12 @@ BitMap.Map.prototype = {
 		var M = this.maptypes[i];
 
 		var layers = [];
+
 		for (n in this.tilelayers){
 			var T = this.tilelayers[n];
 			if (T.maptype_id == M.maptype_id){
 				//get copyright info
 				var copyrightCollection = new GCopyrightCollection();
-				
 				for (c in this.copyrights){
 					var C = this.copyrights[c];
 					if (C.tilelayer_id == T.tilelayer_id){
@@ -231,29 +231,27 @@ BitMap.Map.prototype = {
 						copyrightCollection.addCopyright(copyright);
 					}
 				}
-			
-				layers[n] = new GTileLayer( copyrightCollection, T.minzoom, T.maxzoom );
-				
-				layers[n].getTileUrl = this.makeGetTileUrl( T.tilesurl );
+
+				layers.push( new GTileLayer( copyrightCollection, T.tiles_minzoom, T.tiles_maxzoom ) );
+				x = layers.length-1;
+				layers[x].getTileUrl = this.makeGetTileUrl( T.tilesurl );
 				
 				if ( T.ispng == true || T.ispng == 'true' ){
-					layers[n].isPng = function(){return true;};
+					layers[x].isPng = function(){return true;};
 				}else{
-					layers[n].isPng = function(){return false;};
+					layers[x].isPng = function(){return false;};
 				}	
 			}
 		}
-
+		
 		var opts = {};
 		opts.shortName = M.shortname?M.shortname:M.name;
 		opts.minResolution = (M.minzoom != null)?M.minzoom:0;
 		opts.maxResolution = (M.maxzoom != null)?M.maxzoom:17;
 		opts.errorMessage = M.errormsg?M.errormsg:"";
-		
-		M.type = new GMapType(layers, G_NORMAL_MAP.getProjection(), M.name, opts);
 
-		//add it to the map
-		this.map.addMapType(M.type);		
+		M.type = new GMapType(layers, G_NORMAL_MAP.getProjection(), M.name, opts);
+		this.map.addMapType(M.type);
 	},
 	
 	"setMapType": function(){

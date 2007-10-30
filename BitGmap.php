@@ -42,17 +42,17 @@ class BitGmap extends LibertyAttachable {
 			array_push( $bindVars,  $lookupId = @BitBase::verifyId( $this->mGmapId )? $this->mGmapId : $this->mContentId );
 			$this->getServicesSql( 'content_load_sql_function', $selectSql, $joinSql, $whereSql, $bindVars );
 
-			$query = "select bm.*, lc.*,
+			$query = "select bm.*, lc.*, lcds.`data` AS `summary`,
 					  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
 					  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
 					  FROM `".BIT_DB_PREFIX."gmaps` bm
 						INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON (lc.`content_id` = bm.`content_id`) $joinSql
+						LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')
 						LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
 						LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
 					  WHERE bm.`$lookupColumn`=? $whereSql";
-					  
+
 			$result = $this->mDb->query( $query, $bindVars );
-			
 			if( $result && $result->numRows() ) {
 				$this->mInfo = $result->fields;
 				$this->mGmapId = $result->fields['gmap_id'];
@@ -561,8 +561,10 @@ class BitGmap extends LibertyAttachable {
 			$bindvars = array();
 		}
 
-		$query = "SELECT bm.*, lc.`content_id`, lc.`title`, lc.`data`
-			FROM `".BIT_DB_PREFIX."gmaps` bm INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = bm.`content_id` )
+		$query = "SELECT bm.*, lc.`content_id`, lc.`title`, lc.`data`, lcds.`data` AS `summary`
+			FROM `".BIT_DB_PREFIX."gmaps` bm 
+			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = bm.`content_id` )
+			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')
 			".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." lc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'
 			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
 		$query_cant = "select count( * )from `".BIT_DB_PREFIX."liberty_content` lc ".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." lc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'";
@@ -593,9 +595,6 @@ class BitGmap extends LibertyAttachable {
 
 		$pParamHash['gmap_store'] = array();
 
-		if( !empty( $pParamHash['map_desc'] ) ) {
-			$pParamHash['gmap_store']['description'] = $pParamHash['map_desc'];
-		}
 		if( isset( $pParamHash['map_w'] ) && is_numeric( $pParamHash['map_w'] ) ) {
 			$pParamHash['gmap_store']['width'] = $pParamHash['map_w'];
 		}

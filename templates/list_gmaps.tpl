@@ -43,7 +43,7 @@
 {*						{/if}													 					 *}
 
 {*						{if $gmap_list_description eq 'y'}			 *}
-							<td>{$list[changes].description}</td>
+							<td>{$list[changes].summary}</td>
 {*						{/if}																 		 *}
 
 							<td class="actionicon">

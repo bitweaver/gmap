@@ -9,7 +9,7 @@
 
 <div class="header" id="gmap-header">
 	<h1 id="mymaptitle">{if $gContent->mInfo.title}{$gContent->getTitle()}{elseif $edit_map}Create New Map{else}Map Geo-Located Site Content{/if}</h1>
-	<h2 id="mymapdesc">{$gContent->mInfo.description}</h2>
+	<h2 id="mymapdesc">{$gContent->mInfo.summary}</h2>
 	{include file="bitpackage:gmap/gmap_date_bar.tpl"}
 	{if $map_list}{include file="bitpackage:gmap/list_form.tpl"}{/if}
 </div><!-- end .header -->

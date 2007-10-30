@@ -3,7 +3,7 @@
 <map>
 	<gmap_id>{$mapInfo.gmap_id}</gmap_id>
 	<title>{$gContent->getTitle()}</title>
-	<description>{$mapInfo.description}</description>
+	<description>{$mapInfo.summary}</description>
 	<data>{$mapInfo.xml_data}</data>
 	<parsed_data><![CDATA[{$mapInfo.xml_parsed_data}]]></parsed_data>	
 	<width>{$mapInfo.width}</width>

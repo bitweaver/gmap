@@ -6,7 +6,6 @@ $tables = array(
 'gmaps' => "
   gmap_id I4 PRIMARY,
   content_id I4 NOTNULL,
-  description C(200),
   width I4 DEFAULT 0,
   height I4 DEFAULT 0,
   zoom I4 DEFAULT 16,
