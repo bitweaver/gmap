@@ -112,7 +112,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		$ret = NULL;
 		if( !empty( $pParamHash['image_attachment_path'] )) {
 			$ret = liberty_fetch_thumbnails( $pParamHash['image_attachment_path'], NULL, NULL, FALSE );
-			$ret['original'] = STORAGE_HOST_URI.$pParamHash['image_attachment_path'];
+			$ret['original'] = "/".$pParamHash['image_attachment_path'];
 		}
 		return $ret;
 	}
@@ -217,11 +217,14 @@ class BitGmapMarker extends BitGmapOverlayBase {
 
 		$query = "SELECT lc.*, gm.*, 
 				  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
-				  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name $selectSql
+				  uuc.`login` AS creator_user, uuc.`real_name` AS creator_real_name,
+				  lf.storage_path AS `image_attachment_path` $selectSql
 				  FROM `".BIT_DB_PREFIX."gmaps_markers` gm 
 					INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( gm.`content_id`=lc.`content_id` ) $joinSql
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
 					LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_attachments`   la ON( la.`content_id`         = lc.`content_id` AND la.`is_primary` = 'y' )
+					LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_files`         lf ON( lf.`file_id`            = la.`foreign_id` )
 				  WHERE lc.`content_type_guid` = ? $whereSql
 				  ORDER BY $sort_mode";
 
@@ -245,12 +248,15 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$res['allow_comments'] = "y";
 				$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
 			}
+			$res['thumbnail_url'] = BitGmapMarker::getImageThumbnails( $res );
+			/* DEPRECATED
 			$res['xml_parsed_data'] = $this->parseData( $res['data'], $res['format_guid'] );
 			$res['parsed_data'] = $this->parseData( $res['data'], $res['format_guid'] );
 			$res['parsed_data'] = addslashes($res['parsed_data']);
 			$res['xml_data'] = str_replace("\n", "&#13;", $res['data']);
 			$res['data'] = addslashes($res['data']);
 			$res['data'] = str_replace("\n", "\\n", $res['data']);
+			*/
 			$ret[] = $res;
 
 		}

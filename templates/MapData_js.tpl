@@ -94,6 +94,7 @@ BitMap.MapData.push({ldelim}
 		lat: {$markersInfo[n].lat},
 		lng: {$markersInfo[n].lng},
 		label_data: '{$markersInfo[n].label_data}',
+		thumbnail_url:'{$markersInfo[n].thumbnail_url.avatar}',
 
 		created:{$markersInfo[n].created},
 		last_modified:{$markersInfo[n].last_modified},
