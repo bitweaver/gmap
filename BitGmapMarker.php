@@ -80,7 +80,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 					  WHERE ot.`$lookupColumn`=? $whereSql";
 
 			if( $this->mInfo = $this->mDb->getRow( $query, $bindVars )){
-				$this->mInfo['thumbnail_url'] = BitGmapMarker::getImageThumbnails( $this->mInfo );			
+				$this->mInfo['thumbnail_url'] = BitGmapMarker::getImageThumbnails( $this->mInfo );
 				$this->mOverlayId = $this->mInfo[$overlayKey]; 
 				$this->mContentId = $this->mInfo['content_id'];
 				$this->mInfo['raw'] = $this->mInfo['data'];
@@ -121,6 +121,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		$ret = NULL;
 		if( !empty( $pParamHash['image_attachment_path'] )) {
 			$ret = liberty_fetch_thumbnails( $pParamHash['image_attachment_path'], NULL, NULL, FALSE );
+			$ret['original'] = STORAGE_HOST_URI.$pParamHash['image_attachment_path'];
 		}
 		return $ret;
 	}

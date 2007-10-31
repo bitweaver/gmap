@@ -14,7 +14,7 @@
 			<div class="image">
 				{* @TODO create option for markers_image_size that admin can set *}
 				{assign var=size value=$gBitSystem->getConfig('markers_image_size','small')}
-				{jspopup notra=1 href=$marker.thumbnail_url.large alt=$marker.title|escape title=$marker.title|escape" img=$marker.thumbnail_url.$size}
+				{jspopup notra=1 href=$marker.thumbnail_url.original alt=$marker.title|escape title=$marker.title|escape" img=$marker.thumbnail_url.$size}
 			</div>
 		{/if}
 			
