@@ -23,7 +23,7 @@
 			</div>
 			<div class="row">
 					{forminput}
-					 <a name="marker_assist_btn" title="click a location!" href="javascript:BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a>
+					 <a name="marker_assist_btn" title="click a location!" href="javascript:void(0)" onclick="BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a>
 					{/forminput}
 			</div>
 			

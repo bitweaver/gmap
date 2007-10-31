@@ -173,7 +173,7 @@ myicon.infoShadowAnchor = new GPoint(18, 25);
 			var markerssorted = MochiKit.Iter.groupby_as_array(this.markers, MochiKit.Base.itemgetter("content_type_guid"));
 			forEach(markerssorted, function(leData){
 				var rows = map(function(row) {
-					return  [ A({"href":"javascript: BitMap.MapData[0].Map.markers["+row.n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+row.n+"].gmarker.my_html);"}, row.title), 
+					return  [ A({"href":"javascript:void(0);","onclick":"BitMap.MapData[0].Map.markers["+row.n+"].gmarker.openInfoWindow(BitMap.MapData[0].Map.markers["+row.n+"].gmarker.my_html);"}, row.title), 
 							  row.short_date, 
 							  row.stars_rating];
 				} ,leData[1]);

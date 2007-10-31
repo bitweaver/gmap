@@ -348,7 +348,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				var M = this.markers[n];
 				if ( ( M.side_panel == true && M.explode == true )  || set.plot_on_load != true ) {
 					var imgLink = ( M.thumbnail_url != null && M.thumbnail_url != '' )?IMG({"src":M.thumbnail_url}):null;
-					var newLink = A({"href":"javascript:BitMap.MapData[0].Map.openMarkerWindow("+n+");"}, SPAN(null, M.title), BR(), imgLink );
+					var newLink = A({"href":"javascript:void(0);", "onclick":"BitMap.MapData[0].Map.openMarkerWindow("+n+");"}, SPAN(null, M.title), BR(), imgLink );
 					var container = $('listset_' + M.set_id);
 					container.appendChild(newLink);
 					container.appendChild( BR() );

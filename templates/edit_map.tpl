@@ -34,7 +34,7 @@
 		</div>
 		<div class="row">
 				{forminput}
-					<a name="map_assist_btn" title="click a center!" href="javascript:BitMap.EditSession.addAssistant('map');">( Use Locating Assistant )</a>
+					<a name="map_assist_btn" title="click a center!" href="javascript:void(0)" onclick="BitMap.EditSession.addAssistant('map');">( Use Locating Assistant )</a>
 				{/forminput}
 		</div>
 		<div class="row">
@@ -148,8 +148,8 @@
 		{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
 		
 		<div class="row submit">
-			<input type="button" name="save_map_btn" value="Submit" onclick="javascript:BitMap.EditSession.storeMap( this.form );" /> 
-			<input type="button" name="closemapform" value="Cancel" onclick="javascript:BitMap.EditSession.canceledit( this.form );" />
+			<input type="button" name="save_map_btn" value="Submit" onclick="BitMap.EditSession.storeMap( this.form );" /> 
+			<input type="button" name="closemapform" value="Cancel" onclick="BitMap.EditSession.canceledit( this.form );" />
 		</div>
 
 		{include file="bitpackage:liberty/edit_storage_list.tpl" primary_label="Marker Image"}		

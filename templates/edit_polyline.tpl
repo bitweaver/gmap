@@ -34,7 +34,7 @@
 				<textarea name="poly_data" style="width:90%" rows="3">{$polylineInfo.poly_data}</textarea>
 				{formhelp note=""}
 			{/forminput}
-			<a name="polyline_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polyline', n);">Use Drawing Assistant</a>
+			<a name="polyline_assist_btn" title="draw the line!" href="javascript:void(0)" onclick="BitMap.EditSession.addAssistant('polyline', n);">Use Drawing Assistant</a>
 	</div>
 	<div class="row">
 		{formlabel label="Levels Data" for="levels_data"}
