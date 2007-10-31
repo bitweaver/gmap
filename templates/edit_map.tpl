@@ -14,7 +14,7 @@
 		<div class="row">
 			{formlabel label="Summary" for="summary"}
 			{forminput}
-				<input size="40" type="text" name="summary" id="summary" value="{$pageInfo.summary|escape:html}" />
+				<input size="40" type="text" name="summary" id="summary" value="{$mapInfo.summary|escape:html}" />
 				{formhelp note="Brief description of the map. This is visible just below the title of the map."}
 			{/forminput}
 		</div>

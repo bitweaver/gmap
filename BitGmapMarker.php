@@ -86,24 +86,15 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$this->mInfo['raw'] = $this->mInfo['data'];
 				$this->mInfo['xml_parsed_data'] = $this->parseData( $this->mInfo['data'], $this->mInfo['format_guid'] );
 				$this->mInfo['parsed_data'] = $this->parseData( $this->mInfo['data'], $this->mInfo['format_guid'] );
+				$this->mInfo['clean_data'] = $this->mInfo['parsed_data'];
 				$this->mInfo['parsed_data'] = addslashes($this->mInfo['parsed_data']);
-				$this->mInfo['xml_data'] = str_replace("&", "&amp;", $this->mInfo['data']);
-				$this->mInfo['xml_data'] = str_replace("\n", "&#13;", $this->mInfo['xml_data']);
+				$this->mInfo['xml_data'] = str_replace("\n", "&#13;", $this->mInfo['data']);
 				$this->mInfo['data'] = addslashes($this->mInfo['data']);
-				$this->mInfo['data'] = str_replace("\n", "\\n", $this->mInfo['data']);
+				$this->mInfo['data'] = str_replace("\n", "\\n", $this->mInfo['data']);				
 
 				$comment = new LibertyComment();
 				$this->mInfo['num_comments'] = $comment->getNumComments($this->mInfo['content_id']);
 
-/* we can prolly get rid of this since titles don't take linebreaks. and this was messing up the json editing -wjames
-				$this->mInfo['xml_parsed_title'] = $this->parseData( $this->mInfo['title'], $this->mInfo['format_guid'] );
-				$this->mInfo['parsed_title'] = $this->parseData( $this->mInfo['title'], $this->mInfo['format_guid'] );
-				$this->mInfo['parsed_title'] = addslashes($this->mInfo['parsed_title']);
-				$this->mInfo['xml_title'] = str_replace("&", "&amp;", $this->mInfo['title']);
-				$this->mInfo['xml_title'] = str_replace("\n", "&#13;", $this->mInfo['xml_title']);
-				$this->mInfo['title'] = addslashes($this->mInfo['title']);
-				$this->mInfo['title'] = str_replace("\n", "\\n", $this->mInfo['title']);
-*/
 				LibertyAttachable::load();
 			}
 		}
