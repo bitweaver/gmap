@@ -37,7 +37,7 @@ if( $processForm ) {
 }
 
 
-// allow selection of what packages can have ratings
+// allow selection of what packages can have gmaps
 $exclude = array( 'bitgmap', 'bitgmapmarker', 'tikisticky', 'pigeonholes' );
 foreach( $gLibertySystem->mContentTypes as $cType ) {
 	if( !in_array( $cType['content_type_guid'], $exclude ) ) {

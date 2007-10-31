@@ -14,7 +14,7 @@
 					  {formhelp note='Register for a key at <a href="http://www.google.com/apis/maps/signup.html" target="_new" >http://www.google.com/apis/maps/signup.html</a>'}
 					{/forminput}
 				</div>
-			{/legend}
+			{/legend}			
 		{/jstab}
 		{jstab title="Service Settings"}
 			{legend legend="Mappable Content"}
