@@ -42,7 +42,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	$gBitThemes->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js', 'Style.js' ) );
 
 	//force ajax attachments inclusion - we'll need it since we dont load up the js with the various forms
-	$gBitSmarty->assign( 'attachments_ajax', TRUE );
+	$gBitThemes->loadAjax( 'custom', array( LIBERTY_PKG_URL.'scripts/LibertyAttachments.js' ));
 
 	// Display the template
 	$gBitSystem->display( 'bitpackage:gmap/edit_gmap.tpl', tra('Gmap') );    		
