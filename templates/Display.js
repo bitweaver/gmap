@@ -5,33 +5,6 @@
 
 MochiKit.Base.update(BitMap.Map.prototype, {
 
-	// legacy code from R1/V1
-	/*
-	"addMapType": function(pParamHash){
-		var Maptypes = this.maptypes;
-		var count = Maptypes.length;
-		for (var n=0; n < count; n++) {
-			//must insert some sort of check for the Maptypes[n].basetype and special provisions for hybrids 
-			var copyright = new GCopyright(1,
-                              new GLatLngBounds(new GLatLng(-90, -180),
-                                                new GLatLng(90, 180)),
-                              Maptypes[n].minzoom,
-                              Maptypes[n].copyright);                              
-			var copyrightCollection = new GCopyrightCollection(Maptypes[n].name);
-			copyrightCollection.addCopyright(copyright);        
-			var tilelayers = [new GTileLayer(copyrightCollection, Maptypes[n].minzoom, Maptypes[n].maxzoom)];    
-			tilelayers[0].getTileUrl = CustomGetTileUrl;
-			function CustomGetTileUrl(a,b) {
-				var z = 17 - b;
-				var f = "/maps/?x="+a.x+"&y="+a.y+"&zoom="+z;
-				return f;
-			}
-			var custommap = new GMapType(tilelayers, new GMercatorProjection(Maptypes[n].maxzoom+1), "Maptypes[n].name", {errorMessage:"Sorry we do not have imagery available for this area"});
-			this.map.addMapType(custommap);
-		}
-	},
-	*/
-
 	"attachIcons": function(){
 		var i = this.iconstyles;
 		if (i.length > 0){
@@ -55,8 +28,6 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		I.icon.infoShadowAnchor = new GPoint(I.shadow_anchor_x, I.shadow_anchor_y);
 		I.icon.infoWindowAnchor = new GPoint(I.infowindow_anchor_x, I.infowindow_anchor_y);
 	},
-
-
 
 	"addMarker": function(i){
 		if (this.markers[i]!= null){

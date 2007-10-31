@@ -5,10 +5,6 @@ BitMap.MapData.push({ldelim}
   browser:"{$browserInfo.browser}",
   {if !$geo_edit_serv && !$map_list}
   id:{if $mapInfo.gmap_id}{$mapInfo.gmap_id}{else}null{/if},
-  title:"{$mapInfo.title|addslashes}",
-  description:"{$mapInfo.summary}",
-  data:"{$mapInfo.data}",
-  parsed_data:"{$mapInfo.parsed_data}",
   allow_comments:'{if $gContent->getPreference("allow_comments") eq "y"}y{else}n{/if}',
   {/if}
   mapdiv:'{$smarty.const.ACTIVE_PACKAGE}-map',
@@ -97,8 +93,6 @@ BitMap.MapData.push({ldelim}
 		title: "{$markersInfo[n].title|addslashes}",
 		lat: {$markersInfo[n].lat},
 		lng: {$markersInfo[n].lng},
-		data: '{$markersInfo[n].data}',
-		parsed_data: '{$markersInfo[n].parsed_data}',
 		label_data: '{$markersInfo[n].label_data}',
 
 		created:{$markersInfo[n].created},
