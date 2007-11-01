@@ -205,34 +205,36 @@ BitMap.Map.prototype = {
 
 		var layers = [];
 
-		for (n in this.tilelayers){
-			var T = this.tilelayers[n];
-			if (T.maptype_id == M.maptype_id){
-				//get copyright info
-				var copyrightCollection = new GCopyrightCollection();
-				for (c in this.copyrights){
-					var C = this.copyrights[c];
-					if (C.tilelayer_id == T.tilelayer_id){
-						// create copyright
-						var copyright = new GCopyright(C.copyright_id,
-											  new GLatLngBounds( new GLatLng( C.bounds[0],C.bounds[1] ), new GLatLng( C.bounds[2],C.bounds[3] ) ),
-											  C.copyright_minzoom,
-											  C.notice);
-						
-						//add to copyright collection
-						copyrightCollection.addCopyright(copyright);
+		for (m in M.tilelayer_ids ){
+			for (n in this.tilelayers){
+				if (this.tilelayers[n].tilelayer_id == M.tilelayer_ids[m]){
+					var T = this.tilelayers[n];
+					//get copyright info
+					var copyrightCollection = new GCopyrightCollection();
+					for (c in this.copyrights){
+						var C = this.copyrights[c];
+						if (C.tilelayer_id == T.tilelayer_id){
+							// create copyright
+							var copyright = new GCopyright(C.copyright_id,
+												  new GLatLngBounds( new GLatLng( C.bounds[0],C.bounds[1] ), new GLatLng( C.bounds[2],C.bounds[3] ) ),
+												  C.copyright_minzoom,
+												  C.notice);
+							
+							//add to copyright collection
+							copyrightCollection.addCopyright(copyright);
+						}
 					}
+	
+					layers.push( new GTileLayer( copyrightCollection, T.tiles_minzoom, T.tiles_maxzoom ) );
+					x = layers.length-1;
+					layers[x].getTileUrl = this.makeGetTileUrl( T.tilesurl );
+					
+					if ( T.ispng == true || T.ispng == 'true' ){
+						layers[x].isPng = function(){return true;};
+					}else{
+						layers[x].isPng = function(){return false;};
+					}	
 				}
-
-				layers.push( new GTileLayer( copyrightCollection, T.tiles_minzoom, T.tiles_maxzoom ) );
-				x = layers.length-1;
-				layers[x].getTileUrl = this.makeGetTileUrl( T.tilesurl );
-				
-				if ( T.ispng == true || T.ispng == 'true' ){
-					layers[x].isPng = function(){return true;};
-				}else{
-					layers[x].isPng = function(){return false;};
-				}	
 			}
 		}
 		

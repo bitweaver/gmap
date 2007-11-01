@@ -1196,8 +1196,13 @@ BitMap.Edit.prototype = {
 		//make sure the polygon set options form is closed
 		this.cancelEditPolygonSet();
 
-		//get the set id of polygons we are editing		
-		var set_id = this.Map.polygonsets[i].set_id;    
+		//get the set id of polygons we are editing
+		alert(this.Map.polygonsets.length);
+		for (n in this.Map.polygonsets){
+			alert( this.Map.polygonsets[n] );
+		}
+		
+		var set_id = this.Map.polygonsets[i].set_id;
 
 		//set some constants
 		var polygonTable = $('edit-polygons-table');
@@ -2706,10 +2711,10 @@ BitMap.Edit.prototype = {
 		
 		//polygon assistant
 		if (a == 'polygon'){
-			var f = $('polygonform_'+b);
+			var f = $('edit-polygon-form');
 			ref = this;
 			
-			if (f.circle.options[f.circle.selectedIndex].value == 'true'){
+			if (f.type.options[f.type.selectedIndex].value == 1){
 				alert ('Circle-Center drawing assistant activated for '+ f.title.value + ' polygon. \n Click to marker the center of your circle!');
 				
 				this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
@@ -2720,28 +2725,33 @@ BitMap.Edit.prototype = {
 				});
 			}else{
 				alert ('Polygon drawing assistant activated for '+ f.title.value + ' polygon. \n Click to draw the outline. \n\nThe final connection will automatically be \ncompleted for you, so don\'t worry about that.');
+				this.bModPData = f.poly_data; 
 				this.bLastpoint = null;
 				this.bTempPoints = [];
-				this.TempOverlay = new GPolyline(this.bTempPoints);
-				this.Map.map.addOverlay(this.TempOverlay);		//create polyline object from points and add to map
+				this.TempOverlay = false;
 				
 				this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay,point) {
-					if(ref.bLastpoint && ref.bLastpoint.x==point.x && ref.bLastpoint.y==point.y) return;
-					ref.bLastpoint = point;
-					
-					ref.bTempPoints.push(point);
-					this.removeOverlay(ref.TempOverlay);
-					ref.TempOverlay = new GPolyline(ref.bTempPoints);
-					this.addOverlay(ref.TempOverlay);
-					for(var i=0; i<ref.bTempPoints.length; i++){
-						if (i == 0){
-							msg = ref.bTempPoints[i].y + ', ' + ref.bTempPoints[i].x;
-						}else{
-							msg += ', ' + ref.bTempPoints[i].y + ', ' + ref.bTempPoints[i].x;
+					if (point) {
+						if(ref.bLastpoint && ref.bLastpoint.x == point.x && ref.bLastpoint.y == point.y) return;
+						ref.bLastpoint = point;
+						ref.bTempPoints.push(point);
+						if (ref.TempOverlay){
+							this.removeOverlay( ref.TempOverlay );
 						}
+						if (ref.bTempPoints.length){
+							var opts = (f.type.options[1].selected)?{geodesic:true}:null;
+							ref.TempOverlay = new GPolyline(ref.bTempPoints,"#0000FF", 2, 1, opts)
+							this.addOverlay( ref.TempOverlay );
+						}
+						for(var i=0; i<ref.bTempPoints.length; i++){
+							if (i == 0){
+								msg = ref.bTempPoints[i].y + ', ' + ref.bTempPoints[i].x;
+							}else{
+								msg += ', ' + ref.bTempPoints[i].y + ', ' + ref.bTempPoints[i].x;
+							}
+						}
+						f.poly_data.value = msg;
 					}
-					
-					f.poly_data.value = msg;
 				});
 			}
 		}

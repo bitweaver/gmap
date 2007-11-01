@@ -167,7 +167,7 @@ class BitGmap extends LibertyAttachable {
 
 
 
-	//get all marker styles for a given gmap_id
+	//get all maptypes for a given gmap_id
 	function getMapTypes( &$pGmapId = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
@@ -175,12 +175,16 @@ class BitGmap extends LibertyAttachable {
 		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
 		
 		if( @$this->verifyId( $pGmapId ) ) {
+			$selectSql .= ", ( SELECT GROUP_CONCAT( gtl.`tilelayer_id` ) 
+					  FROM `".BIT_DB_PREFIX."gmaps_tilelayers` gtl 
+					  INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk ON (gtl.`tilelayer_id` = gtk.`tilelayer_id` )
+					  WHERE gtk.`maptype_id` = gsk.`set_id`) `tilelayer_ids` ";
 			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gmt.`maptype_id` = gsk.`set_id`) "; 
 			$whereSql .= " WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = 'maptypes' ";
 			array_push( $bindVars, (int)$pGmapId );
 		}
 		
-		$query = "SELECT DISTINCT gmt.* $selectSql
+		$query = "SELECT gmt.* $selectSql
 				FROM `".BIT_DB_PREFIX."gmaps_maptypes` gmt
 				$joinSql
 				$whereSql";
@@ -207,10 +211,10 @@ class BitGmap extends LibertyAttachable {
 
 			$bindVars = array((int)$gmap_id, "maptypes");
 
-			$query = "SELECT gtl.*, gtk.*
-					FROM `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk
-						INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON(gtk.`maptype_id` = gsk.`set_id`)
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` gtl ON ( gtl.`tilelayer_id` = gtk.`tilelayer_id` )
+			$query = "SELECT DISTINCT gtl.*
+					FROM `".BIT_DB_PREFIX."gmaps_tilelayers` gtl
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk ON ( gtl.`tilelayer_id` = gtk.`tilelayer_id` )
+					INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gtk.`maptype_id` = gsk.`set_id`)
 					WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = ?";
 
 			$result = $this->mDb->query( $query, $bindVars );

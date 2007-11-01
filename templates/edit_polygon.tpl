@@ -24,14 +24,14 @@
 	<div class="row">
 		{formlabel label="Window Text" for="edit"}
 			{forminput}
-				<textarea name="edit" style="width:90%" rows="3">{$polylineInfo.data}</textarea>
+				<textarea name="edit" style="width:90%" rows="3">{$polygonInfo.data}</textarea>
 				{formhelp note="This text will appear in an info ballon when someone clicks on the line."}
 			{/forminput}
 	</div>
 	<div class="row">
 		{formlabel label="Data Points" for="poly_data"}
 			{forminput}
-				<textarea name="poly_data" style="width:90%" rows="3">{$polylineInfo.poly_data}</textarea>
+				<textarea name="poly_data" style="width:90%" rows="3">{$polygonInfo.poly_data}</textarea>
 				{formhelp note=""}
 			{/forminput}
 			<a name="polygon_assist_btn" title="draw the line!" href="javascript:BitMap.EditSession.addAssistant('polygon', n);">Use Drawing Assistant</a>

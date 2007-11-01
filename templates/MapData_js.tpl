@@ -28,7 +28,8 @@ BitMap.MapData.push({ldelim}
 		description:"{$maptypesInfo[n].description}",
 		minzoom:{$maptypesInfo[n].minzoom},
 		maxzoom:{$maptypesInfo[n].maxzoom},
-		errormsg:"{$maptypesInfo[n].errormsg}"
+		errormsg:"{$maptypesInfo[n].errormsg}",
+		tilelayer_ids:[{$maptypesInfo[n].tilelayer_ids}]
   {rdelim},
   {/section}{/if}],
 
@@ -41,8 +42,7 @@ BitMap.MapData.push({ldelim}
 		tiles_maxzoom:{$tilelayersInfo[tilelayers].tiles_maxzoom},
 		ispng:{$tilelayersInfo[tilelayers].ispng},
 		tilesurl:"{$tilelayersInfo[tilelayers].tilesurl}",
-		opacity:{$tilelayersInfo[tilelayers].opacity},
-		maptype_id:{$tilelayersInfo[tilelayers].maptype_id}
+		opacity:{$tilelayersInfo[tilelayers].opacity}
   {rdelim},
   {/section}{/if}],
 
