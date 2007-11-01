@@ -193,13 +193,15 @@ BitMap.Edit.prototype = {
 			}
 			//Add a tool bar for each MarkerSet
 			for (var n=0; n<this.Map.markersets.length; n++) {
+				var i = n;
+				var ref = this;
 				var newMarkerSet = $('edit-markerset').cloneNode(true);
-				newMarkerSet.id = "edit-markerset-"+n;
-				newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[n].name;
-				newMarkerSet.getElementsByTagName("a").item(0).onclick = "BitMap.EditSession.editMarkerSet("+n+");";
-				newMarkerSet.getElementsByTagName("a").item(1).onclick = "BitMap.EditSession.editMarkers("+n+");";
+				newMarkerSet.id = "edit-markerset-"+i;
+				newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[i].name;
+				newMarkerSet.getElementsByTagName("a").item(0).onclick = function(){ref.editMarkerSet(i);};
+				newMarkerSet.getElementsByTagName("a").item(1).onclick = function(){ref.editMarkers(i);};
 				$('edit-markersets-table').appendChild(newMarkerSet);
-				BitMap.show('edit-markerset-'+n);
+				BitMap.show('edit-markerset-'+i);
 			}
 		}
 		BitMap.show('edit-markersets-table');
@@ -309,7 +311,8 @@ BitMap.Edit.prototype = {
 		for (n=count-1; n>1; n--){
 			markerLinksList.removeChild(markerLinks.item(n));
 		}
-		$('edit-markerlink-new-a').onclick = "BitMap.EditSession.editMarker(null, "+i+");";
+		var ref = this;
+		$('edit-markerlink-new-a').onclick = function(){ref.editMarker(null, i);};
 		
 		//For each marker in our set, add a link
 		var firstselected = false;
@@ -319,7 +322,8 @@ BitMap.Edit.prototype = {
 				var li = markerLinks.item(0).cloneNode(true);
 				li.id = 'edit-markerlink-'+n;
 				var link = li.getElementsByTagName("a").item(0);
-				link.onclick = "BitMap.EditSession.editMarker("+n+","+i+")";
+				var nn = n;
+				link.onclick = function(){ref.editMarker(nn,i)};
 				link.innerHTML = m.title;
 				markerLinksList.appendChild(li);
 				li.style.display = "block";
@@ -426,16 +430,18 @@ BitMap.Edit.prototype = {
 		}
 		
 		/* I THINK THIS CAN BE DELETED -wjames5 */
-		//$('edit-markerstylelink-new-a').onclick = "BitMap.EditSession.editMarkerStyle();";
+		//$('edit-markerstylelink-new-a').onclick = function(){ref.editMarkerStyle();";
 		
 		//For each markerstyle, add a link
 		var firstselected = false;
 		for (var n=0; n<this.Map.markerstyles.length; n++) {
+			var i = n;
+			var ref = this;
 			var m = this.Map.markerstyles[n];
 			var li = links.item(0).cloneNode(true);
 			li.id = 'edit-markerstylelink-'+n;
 			var a = li.getElementsByTagName("a").item(0);
-			a.onclick = "BitMap.EditSession.editMarkerStyle("+n+")";
+			a.onclick = function(){ref.editMarkerStyle(i)};
 			a.innerHTML = m.name;
 			linksList.appendChild(li);
 			li.style.display = "block";
@@ -499,15 +505,17 @@ BitMap.Edit.prototype = {
 			linksList.removeChild(links.item(n));
 		}
 		
-		//$('edit-iconstylelink-new-a').onclick = "BitMap.EditSession.editIconStyle(null);";
+		//$('edit-iconstylelink-new-a').onclick = function(){ref.editIconStyle(null);";
 		//For each iconstyle, add a link
 		var firstselected = false;
 		for (var n=0; n<this.Map.iconstyles.length; n++) {
+			var i = n;
+			var ref = this;
 			var m = this.Map.iconstyles[n];
 			var newIconstyleli = links.item(0).cloneNode(true);
 			newIconstyleli.id = 'edit-iconstylelink-'+n;
 			var newIconstyleLink = newIconstyleli.getElementsByTagName("a").item(0);
-			newIconstyleLink.onclick = "BitMap.EditSession.editIconStyle("+n+")";
+			newIconstyleLink.onclick = function(){ref.editIconStyle(i);};
 			newIconstyleLink.innerHTML = m.name;
 			linksList.appendChild(newIconstyleli);
 			newIconstyleli.style.display = "block";
@@ -554,13 +562,15 @@ BitMap.Edit.prototype = {
 		}
 		//Add a tool bar for each MarkerSet
 		for (var n=0; n<this.Map.maptypes.length; n++) {
+			var i = n;
+			var ref = this;
 			var newMaptype = $('edit-maptype').cloneNode(true);
-			newMaptype.id = "edit-maptype-"+n;
-			newMaptype.getElementsByTagName("span").item(0).innerHTML = this.Map.maptypes[n].name;
-			newMaptype.getElementsByTagName("a").item(0).onclick = "BitMap.EditSession.editMaptype("+n+");";
-			newMaptype.getElementsByTagName("a").item(1).onclick = "BitMap.EditSession.editMaptypeTilelayers("+n+");";
+			newMaptype.id = "edit-maptype-"+i;
+			newMaptype.getElementsByTagName("span").item(0).innerHTML = this.Map.maptypes[i].name;
+			newMaptype.getElementsByTagName("a").item(0).onclick = function(){ref.editMaptype(i);};
+			newMaptype.getElementsByTagName("a").item(1).onclick = function(){ref.editMaptypeTilelayers(i);};
 			$('edit-maptypes-table').appendChild(newMaptype);
-			BitMap.show('edit-maptype-'+n);
+			BitMap.show('edit-maptype-'+i);
 		}
 		}else{
 		//alert you must create a maptype first
@@ -633,7 +643,8 @@ BitMap.Edit.prototype = {
 		for (n=count-1; n>1; n--){
 			tilelayersLinksList.removeChild(tilelayersLinks.item(n));
 		}
-		$('edit-tilelayerlink-new-a').onclick = "BitMap.EditSession.editTilelayer(null, "+i+");";
+		var ref = this;
+		$('edit-tilelayerlink-new-a').onclick = function(){ref.editTilelayer(null, i);};
 
 		//For each tilelayer in our new maptype, add a link
 		var firstselected = false;
@@ -643,7 +654,9 @@ BitMap.Edit.prototype = {
 				var li = tilelayersLinks.item(0).cloneNode(true);
 				li.id = 'edit-tilelayerlink-'+n;
 				var link = li.getElementsByTagName("a").item(0);
-				link.onclick = "BitMap.EditSession.editTilelayer("+n+","+i+")";
+				var nn = n;
+				var ref = this;
+				link.onclick = function(){ref.editTilelayer(nn,i);};
 				link.innerHTML = t.tiles_name;
 				tilelayersLinksList.appendChild(li);
 				li.style.display = "block";
@@ -660,6 +673,7 @@ BitMap.Edit.prototype = {
 
 
 	"editTilelayer": function(t_i, m_i){
+		var ref = this;
 		this.cancelEditCopyright();
 		var t_id = ( t_i != null )?this.Map.tilelayers[t_i].tilelayer_id:null;
 		var m_id = this._setIdRef = ( m_i != null )?this.Map.maptypes[m_i].maptype_id:null;
@@ -674,7 +688,7 @@ BitMap.Edit.prototype = {
 				$('edit-copyright-menu').removeChild($("edit-copyrightlink-"+n));
 			}
 		}
-		$('edit-copyrightlink-new-a').onclick = "BitMap.EditSession.editCopyright(null, "+t_i+");";
+		$('edit-copyrightlink-new-a').onclick = function(){ref.editCopyright(null, t_i);};
 		//for each copyright
 		for (var n=0; n<count; n++) {
 			var c = this.Map.copyrights[n];
@@ -684,7 +698,8 @@ BitMap.Edit.prototype = {
 				//update the values
 				newCopyrightMenu.id = "edit-copyrightlink-"+n;
 				newCopyrightLink = newCopyrightMenu.getElementsByTagName("a").item(0);
-				newCopyrightLink.onclick = "BitMap.EditSession.editCopyright("+n+", "+t_i+")";
+				var nn = n;
+				newCopyrightLink.onclick = function(){ref.editCopyright(nn, t_i)};
 				newCopyrightLink.innerHTML = c.notice;
 				//add it to the copyrights menu
 				$('edit-copyright-menu').appendChild(newCopyrightMenu);
@@ -818,8 +833,10 @@ BitMap.Edit.prototype = {
 				var set = $('edit-polylineset').cloneNode(true);
 				set.id = "edit-polylineset-"+n;
 				set.getElementsByTagName("span").item(0).innerHTML = this.Map.polylinesets[n].name;
-				set.getElementsByTagName("a").item(0).onclick = "BitMap.EditSession.editPolylineSet("+n+");";
-				set.getElementsByTagName("a").item(1).onclick = "BitMap.EditSession.editPolylines("+n+");";
+				var i = n;
+				var ref = this;
+				set.getElementsByTagName("a").item(0).onclick = function(){ref.editPolylineSet(i);};
+				set.getElementsByTagName("a").item(1).onclick = function(){ref.editPolylines(i);};
 				$('edit-polylinesets-table').appendChild(set);
 				BitMap.show('edit-polylineset-'+n);
 			}
@@ -906,6 +923,7 @@ BitMap.Edit.prototype = {
 	},
 	
 	"editPolylines": function(i){
+		var ref = this;
 		//make sure the new polyline set form is closed
 		this.cancelNewPolylineSet();
 		
@@ -928,7 +946,7 @@ BitMap.Edit.prototype = {
 		for (n=count-1; n>1; n--){
 			polylineLinksList.removeChild(polylineLinks.item(n));
 		}
-		$('edit-polylinelink-new-a').onclick = "BitMap.EditSession.editPolyline(null, "+i+");";
+		$('edit-polylinelink-new-a').onclick = function(){ref.editPolyline(null, i);};
 		
 		//For each polyline in our set, add a link
 		var firstselected = false;
@@ -938,7 +956,8 @@ BitMap.Edit.prototype = {
 				var li = polylineLinks.item(0).cloneNode(true);
 				li.id = 'edit-polylinelink-'+n;
 				var link = li.getElementsByTagName("a").item(0);
-				link.onclick = "BitMap.EditSession.editPolyline("+n+","+i+")";
+				var nn = n;
+				link.onclick = function(){ref.editPolyline(nn,i);};
 				link.innerHTML = p.name;
 				polylineLinksList.appendChild(li);
 				li.style.display = "block";
@@ -1042,7 +1061,7 @@ BitMap.Edit.prototype = {
 		}
 		
 		/* I THINK THIS CAN BE DELETED -wjames5 */
-		//$('edit-polylinestylelink-new-a').onclick = "BitMap.EditSession.editPolylineStyle();";
+		//$('edit-polylinestylelink-new-a').onclick = function(){ref.editPolylineStyle();";
 		
 		//For each polylinestyle, add a link
 		var firstselected = false;
@@ -1051,7 +1070,9 @@ BitMap.Edit.prototype = {
 			var li = links.item(0).cloneNode(true);
 			li.id = 'edit-polylinestylelink-'+n;
 			var a = li.getElementsByTagName("a").item(0);
-			a.onclick = "BitMap.EditSession.editPolylineStyle("+n+")";
+			var i = n;
+			var ref = this;
+			a.onclick = function(){ref.editPolylineStyle(i);};
 			a.innerHTML = m.name;
 			linksList.appendChild(li);
 			li.style.display = "block";
@@ -1097,11 +1118,13 @@ BitMap.Edit.prototype = {
 			}
 			//Add a tool bar for each PolygonSet
 			for (var n=0; n<this.Map.polygonsets.length; n++) {
+				var i = n;
+				var ref = this;
 				var set = $('edit-polygonset').cloneNode(true);
-				set.id = "edit-polygonset-"+n;
-				set.getElementsByTagName("span").item(0).innerHTML = this.Map.polygonsets[n].name;
-				set.getElementsByTagName("a").item(0).onclick = "BitMap.EditSession.editPolygonSet("+n+");";
-				set.getElementsByTagName("a").item(1).onclick = "BitMap.EditSession.editPolygons("+n+");";
+				set.id = "edit-polygonset-"+i;
+				set.getElementsByTagName("span").item(0).innerHTML = this.Map.polygonsets[i].name;
+				set.getElementsByTagName("a").item(0).onclick = function(){ ref.editPolygonSet(i);};
+				set.getElementsByTagName("a").item(1).onclick = function(){ ref.editPolygons(i);};
 				$('edit-polygonsets-table').appendChild(set);
 				BitMap.show('edit-polygonset-'+n);
 			}
@@ -1188,6 +1211,7 @@ BitMap.Edit.prototype = {
 	},
 	
 	"editPolygons": function(i){
+		var ref = this;
 		//make sure the new polygon set form is closed
 		this.cancelNewPolygonSet();
 		
@@ -1197,11 +1221,6 @@ BitMap.Edit.prototype = {
 		this.cancelEditPolygonSet();
 
 		//get the set id of polygons we are editing
-		alert(this.Map.polygonsets.length);
-		for (n in this.Map.polygonsets){
-			alert( this.Map.polygonsets[n] );
-		}
-		
 		var set_id = this.Map.polygonsets[i].set_id;
 
 		//set some constants
@@ -1215,7 +1234,7 @@ BitMap.Edit.prototype = {
 		for (n=count-1; n>1; n--){
 			polygonLinksList.removeChild(polygonLinks.item(n));
 		}
-		$('edit-polygonlink-new-a').onclick = "BitMap.EditSession.editPolygon(null, "+i+");";
+		$('edit-polygonlink-new-a').onclick = function(){ref.editPolygon(null, i);};
 		
 		//For each polygon in our set, add a link
 		var firstselected = false;
@@ -1225,7 +1244,8 @@ BitMap.Edit.prototype = {
 				var li = polygonLinks.item(0).cloneNode(true);
 				li.id = 'edit-polygonlink-'+n;
 				var link = li.getElementsByTagName("a").item(0);
-				link.onclick = "BitMap.EditSession.editPolygon("+n+","+i+")";
+				var nn = n;
+				link.onclick = function(){ref.editPolygon(nn,i);};
 				link.innerHTML = p.name;
 				polygonLinksList.appendChild(li);
 				li.style.display = "block";
@@ -1322,7 +1342,7 @@ BitMap.Edit.prototype = {
 		}
 		
 		/* I THINK THIS CAN BE DELETED -wjames5 */
-		//$('edit-polygonstylelink-new-a').onclick = "BitMap.EditSession.editPolygonStyle();";
+		//$('edit-polygonstylelink-new-a').onclick = function(){ref.editPolygonStyle();";
 		
 		//For each polygonstyle, add a link
 		var firstselected = false;
@@ -1331,7 +1351,9 @@ BitMap.Edit.prototype = {
 			var li = links.item(0).cloneNode(true);
 			li.id = 'edit-polygonstylelink-'+n;
 			var a = li.getElementsByTagName("a").item(0);
-			a.onclick = "BitMap.EditSession.editPolygonStyle("+n+")";
+			var i = n;
+			var ref = this;
+			a.onclick = function(){ref.editPolygonStyle(i);};
 			a.innerHTML = m.name;
 			linksList.appendChild(li);
 			li.style.display = "block";
