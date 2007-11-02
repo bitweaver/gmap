@@ -1917,26 +1917,34 @@ BitMap.Edit.prototype = {
 	
 	//this needs special attention
 	"updateRemoveMarker": function(rslt){
-		var ref = this.Map;
-		for (var n=0; n<ref.markers.length; n++){
-			var M = ref.markers[n];
-			if ( ( M != null ) && ( M.marker_id == this.editMarkerId ) ){
-				ref.map.removeOverlay(M.gmarker);
-				ref.markers[n].gmarker = null;
-				ref.markers[n] = null;
+        var xml = rslt.responseXML;
+        var status = xml.documentElement.getElementsByTagName('code')[0].firstChild.nodeValue;
+        alert(status);
+        if (status == '200'){
+			var ref = this.Map;
+			for (var n=0; n<ref.markers.length; n++){
+				var M = ref.markers[n];
+				if ( ( M != null ) && ( M.marker_id == this.editMarkerId ) ){
+					ref.map.removeOverlay(M.gmarker);
+					ref.markers[n].gmarker = null;
+					ref.markers[n] = null;
+				}
 			}
-		}
-
-		ref.attachSideMarkers();
-		var S = ref.markersets;
-		for (n=0;n<S.length;n++){
-			if (S[n].set_id == this._setIdRef){
-				this.editMarkers(n);
-				break;
+	
+			ref.attachSideMarkers();
+			var S = ref.markersets;
+			for (n=0;n<S.length;n++){
+				if (S[n].set_id == this._setIdRef){
+					this.editMarkers(n);
+					break;
+				}
 			}
+			
+			this.hideSpinner("DONE!");
+		}else{
+			var msg = xml.documentElement.getElementsByTagName('content')[0].firstChild.nodeValue;
+			alert(msg);
 		}
-		
-		this.hideSpinner("DONE!");
 	},
 	
 

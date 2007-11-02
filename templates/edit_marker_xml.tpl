@@ -14,5 +14,8 @@
 		<allow_comments>{if $gContent->getPreference("allow_comments") == "y"}y{else}n{/if}</allow_comments>
 	</marker>
 {else}
-	<status>success</status>
+	<req>
+	<status><code>{$statusCode}</code></status>
+    <content><![CDATA[{$XMLContent}]]></content>
+    </req>
 {/if}

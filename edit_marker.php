@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.30 2007/11/02 05:18:56 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.31 2007/11/02 06:15:45 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -23,7 +23,9 @@ $gBitSystem->setFormatHeader( 'center_only' );
 
 // Now check permissions to access the marker
 if( $gContent->isValid() ) {
-	$gContent->verifyEditPermission();
+	if ( !$gContent->hasEditPermission() ){
+		$gBitSystem->fatalError( tra( "Sorry, you do not have permission to edit this marker." ));
+	}
 } else {
 	$gBitSystem->verifyPermission( 'p_gmap_overlay_edit' );
 	
@@ -50,9 +52,11 @@ if( $gContent->isValid() ) {
 
 //most of the time we want xml back so we make it the default
 $format = 'xml';
-
+$XMLContent = "";
+$statusCode = 401;
 if (!empty($_REQUEST["save_marker"])) {	
     if( $gContent->store( $_REQUEST ) ) {
+		$statusCode = 200;
 		if ( $gContent->hasAdminPermission() ){
     		$gContent->setEditSharing( $_REQUEST );
 		}    
@@ -61,14 +65,26 @@ if (!empty($_REQUEST["save_marker"])) {
 	}
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_marker"])) {
-	$gContent->verifyAdminPermission();
-    if( $gContent->removeFromSet( $_REQUEST ) ) {
-		$gBitSmarty->assign('removeSucces', true);
+	if ( $gContent->hasAdminPermission() ){
+		if( $gContent->removeFromSet( $_REQUEST ) ) {
+			$statusCode = 200;
+			$gBitSmarty->assign('removeSucces', true);
+		}else{
+			$XMLContent = tra( "Sorry, there was an unknown error trying to remove the marker." );
+		}
+	}else{
+		$XMLContent = tra( "You do not have the required permission to remove this marker from this set." );
 	}
 }elseif (!empty($_REQUEST["expunge_marker"])) {
-	$gContent->verifyAdminPermission();
-    if( $gContent->expunge() ) {
-		$gBitSmarty->assign('expungeSucces', true);
+	if ( $gContent->hasAdminPermission() ){
+		if( $gContent->expunge() ) {
+			$statusCode = 200;
+			$gBitSmarty->assign('expungeSucces', true);
+		}else{
+			$XMLContent = tra( "Sorry, there was an unknown error trying to delete the marker." );
+		}
+	}else{
+		$XMLContent = tra( "You do not have the required permission to delete this marker." );
 	}
 }else{
 	$gContent->invokeServices( 'content_edit_function' );
@@ -85,6 +101,8 @@ if (!empty($_REQUEST["save_marker"])) {
 if ( count($gContent->mErrors) > 0 ){
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
+	$gBitSmarty->assign( 'statusCode', $statusCode);
+	$gBitSmarty->assign( 'XMLContent', $XMLContent);
 	$gBitSystem->setFormatHeader( 'xml' );
 	$gBitSystem->display('bitpackage:gmap/edit_marker_xml.tpl');
 }
