@@ -307,6 +307,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		var display = false;
 		var setscount = this.markersets.length;		
 		var panel = $('gmap-sidepanel');
+		MochiKit.DOM.replaceChildNodes(panel, null)
 		for (var n=0; n<setscount; n++){
 			var set = this.markersets[n];
 			//if show set
@@ -346,9 +347,9 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			for ( var n=0; n<markercount; n++ ){
 				//if show set == y and show marker == y
 				var M = this.markers[n];
-				if ( ( M.side_panel == true && M.explode == true )  || set.plot_on_load != true ) {
-					var imgLink = ( M.thumbnail_url != null && M.thumbnail_url != '' )?IMG({"src":M.thumbnail_url}):null;
-					var newLink = A({"href":"javascript:void(0);", "onclick":"BitMap.MapData[0].Map.openMarkerWindow("+n+");"}, SPAN(null, M.title), BR(), imgLink );
+				if ( M != null && ( ( M.side_panel == true && M.explode == true )  || set.plot_on_load != true ) ) {
+					var imgLink = ( M.thumbnail_url != null && M.thumbnail_url != '' )?[BR(), IMG({"src":M.thumbnail_url})]:null;
+					var newLink = A({"href":"javascript:void(0);", "onclick":"BitMap.MapData[0].Map.openMarkerWindow("+n+");"}, SPAN(null, M.title), imgLink );
 					var container = $('listset_' + M.set_id);
 					container.appendChild(newLink);
 					container.appendChild( BR() );

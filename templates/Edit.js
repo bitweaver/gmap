@@ -322,7 +322,7 @@ BitMap.Edit.prototype = {
 		var firstselected = false;
 		for (var n=0; n<this.Map.markers.length; n++) {
 			var m = this.Map.markers[n];
-			if (m.set_id == set_id){
+			if (this.Map.markers[n] != null && m.set_id == set_id){
 				var li = markerLinks.item(0).cloneNode(true);
 				li.id = 'edit-markerlink-'+n;
 				var link = li.getElementsByTagName("a").item(0);
@@ -359,8 +359,13 @@ BitMap.Edit.prototype = {
 			this._markerIdRef = id = m.marker_id;
 	
 			//update action links with marker specific ref
-			var formLinks = $('edit-marker-actions').getElementsByTagName("a");
-			formLinks.item(0).onclick = "BitMap.MapData[0].Map.markers["+m_i+"].gmarker.openInfoWindowHtml(BitMap.MapData[0].Map.markers["+m_i+"].gmarker.my_html);";
+			var f1 = bind(this.Map.openMarkerWindow, this.Map);
+			$('locate_marker_btn').onclick = function(){ f1(m_i); };
+			var f2 = bind(this.removeMarker, this);
+			$('remove_marker_btn').onclick = function(){ f2($('edit-marker-form')); };
+			var f3 = bind(this.expungeMarker, this);
+			$('expunge_marker_btn').onclick = function(){ f3($('edit-marker-form')); };
+			
 			BitMap.show('edit-marker-actions');
 		}
 		var markersTable = $('edit-markers-table');
@@ -678,7 +683,6 @@ BitMap.Edit.prototype = {
 	},
 	
 	"editTilelayer": function(t_i, m_i){
-//	alert(t_i);
 		var ref = this;
 		this.cancelEditCopyright();
 		var t_id = ( t_i != null )?this.Map.tilelayers[t_i].tilelayer_id:null;
@@ -1401,19 +1405,23 @@ BitMap.Edit.prototype = {
 	 },
 	 
 	 "removeMarker": function(f){
-		this.showSpinner("Removing Marker...");
-		this._setIdRef = f.set_id.value;
-		this.editMarkerId = f.marker_id.value;
-		var str = "edit_marker.php?set_id=" + this._setIdRef + "&marker_id=" + this.editMarkerId + "&remove_marker=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
+	 	if (confirm("Are you sure you want to remove \nthe marker \""+f.title.value+"\" from this marker set?")){
+			this.showSpinner("Removing Marker...");
+			this._setIdRef = f.set_id.value;
+			this.editMarkerId = f.marker_id.value;
+			var str = "edit_marker.php?set_id=" + this._setIdRef + "&marker_id=" + this.editMarkerId + "&remove_marker=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) );
+		}
 	 },
 
 	 "expungeMarker": function(f){
-		this.showSpinner("Deleting Marker...");
-		this._setIdRef = f.set_id.value;
-		this.editMarkerId = f.marker_id.value;
-		var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
+	 	if (confirm("Are you sure you want to delete \nthe marker \""+f.title.value+"\"? \n\nThis can not be undone!")){
+			this.showSpinner("Deleting Marker...");
+			this._setIdRef = f.set_id.value;
+			this.editMarkerId = f.marker_id.value;
+			var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
+		}
 	 },
 
 	 "storeMarkerSet": function(f){
@@ -1909,24 +1917,34 @@ BitMap.Edit.prototype = {
 	
 	//this needs special attention
 	"updateRemoveMarker": function(rslt){
-		for (var n=0; n<this.Map.markers.length; n++){
-			if ( ( this.Map.markers[n] != null ) && ( this.Map.markers[n].marker_id == this.editMarkerId ) ){
-				this.Map.map.removeOverlay(this.Map.markers[n].marker);
-				this.Map.markers[n].marker = null;
-				this.Map.markers[n] = null;
+		var ref = this.Map;
+		for (var n=0; n<ref.markers.length; n++){
+			var M = ref.markers[n];
+			if ( ( M != null ) && ( M.marker_id == this.editMarkerId ) ){
+				ref.map.removeOverlay(M.gmarker);
+				ref.markers[n].gmarker = null;
+				ref.markers[n] = null;
 			}
 		}
+
+		ref.attachSideMarkers();
+		var S = ref.markersets;
+		for (n=0;n<S.length;n++){
+			if (S[n].set_id == this._setIdRef){
+				this.editMarkers(n);
+				break;
+			}
+		}
+		
 		this.hideSpinner("DONE!");
-		this.editMarkers();
-		this.editMarkerSet(this._setIdRef);
 	},
 	
 
 	"updateRemoveMarkerSet": function(){
 	  	for (var n=0; n<this.Map.markers.length; n++){
-	  		if ( ( this.Map.markers[n] != null ) && ( this.Map.markers[n].set_id == this._setIdRef ) && ( this.Map.markers[n].marker != null ) ){
-					this.Map.map.removeOverlay(this.Map.markers[n].marker); 			
-					this.Map.markers[n].marker = null;
+	  		if ( ( this.Map.markers[n] != null ) && ( this.Map.markers[n].set_id == this._setIdRef ) && ( this.Map.markers[n].gmarker != null ) ){
+					this.Map.map.removeOverlay(this.Map.markers[n].gmarker); 			
+					this.Map.markers[n].gmarker = null;
 					this.Map.markers[n] = null;
 	  		}
 	  	}

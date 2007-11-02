@@ -121,7 +121,7 @@ class BitGmapOverlayBase extends LibertyAttachable {
 
 
 	/**
-	* This function removes a polyline
+	* This function removes an overlay
 	**/
 	function expunge() {
 		$ret = FALSE;
@@ -133,8 +133,8 @@ class BitGmapOverlayBase extends LibertyAttachable {
 			if( LibertyAttachable::expunge() ) {
 				$ret = TRUE;
 				
-				// delete all references to the polyline from the polyline keychain
-				$query = "DELETE FROM `".BIT_DB_PREFIX.$this->mOverlayKeychainTable."` WHERE `".$overlayKey." =?";
+				// delete all references to the overlay from the overlay keychain
+				$query = "DELETE FROM `".BIT_DB_PREFIX.$this->mOverlayKeychainTable."` WHERE `".$overlayKey."` =?";
 				$result = $this->mDb->query( $query, array( $this->mOverlayId ) );
 				$this->mDb->CompleteTrans();
 			} else {
@@ -147,7 +147,6 @@ class BitGmapOverlayBase extends LibertyAttachable {
 	
 	function verifyRemove( &$pParamHash ) {
 		$overlayKey = $this->mOverlayType.'_id';
-	
 		$pParamHash['overlay_remove'] = array();
 
 		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
@@ -155,11 +154,9 @@ class BitGmapOverlayBase extends LibertyAttachable {
 		}
 		
 		if( !empty( $pParamHash[$overlayKey] ) && is_numeric( $pParamHash[$overlayKey] ) ) {
-			$pParamHash['overylay_remove'][$overlayKey] = $pParamHash[$overlayKey];
+			$pParamHash['overlay_remove'][$overlayKey] = $pParamHash[$overlayKey];
 		}
-
 		return( count( $this->mErrors ) == 0 );
-				
 	}	
 	/**
 	* This function removes a polyline from a set

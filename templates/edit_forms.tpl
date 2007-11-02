@@ -183,9 +183,9 @@
 				Put advice here
 				</div>
 				<div id="edit-markerset-options-actions">Edit Marker Actions<br/>
-				<a id="setremove" href="javascript:void(0)" onclick="BitMap.EditSession.removeMarkerSet( this.form );">remove</a> 
+				<a id="setremove" href="javascript:void(0)" onclick="BitMap.EditSession.removeMarkerSet( this.form );">remove</a><br/>
 				<a id="setdelete" href="javascript:void(0)" onclick="BitMap.EditSession.expungeMarkerSet( this.form );">delete</a><br/><br/>
-				<a id="setaddmarkers" href="javascript:void(0)" onclick="alert('feature coming soon');">Add Markers from Archives</a>
+				{* uncomment when available <a id="setaddmarkers" href="javascript:void(0)" onclick="">Add Markers from Archives</a> *}
 				<div>
 			</td>
 		</tr>
@@ -212,9 +212,9 @@
 					   Put advice here
 					</div>
 					<div id="edit-marker-actions">Edit Marker Actions<br/>
-						<a name="locate_marker_btn" title="locate on the map" href="javascript:void(0)" onclick="BitMap.MapData[0].Map.markers[n].marker.openInfoWindowHtml(BitMap.MapData[0].Map.markers[n].marker.my_html);">show</a>
-						<a name="remove_marker_btn" title="remove from this set" href="javascript:void(0)" onclick="BitMap.EditSession.removeMarker(document.edit-marker-form);">remove</a>
-						<a name="expunge_marker_btn" title="delete the marker!" href="javascript:void(0)" onclick="BitMap.EditSession.expungeMarker(document.edit-marker-form);">delete</a><br/>
+						<a id="locate_marker_btn" title="locate on the map" href="javascript:void(0)">show</a><br/>
+						<a id="remove_marker_btn" title="remove from this set" href="javascript:void(0)">remove</a><br/>
+						<a id="expunge_marker_btn" title="delete the marker!" href="javascript:void(0)">delete</a>
 					</div>
 				</td>
 			</tr>
