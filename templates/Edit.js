@@ -2696,12 +2696,12 @@ BitMap.Edit.prototype = {
 			var f = $('edit-marker-form');
 			alert ('Marker ploting assistant activated for '+ f.title.value + ' marker. \n Click to Position!');
 			
-			ref = this;
+			var ref = this;
 			
 			this.bAssistant = GEvent.addListener(this.Map.map, "click", function(overlay, point){
 				if (point) {
 					if (ref.TempOverlay != null) {
-						ref.removeOverlay(ref.TempOverlay);
+						this.removeOverlay(ref.TempOverlay);
 					}
 					ref.TempOverlay = new GMarker(point);
 					this.addOverlay(ref.TempOverlay);
