@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.29 2007/11/02 05:08:51 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.30 2007/11/02 05:18:56 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -61,10 +61,12 @@ if (!empty($_REQUEST["save_marker"])) {
 	}
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_marker"])) {
+	$gContent->verifyAdminPermission();
     if( $gContent->removeFromSet( $_REQUEST ) ) {
 		$gBitSmarty->assign('removeSucces', true);
 	}
 }elseif (!empty($_REQUEST["expunge_marker"])) {
+	$gContent->verifyAdminPermission();
     if( $gContent->expunge() ) {
 		$gBitSmarty->assign('expungeSucces', true);
 	}
