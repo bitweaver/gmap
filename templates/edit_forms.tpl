@@ -63,9 +63,9 @@
 					Put advice here
 				</div>
 				<div id="edit-maptype-options-actions">Edit Maptype Actions<br/>
-					<a name="locate_maptype_btn" title="show on the map" href="javascript:void(0)" onclick="alert('feature coming soon');">show</a>
-					<a name="remove_maptype_btn" title="remove from this map" href="javascript:void(0)" onclick="BitMap.EditSession.removeMaptype(document['edit-maptype-options-form']);">remove</a>
-					<a name="expunge_maptype_btn" title="delete the maptype!" href="javascript:void(0)" onclick="BitMap.EditSession.expungeMaptype(document['edit-maptype-options-form']);">delete</a>
+					<a id="locate_maptype_btn" title="show on the map" href="javascript:void(0)" onclick="alert('feature coming soon');">show</a><br/>
+					<a id="remove_maptype_btn" title="remove from this map" href="javascript:void(0)" onclick="BitMap.EditSession.removeMaptype(document['edit-maptype-options-form']);">remove</a><br/>
+					<a id="expunge_maptype_btn" title="delete the maptype!" href="javascript:void(0)" onclick="BitMap.EditSession.expungeMaptype(document['edit-maptype-options-form']);">delete</a><br/>
 				</div>
 			</td>
 		</tr>
@@ -92,8 +92,8 @@
                Put advice here
           </div>
           <div id="edit-tilelayer-actions">Edit Marker Actions<br/>
-            <a name="remove_tilelayer_btn" title="remove from this maptype" href="javascript:void(0)" onclick="BitMap.EditSession.removeTilelayer(document.edit-tilelayer-form);">remove</a>
-            <a name="expunge_tilelayer_btn" title="delete the tilelayer!" href="javascript:void(0)" onclick="BitMap.EditSession.expungeTilelayer(document.edit-tilelayer-form);">delete</a><br/>
+            <a id="remove_tilelayer_btn" title="remove from this maptype" href="javascript:void(0)">remove</a><br/>
+            <a id="expunge_tilelayer_btn" title="delete the tilelayer!" href="javascript:void(0)">delete</a><br/><br/>
           </div>
         </td>
      	</tr>
@@ -214,7 +214,7 @@
 					<div id="edit-marker-actions">Edit Marker Actions<br/>
 						<a id="locate_marker_btn" title="locate on the map" href="javascript:void(0)">show</a><br/>
 						<a id="remove_marker_btn" title="remove from this set" href="javascript:void(0)">remove</a><br/>
-						<a id="expunge_marker_btn" title="delete the marker!" href="javascript:void(0)">delete</a>
+						<a id="expunge_marker_btn" title="delete the marker!" href="javascript:void(0)">delete</a><br/>
 					</div>
 				</td>
 			</tr>
@@ -373,8 +373,8 @@
 				Put advice here
 				</div>
 				<div id="edit-polylineset-options-actions">Edit Polyline Actions<br/>
-				<a id="setremove" href="javascript:void(0)" onclick="BitMap.EditSession.removePolylineSet( this.form );">remove</a> 
-				<a id="setdelete" href="javascript:void(0)" onclick="BitMap.EditSession.expungePolylineSet( this.form );">delete</a><br/><br/>
+				<a id="setremove" href="javascript:void(0)" onclick="BitMap.EditSession.removePolylineSet( this.form );">remove</a><br/> 
+				<a id="setdelete" href="javascript:void(0)" onclick="BitMap.EditSession.expungePolylineSet( this.form );">delete</a><br/><br/><br/>
 				<a id="setaddpolylines" href="javascript:void(0)" onclick="alert('feature coming soon');">Add Polylines from Archives</a>
 				<div>
 			</td>
@@ -401,8 +401,8 @@
 					   Put advice here
 					</div>
 					<div id="edit-polyline-actions">Edit Polyline Actions<br/>
-						<a name="remove_polyline_btn" title="remove from this set" href="javascript:void(0)" onclick="BitMap.EditSession.removePolyline(document.edit-polyline-form);">remove</a>
-						<a name="expunge_polyline_btn" title="delete the polyline!" href="javascript:void(0)" onclick="BitMap.EditSession.expungePolyline(document.edit-polyline-form);">delete</a><br/>
+						<a id="remove_polyline_btn" title="remove from this set" href="javascript:void(0)">remove</a><br/>
+						<a id="expunge_polyline_btn" title="delete the polyline!" href="javascript:void(0)">delete</a><br/><br/>
 					</div>
 				</td>
 			</tr>
@@ -510,8 +510,8 @@
 				Put advice here
 				</div>
 				<div id="edit-polygonset-options-actions">Edit Polygon Actions<br/>
-				<a id="setremove" href="javascript:void(0)" onclick="BitMap.EditSession.removePolygonSet( this.form );">remove</a> 
-				<a id="setdelete" href="javascript:void(0)" onclick="BitMap.EditSession.expungePolygonSet( this.form );">delete</a><br/><br/>
+				<a id="setremove" href="javascript:void(0)" onclick="BitMap.EditSession.removePolygonSet( this.form );">remove</a><br/> 
+				<a id="setdelete" href="javascript:void(0)" onclick="BitMap.EditSession.expungePolygonSet( this.form );">delete</a><br/><br/><br/>
 				<a id="setaddpolygons" href="javascript:void(0)" onclick="alert('feature coming soon');">Add Polygons from Archives</a>
 				<div>
 			</td>
@@ -538,8 +538,8 @@
 					   Put advice here
 					</div>
 					<div id="edit-polygon-actions">Edit Polygon Actions<br/>
-						<a name="remove_polygon_btn" title="remove from this set" href="javascript:void(0)" onclick="BitMap.EditSession.removePolygon(document.edit-polygon-form);">remove</a>
-						<a name="expunge_polygon_btn" title="delete the polygon!" href="javascript:void(0)" onclick="BitMap.EditSession.expungePolygon(document.edit-polygon-form);">delete</a><br/>
+						<a id="remove_polygon_btn" title="remove from this set" href="javascript:void(0)">remove</a><br/>
+						<a id="expunge_polygon_btn" title="delete the polygon!" href="javascript:void(0)">delete</a><br/><br/>
 					</div>
 				</td>
 			</tr>

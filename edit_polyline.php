@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.20 2007/09/20 19:44:13 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.21 2007/11/02 18:34:33 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -23,7 +23,9 @@ $gBitSystem->setFormatHeader( 'center_only' );
 
 // Now check permissions to access the polyline
 if( $gContent->isValid() ) {
-	$gContent->verifyEditPermission();
+	if ( !$gContent->hasEditPermission() ){
+		$gBitSystem->fatalError( tra( "Sorry, you do not have permission to edit this polyline." ));
+	}
 } else {
 	$gBitSystem->verifyPermission( 'p_gmap_overlay_edit' );
 
@@ -49,9 +51,11 @@ if( $gContent->isValid() ) {
 
 //most of the time we want xml back so we make it the default
 $format = 'xml';
-
+$XMLContent = "";
+$statusCode = 401;
 if (!empty($_REQUEST["save_polyline"])) {
     if( $gContent->store( $_REQUEST ) ) {		
+		$statusCode = 200;
 		if ( $gContent->hasAdminPermission() ){
     		$gContent->setEditSharing( $_REQUEST );
 		}    
@@ -59,12 +63,26 @@ if (!empty($_REQUEST["save_polyline"])) {
 	}
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_polyline"])) {
-    if( $gContent->removeFromSet( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('removeSucces', true);
+	if ( $gContent->hasAdminPermission() ){
+		if( $gContent->removeFromSet( $_REQUEST ) ) {
+			$statusCode = 200;
+			$gBitSmarty->assign('removeSucces', true);
+		}else{
+			$XMLContent = tra( "Sorry, there was an unknown error trying to remove the marker." );
+		}
+	}else{
+		$XMLContent = tra( "You do not have the required permission to remove this marker from this set." );
 	}
 }elseif (!empty($_REQUEST["expunge_polyline"])) {
-    if( $gContent->expunge() ) {
-		$gBitSmarty->assign_by_ref('expungeSucces', true);
+	if ( $gContent->hasAdminPermission() ){
+		if( $gContent->expunge() ) {
+			$statusCode = 200;
+			$gBitSmarty->assign('expungeSucces', true);
+		}else{
+			$XMLContent = tra( "Sorry, there was an unknown error trying to delete the marker." );
+		}
+	}else{
+		$XMLContent = tra( "You do not have the required permission to delete this marker." );
 	}
 }else{
 	$gContent->invokeServices( 'content_edit_function' );
@@ -82,6 +100,8 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
+	$gBitSmarty->assign( 'statusCode', $statusCode);
+	$gBitSmarty->assign( 'XMLContent', $XMLContent);
 	$gBitSystem->setFormatHeader( 'xml' );
 	$gBitSystem->display('bitpackage:gmap/edit_polyline_xml.tpl');
 }

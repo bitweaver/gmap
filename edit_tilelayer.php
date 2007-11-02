@@ -22,20 +22,28 @@ $gContent = new BitGmap();
 //There is no callback to the server for previewing changes.
 
 $format = 'xml';
-
+$XMLContent = "";
+$statusCode = 401;
 if (!empty($_REQUEST["save_tilelayer"])) {
     if( $result = $gContent->storeTilelayer( $_REQUEST ) ) {
+		$statusCode = 200;
 		$gBitSmarty->assign_by_ref('tilelayerInfo', $result );
     }
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_tilelayer"])) {
     if( $gContent->removeTilelayerFromMaptype( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('removeSucces', true);
-    }
+		$statusCode = 200;
+		$gBitSmarty->assign('removeSucces', true);
+	}else{
+		$XMLContent = tra( "Sorry, there was an unknown error trying to remove the tilelayer." );
+	}
 }elseif (!empty($_REQUEST["expunge_tilelayer"])) {
     if( $gContent->expungeTilelayer( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('expungeSucces', true);
-    }
+		$statusCode = 200;
+		$gBitSmarty->assign('expungeSucces', true);
+	}else{
+		$XMLContent = tra( "Sorry, there was an unknown error trying to delete the tilelayer." );
+	}
 }else{
 	if ( isset( $_REQUEST["tilelayer_id"] ) ){
 		$tilelayer = $gContent->getTilelayer( $_REQUEST["tilelayer_id"] );
@@ -53,6 +61,9 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
-	$gBitSystem->display('bitpackage:gmap/edit_tilelayer_xml.tpl', null, $format);
+	$gBitSmarty->assign( 'statusCode', $statusCode);
+	$gBitSmarty->assign( 'XMLContent', $XMLContent);
+	$gBitSystem->setFormatHeader( 'xml' );
+	$gBitSystem->display('bitpackage:gmap/edit_tilelayer_xml.tpl');
 }
 ?>
