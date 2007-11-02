@@ -10,5 +10,5 @@
 	<errormsg>{$maptypeInfo.errormsg}</errormsg>
 </maptype>
 {else}
-	<status>success</status>
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

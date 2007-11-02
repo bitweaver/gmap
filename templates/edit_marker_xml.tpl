@@ -14,8 +14,5 @@
 		<allow_comments>{if $gContent->getPreference("allow_comments") == "y"}y{else}n{/if}</allow_comments>
 	</marker>
 {else}
-	<req>
-	<status><code>{$statusCode}</code></status>
-    <content><![CDATA[{$XMLContent}]]></content>
-    </req>
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

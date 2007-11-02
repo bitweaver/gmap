@@ -9,4 +9,6 @@
 	<label_hover_styles>{$markerstyleInfo.label_hover_styles}</label_hover_styles>
 	<window_styles>{$markerstyleInfo.window_styles}</window_styles>
 </markerstyle>
+{else}
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

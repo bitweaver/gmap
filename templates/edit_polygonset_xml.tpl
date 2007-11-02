@@ -7,4 +7,6 @@
 		<style_id>{$polygonsetInfo.style_id}</style_id>
 		<polylinestyle_id>{$polygonsetInfo.polylinestyle_id}</polylinestyle_id>
 	</polygonset>
+{else}
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

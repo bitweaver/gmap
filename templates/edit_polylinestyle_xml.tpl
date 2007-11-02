@@ -7,4 +7,6 @@
 	<weight>{$polylinestyleInfo.weight}</weight>
 	<opacity>{$polylinestyleInfo.opacity}</opacity>
 </polylinestyle>
+{else}
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

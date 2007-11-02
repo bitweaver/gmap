@@ -154,7 +154,17 @@ BitMap.Edit.prototype = {
 		return function(){ func(n,i) };
 	},
 	
-
+	"verifyRemove": function(rslt){
+        var xml = rslt.responseXML;
+        var status = xml.documentElement.getElementsByTagName('code')[0].firstChild.nodeValue;
+		if (status != '200'){
+			var msg = xml.documentElement.getElementsByTagName('content')[0].firstChild.nodeValue;
+			alert(msg);
+			return false;
+		}else{
+			return true;
+		}
+	},
 	
 	/*******************
 	 *
@@ -199,12 +209,12 @@ BitMap.Edit.prototype = {
 			for (var n=0; n<this.Map.markersets.length; n++) {
 				var i = n;
 				var ref = this;
-				var newMarkerSet = $('edit-markerset').cloneNode(true);
-				newMarkerSet.id = "edit-markerset-"+i;
-				newMarkerSet.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[i].name;
-				newMarkerSet.getElementsByTagName("a").item(0).onclick = this.handleEvent('editMarkerSet',i);
-				newMarkerSet.getElementsByTagName("a").item(1).onclick = this.handleEvent('editMarkers',i);
-				$('edit-markersets-table').appendChild(newMarkerSet);
+				var ms = $('edit-markerset').cloneNode(true);
+				ms.id = "edit-markerset-"+i;
+				ms.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[i].name;
+				ms.getElementsByTagName("a").item(0).onclick = this.handleEvent('editMarkerSet',i);
+				ms.getElementsByTagName("a").item(1).onclick = this.handleEvent('editMarkers',i);
+				$('edit-markersets-table').appendChild(ms);
 				BitMap.show('edit-markerset-'+i);
 			}
 		}
@@ -238,12 +248,12 @@ BitMap.Edit.prototype = {
 			this._setIdRef = null;
 			this.editObjectN = null;
 			if( !$('edit-markerset-new') ){
-				var newMarkerSet = $('edit-markerset').cloneNode(true);
-				newMarkerSet.id = "edit-markerset-new";
-				newMarkerSet.getElementsByTagName("span").item(0).innerHTML = "New Marker Set";
-				var tdtags = newMarkerSet.getElementsByTagName("td");
+				var ms = $('edit-markerset').cloneNode(true);
+				ms.id = "edit-markerset-new";
+				ms.getElementsByTagName("span").item(0).innerHTML = "New Marker Set";
+				var tdtags = ms.getElementsByTagName("td");
 				tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
-				$('edit-markers-menu').appendChild(newMarkerSet);
+				$('edit-markers-menu').appendChild(ms);
 				
 				$('edit-markerset-new').appendChild( $('edit-markerset-options-table') );
 				BitMap.show('edit-markerset-new');
@@ -253,6 +263,12 @@ BitMap.Edit.prototype = {
 			this.editObjectN = this._setIndexRef = i;
 			this.cancelNewMarkerSet();
 			this._setIdRef = this.Map.markersets[i].set_id;
+
+			var f2 = bind(this.removeMarkerSet, this);
+			$('remove_markerset_btn').onclick = function(){ f2($('edit-markerset-options-form')); };
+			var f3 = bind(this.expungeMarkerSet, this);
+			$('expunge_markerset_btn').onclick = function(){ f3($('edit-markerset-options-form')); };
+
 			var optionsTable = $('edit-markerset-options-table');
 			var target = $('edit-markerset-'+i);
 			target.insertBefore(optionsTable, target.childNodes[2]);  
@@ -609,6 +625,16 @@ BitMap.Edit.prototype = {
 			this.editObjectN = this._setIndexRef = i;
 			this.cancelNewMaptype();
 			this._setIdRef = this.Map.maptypes[i].maptype_id;
+			
+			//update action links with maptype specific ref
+			var f1 = bind(this.Map.map.setMapType, this.Map.map);
+			var ref = this;
+			$('locate_maptype_btn').onclick = function(){ f1(ref.Map.maptypes[i].type); };
+			var f2 = bind(this.removeMaptype, this);
+			$('remove_maptype_btn').onclick = function(){ f2($('edit-maptype-form')); };
+			var f3 = bind(this.expungeMaptype, this);
+			$('expunge_maptype_btn').onclick = function(){ f3($('edit-maptype-form')); };
+			
 			var optionsTable = $('edit-maptype-options-table');
 			var target = $('edit-maptype-'+i);
 			target.insertBefore(optionsTable, target.childNodes[2]);  
@@ -881,12 +907,12 @@ BitMap.Edit.prototype = {
 			this._setIdRef = null;
 			this.editObjectN = null;
 			if( !$('edit-polylineset-new') ){
-				var newPolylineSet = $('edit-polylineset').cloneNode(true);
-				newPolylineSet.id = "edit-polylineset-new";
-				newPolylineSet.getElementsByTagName("span").item(0).innerHTML = "New Polyline Set";
-				var tdtags = newPolylineSet.getElementsByTagName("td");
+				var ps = $('edit-polylineset').cloneNode(true);
+				ps.id = "edit-polylineset-new";
+				ps.getElementsByTagName("span").item(0).innerHTML = "New Polyline Set";
+				var tdtags = ps.getElementsByTagName("td");
 				tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
-				$('edit-polylines-menu').appendChild(newPolylineSet);
+				$('edit-polylines-menu').appendChild(ps);
 				
 				$('edit-polylineset-new').appendChild( $('edit-polylineset-options-table') );
 				BitMap.show('edit-polylineset-new');
@@ -896,6 +922,12 @@ BitMap.Edit.prototype = {
 			this.editObjectN = this._setIndexRef = i;
 			this.cancelNewPolylineSet();
 			this._setIdRef = this.Map.polylinesets[i].set_id;
+
+			var f2 = bind(this.removePolylineSet, this);
+			$('remove_polylineset_btn').onclick = function(){ f2($('edit-polylineset-options-form')); };
+			var f3 = bind(this.expungePolylineSet, this);
+			$('expunge_polylineset_btn').onclick = function(){ f3($('edit-polylineset-options-form')); };
+
 			var optionsTable = $('edit-polylineset-options-table');
 			var target = $('edit-polylineset-'+i);
 			target.insertBefore(optionsTable, target.childNodes[2]);  
@@ -1177,12 +1209,12 @@ BitMap.Edit.prototype = {
 			this._setIdRef = null;
 			this.editObjectN = null;
 			if( !$('edit-polygonset-new') ){
-				var newPolygonSet = $('edit-polygonset').cloneNode(true);
-				newPolygonSet.id = "edit-polygonset-new";
-				newPolygonSet.getElementsByTagName("span").item(0).innerHTML = "New Polygon Set";
-				var tdtags = newPolygonSet.getElementsByTagName("td");
+				var ps = $('edit-polygonset').cloneNode(true);
+				ps.id = "edit-polygonset-new";
+				ps.getElementsByTagName("span").item(0).innerHTML = "New Polygon Set";
+				var tdtags = ps.getElementsByTagName("td");
 				tdtags.item(1).parentNode.removeChild(tdtags.item(1));  
-				$('edit-polygons-menu').appendChild(newPolygonSet);
+				$('edit-polygons-menu').appendChild(ps);
 				
 				$('edit-polygonset-new').appendChild( $('edit-polygonset-options-table') );
 				BitMap.show('edit-polygonset-new');
@@ -1192,6 +1224,12 @@ BitMap.Edit.prototype = {
 			this.editObjectN = this._setIndexRef = i;
 			this.cancelNewPolygonSet();
 			this._setIdRef = this.Map.polygonsets[i].set_id;
+
+			var f2 = bind(this.removePolygonSet, this);
+			$('remove_polygonset_btn').onclick = function(){ f2($('edit-polygonset-options-form')); };
+			var f3 = bind(this.expungePolygonSet, this);
+			$('expunge_polygonset_btn').onclick = function(){ f3($('edit-polygonset-options-form')); };
+
 			var optionsTable = $('edit-polygonset-options-table');
 			var target = $('edit-polygonset-'+i);
 			target.insertBefore(optionsTable, target.childNodes[2]);  
@@ -1449,17 +1487,21 @@ BitMap.Edit.prototype = {
 	 },
 
 	 "removeMarkerSet": function(f){
-		this.showSpinner("Removing Markerset...");
-		this._setIdRef = f.set_id.value;
-		var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
+	 	if (confirm("Are you sure you want to remove \nthe markerset \""+f.title.value+"\" from this map?")){
+			this.showSpinner("Removing Markerset...");
+			this._setIdRef = f.set_id.value;
+			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) );
+		}
 	 },
 
 	 "expungeMarkerSet": function(f){
-		this.showSpinner("Deleting Markerset...");
-		this._setIdRef = f.set_id.value;
-		var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) ); 
+	 	if (confirm("Are you sure you want to delete \nthe markerset \""+f.title.value+"\"? \n\nThis can not be undone!")){
+			this.showSpinner("Deleting Markerset...");
+			this._setIdRef = f.set_id.value;
+			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) );
+		}
 	 },
 	 
 	 "storeMarkerStyle": function(f){
@@ -1481,19 +1523,23 @@ BitMap.Edit.prototype = {
 	 },
 	 
 	 "removeMaptype": function(f){
-		this.showSpinner("Removing Maptype...");
-		this.editObjectN = f.array_n.value;
-		this.editSetId = f.maptype_id.value;
-		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
+	 	if (confirm("Are you sure you want to remove \nthe maptype \""+f.name.value+"\" from this map?")){
+			this.showSpinner("Removing Maptype...");
+			this.editObjectN = f.array_n.value;
+			this.editSetId = f.maptype_id.value;
+			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) );
+		}
 	 },
 	 
 	 "expungeMaptype": function(f){
-		this.showSpinner("Deleting Maptype...");
-		this.editObjectN = f.array_n.value;
-		this.editSetId = f.maptype_id.value;
-		var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) ); 
+	 	if (confirm("Are you sure you want to delete \nthe maptype \""+f.name.value+"\"? \n\nThis can not be undone!")){
+			this.showSpinner("Deleting Maptype...");
+			this.editObjectN = f.array_n.value;
+			this.editSetId = f.maptype_id.value;
+			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) );
+		}
 	 },
 
 	 "storeTilelayer": function(f){
@@ -1503,19 +1549,23 @@ BitMap.Edit.prototype = {
 	 },
 	 
 	 "removeTilelayer": function(f){
-		this.showSpinner("Removing Tilelayer...");
-		this.editSetId = f.set_id.value;
-		this.editTilelayerId = f.tilelayer_id.value;
-		var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
+	 	if (confirm("Are you sure you want to remove \nthe tilelayer \""+f.tiles_name.value+"\" from this maptype?")){
+			this.showSpinner("Removing Tilelayer...");
+			this.editSetId = f.set_id.value;
+			this.editTilelayerId = f.tilelayer_id.value;
+			var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) );
+		}
 	 },
 
 	 "expungeTilelayer": function(f){
-		this.showSpinner("Deleting Tilelayer...");
-		this.editSetId = f.set_id.value;
-		this.editTilelayerId = f.tilelayer_id.value;
-		var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) ); 
+	 	if (confirm("Are you sure you want to delete \nthe tilelayer \""+f.tiles_name.value+"\"? \n\nThis can not be undone!")){
+			this.showSpinner("Deleting Tilelayer...");
+			this.editSetId = f.set_id.value;
+			this.editTilelayerId = f.tilelayer_id.value;
+			var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) );
+		}
 	 },
 
 	 "storeCopyright": function(f){
@@ -1525,19 +1575,23 @@ BitMap.Edit.prototype = {
 	 },
 	 
 	 "removeCopyright": function(f){
-		this.showSpinner("Removing Copyright...");
-		this.editSetId = f.set_id.value;
-		this.editCopyrightId = f.copyright_id.value;
-		var str = "edit_copyright.php?set_id=" + this.editSetId + "&copyright_id=" + this.editCopyrightId + "&remove_copyright=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
+	 	if (confirm("Are you sure you want to remove \nthe copyright from this tilelayer?")){
+			this.showSpinner("Removing Copyright...");
+			this.editSetId = f.set_id.value;
+			this.editCopyrightId = f.copyright_id.value;
+			var str = "edit_copyright.php?set_id=" + this.editSetId + "&copyright_id=" + this.editCopyrightId + "&remove_copyright=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) );
+		}
 	 },
 
 	 "expungeCopyright": function(f){
-		this.showSpinner("Deleting Copyright...");
-		this.editSetId = f.set_id.value;
-		this.editCopyrightId = f.copyright_id.value;
-		var str = "edit_copyright.php?copyright_id=" + this.editCopyrightId + "&expunge_copyright=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) ); 
+	 	if (confirm("Are you sure you want to delete \nthe copyright? \n\nThis can not be undone!")){
+			this.showSpinner("Deleting Copyright...");
+			this.editSetId = f.set_id.value;
+			this.editCopyrightId = f.copyright_id.value;
+			var str = "edit_copyright.php?copyright_id=" + this.editCopyrightId + "&expunge_copyright=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) );
+		}
 	 },
 		 
 	 "storePolyline": function(f){
@@ -1549,19 +1603,23 @@ BitMap.Edit.prototype = {
 	 },
 	 
 	 "removePolyline": function(f){
-		this.showSpinner("Removing Polyline...");
-		this._setIdRef = f.set_id.value;
-		this.editPolylineId = f.polyline_id.value;
-		var str = "edit_polyline.php?set_id=" + this._setIdRef + "&polyline_id=" + this.editPolylineId + "&remove_polyline=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolyline, this) ); 
+	 	if (confirm("Are you sure you want to remove \nthe polyline \""+f.title.value+"\" from this polyline set?")){
+			this.showSpinner("Removing Polyline...");
+			this._setIdRef = f.set_id.value;
+			this.editPolylineId = f.polyline_id.value;
+			var str = "edit_polyline.php?set_id=" + this._setIdRef + "&polyline_id=" + this.editPolylineId + "&remove_polyline=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolyline, this) ); 
+		}
 	 },
 
 	 "expungePolyline": function(f){
-		this.showSpinner("Deleting Polyline...");
-		this._setIdRef = f.set_id.value;
-		this.editPolylineId = f.polyline_id.value;
-		var str = "edit_polyline.php?polyline_id=" + this.editPolylineId + "&expunge_polyline=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolyline, this) ); 
+	 	if (confirm("Are you sure you want to delete \nthe polylineset \""+f.title.value+"\"? \n\nThis can not be undone!")){
+			this.showSpinner("Deleting Polyline...");
+			this._setIdRef = f.set_id.value;
+			this.editPolylineId = f.polyline_id.value;
+			var str = "edit_polyline.php?polyline_id=" + this.editPolylineId + "&expunge_polyline=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolyline, this) );
+		}
 	 },
 
 	 "storePolylineSet": function(f){
@@ -1572,17 +1630,21 @@ BitMap.Edit.prototype = {
 	 },
 
 	 "removePolylineSet": function(f){
-		this.showSpinner("Removing Polylineset...");
-		this._setIdRef = f.set_id.value;
-		var str = "edit_polylineset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polylineset=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolylineSet, this) ); 
+	 	if (confirm("Are you sure you want to remove \nthe polylineset \""+f.title.value+"\" from this map?")){
+			this.showSpinner("Removing Polylineset...");
+			this._setIdRef = f.set_id.value;
+			var str = "edit_polylineset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polylineset=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolylineSet, this) );
+		}
 	 },
 
 	 "expungePolylineSet": function(f){
-		this.showSpinner("Deleting Polylineset...");
-		this._setIdRef = f.set_id.value;
-		var str = "edit_polylineset.php?" + "set_id=" + f.set_id.value + "&expunge_polylineset=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolylineSet, this) ); 
+	 	if (confirm("Are you sure you want to delete \nthe polylineset \""+f.title.value+"\"? \n\nThis can not be undone!")){
+			this.showSpinner("Deleting Polylineset...");
+			this._setIdRef = f.set_id.value;
+			var str = "edit_polylineset.php?" + "set_id=" + f.set_id.value + "&expunge_polylineset=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolylineSet, this) ); 
+		}
 	 },
 	 
 	 "storePolylineStyle": function(f){
@@ -1600,19 +1662,23 @@ BitMap.Edit.prototype = {
 	 },
 	 
 	 "removePolygon": function(f){
-		this.showSpinner("Removing Polygon...");
-		this._setIdRef = f.set_id.value;
-		this.editPolygonId = f.polygon_id.value;
-		var str = "edit_polygon.php?set_id=" + this._setIdRef + "&polygon_id=" + this.editPolygonId + "&remove_polygon=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygon, this) ); 
+	 	if (confirm("Are you sure you want to remove \nthe polygon \""+f.title.value+"\" from this polygon set?")){
+			this.showSpinner("Removing Polygon...");
+			this._setIdRef = f.set_id.value;
+			this.editPolygonId = f.polygon_id.value;
+			var str = "edit_polygon.php?set_id=" + this._setIdRef + "&polygon_id=" + this.editPolygonId + "&remove_polygon=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygon, this) ); 
+		}
 	 },
 
 	 "expungePolygon": function(f){
-		this.showSpinner("Deleting Polygon...");
-		this._setIdRef = f.set_id.value;
-		this.editPolygonId = f.polygon_id.value;
-		var str = "edit_polygon.php?polygon_id=" + this.editPolygonId + "&expunge_polygon=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygon, this) ); 
+	 	if (confirm("Are you sure you want to delete \nthe polygon \""+f.title.value+"\"? \n\nThis can not be undone!")){
+			this.showSpinner("Deleting Polygon...");
+			this._setIdRef = f.set_id.value;
+			this.editPolygonId = f.polygon_id.value;
+			var str = "edit_polygon.php?polygon_id=" + this.editPolygonId + "&expunge_polygon=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygon, this) ); 
+		}
 	 },
 
 	 "storePolygonSet": function(f){
@@ -1623,17 +1689,21 @@ BitMap.Edit.prototype = {
 	 },
 
 	 "removePolygonSet": function(f){
-		this.showSpinner("Removing Polygonset...");
-		this._setIdRef = f.set_id.value;
-		var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polygonset=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) ); 
+	 	if (confirm("Are you sure you want to remove \nthe polygonset \""+f.title.value+"\" from this map?")){
+			this.showSpinner("Removing Polygonset...");
+			this._setIdRef = f.set_id.value;
+			var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polygonset=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) ); 
+		}
 	 },
 
 	 "expungePolygonSet": function(f){
-		this.showSpinner("Deleting Polygonset...");
-		this._setIdRef = f.set_id.value;
-		var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&expunge_polygonset=true";
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) ); 
+	 	if (confirm("Are you sure you want to delete \nthe polygonset \""+f.title.value+"\"? \n\nThis can not be undone!")){
+			this.showSpinner("Deleting Polygonset...");
+			this._setIdRef = f.set_id.value;
+			var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&expunge_polygonset=true";
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) ); 
+		}
 	 },
 
 	 "storePolygonStyle": function(f){
@@ -1934,9 +2004,7 @@ BitMap.Edit.prototype = {
 	
 	//this needs special attention
 	"updateRemoveMarker": function(rslt){
-        var xml = rslt.responseXML;
-        var status = xml.documentElement.getElementsByTagName('code')[0].firstChild.nodeValue;
-         if (status == '200'){
+		if ( this.verifyRemove(rslt) ){
 			var ref = this.Map;
 			for (var n=0; n<ref.markers.length; n++){
 				var M = ref.markers[n];
@@ -1955,36 +2023,34 @@ BitMap.Edit.prototype = {
 					break;
 				}
 			}
-			
 			this.hideSpinner("DONE!");
-		}else{
-			var msg = xml.documentElement.getElementsByTagName('content')[0].firstChild.nodeValue;
-			alert(msg);
 		}
 	},
 
 
 	"updateRemoveMarkerSet": function(){
-	  	for (var n=0; n<this.Map.markers.length; n++){
-	  		if ( ( this.Map.markers[n] != null ) && ( this.Map.markers[n].set_id == this._setIdRef ) && ( this.Map.markers[n].gmarker != null ) ){
-					this.Map.map.removeOverlay(this.Map.markers[n].gmarker); 			
-					this.Map.markers[n].gmarker = null;
-					this.Map.markers[n] = null;
-	  		}
-	  	}
-		for (var s=0; s<this.Map.markersets.length; s++){
-	  		if ( ( this.Map.markersets[s] != null ) && ( this.Map.markersets[s].set_id == this._setIdRef ) ){
-	      		var getElem = "markerset_"+this.Map.markersets[s].set_id;
-	      		if ( $(getElem) ) {
-	         		var extraMarkerForm = $(getElem);
-	      			$('editmarkerform').removeChild(extraMarkerForm);
-	      		}
-					this.Map.markersets[s].set_id = null;
-	  			this.Map.markersets[s] = null;
-	  		}
+		if ( this.verifyRemove(rslt) ){
+			for (var n=0; n<this.Map.markers.length; n++){
+				if ( ( this.Map.markers[n] != null ) && ( this.Map.markers[n].set_id == this._setIdRef ) && ( this.Map.markers[n].gmarker != null ) ){
+						this.Map.map.removeOverlay(this.Map.markers[n].gmarker); 			
+						this.Map.markers[n].gmarker = null;
+						this.Map.markers[n] = null;
+				}
+			}
+			for (var s=0; s<this.Map.markersets.length; s++){
+				if ( ( this.Map.markersets[s] != null ) && ( this.Map.markersets[s].set_id == this._setIdRef ) ){
+					var getElem = "markerset_"+this.Map.markersets[s].set_id;
+					if ( $(getElem) ) {
+						var extraMarkerForm = $(getElem);
+						$('editmarkerform').removeChild(extraMarkerForm);
+					}
+						this.Map.markersets[s].set_id = null;
+					this.Map.markersets[s] = null;
+				}
+			}
+			this.editMarkers();
+			this.hideSpinner("DONE!");
 		}
-		this.hideSpinner("DONE!");
-		this.editMarkers();
 	},
 	
 	
@@ -2181,35 +2247,37 @@ BitMap.Edit.prototype = {
 	},
 	 
 	"updateRemoveMaptype": function(rslt){
-		var n = this.editObjectN;
-		// get maptype node value
-		var p = this.Map.maptypes[n].maptype_node;
-		// remove the maptype ref form the map array of types
-		this.Map.maptypes[this.Map.maptypes[n].name] = null;
-		// remove the controls
-		this.Map.map.removeControl(typecontrols);
-		// remove it from the map			
-		this.Map.map.mapTypes.splice(p, 1);
-		// add the controls
-		this.Map.map.addControl(typecontrols);
-		
-		// @todo we should first check if the map is on display, and then if so flip to street
-		// we flip to street mode
-		this.Map.map.setMaptype(this.Map.map.mapTypes[0]);
-		
-		// remove by id the maptype form
-		for (var j=0; j<this.Map.maptypes.length; j++){
-			if ( ( this.Map.maptypes[j] != null ) && ( this.Map.maptypes[j].maptype_id == this.editSetId ) ){
-			var getElem = "editmaptypetable_" + this.Map.maptypes[j].maptype_id;
-			if ( $(getElem) ) {
-				var extraMaptypeForm = $(getElem);
-				$('editmaptypeform').removeChild(extraMaptypeForm);
-			}
-				this.Map.maptypes[n].maptype_id = null;
-				this.Map.maptypes[n] = null;
-			}
-		}			
-		this.hideSpinner("DONE!");
+		if ( this.verifyRemove(rslt) ){
+			var n = this.editObjectN;
+			// get maptype node value
+			var p = this.Map.maptypes[n].maptype_node;
+			// remove the maptype ref form the map array of types
+			this.Map.maptypes[this.Map.maptypes[n].name] = null;
+			// remove the controls
+			this.Map.map.removeControl(typecontrols);
+			// remove it from the map			
+			this.Map.map.mapTypes.splice(p, 1);
+			// add the controls
+			this.Map.map.addControl(typecontrols);
+			
+			// @todo we should first check if the map is on display, and then if so flip to street
+			// we flip to street mode
+			this.Map.map.setMaptype(this.Map.map.mapTypes[0]);
+			
+			// remove by id the maptype form
+			for (var j=0; j<this.Map.maptypes.length; j++){
+				if ( ( this.Map.maptypes[j] != null ) && ( this.Map.maptypes[j].maptype_id == this.editSetId ) ){
+				var getElem = "editmaptypetable_" + this.Map.maptypes[j].maptype_id;
+				if ( $(getElem) ) {
+					var extraMaptypeForm = $(getElem);
+					$('editmaptypeform').removeChild(extraMaptypeForm);
+				}
+					this.Map.maptypes[n].maptype_id = null;
+					this.Map.maptypes[n] = null;
+				}
+			}			
+			this.hideSpinner("DONE!");
+		}
 	},
 
 	"updateTilelayer": function(rslt){
@@ -2262,21 +2330,16 @@ BitMap.Edit.prototype = {
 	},
 
 	"updateRemoveTilelayer": function(){
-        var xml = rslt.responseXML;
-        var status = xml.documentElement.getElementsByTagName('code')[0].firstChild.nodeValue;
-		if (status == '200'){
+		if ( this.verifyRemove(rslt) ){
 			for (var n=0; n<this.Map.tilelayers.length; n++){
 				if ( ( this.Map.tilelayers[n] != null ) && ( this.Map.maptypes[i].tilelayers[n].marker_id == this.editSetId ) ){
 					//@TODO remove layer from related maptype and update maptype on map
 					this.Map.tilelayers[n] = null;
 				}
 			}
-			this.hideSpinner("DONE!");
 			this.editMaptype(editSetId);
 			this.editTilelayers();
-		}else{
-			var msg = xml.documentElement.getElementsByTagName('content')[0].firstChild.nodeValue;
-			alert(msg);
+			this.hideSpinner("DONE!");
 		}	
 	},
 
@@ -2318,15 +2381,17 @@ BitMap.Edit.prototype = {
 	},
 	
 	"updateRemoveCopyright":function(){
-		var n = this.editObjectN;
-		this.Map.copyrights[n] = null;
-
-		//remove the related maptype
-		//re-add the maptype
+		if ( this.verifyRemove(rslt) ){
+			var n = this.editObjectN;
+			this.Map.copyrights[n] = null;
 	
-		this.hideSpinner("DONE!");
-		this.cancelEditCopyright();
-		this.editTilelayer(s);	
+			//@TODO remove the related maptype
+			//@TODO re-add the maptype
+		
+			this.hideSpinner("DONE!");
+			this.cancelEditCopyright();
+			this.editTilelayer(s);	
+		}
 	},
 
 	"updatePolyline": function(rslt){
@@ -2505,26 +2570,28 @@ BitMap.Edit.prototype = {
 
 	//this needs special attention
 	"updateRemovePolylineSet": function(){
-	  	for (var n=0; n<this.Map.polylines.length; n++){
-	  		if ( ( this.Map.polylines[n] != null ) && ( this.Map.polylines[n].set_id == this.editSetId ) && ( this.Map.polylines[n].polyline != null ) ){
-	  			this.Map.map.removeOverlay(Map.Polylines[n].polyline);
-					this.Map.polylines[n].polyline = null;
-	  			this.Map.polylines[n] = null;
-	  		}
-	  	}
-		for (var s=0; s<Map.PolylineSets.length; s++){
-	  		if ( ( this.Map.polylinesets[s] != null ) && ( this.Map.polylinesets[s].set_id == this.editSetId ) ){
-	      		var getElem = "polylineset_"+this.Map.polylinesets[s].set_id;
-	      		if ( $(getElem) ) {
-	          		var extraPolylineForm = $(getElem);
-	      			$('editpolylineform').removeChild(extraPolylineForm);
-	      		}
-					this.Map.polylinesets[s].set_id = null;
-	  			this.Map.polylinesets[s] = null;
-	  		}
+		if ( this.verifyRemove(rslt) ){
+			for (var n=0; n<this.Map.polylines.length; n++){
+				if ( ( this.Map.polylines[n] != null ) && ( this.Map.polylines[n].set_id == this.editSetId ) && ( this.Map.polylines[n].polyline != null ) ){
+					this.Map.map.removeOverlay(Map.Polylines[n].polyline);
+						this.Map.polylines[n].polyline = null;
+					this.Map.polylines[n] = null;
+				}
+			}
+			for (var s=0; s<Map.PolylineSets.length; s++){
+				if ( ( this.Map.polylinesets[s] != null ) && ( this.Map.polylinesets[s].set_id == this.editSetId ) ){
+					var getElem = "polylineset_"+this.Map.polylinesets[s].set_id;
+					if ( $(getElem) ) {
+						var extraPolylineForm = $(getElem);
+						$('editpolylineform').removeChild(extraPolylineForm);
+					}
+						this.Map.polylinesets[s].set_id = null;
+					this.Map.polylinesets[s] = null;
+				}
+			}
+			this.editPolylines();
+			this.hideSpinner("DONE!");
 		}
-		this.hideSpinner("DONE!");
-		this.editPolylines();
 	},
 
 	"updatePolygon": function(rslt){
@@ -2676,9 +2743,7 @@ BitMap.Edit.prototype = {
 	 },	
 
 	"updateRemovePolygon": function(){
-        var xml = rslt.responseXML;
-        var status = xml.documentElement.getElementsByTagName('code')[0].firstChild.nodeValue;
-		if (status == '200'){
+		if ( this.verifyRemove(rslt) ){
 			for (var i=0; i<this.Map.polygons.length; i++){
 				if ( Map.Polygons[i] != null && this.Map.polygons[n].polygon != null && this.Map.polygons[i].polygon_id == this.editPolygonId ){
 					this.Map.map.removeOverlay(this.Map.polygons[i].polygon);
@@ -2686,37 +2751,36 @@ BitMap.Edit.prototype = {
 					this.Map.polygons[i] = null;
 				}
 			}
-			this.hideSpinner("DONE!");
 			this.editPolygons();
 			this.editPolygonSet(this._setIdRef);
-		}else{
-			var msg = xml.documentElement.getElementsByTagName('content')[0].firstChild.nodeValue;
-			alert(msg);
+			this.hideSpinner("DONE!");
 		}		
 	},
 
 	//this needs special attention
 	"updateRemovePolygonSet": function(){
-	  	for (var n=0; n<this.Map.polygons.length; n++){
-	  		if ( ( this.Map.polygons[n] != null ) && ( this.Map.polygons[n].set_id == this.editSetId ) && ( this.Map.polygons[n].polygon != null ) ){
-	  			this.Map.map.removeOverlay(Map.Polygons[n].polygon);
-					this.Map.polygons[n].polygon = null;
-	  			this.Map.polygons[n] = null;
-	  		}
-	  	}
-		for (var s=0; s<Map.PolygonSets.length; s++){
-	  		if ( ( this.Map.polygonsets[s] != null ) && ( this.Map.polygonsets[s].set_id == this.editSetId ) ){
-	      		var getElem = "polygonset_"+this.Map.polygonsets[s].set_id;
-	      		if ( $(getElem) ) {
-	          		var extraPolygonForm = $(getElem);
-	      			$('editpolygonform').removeChild(extraPolygonForm);
-	      		}
-					this.Map.polygonsets[s].set_id = null;
-	  			this.Map.polygonsets[s] = null;
-	  		}
+		if ( this.verifyRemove(rslt) ){
+			for (var n=0; n<this.Map.polygons.length; n++){
+				if ( ( this.Map.polygons[n] != null ) && ( this.Map.polygons[n].set_id == this.editSetId ) && ( this.Map.polygons[n].polygon != null ) ){
+					this.Map.map.removeOverlay(Map.Polygons[n].polygon);
+						this.Map.polygons[n].polygon = null;
+					this.Map.polygons[n] = null;
+				}
+			}
+			for (var s=0; s<Map.PolygonSets.length; s++){
+				if ( ( this.Map.polygonsets[s] != null ) && ( this.Map.polygonsets[s].set_id == this.editSetId ) ){
+					var getElem = "polygonset_"+this.Map.polygonsets[s].set_id;
+					if ( $(getElem) ) {
+						var extraPolygonForm = $(getElem);
+						$('editpolygonform').removeChild(extraPolygonForm);
+					}
+						this.Map.polygonsets[s].set_id = null;
+					this.Map.polygonsets[s] = null;
+				}
+			}
+			this.editPolygons();
+			this.hideSpinner("DONE!");
 		}
-		this.hideSpinner("DONE!");
-		this.editPolygons();
 	},		
 	/******************
 	 *

@@ -22,26 +22,33 @@ $gContent = new BitGmap();
 //There is no callback to the server for previewing changes.
 
 $format = 'xml';
-
+$XMLContent = "";
+$statusCode = 401;
 if (!empty($_REQUEST["save_copyright"])) {
 	if( $result = $gContent->storeCopyright( $_REQUEST ) ) {
+		$statusCode = 200;
 		$gBitSmarty->assign_by_ref('copyrightInfo', $result );
 	}
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_copyright"])) {
-	if( $gContent->removeTilelayerFromMaptype( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('removeSucces', true);
+	if( $gContent->removeCopyrightFromTilelayer( $_REQUEST ) ) {
+		$gBitSmarty->assign('removeSucces', true);
+	}else{
+		$XMLContent = tra( "Sorry, there was an unknown error trying to remove the copyright." );
 	}
 }elseif (!empty($_REQUEST["expunge_copyright"])) {
-	if( $gContent->expungeTilelayer( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('expungeSucces', true);
+	if( $gContent->expungeCopyright( $_REQUEST ) ) {
+		$statusCode = 200;
+		$gBitSmarty->assign('expungeSucces', true);
+	}else{
+		$XMLContent = tra( "Sorry, there was an unknown error trying to delete the copyright." );
 	}
 }else{
 	if ( isset( $_REQUEST["copyright_id"] ) ){
 		$copyright = $gContent->getCopyright( $_REQUEST["copyright_id"] );
 	}
-	if (isset($_REQUEST["tilelayer_id"])){
-		$copyright['tilelayer_id'] = $_REQUEST["tilelayer_id"];
+	if (isset($_REQUEST["copyright_id"])){
+		$copyright['copyright_id'] = $_REQUEST["copyright_id"];
 	}
 	$gBitSmarty->assign_by_ref('copyrightInfo', $copyright);
 	$gBitSystem->display('bitpackage:gmap/edit_copyright.tpl', NULL, 'center_only');
@@ -53,6 +60,9 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
-	$gBitSystem->display('bitpackage:gmap/edit_copyright_xml.tpl', null, $format);
+	$gBitSmarty->assign( 'statusCode', $statusCode);
+	$gBitSmarty->assign( 'XMLContent', $XMLContent);
+	$gBitSystem->setFormatHeader( 'xml' );
+	$gBitSystem->display('bitpackage:gmap/edit_copyright_xml.tpl');
 }
 ?>

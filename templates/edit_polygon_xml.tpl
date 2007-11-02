@@ -12,5 +12,5 @@
 		<num_levels>{$polygonInfo.num_levels}</num_levels>
 	</polygon>
 {else}
-	<status>success</status>
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

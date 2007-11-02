@@ -10,4 +10,6 @@
 	<side_panel>{$markersetInfo.side_panel}</side_panel>
 	<explode>{$markersetInfo.explode}</explode>
 </markerset>
+{else}
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

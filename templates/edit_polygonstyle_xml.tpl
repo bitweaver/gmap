@@ -6,4 +6,6 @@
 	<color>{$polygonstyleInfo.color}</color>
 	<opacity>{$polygonstyleInfo.opacity}</opacity>
 </polygonstyle>
+{else}
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

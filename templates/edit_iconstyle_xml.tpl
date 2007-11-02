@@ -18,4 +18,6 @@
 	<infowindow_anchor_x>{$iconstyleInfo.infowindow_anchor_x}</infowindow_anchor_x>
 	<infowindow_anchor_y>{$iconstyleInfo.infowindow_anchor_y}</infowindow_anchor_y>
 </iconstyle>
+{else}
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

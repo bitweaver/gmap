@@ -10,5 +10,5 @@
 		<num_levels>{$polylineInfo.num_levels}</num_levels>
 	</polyline>
 {else}
-	<status>success</status>
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

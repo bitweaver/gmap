@@ -6,4 +6,6 @@
 		<description>{$polylinesetInfo.data}</description>
 		<style_id>{$polylinesetInfo.style_id}</style_id>
 	</polylineset>
+{else}
+	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}

@@ -9,7 +9,7 @@ require_once('../bit_setup_inc.php' );
 // Is package installed and enabled
 $gBitSystem->verifyPackage('gmap' );
 
-// Get the markerset for specified set_id
+// Get the polygonset for specified set_id
 require_once(GMAP_PKG_PATH.'lookup_polygonset_inc.php' );
 
 $gBitSystem->setFormatHeader( 'center_only' );
@@ -41,9 +41,11 @@ if( $gContent->isValid() ) {
 //There is no callback to the server for previewing changes.
 
 $format = 'xml';
-
+$XMLContent = "";
+$statusCode = 401;
 if (!empty($_REQUEST["save_polygonset"])) {
     if( $gContent->store( $_REQUEST ) ) {
+		$statusCode = 200;
 		if ( $gContent->hasAdminPermission() ){
     		$gContent->setEditSharing( $_REQUEST );
 			$gContent->setAllowChildren( $_REQUEST );
@@ -52,12 +54,26 @@ if (!empty($_REQUEST["save_polygonset"])) {
 	}
 //Check if this to remove from a map, or to delete completely
 }elseif (!empty($_REQUEST["remove_polygonset"])) {
-    if( $gContent->removeSetFromMap( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('removeSucces', true);
+	if ( $gContent->hasAdminPermission() ){
+	    if( $gContent->removeSetFromMap( $_REQUEST ) ) {
+			$statusCode = 200;
+			$gBitSmarty->assign('removeSucces', true);
+		}else{
+			$XMLContent = tra( "Sorry, there was an unknown error trying to remove the polygonset." );
+		}
+	}else{
+		$XMLContent = tra( "You do not have the required permission to remove this polygonset from this map." );
 	}
 }elseif (!empty($_REQUEST["expunge_polygonset"])) {
-    if( $gContent->expunge() ) {
-		$gBitSmarty->assign_by_ref('expungeSucces', true);
+	if ( $gContent->hasAdminPermission() ){
+		if( $gContent->expunge() ) {
+			$statusCode = 200;
+			$gBitSmarty->assign('expungeSucces', true);
+		}else{
+			$XMLContent = tra( "Sorry, there was an unknown error trying to delete the polygonset." );
+		}
+	}else{
+		$XMLContent = tra( "You do not have the required permission to delete this polygonset." );
 	}
 }else{
 	$gContent->invokeServices( 'content_edit_function' );
@@ -80,6 +96,8 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
+	$gBitSmarty->assign( 'statusCode', $statusCode);
+	$gBitSmarty->assign( 'XMLContent', $XMLContent);
 	$gBitSystem->setFormatHeader( 'xml' );
 	$gBitSystem->display('bitpackage:gmap/edit_polygonset_xml.tpl');
 }

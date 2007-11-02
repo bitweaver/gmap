@@ -39,9 +39,11 @@ if( $gContent->isValid() ) {
 
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.
-
+$XMLContent = "";
+$statusCode = 401;
 if (!empty($_REQUEST["save_markerset"])) {
     if( $gContent->store( $_REQUEST ) ) {
+		$statusCode = 200;
 		if ( $gContent->hasAdminPermission() ){
     		$gContent->setEditSharing( $_REQUEST );
 			$gContent->setAllowChildren( $_REQUEST );
@@ -50,12 +52,26 @@ if (!empty($_REQUEST["save_markerset"])) {
 	}
 //Check if this to remove from a map, or to delete completely
 }elseif (!empty($_REQUEST["remove_markerset"])) {
-    if( $gContent->removeSetFromMap( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('removeSucces', true);
+	if ( $gContent->hasAdminPermission() ){
+	    if( $gContent->removeSetFromMap( $_REQUEST ) ) {
+			$statusCode = 200;
+			$gBitSmarty->assign('removeSucces', true);
+		}else{
+			$XMLContent = tra( "Sorry, there was an unknown error trying to remove the markerset." );
+		}
+	}else{
+		$XMLContent = tra( "You do not have the required permission to remove this markerset from this map." );
 	}
 }elseif (!empty($_REQUEST["expunge_markerset"])) {
-    if( $gContent->expunge() ) {
-		$gBitSmarty->assign_by_ref('expungeSucces', true);
+	if ( $gContent->hasAdminPermission() ){
+		if( $gContent->expunge() ) {
+			$statusCode = 200;
+			$gBitSmarty->assign('expungeSucces', true);
+		}else{
+			$XMLContent = tra( "Sorry, there was an unknown error trying to delete the markerset." );
+		}
+	}else{
+		$XMLContent = tra( "You do not have the required permission to delete this markerset." );
 	}
 }else{
 	$gContent->invokeServices( 'content_edit_function' );
@@ -78,6 +94,8 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
+	$gBitSmarty->assign( 'statusCode', $statusCode);
+	$gBitSmarty->assign( 'XMLContent', $XMLContent);
 	$gBitSystem->setFormatHeader( 'xml' );
 	$gBitSystem->display('bitpackage:gmap/edit_markerset_xml.tpl');
 }
