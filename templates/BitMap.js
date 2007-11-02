@@ -282,7 +282,9 @@ BitMap.Map.prototype = {
 						overlay.openInfoWindow(overlay.my_html);
 					}
 				}else{
-					BitMap.MapData[0].Map.openMarkerWindow(overlay.index);				
+					if (overlay.type == 'marker'){
+						BitMap.MapData[0].Map.openMarkerWindow(overlay.index);
+					}
 				}
 			}
 		});
