@@ -102,8 +102,8 @@ class BitGmapMarker extends BitGmapOverlayBase {
 	}
 
 	/**
-	* Get the URL for any given article image
-	* @param $pParamHash pass in full set of data returned from article query
+	* Get the URL for any given marker image
+	* @param $pParamHash pass in full set of data returned from marker query
 	* @return url to image
 	* @access public
 	**/
