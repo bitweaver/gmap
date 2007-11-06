@@ -41,7 +41,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		$this->mContentTypeGuid = BITGMAPMARKER_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGMAPMARKER_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGMAPMARKER_CONTENT_TYPE_GUID,
-			'content_description' => 'Marker for Google Map',
+			'content_description' => 'Google Map Marker',
 			'handler_class' => 'BitGmapMarker',
 			'handler_package' => 'gmap',
 			'handler_file' => 'BitGmapMarker.php',
