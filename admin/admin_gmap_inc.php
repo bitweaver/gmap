@@ -8,8 +8,11 @@ if (isset($_REQUEST["gmapset"]) && isset($_REQUEST["homeGmap"])) {
     $gBitSmarty->assign('home_gmap', $_REQUEST["homeGmap"]);
 }
 
-if( !empty( $_REQUEST['gmap_api_key'] ) ) {
+if( !empty( $_REQUEST['gmap_preferences'] )) {
 	$gBitSystem->storeConfig( 'gmap_api_key', $_REQUEST['gmap_api_key'], GMAP_PKG_NAME );
+	$gBitSystem->storeConfig( 'gmap_lat', $_REQUEST['gmap_lat'], GMAP_PKG_NAME );
+	$gBitSystem->storeConfig( 'gmap_lng', $_REQUEST['gmap_lng'], GMAP_PKG_NAME );
+	$gBitSystem->storeConfig( 'gmap_zoom', $_REQUEST['gmap_zoom'], GMAP_PKG_NAME );
 }
 
 require_once( GMAP_PKG_PATH.'BitGmap.php' );

@@ -324,11 +324,11 @@ $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
 
 $gBitInstaller->registerPreferences( GMAP_PKG_NAME, array(
 //	array( GMAP_PKG_NAME, 'gmap_api_key', 'you must get a key from google'),
-//	array( GMAP_PKG_NAME, 'gmap_width', '0'),
-//	array( GMAP_PKG_NAME, 'gmap_height', '0'),
-	array( GMAP_PKG_NAME, 'gmap_lat', 40.0),
-	array( GMAP_PKG_NAME, 'gmap_lng', -97.0),
-	array( GMAP_PKG_NAME, 'gmap_zoom', 3),
+//	array( GMAP_PKG_NAME, 'gmap_width', 0),
+//	array( GMAP_PKG_NAME, 'gmap_height', 0),
+//	array( GMAP_PKG_NAME, 'gmap_lat', 0),
+//	array( GMAP_PKG_NAME, 'gmap_lng', 0),
+//	array( GMAP_PKG_NAME, 'gmap_zoom', 3),
 	array( GMAP_PKG_NAME, 'gmap_scale', 'false'),
 	array( GMAP_PKG_NAME, 'gmap_maptype_control', 'true'),
 	array( GMAP_PKG_NAME, 'gmap_zoom_control', 's'),

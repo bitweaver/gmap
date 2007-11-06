@@ -2,7 +2,7 @@
 {form}
 	{jstabs}
 		{jstab title="General Settings"}
-			{legend legend="General Settings"}
+			{legend legend="API Settings"}
 				<input type="hidden" name="page" value="{$page}" />
 				<div class="row">
 					{formlabel label="Google Maps API Key" for=apikey}
@@ -14,6 +14,29 @@
 					  {formhelp note='Register for a key at <a href="http://www.google.com/apis/maps/signup.html" target="_new" >http://www.google.com/apis/maps/signup.html</a>'}
 					{/forminput}
 				</div>
+			{/legend}			
+			{legend legend="Default Geo Values"}
+				<div class="row">
+					{formlabel label="Center Latitude" for="gmap_lat"}
+					{forminput}
+						<input size="30" type="text" name="gmap_lat" id="gmap_lat" value="{$gBitSystem->getConfig('gmap_lat')|default:0}" />
+						{formhelp note=""}
+					{/forminput}
+				</div>				
+				<div class="row">
+					{formlabel label="Center Longitude" for="gmap_lng"}
+					{forminput}
+						<input size="30" type="text" name="gmap_lng" id="gmap_lng" value="{$gBitSystem->getConfig('gmap_lng')|default:0}" />
+						{formhelp note=""}
+					{/forminput}
+				</div>				
+				<div class="row">
+					{formlabel label="Zoom Level" for="gmap_zoom"}
+					{forminput}
+						<input size="5" type="text" name="gmap_zoom" id="gmap_zoom" value="{$gBitSystem->getConfig('gmap_zoom')|default:0}" />
+						{formhelp note=""}
+					{/forminput}
+				</div>				
 			{/legend}			
 		{/jstab}
 		{jstab title="Service Settings"}
