@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.31 2007/11/02 06:15:45 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.32 2007/11/06 17:54:53 wjames5 Exp $
  * @package gmap
  * @subpackage functions
  */
@@ -60,6 +60,7 @@ if (!empty($_REQUEST["save_marker"])) {
 		if ( $gContent->hasAdminPermission() ){
     		$gContent->setEditSharing( $_REQUEST );
 		}    
+		$gContent->storePreference( 'primary_attachment_size', !empty( $_REQUEST['primary_attachment_size'] ) && ($_REQUEST['primary_attachment_size'] != "small") ? $_REQUEST['primary_attachment_size'] : NULL );
 		$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
 		$gBitSmarty->assign_by_ref('markerInfo', $gContent->mInfo);
 	}
@@ -92,6 +93,7 @@ if (!empty($_REQUEST["save_marker"])) {
 	if (isset($_REQUEST["set_id"])){
 		$marker['set_id'] = $_REQUEST["set_id"];
 	}
+	$gBitSmarty->assign( 'imageSizes', get_image_size_options( FALSE ));
 	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign_by_ref('markerInfo', $marker);
 	$gBitSystem->display('bitpackage:gmap/edit_marker.tpl', NULL, 'center_only');

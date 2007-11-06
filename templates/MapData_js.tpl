@@ -95,14 +95,6 @@ BitMap.MapData.push({ldelim}
 		lng: {$markersInfo[n].lng},
 		label_data: '{$markersInfo[n].label_data}',
 		thumbnail_url:'{$markersInfo[n].thumbnail_url.avatar}',
-
-		created:{$markersInfo[n].created},
-		last_modified:{$markersInfo[n].last_modified},
-		modifier_real_name:'{$markersInfo[n].modifier_real_name}',
-		modifier_user_id:{$markersInfo[n].modifier_user_id},
-		creator_real_name:'{$markersInfo[n].creator_real_name}',
-		creator_user_id:{$markersInfo[n].user_id},
-
 		set_id: {$markersInfo[n].set_id},
 		style_id: {$markersInfo[n].style_id},
 		icon_id: {$markersInfo[n].icon_id},

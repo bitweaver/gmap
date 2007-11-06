@@ -44,12 +44,21 @@
 			</div>
 			
 			{textarea}{$markerInfo.raw}{/textarea}
+
+			<div class="row">
+				{formlabel label="Primary Attachment Image Size" for="primary_attachment_size"}
+				{forminput}
+					{assign var=size value=$gContent->getPreference('primary_attachment_size')|default:small}
+					{html_options values=$imageSizes options=$imageSizes name="primary_attachment_size" selected=$size}
+					{formhelp note="Here you can select the size of the primary attachment image. Change this if the default is too small or too big."}
+				{/forminput}
+			</div>
 	
 			{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 			<div class="row">
 				{formlabel label="Allow Comments" for="allow_comments"}
 					{forminput}
-						<input type="checkbox" name="allow_comments" value="y" {if $markerInfo.allow_comments eq 'y'}checked="checked"{/if} />
+						<input type="checkbox" name="allow_comments" value="y" {if $gContent->isCommentable() eq 'y'}checked="checked"{/if} />
 						{formhelp note=""}
 					{/forminput}
 			</div>

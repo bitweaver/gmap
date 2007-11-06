@@ -240,8 +240,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		$cant = $this->mDb->getOne($query_cant,$bindVars);
 		
 		$comment = &new LibertyComment();
-		while ($res = $result->fetchrow()) {
-		
+		while ($res = $result->fetchrow()) {		
 			//need something like this - but need to get the prefs in the query
 			$res['allow_comments'] = "n";
 			if( $this->getPreference('allow_comments', null, $res['content_id']) == 'y' ) {
@@ -249,16 +248,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
 			}
 			$res['thumbnail_url'] = BitGmapMarker::getImageThumbnails( $res );
-			/* DEPRECATED
-			$res['xml_parsed_data'] = $this->parseData( $res['data'], $res['format_guid'] );
-			$res['parsed_data'] = $this->parseData( $res['data'], $res['format_guid'] );
-			$res['parsed_data'] = addslashes($res['parsed_data']);
-			$res['xml_data'] = str_replace("\n", "&#13;", $res['data']);
-			$res['data'] = addslashes($res['data']);
-			$res['data'] = str_replace("\n", "\\n", $res['data']);
-			*/
 			$ret[] = $res;
-
 		}
 		
 		$pListHash["data"] = $ret;
