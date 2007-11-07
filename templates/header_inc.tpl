@@ -1,9 +1,13 @@
 {if $gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap') && $gBitSystem->isFeatureActive('gmap_api_key')}
- {if $geo_edit_serv || $view_map || $map_list || $edit_map}
+ {if $geo_edit_serv || $view_map || $simple_map || $map_list || $edit_map}
 		{include file="bitpackage:gmap/header_base.tpl"}
  {/if}
  {if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
 	{if $view_map }
+		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
+	{/if}
+	{if $simple_map }
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}

@@ -306,7 +306,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	"attachSideMarkers": function(){
 		var center = this.map.getCenter();
 		var display = false;
-		var setscount = this.markersets.length;		
+		var setscount = this.markersets.length;
 		var panel = $('gmap-sidepanel');
 		MochiKit.DOM.replaceChildNodes(panel, null)
 		for (var n=0; n<setscount; n++){

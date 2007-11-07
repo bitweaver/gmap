@@ -10,14 +10,20 @@ BitMap.MapData.push({ldelim}
   mapdiv:'{$smarty.const.ACTIVE_PACKAGE}-map',
   width:{if $mapInfo.width}{$mapInfo.width}{elseif $gBitSystem->getConfig("gmap_width")}{$gBitSystem->getConfig("gmap_width")}{else}0{/if},
   height:{if $geo_edit_serv}400{elseif $mapInfo.height}{$mapInfo.height}{elseif $gBitSystem->getConfig("gmap_height")}{$gBitSystem->getConfig("gmap_height")}{else}0{/if},
+{if !$simple_map }
   lat:{if $mapInfo.lat}{$mapInfo.lat}{elseif $gBitSystem->getConfig("gmap_lat")}{$gBitSystem->getConfig("gmap_lat")}{else}0{/if},
   lng:{if $mapInfo.lng}{$mapInfo.lng}{elseif $gBitSystem->getConfig("gmap_lng")}{$gBitSystem->getConfig("gmap_lng")}{else}0{/if},
   zoom:{if $mapInfo.zoom}{$mapInfo.zoom}{elseif $gBitSystem->getConfig("gmap_zoom")}{$gBitSystem->getConfig("gmap_zoom")}{else}0{/if},
+{else}
+  lat:{$listcontent[0].lat},
+  lng:{$listcontent[0].lng},
+  zoom:{if $mapInfo.zoom}{$mapInfo.zoom+2}{elseif $gBitSystem->getConfig("gmap_zoom")}{$gBitSystem->getConfig("gmap_zoom")+2}{else}2{/if},
+{/if}
   scale:{if $mapInfo.scale}{$mapInfo.scale}{elseif $gBitSystem->getConfig("gmap_scale")}{$gBitSystem->getConfig("gmap_scale")}{else}false{/if}, /*true,false*/
   maptype:{if $mapInfo.maptype}{$mapInfo.maptype}{elseif $gBitSystem->getConfig("gmap_maptype")}{$gBitSystem->getConfig("gmap_maptype")}{else}0{/if},
   maptype_control:{if $mapInfo.maptype_control}{$mapInfo.maptype_control}{elseif $gBitSystem->getConfig("gmap_maptype_control")}{$gBitSystem->getConfig("gmap_maptype_control")}{else}true{/if}, /*true,false*/
   zoom_control:'{if $mapInfo.zoom_control}{$mapInfo.zoom_control}{elseif $gBitSystem->getConfig("gmap_zoom_control")}{$gBitSystem->getConfig("gmap_zoom_control")}{else}s{/if}', /*s,l,z,n*/
-  overview_control:{if $mapInfo.overview_control}{$mapInfo.overview_control}{elseif $gBitSystem->getConfig("gmap_overview_control")}{$gBitSystem->getConfig("gmap_overview_control")}{else}true{/if}, /*true,false*/
+  overview_control:{if !$simple_map }{if $mapInfo.overview_control}{$mapInfo.overview_control}{elseif $gBitSystem->getConfig("gmap_overview_control")}{$gBitSystem->getConfig("gmap_overview_control")}{else}true{/if}{else}false{/if}, /*true,false*/
   
   Maptypes:[
   {if count($maptypesInfo) > 0}{section name=n loop=$maptypesInfo}

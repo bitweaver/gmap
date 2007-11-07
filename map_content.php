@@ -83,13 +83,22 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 			$gBitSmarty->assign_by_ref('GeoStars', $GeoStars);
 		}
 	
-		$gBitSmarty->assign('map_list', TRUE);
-		$gBitSystem->mOnload[] = 'BitMap.DisplayList();';
-
 		//use Mochikit - prototype sucks
 		$gBitThemes->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js', 'DateTime.js',  'Style.js' ) );
-		
-		$gBitSystem->display( 'bitpackage:gmap/map_list.tpl', tra( 'Gmap' ) );
+
+		//format include is for the inline service of including a map in other content when geo-located
+		if ($_REQUEST['format']=="include"){
+			//if the format is include then this is called internally as an iframe so we hide the rest of the layout
+			$gHideModules = TRUE;
+			$gBitSmarty->assign('simple_map', TRUE);
+			//this disables marker clicking since infowindow would only contain the data thats already on display
+			$gBitSystem->mOnload[] = 'BitMap.DisplaySimple();';
+			$gBitSystem->display( 'bitpackage:gmap/map_inc.tpl', tra( 'Gmap' ) );
+		}else{
+			$gBitSmarty->assign('map_list', TRUE);
+			$gBitSystem->mOnload[] = 'BitMap.DisplayList();';
+			$gBitSystem->display( 'bitpackage:gmap/map_list.tpl', tra( 'Gmap' ) );
+		}
 	}else{
 		$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', tra('Gmap') );
 	}

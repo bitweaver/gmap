@@ -16,25 +16,29 @@ BitMap.hide = function (i){
 };
 
 BitMap.Display = function(){
-  BitMap.Initialize();
+  BitMap.Initialize(400);
   BitMap.MapData[0].Map.addOverlayListener();
-  BitMap.MapData[0].Map.attachSideMarkers();
+  if( $('gmap-sidepanel') ){ BitMap.MapData[0].Map.attachSideMarkers(); };
+};
+
+BitMap.DisplaySimple = function(){
+  BitMap.Initialize(0);
 };
 
 BitMap.DisplayList = function(){
   BitMap.MakeCalendar();
-  BitMap.Initialize();
+  BitMap.Initialize(400);
   BitMap.MapData[0].Map.addOverlayListener();
   BitMap.MapData[0].Map.attachSideMarkers();
 };
 
 BitMap.EditContent = function(){
-  BitMap.Initialize();
+  BitMap.Initialize(400);
   BitMap.MapData[0].Map.addLatLngCapture();
 };
 
 
-BitMap.Initialize = function(){
+BitMap.Initialize = function(minsize){
   var count = BitMap.MapData.length;
   for (n=0; n<count; n++){
     BitMap.MapData[n].Map = new BitMap.Map(
@@ -45,6 +49,7 @@ BitMap.Initialize = function(){
       BitMap.MapData[n].height,
       {lat: BitMap.MapData[n].lat, lng: BitMap.MapData[n].lng},
       BitMap.MapData[n].zoom,
+      minsize,
       BitMap.MapData[n].maptype,
       {scale: BitMap.MapData[n].scale, maptype_control:BitMap.MapData[n].maptype_control, zoom_control: BitMap.MapData[n].zoom_control, overview_control: BitMap.MapData[n].overview_control},
       BitMap.MapData[n].allow_comments,
@@ -67,7 +72,7 @@ BitMap.Initialize = function(){
 
 //center is an object containing .lat and .lng
 //controls is an object containing .scale .type_control .zoom_control
-BitMap.Map = function (index, mapdiv, id, width, height, center, zoom, maptype, controls, allow_comments, maptypes, tilelayers, copyrights, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
+BitMap.Map = function (index, mapdiv, id, width, height, center, zoom, minsize, maptype, controls, allow_comments, maptypes, tilelayers, copyrights, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
 	this.index = index;
 	this.mapdiv = mapdiv;
 	this.id = id;
@@ -75,6 +80,7 @@ BitMap.Map = function (index, mapdiv, id, width, height, center, zoom, maptype, 
 	this.height = height;
 	this.center = center;
 	this.zoom = zoom;
+	this.minsize = minsize;
 	this.maptype = maptype;
 	this.controls = controls;
 	this.allow_comments = allow_comments;
@@ -98,13 +104,16 @@ BitMap.Map = function (index, mapdiv, id, width, height, center, zoom, maptype, 
 	if (this.height == 0){
 		this.MR = BitMap.Utl.MapResize;
 		//set these variables to customize
-		this.MR.regOffsetObjs([$('gmap-header'),$('footer')]);
+		var elms = []
+		if ($('gmap-header')){ elms.push($('gmap-header'))};
+		if ($('footer')){ elms.push($('footer'))};
+		this.MR.regOffsetObjs(elms);
 		this.MR.regOffsetBonus(0);
-		this.MR.regMinSize(400);
+		this.MR.regMinSize(this.minsize);
 		//these are constants dont mess with them
 		this.MR.regMap(this.map);
 		this.MR.regMapDiv($(this.mapdiv));
-		this.MR.regPanelDiv($('gmap-sidepanel'));
+		if ($('gmap-sidepanel')){ this.MR.regPanelDiv($('gmap-sidepanel')) };
 		this.MR.sizeMapDiv();
 		this.MR.setResizeListener();
 	}
@@ -183,7 +192,7 @@ BitMap.Map.prototype = {
 		if ( this.navControls != null ){
 			this.map.addControl( this.navControls );
 		}
-		if (this.controls.maptype_control == true){
+		if (this.controls.maptype_control == true && (this.width = 0 && this.minsize > 200)){
 			this.typeControl = new GMapTypeControl();
 			this.map.addControl( this.typeControl );  
 		}
