@@ -87,7 +87,7 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 		$gBitThemes->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js', 'DateTime.js',  'Style.js' ) );
 
 		//format include is for the inline service of including a map in other content when geo-located
-		if ($_REQUEST['format']=="include"){
+		if (isset($_REQUEST['format']) && $_REQUEST['format']=="include"){
 			//if the format is include then this is called internally as an iframe so we hide the rest of the layout
 			$gHideModules = TRUE;
 			$gBitSmarty->assign('simple_map', TRUE);
