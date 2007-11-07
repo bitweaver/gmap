@@ -116,6 +116,7 @@ BitMap.Map = function (index, mapdiv, id, width, height, center, zoom, minsize, 
 		if ($('gmap-sidepanel')){ this.MR.regPanelDiv($('gmap-sidepanel')) };
 		this.MR.sizeMapDiv();
 		this.MR.setResizeListener();
+		this.map.checkResize();
 	}
 	
 	this.map.setCenter(new GLatLng(this.center.lat, this.center.lng), this.zoom);
