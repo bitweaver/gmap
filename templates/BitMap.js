@@ -193,8 +193,9 @@ BitMap.Map.prototype = {
 		if ( this.navControls != null ){
 			this.map.addControl( this.navControls );
 		}
-		if (this.controls.maptype_control == true && (this.width = 0 && this.minsize > 200)){
-			this.typeControl = new GMapTypeControl();
+		if (this.controls.maptype_control == true){
+			var mini = (this.width == 0 && this.minsize < 200)?true:false;
+			this.typeControl = new GMapTypeControl(mini);
 			this.map.addControl( this.typeControl );  
 		}
 		if (this.controls.overview_control == true){
