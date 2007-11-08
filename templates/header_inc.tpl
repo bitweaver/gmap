@@ -29,6 +29,11 @@
 		<script src="{$smarty.const.GMAP_PKG_URL}templates/Utl.MapResize.js" type="text/javascript"></script>
 
 	<style type="text/css">
+		{if $simple_map}
+		{literal}
+			body {margin:0; padding:0}
+		{/literal}
+		{/if}
 		{literal}
 			.hide {display:none;}
 			#gmap-sidepanel {float:right; margin:0; padding:0; width:300px; overflow:auto;}

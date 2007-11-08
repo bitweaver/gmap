@@ -93,6 +93,7 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 			$gBitSmarty->assign('simple_map', TRUE);
 			//this disables marker clicking since infowindow would only contain the data thats already on display
 			$gBitSystem->mOnload[] = 'BitMap.DisplaySimple();';
+			$gBitThemes->setStyle( 'none' );
 			$gBitSystem->display( 'bitpackage:gmap/map_inc.tpl', tra( 'Gmap' ) );
 		}else{
 			$gBitSmarty->assign('map_list', TRUE);
