@@ -1,12 +1,12 @@
 {strip}
 {form action="javascript:;" enctype="multipart/form-data" id="edit-polygon-form"}
-	<input name="save_polygon" type="hidden" value="true">
-	<input name="set_id" type="hidden" size="3" value="{$polygonInfo.set_id}">
-	<input name="polygon_id" type="hidden" size="3" value="{$polygonInfo.polygon_id}">
+	<input name="save_polygon" type="hidden" value="true" />
+	<input name="set_id" type="hidden" size="3" value="{$polygonInfo.set_id}" />
+	<input name="polygon_id" type="hidden" size="3" value="{$polygonInfo.polygon_id}" />
 	<div class="row">
 		{formlabel label="Name" for="name"}
 			{forminput}
-				<input name="title" type="text" style="width:90%" value="{$polygonInfo.title}">
+				<input name="title" type="text" style="width:90%" value="{$polygonInfo.title}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -17,7 +17,7 @@
 					<option value="0" {if $polygonInfo.type == 0 }selected="selected"{/if}>Google (standard)</option>
 					<option value="1" {if $polygonInfo.type == 1 }selected="selected"{/if}>Circle</option>
 					<option value="2" {if $polygonInfo.type == 2 }selected="selected"{/if}>Encoded</option>
-				</select><br/>
+				</select>
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -39,14 +39,14 @@
 	<div class="row">
 		{formlabel label="Circle Center" for="circle_center"}
 			{forminput}
-				<input name="circle_center" type="text" style="width:90%" value="{$polygonInfo.circle_center}"><br/>
+				<input name="circle_center" type="text" style="width:90%" value="{$polygonInfo.circle_center}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
 	<div class="row">
 		{formlabel label="Radius" for="radius"}
 			{forminput}
-				<input name="radius" type="text" style="width:90%" value="{$polygonInfo.radius}"><br/>
+				<input name="radius" type="text" style="width:90%" value="{$polygonInfo.radius}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -60,14 +60,14 @@
 	<div class="row">
 		{formlabel label="Zoom Factor" for="zoom_factor"}
 			{forminput}
-				<input name="zoom_factor" type="text" style="width:90%" value="{$polygonInfo.zoom_factor}"><br/>
+				<input name="zoom_factor" type="text" style="width:90%" value="{$polygonInfo.zoom_factor}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
 	<div class="row">
 		{formlabel label="Number of Levels" for="num_levels"}
 			{forminput}
-				<input name="num_levels" type="text" style="width:90%" value="{$polygonInfo.num_levels}"><br/>
+				<input name="num_levels" type="text" style="width:90%" value="{$polygonInfo.num_levels}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -83,7 +83,7 @@
 	{/if}
 	
 	<div class="row submit">
-		<input type="button" name="save_polygon_btn" value="Save" onclick="javascript:BitMap.EditSession.storePolygon( this.form );">
+		<input type="button" name="save_polygon_btn" value="Save" onclick="javascript:BitMap.EditSession.storePolygon( this.form );" />
 	</div>
 {/form}
 {/strip}

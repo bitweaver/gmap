@@ -12,11 +12,11 @@
 	{include file="bitpackage:gmap/gmap_header.tpl"}
 	<div class="body">
 		<div class="gmap-content">
-		  {include file='bitpackage:gmap/gmap_sidepanel.tpl'}
-		  {include file="bitpackage:gmap/map_inc.tpl"}
-	    </div>
+			{include file='bitpackage:gmap/gmap_sidepanel.tpl'}
+			{include file="bitpackage:gmap/map_inc.tpl"}
+		</div>
 		{* this is a container for our forms - we ajax them in *}
-	    <div id="gmap-forms">
+		<div id="gmap-forms">
 			{include file="bitpackage:gmap/edit_forms.tpl"}
 		</div>
 		<div id="mapcontent" class="content">

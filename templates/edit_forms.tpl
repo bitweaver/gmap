@@ -1,10 +1,10 @@
 <div id="editerror" style="display:none">ERROR HERE</div>
 
 <div>
-	<a id="emap" href="javascript:void(0)" onclick="BitMap.EditSession.editMap({$mapInfo.gmap_id});">Edit Map</a> | 
+	<a id="emap" href="javascript:void(0)" onclick="BitMap.EditSession.editMap({$mapInfo.gmap_id});">Edit Map</a> |
 	<a id="emaptype" href="javascript:void(0)" onclick="BitMap.EditSession.editMaptypes();">Edit Maptypes</a> |
-	<a id="emarker" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSets();">Edit Markers</a> | 
-	<a id="epolyline" href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineSets();">Edit Polylines</a> | 
+	<a id="emarker" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSets();">Edit Markers</a> |
+	<a id="epolyline" href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineSets();">Edit Polylines</a> |
 	<a id="epolygon" href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonSets();">Edit Polygons</a>
 </div>
 
@@ -29,22 +29,22 @@
 
 <!-- maptype editing menu -->
 <div id="edit-maptypes-table" class="edit-table" style="display:none;">
-  <h2>MapTypes Associated With This Map</h2>
-  <div id="edit-maptype" class="edit-titlebar" style="display:none;">
-    <table class="bar">
-    	<tr>
-			<td width="200px"><span class="setname">MapType Name Here</span></td>
-			<td>
-				<a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editMaptype(n);">Edit Maptype Options</a> | 
-				<a class="list" href="javascript:void(0)" onclick="BitMap.EditSession.editMaptypeTilelayers(n);">Edit Tilelayers In This Maptype</a>
-			</td>
-			<td width="10px" style="text-align:right">
-				<a title="close options editing" href="javascript:void(0)" onclick="javascript:BitMap.EditSession.cancelEditMaptype();"><img src="{$smarty.const.GMAP_PKG_URL}icons/close.gif"></a>
-				<!-- <input type="button" name="closemaptypeform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptype()"/> -->
-			</td>
-		</tr>
-    </table>
-  </div>
+	<h2>MapTypes Associated With This Map</h2>
+	<div id="edit-maptype" class="edit-titlebar" style="display:none;">
+		<table class="bar">
+			<tr>
+				<td width="200px"><span class="setname">MapType Name Here</span></td>
+				<td>
+					<a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editMaptype(n);">Edit Maptype Options</a> |
+					<a class="list" href="javascript:void(0)" onclick="BitMap.EditSession.editMaptypeTilelayers(n);">Edit Tilelayers In This Maptype</a>
+				</td>
+				<td width="10px" style="text-align:right">
+					<a title="close options editing" href="javascript:void(0)" onclick="javascript:BitMap.EditSession.cancelEditMaptype();"><img src="{$smarty.const.GMAP_PKG_URL}icons/close.gif"></a>
+					<!-- <input type="button" name="closemaptypeform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptype()" /> -->
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 <!-- end of maptype editing menu -->
 
@@ -59,13 +59,13 @@
 				<div id="maptype-form">PUT MAPTYPE FORM HERE!</div>
 			</td>
 			<td width="200px">
-				<div id="edit-maptype-tips">Tips<br/>
+				<div id="edit-maptype-tips">Tips<br />
 					Put advice here
 				</div>
-				<div id="edit-maptype-options-actions">Edit Maptype Actions<br/>
-					<a id="locate_maptype_btn" title="show on the map" href="javascript:void(0)">show</a><br/>
-					<a id="remove_maptype_btn" title="remove from this map" href="javascript:void(0)">remove</a><br/>
-					<a id="expunge_maptype_btn" title="delete the maptype!" href="javascript:void(0)">delete</a><br/>
+				<div id="edit-maptype-options-actions">Edit Maptype Actions<br />
+					<a id="locate_maptype_btn" title="show on the map" href="javascript:void(0)">show</a><br />
+					<a id="remove_maptype_btn" title="remove from this map" href="javascript:void(0)">remove</a><br />
+					<a id="expunge_maptype_btn" title="delete the maptype!" href="javascript:void(0)">delete</a><br />
 				</div>
 			</td>
 		</tr>
@@ -76,63 +76,63 @@
 
 <!-- edit tilelayers form -->
 <div id="edit-tilelayers-table" class="edit-datatable" style="display:none;">
-    <table>
-    	<tr>
-        <td width="200px">Tilelayers:<br/>
-			<ul id="edit-tilelayers-list">
-				<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editTilelayer(n);">Tilelayer Name Here</a></li>
-				<li id="edit-tilelayerlink-new"><b><a id="edit-tilelayerlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newTilelayer(setindex);">Add A New Tilelayer</a></b></li>
-            </ul>
-        </td>
-    	<td>
-			<div id="tilelayer-form"></div>
-        </td>
-        <td width="200px">
-          <div id="edit-tilelayer-tips">Tips<br/>
-               Put advice here
-          </div>
-          <div id="edit-tilelayer-actions">Edit Marker Actions<br/>
-            <a id="remove_tilelayer_btn" title="remove from this maptype" href="javascript:void(0)">remove</a><br/>
-            <a id="expunge_tilelayer_btn" title="delete the tilelayer!" href="javascript:void(0)">delete</a><br/><br/>
-          </div>
-        </td>
-     	</tr>
-    </table>
-    <table>
-    	<tr>
-        <td width="200px">
-        </td>
-    	<td>
-          <div class="tplform">
-            <div id="edit-copyright-menu">
-            	Copyright Notices for this Tilelayer
-				<div id="edit-copyrightlink-new">
-					<b><a id="edit-copyrightlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editCopyright(copyrightindex, tilelayerindex);">Add A New Copyright</a></b>
+	<table>
+		<tr>
+			<td width="200px">Tilelayers:<br />
+				<ul id="edit-tilelayers-list">
+					<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editTilelayer(n);">Tilelayer Name Here</a></li>
+					<li id="edit-tilelayerlink-new"><b><a id="edit-tilelayerlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newTilelayer(setindex);">Add A New Tilelayer</a></b></li>
+				</ul>
+			</td>
+			<td>
+				<div id="tilelayer-form"></div>
+			</td>
+			<td width="200px">
+				<div id="edit-tilelayer-tips">Tips<br />
+					Put advice here
 				</div>
-				<div id="edit-copyrightlink" style="display:none;">
-					<a href="javascript:void(0)" onclick="BitMap.EditSession.editCopyright(n);">Copyright Notice Here</a>
+				<div id="edit-tilelayer-actions">Edit Marker Actions<br />
+					<a id="remove_tilelayer_btn" title="remove from this maptype" href="javascript:void(0)">remove</a><br />
+					<a id="expunge_tilelayer_btn" title="delete the tilelayer!" href="javascript:void(0)">delete</a><br /><br />
 				</div>
-            </div>
-          </div>
-        </td>
-        <td width="200px">
-        </td>
-     	</tr>
-    </table>
-	<input type="button" name="closetilelayerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditTilelayers()"></br>
-</div> 
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td width="200px">
+			</td>
+			<td>
+				<div class="tplform">
+					<div id="edit-copyright-menu">
+						Copyright Notices for this Tilelayer
+						<div id="edit-copyrightlink-new">
+							<b><a id="edit-copyrightlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editCopyright(copyrightindex, tilelayerindex);">Add A New Copyright</a></b>
+						</div>
+						<div id="edit-copyrightlink" style="display:none;">
+							<a href="javascript:void(0)" onclick="BitMap.EditSession.editCopyright(n);">Copyright Notice Here</a>
+						</div>
+					</div>
+				</div>
+			</td>
+			<td width="200px">
+			</td>
+		</tr>
+	</table>
+	<input type="button" name="closetilelayerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditTilelayers()" />
+</div>
 <!-- edit of edit tilelayers form -->
 
 
 <!-- edit copyrights form -->
 <div id="edit-copyright-table" style="display:none;">
 	<div id="copyright-form">PUT COPYRIGHT FORM HERE!</div>
-</div> 
+</div>
 <!-- edit of edit copyrights form -->
 
 <!-- close all maptype editing -->
 <div id="edit-maptypes-cancel" style="display:none;">
-  <input type="button" name="closemaptypeform" value="Close Maptype Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptypes();" />
+	<input type="button" name="closemaptypeform" value="Close Maptype Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptypes();" />
 </div>
 
 
@@ -141,11 +141,11 @@
 <!-------------------------
 	-  Markerset and Marker Editing Forms
 	------------------------->
-	
+
 <!-- marker editing menu -->
 <div id="edit-markers-menu" style="display:none;">
-		<a href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSet();">New Marker Set</a> | 
-		<a href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerStyles();">Edit Marker Styles</a> | 
+		<a href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSet();">New Marker Set</a> |
+		<a href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerStyles();">Edit Marker Styles</a> |
 		<a href="javascript:void(0)" onclick="BitMap.EditSession.editIconStyles();">Edit Marker Icons</a>
 </div>
 <!-- end of marker editing menu -->
@@ -159,7 +159,7 @@
     	<tr>
         <td width="200px"><span class="setname">Set Name Here</span></td>
       <td>
-        <a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSetOptions(n);">Edit Set Options</a> | 
+        <a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSetOptions(n);">Edit Set Options</a> |
         <a class="list" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkers(n);">Edit Markers In This Set</a>
       </td>
     </tr>
@@ -179,12 +179,12 @@
 				<div id="markerset-form">PUT MARKERSET FORM HERE!</div>
 			</td>
 			<td width="200px">
-				<div id="edit-markerset-options-tips">Tips<br/>
+				<div id="edit-markerset-options-tips">Tips<br />
 				Put advice here
 				</div>
-				<div id="edit-markerset-options-actions">Edit Marker Actions<br/>
-				<a id="remove_markerset_btn" title="remove from this set from this map" href="javascript:void(0)">remove</a><br/>
-				<a id="delete_markerset_btn" title="delete this marker set!" href="javascript:void(0)">delete</a><br/><br/>
+				<div id="edit-markerset-options-actions">Edit Marker Actions<br />
+				<a id="remove_markerset_btn" title="remove from this set from this map" href="javascript:void(0)">remove</a><br />
+				<a id="delete_markerset_btn" title="delete this marker set!" href="javascript:void(0)">delete</a><br /><br />
 				{* uncomment when available <a id="setaddmarkers" href="javascript:void(0)" onclick="">Add Markers from Archives</a> *}
 				<div>
 			</td>
@@ -198,7 +198,7 @@
 <div id="edit-markers-table" class="edit-datatable" style="display:none;">
 		<table>
 			<tr>
-				<td width="200px">Markers:<br/>
+				<td width="200px">Markers:<br />
 					<ul id="edit-markers-list">
 						<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editMarker(n);">Marker Name Here</a></li>
 						<li id="edit-markerlink-new"><b><a id="edit-markerlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newMarker(setindex);">Add A New Marker</a></b></li>
@@ -208,19 +208,19 @@
 					<div id="marker-form">PUT MARKER FORM HERE!</div>
 				</td>
 				<td width="200px">
-					<div id="edit-marker-tips">Tips<br/>
+					<div id="edit-marker-tips">Tips<br />
 					   Put advice here
 					</div>
-					<div id="edit-marker-actions">Edit Marker Actions<br/>
-						<a id="locate_marker_btn" title="locate on the map" href="javascript:void(0)">show</a><br/>
-						<a id="remove_marker_btn" title="remove from this set" href="javascript:void(0)">remove</a><br/>
-						<a id="expunge_marker_btn" title="delete the marker!" href="javascript:void(0)">delete</a><br/>
+					<div id="edit-marker-actions">Edit Marker Actions<br />
+						<a id="locate_marker_btn" title="locate on the map" href="javascript:void(0)">show</a><br />
+						<a id="remove_marker_btn" title="remove from this set" href="javascript:void(0)">remove</a><br />
+						<a id="expunge_marker_btn" title="delete the marker!" href="javascript:void(0)">delete</a><br />
 					</div>
 				</td>
 			</tr>
 		</table>
-	<input type="button" name="closemarkerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditMarkers()"></br>
-</div> 
+	<input type="button" name="closemarkerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditMarkers()" />
+</div>
 <!-- edit of edit markers form -->
 
 
@@ -262,10 +262,10 @@
 				<div id="markerstyle-form">PUT MARKERSTYLE FORM HERE!</div>
 			</td>
 			<td width="200px">
-				<div id="edit-markerstyle-tips">Tips<br/>
+				<div id="edit-markerstyle-tips">Tips<br />
 					Put advice here
 				</div>
-				<div id="edit-markerstyle-actions">Edit Marker Style Actions<br/>
+				<div id="edit-markerstyle-actions">Edit Marker Style Actions<br />
 					Currently no delete or expunge options
 				</div>
 			</td>
@@ -313,10 +313,10 @@
 				<div id="iconstyle-form">PUT ICONSTYLE FORM HERE!</div>
 			</td>
 			<td width="200px">
-				<div id="edit-iconstyle-tips">Tips<br/>
+				<div id="edit-iconstyle-tips">Tips<br />
 					Put advice here
 				</div>
-				<div id="edit-iconstyle-actions">Edit Icon Style Actions<br/>
+				<div id="edit-iconstyle-actions">Edit Icon Style Actions<br />
 					Currently no delete or expunge options
 				</div>
 			</td>
@@ -338,8 +338,8 @@
 
 <!--polyline editing forms -->
 <div id="edit-polylines-menu" style="display:none;">
-		<a href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineSet();">New Polyline Set</a> | 
-		<a href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineStyles();">Edit Polyline Styles</a> | 
+		<a href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineSet();">New Polyline Set</a> |
+		<a href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineStyles();">Edit Polyline Styles</a> |
 </div>
 
 <!-- polylineset editing menu -->
@@ -350,7 +350,7 @@
     	<tr>
         <td width="200px"><span class="setname">Set Name Here</span></td>
       <td>
-        <a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineSetOptions(n);">Edit Set Options</a> | 
+        <a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineSetOptions(n);">Edit Set Options</a> |
         <a class="list" href="javascript:void(0)" onclick="BitMap.EditSession.editPolylines(n);">Edit Polylines In This Set</a>
       </td>
     </tr>
@@ -369,12 +369,12 @@
 				<div id="polylineset-form">PUT POLYLINESET FORM HERE!</div>
 			</td>
 			<td width="200px">
-				<div id="edit-polylineset-options-tips">Tips<br/>
+				<div id="edit-polylineset-options-tips">Tips<br />
 				Put advice here
 				</div>
-				<div id="edit-polylineset-options-actions">Edit Polyline Actions<br/>
-				<a id="remove_polylineset_btn" title="remove from this set from this map" href="javascript:void(0)">remove</a><br/>
-				<a id="delete_polylineset_btn" title="delete this polyline set!" href="javascript:void(0)">delete</a><br/><br/>
+				<div id="edit-polylineset-options-actions">Edit Polyline Actions<br />
+				<a id="remove_polylineset_btn" title="remove from this set from this map" href="javascript:void(0)">remove</a><br />
+				<a id="delete_polylineset_btn" title="delete this polyline set!" href="javascript:void(0)">delete</a><br /><br />
 				{* uncomment when it works <a id="setaddpolylines" href="javascript:void(0)" onclick="alert('feature coming soon');">Add Polylines from Archives</a> *}
 				<div>
 			</td>
@@ -387,7 +387,7 @@
 <div id="edit-polylines-table" class="edit-datatable" style="display:none;">
 		<table>
 			<tr>
-				<td width="200px">Polylines:<br/>
+				<td width="200px">Polylines:<br />
 					<ul id="edit-polylines-list">
 						<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editPolyline(n);">Polyline Name Here</a></li>
 						<li id="edit-polylinelink-new"><b><a id="edit-polylinelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newPolyline(setindex);">Add A New Polyline</a></b></li>
@@ -397,18 +397,18 @@
 					<div id="polyline-form">PUT POLYLINE FORM HERE!</div>
 				</td>
 				<td width="200px">
-					<div id="edit-polyline-tips">Tips<br/>
+					<div id="edit-polyline-tips">Tips<br />
 					   Put advice here
 					</div>
-					<div id="edit-polyline-actions">Edit Polyline Actions<br/>
-						<a id="remove_polyline_btn" title="remove from this set" href="javascript:void(0)">remove</a><br/>
-						<a id="expunge_polyline_btn" title="delete the polyline!" href="javascript:void(0)">delete</a><br/><br/>
+					<div id="edit-polyline-actions">Edit Polyline Actions<br />
+						<a id="remove_polyline_btn" title="remove from this set" href="javascript:void(0)">remove</a><br />
+						<a id="expunge_polyline_btn" title="delete the polyline!" href="javascript:void(0)">delete</a><br /><br />
 					</div>
 				</td>
 			</tr>
 		</table>
-	<input type="button" name="closepolylineset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditPolylines()"></br>
-</div> 
+	<input type="button" name="closepolylineset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditPolylines()" />
+</div>
 <!-- edit of edit polylines form -->
 
 <!-- close all polyline editing -->
@@ -449,10 +449,10 @@
 				<div id="polylinestyle-form">PUT POLYLINESTYLE FORM HERE!</div>
 			</td>
 			<td width="200px">
-				<div id="edit-polylinestyle-tips">Tips<br/>
+				<div id="edit-polylinestyle-tips">Tips<br />
 					Put advice here
 				</div>
-				<div id="edit-polylinestyle-actions">Edit Polyline Style Actions<br/>
+				<div id="edit-polylinestyle-actions">Edit Polyline Style Actions<br />
 					Currently no delete or expunge options
 				</div>
 			</td>
@@ -475,8 +475,8 @@
 
 <!--polygon editing forms -->
 <div id="edit-polygons-menu" style="display:none;">
-		<a href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonSet();">New Polygon Set</a> | 
-		<a href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonStyles();">Edit Polygon Styles</a> | 
+		<a href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonSet();">New Polygon Set</a> |
+		<a href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonStyles();">Edit Polygon Styles</a> |
 </div>
 
 <!-- polygonset editing menu -->
@@ -487,7 +487,7 @@
     	<tr>
         <td width="200px"><span class="setname">Set Name Here</span></td>
       <td>
-        <a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonSetOptions(n);">Edit Set Options</a> | 
+        <a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonSetOptions(n);">Edit Set Options</a> |
         <a class="list" href="javascript:void(0)" onclick="BitMap.EditSession.editPolygons(n);">Edit Polygons In This Set</a>
       </td>
     </tr>
@@ -506,12 +506,12 @@
 				<div id="polygonset-form">PUT POLYGONSET FORM HERE!</div>
 			</td>
 			<td width="200px">
-				<div id="edit-polygonset-options-tips">Tips<br/>
+				<div id="edit-polygonset-options-tips">Tips<br />
 				Put advice here
 				</div>
-				<div id="edit-polygonset-options-actions">Edit Polygon Actions<br/>
-				<a id="remove_polygonset_btn" title="remove from this set from this map" href="javascript:void(0)">remove</a><br/>
-				<a id="delete_polygonset_btn" title="delete this polygon set!" href="javascript:void(0)">delete</a><br/><br/>
+				<div id="edit-polygonset-options-actions">Edit Polygon Actions<br />
+				<a id="remove_polygonset_btn" title="remove from this set from this map" href="javascript:void(0)">remove</a><br />
+				<a id="delete_polygonset_btn" title="delete this polygon set!" href="javascript:void(0)">delete</a><br /><br />
 				{* uncomment when it works <a id="setaddpolygons" href="javascript:void(0)" onclick="alert('feature coming soon');">Add Polygons from Archives</a> *}
 				<div>
 			</td>
@@ -524,7 +524,7 @@
 <div id="edit-polygons-table" class="edit-datatable" style="display:none;">
 		<table>
 			<tr>
-				<td width="200px">Polygons:<br/>
+				<td width="200px">Polygons:<br />
 					<ul id="edit-polygons-list">
 						<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editPolygon(n);">Polygon Name Here</a></li>
 						<li id="edit-polygonlink-new"><b><a id="edit-polygonlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newPolygon(setindex);">Add A New Polygon</a></b></li>
@@ -534,18 +534,18 @@
 					<div id="polygon-form">PUT POLYGON FORM HERE!</div>
 				</td>
 				<td width="200px">
-					<div id="edit-polygon-tips">Tips<br/>
+					<div id="edit-polygon-tips">Tips<br />
 					   Put advice here
 					</div>
-					<div id="edit-polygon-actions">Edit Polygon Actions<br/>
-						<a id="remove_polygon_btn" title="remove from this set" href="javascript:void(0)">remove</a><br/>
-						<a id="expunge_polygon_btn" title="delete the polygon!" href="javascript:void(0)">delete</a><br/><br/>
+					<div id="edit-polygon-actions">Edit Polygon Actions<br />
+						<a id="remove_polygon_btn" title="remove from this set" href="javascript:void(0)">remove</a><br />
+						<a id="expunge_polygon_btn" title="delete the polygon!" href="javascript:void(0)">delete</a><br /><br />
 					</div>
 				</td>
 			</tr>
 		</table>
-	<input type="button" name="closepolygonset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditPolygons()"></br>
-</div> 
+	<input type="button" name="closepolygonset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditPolygons()" />
+</div>
 <!-- edit of edit polygons form -->
 
 <!-- close all polygon editing -->
@@ -586,10 +586,10 @@
 				<div id="polygonstyle-form">PUT POLYLINESTYLE FORM HERE!</div>
 			</td>
 			<td width="200px">
-				<div id="edit-polygonstyle-tips">Tips<br/>
+				<div id="edit-polygonstyle-tips">Tips<br />
 					Put advice here
 				</div>
-				<div id="edit-polygonstyle-actions">Edit Polygon Style Actions<br/>
+				<div id="edit-polygonstyle-actions">Edit Polygon Style Actions<br />
 					Currently no delete or expunge options
 				</div>
 			</td>

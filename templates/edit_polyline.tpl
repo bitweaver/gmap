@@ -1,12 +1,12 @@
 {strip}
 {form action="javascript:;" enctype="multipart/form-data" id="edit-polyline-form"}
-	<input name="save_polyline" type="hidden" value="true">
-	<input name="set_id" type="hidden" size="3" value="{$polylineInfo.set_id}">
-	<input name="polyline_id" type="hidden" size="3" value="{$polylineInfo.polyline_id}">
+	<input name="save_polyline" type="hidden" value="true" />
+	<input name="set_id" type="hidden" size="3" value="{$polylineInfo.set_id}" />
+	<input name="polyline_id" type="hidden" size="3" value="{$polylineInfo.polyline_id}" />
 	<div class="row">
 		{formlabel label="Name" for="name"}
 			{forminput}
-				<input name="title" type="text" style="width:90%" value="{$polylineInfo.title}">
+				<input name="title" type="text" style="width:90%" value="{$polylineInfo.title}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -17,7 +17,7 @@
 					<option value="0" {if $polylineInfo.type == 0 }selected="selected"{/if}>Google (standard)</option>
 					<option value="1" {if $polylineInfo.type == 1 }selected="selected"{/if}>Geodesic</option>
 					<option value="2" {if $polylineInfo.type == 2 }selected="selected"{/if}>Encoded</option>
-				</select><br/>
+				</select>
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -46,14 +46,14 @@
 	<div class="row">
 		{formlabel label="Zoom Factor" for="zoom_factor"}
 			{forminput}
-				<input name="zoom_factor" type="text" style="width:90%" value="{$polylineInfo.zoom_factor}"><br/>
+				<input name="zoom_factor" type="text" style="width:90%" value="{$polylineInfo.zoom_factor}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
 	<div class="row">
 		{formlabel label="Number of Levels" for="num_levels"}
 			{forminput}
-				<input name="num_levels" type="text" style="width:90%" value="{$polylineInfo.num_levels}"><br/>
+				<input name="num_levels" type="text" style="width:90%" value="{$polylineInfo.num_levels}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -69,7 +69,7 @@
 	{/if}
 
 	<div class="row submit">
-		<input type="button" name="save_polyline_btn" value="Save" onclick="javascript:BitMap.EditSession.storePolyline( this.form );">
+		<input type="button" name="save_polyline_btn" value="Save" onclick="javascript:BitMap.EditSession.storePolyline( this.form );" />
 	</div>
 {/form}
 {/strip}

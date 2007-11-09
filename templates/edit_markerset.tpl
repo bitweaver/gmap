@@ -1,12 +1,12 @@
 {strip}
 {form action="javascript:;" enctype="multipart/form-data" id="edit-markerset-options-form"}
-	<input name="set_id" type="hidden" value="{$markersetInfo.set_id}">
-	<input name="gmap_id" type="hidden" value="{$markersetInfo.gmap_id}">
-	<input name="save_markerset" type="hidden" value="true">
+	<input name="set_id" type="hidden" value="{$markersetInfo.set_id}" />
+	<input name="gmap_id" type="hidden" value="{$markersetInfo.gmap_id}" />
+	<input name="save_markerset" type="hidden" value="true" />
 	<div class="row">
 		{formlabel label="Name" for="name"}
 			{forminput}
-				<input size="40" name="title" type="text" value="{$markersetInfo.title}"><br/>
+				<input size="40" name="title" type="text" value="{$markersetInfo.title}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -14,7 +14,7 @@
 	<div class="row">
 		{formlabel label="Description" for="description"}
 			{forminput}
-				<input size="40" id="editliberty" name="edit" type="text" value="{$markersetInfo.data}">
+				<input size="40" id="editliberty" name="edit" type="text" value="{$markersetInfo.data}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>

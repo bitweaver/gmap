@@ -1,11 +1,11 @@
 {strip}
 {form action="javascript:;" enctype="multipart/form-data" id="edit-markerstyle-form"}
-	<input name="style_id" type="hidden" value="{$markerstyleInfo.style_id}">
-	<input name="save_markerstyle" type="hidden" value="true">
+	<input name="style_id" type="hidden" value="{$markerstyleInfo.style_id}" />
+	<input name="save_markerstyle" type="hidden" value="true" />
 	<div class="row">
 		{formlabel label="Name" for="name"}
 			{forminput}
-				<input name="name" type="text" style="width:90%" value="{$markerstyleInfo.name}">
+				<input name="name" type="text" style="width:90%" value="{$markerstyleInfo.name}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -22,14 +22,14 @@
 	<div class="row">
 		{formlabel label="Label Hover Opacity (%)" for="label_hover_opacity"}
 			{forminput}
-				<input name="label_hover_opacity" type="text" size="5" value="{if $markerstyleInfo.label_hover_opacity}{$markerstyleInfo.label_hover_opacity}{else}70{/if}"></div>
+				<input name="label_hover_opacity" type="text" size="5" value="{if $markerstyleInfo.label_hover_opacity}{$markerstyleInfo.label_hover_opacity}{else}70{/if}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
 	<div class="row">
 		{formlabel label="Label Opacity (%)" for="label_opacity"}
 			{forminput}
-				<input name="label_opacity" type="text" size="5" value="{if $markerstyleInfo.label_opacity}{$markerstyleInfo.label_opacity}{else}100{/if}"></div>
+				<input name="label_opacity" type="text" size="5" value="{if $markerstyleInfo.label_opacity}{$markerstyleInfo.label_opacity}{else}100{/if}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
@@ -48,7 +48,7 @@
 			{/forminput}
 	</div>
 	<div class="row submit">
-		<input type="button" name="save_markerstyle_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarkerStyle( this.form );"></div>
+		<input type="button" name="save_markerstyle_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarkerStyle( this.form );" />
 	</div>
 {/form}
 {/strip}

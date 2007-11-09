@@ -1,19 +1,19 @@
 {strip}
 {form action="javascript:;" enctype="multipart/form-data" id="edit-polylineset-options-form"}
-	<input name="set_id" type="hidden" value="{$polylinesetInfo.set_id}">
-	<input name="gmap_id" type="hidden" value="{$polylinesetInfo.gmap_id}">
-	<input name="save_polylineset" type="hidden" value="true">
+	<input name="set_id" type="hidden" value="{$polylinesetInfo.set_id}" />
+	<input name="gmap_id" type="hidden" value="{$polylinesetInfo.gmap_id}" />
+	<input name="save_polylineset" type="hidden" value="true" />
 	<div class="row">
 		{formlabel label="Name" for="name"}
 			{forminput}
-				<input size="40" name="title" type="text" value="{$polylinesetInfo.title}"><br/>
+				<input size="40" name="title" type="text" value="{$polylinesetInfo.title}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
 	<div class="row">
 		{formlabel label="Description" for="description"}
 			{forminput}
-				<input size="40" id="editliberty" name="edit" type="text" value="{$polylinesetInfo.data}">
+				<input size="40" id="editliberty" name="edit" type="text" value="{$polylinesetInfo.data}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
