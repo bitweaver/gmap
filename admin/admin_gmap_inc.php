@@ -55,7 +55,7 @@ foreach( $gLibertySystem->mContentTypes as $cType ) {
 // where to display content permalinks to mapped-content map
 $formGmapServiceDisplayOptions = array(
 	"gmap_in_icon" => array(
-		'label' => 'Only display icon',
+		'label' => 'Map Icon',
 		'note' => 'This will show a link to the map as an icon among the other page icons. Visible both in listings and when the full content page is loaded.',
 		'type' => 'toggle',
 	),
