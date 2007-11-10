@@ -59,7 +59,7 @@
 						{formlabel label=`$output.label` for=$item}
 						{forminput}
 							{if $output.type == 'numeric'}
-								{html_options name="$item" values=$numbers output=$numbers selected=$gBitSystem->getConfig($item) labels=false id=$item}
+								<input size="5" type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item)}" />
 							{elseif $output.type == 'input'}
 								<input type='text' name="{$item}" id="{$item}" value="{$gBitSystem->getConfig($item)}" />
 							{else}

@@ -25,6 +25,7 @@ if( $gBitSystem->isPackageActive( 'gmap' ) ) {
 		'content_nav_tpl'        => 'bitpackage:gmap/view_gmap_nav.tpl',
 		'content_body_tpl'       => 'bitpackage:gmap/view_gmap_body.tpl',
 		'content_view_tpl'       => 'bitpackage:gmap/view_gmap_view.tpl',
+		'content_icon_tpl'       => 'bitpackage:gmap/view_gmap_icon.tpl',
 	) );
 }
 

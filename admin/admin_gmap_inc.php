@@ -3,10 +3,12 @@
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
 
-if (isset($_REQUEST["gmapset"]) && isset($_REQUEST["homeGmap"])) {
-    $gBitSystem->storePreference("home_gmap", $_REQUEST["homeGmap"]);
-    $gBitSmarty->assign('home_gmap', $_REQUEST["homeGmap"]);
+/* not used
+if( isset( $_REQUEST["gmapset"] ) && isset( $_REQUEST["homeGmap"] )) {
+	$gBitSystem->storePreference( "home_gmap", $_REQUEST["homeGmap"] );
+	$gBitSmarty->assign( 'home_gmap', $_REQUEST["homeGmap"] );
 }
+ */
 
 if( !empty( $_REQUEST['gmap_preferences'] )) {
 	$gBitSystem->storeConfig( 'gmap_api_key', $_REQUEST['gmap_api_key'], GMAP_PKG_NAME );
@@ -17,6 +19,7 @@ if( !empty( $_REQUEST['gmap_preferences'] )) {
 
 require_once( GMAP_PKG_PATH.'BitGmap.php' );
 
+/* not used
 $formGmapLists = array(
 	"gmap_list_title" => array(
 		'label' => 'Title',
@@ -38,6 +41,7 @@ if( $processForm ) {
 		simple_set_toggle( $item );
 	}
 }
+ */
 
 
 // allow selection of what packages can have gmaps
@@ -50,20 +54,35 @@ foreach( $gLibertySystem->mContentTypes as $cType ) {
 
 // where to display content permalinks to mapped-content map
 $formGmapServiceDisplayOptions = array(
+	"gmap_in_icon" => array(
+		'label' => 'Only display icon',
+		'note' => 'This will show a link to the map as an icon among the other page icons. Visible both in listings and when the full content page is loaded.',
+		'type' => 'toggle',
+	),
 	"gmap_in_nav" => array(
-		'label' => 'Gmap Link In Nav',
-		'note' => 'Shows a link to the content map at the top of a page. Only visible when the full content page is loaded',
+		'label' => 'Navigation Link',
+		'note' => 'Shows a link to the content map at the top of a page. Only visible when the full content page is loaded.',
 		'type' => 'toggle',
 	),
 	"gmap_in_body" => array(
-		'label' => 'Gmap Link In Body',
-		'note' => 'Shows a link to the content map above the body text of content. Visible both in listings and when the full content page is loaded',
+		'label' => 'In Body Area',
+		'note' => 'Shows a link to the content map including a small inline map above the body text of content. Visible both in listings and when the full content page is loaded.',
 		'type' => 'toggle',
 	),
 	"gmap_in_view" => array(
-		'label' => 'Gmap Link In View',
-		'note' => 'Shows a link to the content map at the bottom of a page after the body text. Only visible when the full content page is loaded',
+		'label' => 'Bottom of Page',
+		'note' => 'Shows a link to the content map including a small inline map below the body text. Only visible when the full content page is loaded.',
 		'type' => 'toggle',
+	),
+	"gmap_inline_map_width" => array(
+		'label' => 'Inline Map Width',
+		'note' => 'Set the width in pixels of the inline map.',
+		'type' => 'numeric',
+	),
+	"gmap_inline_map_height" => array(
+		'label' => 'Inline Map Height',
+		'note' => 'Set the height in pixels of the inline map.',
+		'type' => 'numeric',
 	),
 );
 $gBitSmarty->assign( 'formGmapServiceDisplayOptions', $formGmapServiceDisplayOptions );
@@ -79,6 +98,7 @@ if( !empty( $_REQUEST['gmap_preferences'] ) ) {
 			simple_set_value( $item, GMAP_PKG_NAME );
 		}
 	}
+
 	foreach( array_keys( $formMappable['guids'] ) as $mappable ) {
 		$gBitSystem->storeConfig( $mappable, ( ( !empty( $_REQUEST['mappable_content'] ) && in_array( $mappable, $_REQUEST['mappable_content'] ) ) ? 'y' : NULL ), GMAP_PKG_NAME );
 	}
