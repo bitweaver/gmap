@@ -1,5 +1,5 @@
 <?php
-global $gBitSystem;
+global $gBitSystem, $gBitThemes;
 
 $registerHash = array(
 	'package_name' => 'gmap',
@@ -10,8 +10,10 @@ $registerHash = array(
 $gBitSystem->registerPackage( $registerHash );
 
 if( $gBitSystem->isPackageActive( 'gmap' ) ) {
-	require_once( GMAP_PKG_PATH.'BitGmap.php' );
+	// load the css file
+	$gBitThemes->loadCss( GMAP_PKG_PATH.'gmap.css' );
 
+	require_once( GMAP_PKG_PATH.'BitGmap.php' );
 	$menuHash = array(
 		'package_name'  => GMAP_PKG_NAME,
 		'index_url'     => GMAP_PKG_URL.'index.php',

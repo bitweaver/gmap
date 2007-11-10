@@ -1,6 +1,6 @@
 {strip}
 {if $serviceHash.lat && $serviceHash.lng && $smarty.const.ACTIVE_PACKAGE != 'gmap' && !$exclude_map_link }
-	<div class="gmap-permalink" style="float:right; padding:0; margin:0 0 1em 0.5em; text-align:right;">
+	<div class="gmap-permalink">
 		{assign var=iforce value=icon_text}
 		{if $location == icon}
 			{assign var=iforce value=icon}
