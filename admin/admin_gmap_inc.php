@@ -78,11 +78,13 @@ $formGmapServiceDisplayOptions = array(
 		'label' => 'Inline Map Width',
 		'note' => 'Set the width in pixels of the inline map.',
 		'type' => 'numeric',
+		'default' => 190,
 	),
 	"gmap_inline_map_height" => array(
 		'label' => 'Inline Map Height',
 		'note' => 'Set the height in pixels of the inline map.',
 		'type' => 'numeric',
+		'default' => 190,
 	),
 );
 $gBitSmarty->assign( 'formGmapServiceDisplayOptions', $formGmapServiceDisplayOptions );
