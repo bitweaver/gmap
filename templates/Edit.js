@@ -1761,10 +1761,10 @@ BitMap.Edit.prototype = {
 		this.Map.allow_comments = com[0].firstChild.nodeValue;
 
 		//replace everything	
-		var maptile = $('mymaptitle');
+		var maptile = $('map_title');
 		if (maptile){maptile.innerHTML=this.Map.title;}
 		
-		var mapdesc = $('mymapdesc');
+		var mapdesc = $('map_desc');
 		if (mapdesc){mapdesc.innerHTML=this.Map.description;}
 		
 		$('mapcontent').innerHTML = this.Map.parsed_data;
