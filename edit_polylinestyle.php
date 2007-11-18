@@ -18,7 +18,7 @@ $gContent = new BitGmap();
 //if a maptype_id is passed try to look it up and see if the user is the owner or has admin perms
 if ( isset( $_REQUEST['style_id'] ) && is_numeric( $_REQUEST['style_id'] ) ){
 	$style = $gContent->getPolylineStyle( $_REQUEST['style_id'] );
-	if ( $style != NULL && ( $style['user_id'] == $gBitUser->mUserId || $gBitSystem->hasPermission( 'p_gmap_admin' ) ) != TRUE ){
+	if ( $style != NULL && ( $style['user_id'] == $gBitUser->mUserId || $gBitUser->hasPermission( 'p_gmap_admin' ) ) != TRUE ){
 		$gBitSystem->fatalError( tra( "You can not edit this style!" ));
 	}
 }

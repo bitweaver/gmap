@@ -18,7 +18,7 @@ $gContent = new BitGmap();
 //if a maptype_id is passed try to look it up and see if the user is the owner or has admin perms
 if ( isset( $_REQUEST['maptype_id'] ) && is_numeric( $_REQUEST['maptype_id'] ) ){
 	$maptype = $gContent->getMapType( $_REQUEST['maptype_id'] );
-	if ( $maptype != NULL && ( $maptype['user_id'] == $gBitUser->mUserId || $gBitSystem->hasPermission( 'p_gmap_admin' ) ) != TRUE ){
+	if ( $maptype != NULL && ( $maptype['user_id'] == $gBitUser->mUserId || $gBitUser->hasPermission( 'p_gmap_admin' ) ) != TRUE ){
 		$gBitSystem->fatalError( tra( "You can not edit this maptype!" ));
 	}
 }
