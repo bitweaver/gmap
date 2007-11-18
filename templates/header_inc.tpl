@@ -38,8 +38,6 @@
 			.hide {display:none;}
 			#gmap-sidepanel {float:right; margin:0; padding:0; width:300px; overflow:auto;}
 			#gmap-sidepanel-table {margin:0; padding:0;}
-			table.data {border-collapse:collapse;}
-			table.data td{border-top:#eee solid 1px;padding:1px 3px;}
 			.gmap-tooltip {background:white; font-weight:bold; padding:2px 4px; white-space:nowrap; border:#999 solid 1px;}
 			.data-date {width:36%; text-align:center}
 			.data-rating {width:14%; text-align:center}
