@@ -33,7 +33,7 @@
 				</tr>
 
 				{section name=changes loop=$list}
-					<tr class="{cycle values="even,odd"}">
+					<tr class="{cycle values="odd,even"}">
 {*						{if $gmap_list_gmap_id eq 'y'}           *}
 							<td>{$list[changes].gmap_id|truncate:20:"...":true}</td>
 {*						{/if}
