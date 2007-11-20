@@ -20,7 +20,7 @@ if (typeof(BitMap.Utl.JSCSS) == 'undefined') {
 		  o.className=o.className.replace(rep,'');
 		break;
 		case 'check':
-		  return new RegExp('\\b'+c1+'\\b').test(o.className)
+		  return new RegExp('\\b'+c1+'\\b').test(o.className);
 		break;
 	  }
 	}
