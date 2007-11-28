@@ -18,10 +18,9 @@
 /**
  * required setup
  */
-
-/**
- * wj: Most of this page is based on the Sample Package
- */
+ 
+// force js on the user
+$_COOKIE['javascript_enabled'] = 'y';
 
 // Initialization
 require_once( '../bit_setup_inc.php' );
