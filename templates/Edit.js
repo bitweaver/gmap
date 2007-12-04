@@ -5,6 +5,10 @@ BitMap.show('editerror');
 $('editerror').innerHTML = rslt.responseText;
 */
 
+if (typeof(BitMap) == 'undefined') {
+	BitMap = {};
+}
+
 BitMap.dumpProps = function(obj, parent) {
 	for (var i in obj) {
 		if (parent) { var msg = parent + "." + i + "\n" + obj[i]; } else { var msg = i + "\n" + obj[i]; }
@@ -13,10 +17,6 @@ BitMap.dumpProps = function(obj, parent) {
 			if (parent) { dumpProps(obj[i], parent + "." + i); } else { dumpProps(obj[i], i); }
 		}
 	}
-}
-
-if (typeof(BitMap) == 'undefined') {
-	BitMap = {};
 }
 
 BitMap.EditMap = function(){
