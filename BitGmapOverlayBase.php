@@ -206,7 +206,17 @@ class BitGmapOverlayBase extends LibertyAttachable {
 		}
 		return $ret;
 	}
-	
+
+	/**
+	 * Custom Permission Convenience Functions
+	 * These are not as robust as the full custom permissions options of Liberty
+	 * However they offer a quick and intuitive way for users to set commonly
+	 * desirable custom access control without having to give site wide custom-permission
+	 * access to all basic registered users.
+	 */	
+	/**
+	 * Make the overlay editable by all registered users - for wiki like editing
+	 */
 	function setEditSharing(&$pParamHash){
 		if ( isset( $pParamHash['share_edit'] ) ){
 			$this->storePermission( 3, 'p_gmap_overlay_edit' );
@@ -218,6 +228,25 @@ class BitGmapOverlayBase extends LibertyAttachable {
 	function isEditShared(){
 		$ret = FALSE;
 		if ( isset( $this->mPerms['p_gmap_overlay_edit'] ) && $this->mPerms['p_gmap_overlay_edit']['group_id'] == 3 && $this->mPerms['p_gmap_overlay_edit']['is_revoked'] != "y"){
+			$ret = TRUE;
+		}
+		return $ret;
+	}
+
+	/**
+	 * Make the overlay hidden (assumes view permission is set to anonymous by default and revokes that permission)
+	 */
+	function setViewPrivate(&$pParamHash){
+		if (isset( $pParamHash['make_private'])){
+			$this->storePermission('-1', 'p_gmap_overlay_view', TRUE);
+		}else{
+			$this->removePermission('-1', 'p_gmap_overlay_view');
+		}
+	}
+
+	function isViewPrivate(){
+		$ret = FALSE;
+		if ( isset( $this->mPerms['p_gmap_overlay_view'] ) &&  $this->mPerms['p_gmap_overlay_view']['group_id'] == -1  && $this->mPerms['p_gmap_overlay_view']['is_revoked'] == "y" ){
 			$ret = TRUE;
 		}
 		return $ret;
