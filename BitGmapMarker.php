@@ -248,6 +248,15 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
 			}
 			$res['thumbnail_url'] = BitGmapMarker::getImageThumbnails( $res );
+			/* not sure the best way to go about
+			 *  cleaning this kind of crap out -
+			 *  but since gmaps uses plenty of javascript
+			 *  we can't have this business in here
+			 *  if someone slipped it in somehow.
+			 *  there shouldnt be line breaks in titles anyway,
+			 *  but sometimes someone gets one in. -wjames5
+			 */
+			$res['title'] = str_replace("\n", "", $res['title']);
 			$ret[] = $res;
 		}
 		
