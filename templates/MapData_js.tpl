@@ -5,7 +5,7 @@ BitMap.MapData.push({ldelim}
   browser:"{$browserInfo.browser}",
   {if !$geo_edit_serv && !$map_list}
   id:{if $mapInfo.gmap_id}{$mapInfo.gmap_id}{else}null{/if},
-  allow_comments:'{if $gContent->getPreference("allow_comments") eq "y"}y{else}n{/if}',
+  allow_comments:'{if $gContent && $gContent->getPreference("allow_comments") eq "y"}y{else}n{/if}',
   {/if}
   mapdiv:'{$smarty.const.ACTIVE_PACKAGE}-map',
   width:{if $mapInfo.width}{$mapInfo.width}{elseif $gBitSystem->getConfig("gmap_width")}{$gBitSystem->getConfig("gmap_width")}{else}0{/if},
