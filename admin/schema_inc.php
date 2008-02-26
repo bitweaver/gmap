@@ -337,4 +337,14 @@ $gBitInstaller->registerPreferences( GMAP_PKG_NAME, array(
 	)
 );
 
+// ### Register content types
+$gBitInstaller->registerContentObjects( GMAP_PKG_NAME, array( 
+	'BitGmap'=>GMAP_PKG_PATH.'BitGmap.php',
+	'BitGmapMarker'=>GMAP_PKG_PATH.'BitGmapMarker.php',
+	'BitGmapMarkerSet'=>GMAP_PKG_PATH.'BitGmapMarkerSet.php',
+	'BitGmapPolygon'=>GMAP_PKG_PATH.'BitGmapPolygon.php',
+	'BitGmapPolygonSet'=>GMAP_PKG_PATH.'BitGmapPolygonSet.php',
+	'BitGmapPolyline'=>GMAP_PKG_PATH.'BitGmapPolyline.php',
+	'BitGmapPolylineSet'=>GMAP_PKG_PATH.'BitGmapPolylineSet.php',
+));
 ?>
