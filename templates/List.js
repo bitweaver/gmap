@@ -62,12 +62,13 @@ BitMap.SelectDateRange = function(sel){
 
 MochiKit.Base.update(BitMap.Map.prototype, {
 
-	"RequestContent": function(f){
+	"RequestContent": function(f,page){
+		page = (typeof(page)!='undefined')?page:1;
 		var up_lat = this.map.getBounds().getNorthEast().lat();
 		var right_lng = this.map.getBounds().getNorthEast().lng();
 		var down_lat = this.map.getBounds().getSouthWest().lat();
 		var left_lng = this.map.getBounds().getSouthWest().lng();
-		var str = [BitMap.BIT_ROOT_URL, "liberty/list_content.php?", MochiKit.Base.queryString(f), "&up_lat=",up_lat,"&right_lng=",right_lng,"&down_lat=",down_lat,"&left_lng=",left_lng].join("");
+		var str = [BitMap.BIT_ROOT_URL, "liberty/list_content.php?", MochiKit.Base.queryString(f), "&up_lat=",up_lat,"&right_lng=",right_lng,"&down_lat=",down_lat,"&left_lng=",left_lng,"&list_page=",page].join("");
 		
 		//account for bug in queryString
 		str = str.replace(/liberty_categories%5B%5D=Any/,"");
@@ -86,6 +87,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			this.loopOver(ref.markers, function(i){ref.addMarker(i);});
 			this.clearSidepanel();
 			this.attachSideMarkers();
+			this.attachPagination(rslt.ListInfo);
 		}
 		if (rslt.Status.code == 204){
 			alert("sorry we couldn't find anything matching your request");
@@ -198,6 +200,22 @@ myicon.infoShadowAnchor = new GPoint(18, 25);
 		}
 		this.map.checkResize();
 		this.map.setCenter(center);
+	},
+
+	"attachPagination": function(ListInfo){
+		var tp = ListInfo.total_pages;
+		var cp = ListInfo.current_page;
+		if (tp > 1){
+			var prevLink = (cp > 1)?A ( {'href':'javascript:void(0);', 'onclick':'javascript:BitMap.MapData[0].Map.RequestContent(document["list-query-form"],'+(cp-1)+');'}, "« " ):null;
+			var nextLink = (cp < tp)?A ( {'href':'javascript:void(0);', 'onclick':'javascript:BitMap.MapData[0].Map.RequestContent(document["list-query-form"],'+(cp+1)+');'}, " »" ):null;
+			
+			var d =DIV( {'class':'pagination'}, 
+				prevLink,
+				SPAN( null, "Page ", STRONG( null, cp ), " of ", STRONG( null, tp ) ),
+				nextLink
+			);
+			$('gmap-sidepanel-table').appendChild( d );
+		}
 	},
 
 	"clearSidepanel": function(){
