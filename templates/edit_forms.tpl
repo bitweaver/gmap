@@ -158,10 +158,10 @@
     <table class="bar">
     	<tr>
         <td width="200px"><span class="setname">Set Name Here</span></td>
-      <td>
-        <a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSetOptions(n);">Edit Set Options</a> |
-        <a class="list" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkers(n);">Edit Markers In This Set</a>
-      </td>
+		<td>
+			<a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSetOptions(n);">Edit Set Options</a> |
+			<a class="list" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkers(n);">Edit Markers In This Set</a>
+		</td>
     </tr>
     </table>
   </div>
@@ -184,7 +184,7 @@
 				</div>
 				<div id="edit-markerset-options-actions">Edit Marker Actions<br />
 				<a id="remove_markerset_btn" title="remove from this set from this map" href="javascript:void(0)">remove</a><br />
-				<a id="delete_markerset_btn" title="delete this marker set!" href="javascript:void(0)">delete</a><br /><br />
+				<a id="expunge_markerset_btn" title="delete this marker set!" href="javascript:void(0)">delete</a><br /><br />
 				{* uncomment when available <a id="setaddmarkers" href="javascript:void(0)" onclick="">Add Markers from Archives</a> *}
 				<div>
 			</td>
@@ -374,7 +374,7 @@
 				</div>
 				<div id="edit-polylineset-options-actions">Edit Polyline Actions<br />
 				<a id="remove_polylineset_btn" title="remove from this set from this map" href="javascript:void(0)">remove</a><br />
-				<a id="delete_polylineset_btn" title="delete this polyline set!" href="javascript:void(0)">delete</a><br /><br />
+				<a id="expunge_polylineset_btn" title="delete this polyline set!" href="javascript:void(0)">delete</a><br /><br />
 				{* uncomment when it works <a id="setaddpolylines" href="javascript:void(0)" onclick="alert('feature coming soon');">Add Polylines from Archives</a> *}
 				<div>
 			</td>
@@ -511,7 +511,7 @@
 				</div>
 				<div id="edit-polygonset-options-actions">Edit Polygon Actions<br />
 				<a id="remove_polygonset_btn" title="remove from this set from this map" href="javascript:void(0)">remove</a><br />
-				<a id="delete_polygonset_btn" title="delete this polygon set!" href="javascript:void(0)">delete</a><br /><br />
+				<a id="expunge_polygonset_btn" title="delete this polygon set!" href="javascript:void(0)">delete</a><br /><br />
 				{* uncomment when it works <a id="setaddpolygons" href="javascript:void(0)" onclick="alert('feature coming soon');">Add Polygons from Archives</a> *}
 				<div>
 			</td>
