@@ -257,6 +257,16 @@ class BitGmapMarker extends BitGmapOverlayBase {
 			 *  but sometimes someone gets one in. -wjames5
 			 */
 			$res['title'] = str_replace("\n", "", $res['title']);
+			/* @TODO: use this when ready to support html in lables
+			$res['parsed_data'] = $this->parseData( $res['label_data'], $res['format_guid'] );
+			$res['parsed_data'] = addslashes($res['parsed_data']);
+			*/
+			// this should escape line breaks for javascript
+			$res['label_data'] = str_replace("\n", "&#13;", $res['label_data']);
+			/* if the above doesnt work might resort to this:
+			$res['label_data'] = addslashes($res['label_data']);
+			$res['label_data'] = str_replace("\n", "\\n", $res['label_data']);				
+			*/
 			$ret[] = $res;
 		}
 		
