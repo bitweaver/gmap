@@ -113,7 +113,7 @@ $tables = array(
   CONSTRAINTS ', CONSTRAINT `gmaps_icon_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'	
 ",
 
-//type options: 0 => GMarker, 1 => PdMarker
+//type options: 0 => GXMarker, 1 => PdMarker
 //lable hover opacity is for all
 //label opacity is PdMarker Class only
 //label hover styles is CSS for all

@@ -100,6 +100,7 @@ BitMap.MapData.push({ldelim}
 		lat: {$markersInfo[n].lat},
 		lng: {$markersInfo[n].lng},
 		label_data: '{$markersInfo[n].label_data}',
+		parsed_label_data: '{$markersInfo[n].parsed_label_data}',
 		thumbnail_url:'{$markersInfo[n].thumbnail_url.avatar}',
 		set_id: {$markersInfo[n].set_id},
 		style_id: {$markersInfo[n].style_id},

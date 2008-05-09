@@ -77,14 +77,14 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		var M = this.markers[i];
 		var p = new GLatLng(parseFloat(M.lat), parseFloat(M.lng));
 		var myicon = (n != null)?this.iconstyles[n].icon:null;
-		var mytitle;
+		var tip;
 		//add marker roll over
-		if (typeof(M.label_data) != 'undefined' && M.label_date != null){
-		mytitle = M.label_data;
+		if (typeof(M.label_data) != 'undefined' && M.label_data != null){
+			tip = M.label_data;
 		}else if (typeof(M.title) != 'undefined' && M.title != null){
-		mytitle = M.title;
+			tip = M.title;
 		}		
-		M.gmarker = new GMarker(p, {icon: myicon, title:mytitle});
+		M.gmarker = new GMarker(p, {icon: myicon, title:tip});
 		M.gmarker.index = i;
 		M.gmarker.type = 'marker';
 		M.gmarker.my_maxurl = BitMap.BIT_ROOT_URL + "gmap/view_marker.php?marker_id=" + M.marker_id + '&comments_maxComments=999999';
@@ -102,7 +102,13 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		if (i != null){
 			icon = this.iconstyles[i].icon;
 		}
-		var mytip = DIV({'class':'tip-'+this.markerstyles[s].name}, M.label_data);
+		var tip;
+		if (typeof(M.parsed_label_data) != 'undefined' && M.parsed_label_data != null){
+			tip = M.parsed_label_data;
+		}else if (typeof(M.title) != 'undefined' && M.title != null){
+			tip = M.title;
+		}		
+		var mytip = DIV({'class':'tip-'+this.markerstyles[s].name}, tip);
 		M.gmarker = new GxMarker(point, icon, mytip);
 		M.gmarker.marker_style_type = 0;
 		

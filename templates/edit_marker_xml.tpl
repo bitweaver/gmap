@@ -10,6 +10,7 @@
 		<nav><![CDATA[{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}]]></nav>
 		<view><![CDATA[{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='view' serviceHash=$gContent->mInfo}]]></view>
 		<label>{$markerInfo.label_data}</label>
+		<parsed_label><![CDATA[{$markerInfo.parsed_label_data}]]></parsed_label>
 		<z>{$markerInfo.zindex}</z>
 		<allow_comments>{if $gContent->getPreference("allow_comments") == "y"}y{else}n{/if}</allow_comments>
 	</marker>

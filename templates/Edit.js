@@ -1929,6 +1929,8 @@ BitMap.Edit.prototype = {
 		m.parsed_data = pdt[0].firstChild.nodeValue;
 		var l = xml.getElementsByTagName('label');
 		m.label_data = ( l[0].firstChild != null )?l[0].firstChild.nodeValue:'';
+		var pl = xml.getElementsByTagName('parsed_label');
+		m.parsed_label_data = ( pl[0].firstChild != null )?pl[0].firstChild.nodeValue:'';
 		//var z = xml.getElementsByTagName('z');
 		//m.zindex = parseInt(z[0].firstChild.nodeValue);	
 		var com = xml.getElementsByTagName('allow_comments');

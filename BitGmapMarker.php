@@ -92,6 +92,9 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$this->mInfo['data'] = addslashes($this->mInfo['data']);
 				$this->mInfo['data'] = str_replace("\n", "\\n", $this->mInfo['data']);				
 
+				// to support html in labels
+				$this->mInfo['parsed_label_data'] = $this->parseData( $this->mInfo['label_data'], $this->mInfo['format_guid'] );
+
 				$comment = new LibertyComment();
 				$this->mInfo['num_comments'] = $comment->getNumComments($this->mInfo['content_id']);
 
@@ -257,16 +260,14 @@ class BitGmapMarker extends BitGmapOverlayBase {
 			 *  but sometimes someone gets one in. -wjames5
 			 */
 			$res['title'] = str_replace("\n", "", $res['title']);
-			/* @TODO: use this when ready to support html in lables
-			$res['parsed_data'] = $this->parseData( $res['label_data'], $res['format_guid'] );
-			$res['parsed_data'] = addslashes($res['parsed_data']);
-			*/
+
+			// to support html in labels
+			$res['parsed_label_data'] = $this->parseData( $res['label_data'], $res['format_guid'] );
+			$res['parsed_label_data'] = addslashes($res['parsed_label_data']);
 			// this should escape line breaks for javascript
-			$res['label_data'] = str_replace("\n", "&#13;", $res['label_data']);
-			/* if the above doesnt work might resort to this:
 			$res['label_data'] = addslashes($res['label_data']);
 			$res['label_data'] = str_replace("\n", "\\n", $res['label_data']);				
-			*/
+			
 			$ret[] = $res;
 		}
 		

@@ -13,7 +13,7 @@
 		{formlabel label="Type" for="marker_style_type"}
 			{forminput}
 				<select name="marker_style_type">
-				<option value="0" {if $markerstyleInfo.marker_style_type == 0 }selected="selected"{/if}>GMarker</option>
+				<option value="0" {if $markerstyleInfo.marker_style_type == 0 }selected="selected"{/if}>GXMarker</option>
 				<option value="1" {if $markerstyleInfo.marker_style_type == 1 }selected="selected"{/if}>PdMarker</option>
 				</select>
 				{formhelp note=""}
