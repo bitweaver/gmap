@@ -1,4 +1,4 @@
-//NOTE: We use Mochikit library for AJAX and substitute getElementById with '$()'
+//NOTE: We ese Mochikit library for AJAX and substitute getElementById with '$()'
 
 /*	
 BitMap.show('editerror');
@@ -2009,12 +2009,13 @@ BitMap.Edit.prototype = {
 			for (var n=0; n<ref.markers.length; n++){
 				var M = ref.markers[n];
 				if ( ( M != null ) && ( M.marker_id == this.editMarkerId ) ){
-					ref.map.removeOverlay(M.gmarker);
+					if ( typeof( M.gmarker ) != 'undefined' && M.gmarker.plotted == true ){
+						ref.map.removeOverlay(M.gmarker);
+					}
 					ref.markers[n].gmarker = null;
 					ref.markers[n] = null;
 				}
 			}
-	
 			ref.attachSideMarkers();
 			var S = ref.markersets;
 			for (n=0;n<S.length;n++){
@@ -2031,10 +2032,12 @@ BitMap.Edit.prototype = {
 	"updateRemoveMarkerSet": function(){
 		if ( this.verifyRemove(rslt) ){
 			for (var n=0; n<this.Map.markers.length; n++){
-				if ( ( this.Map.markers[n] != null ) && ( this.Map.markers[n].set_id == this._setIdRef ) && ( this.Map.markers[n].gmarker != null ) ){
-						this.Map.map.removeOverlay(this.Map.markers[n].gmarker); 			
-						this.Map.markers[n].gmarker = null;
-						this.Map.markers[n] = null;
+				if ( ( this.Map.markers[n] != null ) && ( this.Map.markers[n].set_id == this._setIdRef ) ){
+					if ( typeof( this.Map.markers[n].gmarker != 'undefined' ) ){
+						this.Map.map.removeOverlay(this.Map.markers[n].gmarker);
+					}
+					this.Map.markers[n].gmarker = null;
+					this.Map.markers[n] = null;
 				}
 			}
 			for (var s=0; s<this.Map.markersets.length; s++){
@@ -2553,8 +2556,10 @@ BitMap.Edit.prototype = {
         var status = xml.documentElement.getElementsByTagName('code')[0].firstChild.nodeValue;
 		if (status == '200'){
 			for (var i=0; i<this.Map.polylines.length; i++){
-				if ( Map.Polylines[i] != null && this.Map.polylines[n].polyline != null && this.Map.polylines[i].polyline_id == this.editPolylineId ){
-					this.Map.map.removeOverlay(this.Map.polylines[i].polyline);
+				if ( Map.Polylines[i] != null && this.Map.polylines[i].polyline_id == this.editPolylineId ){
+					if( typeof( this.Map.polylines[n].polyline ) != 'undefined' ){
+						this.Map.map.removeOverlay(this.Map.polylines[i].polyline);
+					}
 					this.Map.polylines[i].polyline = null;
 					this.Map.polylines[i] = null;
 				}
@@ -2572,9 +2577,11 @@ BitMap.Edit.prototype = {
 	"updateRemovePolylineSet": function(){
 		if ( this.verifyRemove(rslt) ){
 			for (var n=0; n<this.Map.polylines.length; n++){
-				if ( ( this.Map.polylines[n] != null ) && ( this.Map.polylines[n].set_id == this.editSetId ) && ( this.Map.polylines[n].polyline != null ) ){
-					this.Map.map.removeOverlay(Map.Polylines[n].polyline);
-						this.Map.polylines[n].polyline = null;
+				if ( ( this.Map.polylines[n] != null ) && ( this.Map.polylines[n].set_id == this.editSetId ) ){
+					if( typeof( this.Map.polylines[n].polyline != null ) ){
+						this.Map.map.removeOverlay(Map.Polylines[n].polyline);
+					}
+					this.Map.polylines[n].polyline = null;
 					this.Map.polylines[n] = null;
 				}
 			}

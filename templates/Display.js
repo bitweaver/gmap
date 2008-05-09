@@ -89,6 +89,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		M.gmarker.type = 'marker';
 		M.gmarker.my_maxurl = BitMap.BIT_ROOT_URL + "gmap/view_marker.php?marker_id=" + M.marker_id + '&comments_maxComments=999999';
 		this.map.addOverlay(M.gmarker);
+		M.gmarker.plotted = true;
 	},
 
 
@@ -112,6 +113,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		M.gmarker.my_html = DIV({'style':'white-space: nowrap;', 'class':'win-'+this.markerstyles[s].name}, H1({'class':markertitle}, M.title), imgLink, data);
 		*/
 		this.map.addOverlay(M.gmarker);
+		M.gmarker.plotted = true;
 	},
 
 
@@ -138,6 +140,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		*/
 		//rollover-icon: M.marker.setHoverImage("http://www.google.com/mapfiles/dd-start.png");
 		this.map.addOverlay(M.gmarker);
+		M.gmarker.plotted = true;
 	},
 
 
