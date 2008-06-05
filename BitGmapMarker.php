@@ -98,7 +98,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$comment = new LibertyComment();
 				$this->mInfo['num_comments'] = $comment->getNumComments($this->mInfo['content_id']);
 
-				LibertyAttachable::load();
+				LibertyMime::load();
 			}
 		}
 		return( count( $this->mInfo ) );

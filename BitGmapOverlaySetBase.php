@@ -146,7 +146,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
   			// delete all references to the marker set from the map sets keychain
     		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` WHERE `set_id` =? AND `set_type` = ".$mOverlaySetType;
   			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
-			if( LibertyAttachable::expunge() ) {
+			if( LibertyMime::expunge() ) {
 				$ret = TRUE;
 				$this->mDb->CompleteTrans();
 			} else {

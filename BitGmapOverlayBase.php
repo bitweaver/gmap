@@ -19,10 +19,10 @@
  * required setup
  */
 
-require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
+require_once( LIBERTY_PKG_PATH.'LibertyMime.php' );
 
 // this is the class that contains all the functions for the package
-class BitGmapOverlayBase extends LibertyAttachable {
+class BitGmapOverlayBase extends LibertyMime {
 
 	var $mOverlayId;
 
@@ -39,7 +39,7 @@ class BitGmapOverlayBase extends LibertyAttachable {
 	* During initialisation, be sure to call our base constructors
 	**/
 	function BitGmapOverlayBase() {
-		parent::LibertyAttachable();
+		parent::LibertyMime();
 		
 		// Permission setup
 		$this->mViewContentPerm  = 'p_gmap_overlay_view';
@@ -81,7 +81,7 @@ class BitGmapOverlayBase extends LibertyAttachable {
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
 				$this->mInfo['parsed_data'] = $this->parseData();
 				
-				LibertyAttachable::load();
+				LibertyMime::load();
 			}
 			
 		}
@@ -130,7 +130,7 @@ class BitGmapOverlayBase extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			$query = "DELETE FROM `".BIT_DB_PREFIX.$this->mOverlayTable."` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
-			if( LibertyAttachable::expunge() ) {
+			if( LibertyMime::expunge() ) {
 				$ret = TRUE;
 				
 				// delete all references to the overlay from the overlay keychain

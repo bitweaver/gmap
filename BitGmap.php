@@ -1,16 +1,16 @@
 <?php
 
-require_once( LIBERTY_PKG_PATH.'LibertyAttachable.php' );
+require_once( LIBERTY_PKG_PATH.'LibertyMime.php' );
 require_once( LIBERTY_PKG_PATH.'LibertyComment.php' );
 
 define( 'BITGMAP_CONTENT_TYPE_GUID', 'bitgmap' );
 
-class BitGmap extends LibertyAttachable {
+class BitGmap extends LibertyMime {
 
 	var $mGmapId;
 
 	function BitGmap( $pGmapId=NULL, $pContentId=NULL ) {
-		parent::LibertyAttachable();
+		parent::LibertyMime();
 		$this->mGmapId = $pGmapId;
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITGMAP_CONTENT_TYPE_GUID;
@@ -1098,7 +1098,7 @@ class BitGmap extends LibertyAttachable {
 			$this->mDb->StartTrans();
 			$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
-			if( LibertyAttachable::expunge() ) {
+			if( LibertyMime::expunge() ) {
 				$ret = TRUE;
 				$this->mDb->CompleteTrans();
 			} else {
