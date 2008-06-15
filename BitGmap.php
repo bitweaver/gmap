@@ -1366,4 +1366,17 @@ function gmap_content_edit( &$pObject ) {
 		$gBitSystem->mOnload[] = 'BitMap.EditContent();';
 	}
 }
+
+
+function gmap_content_preview( &$pObject) {
+	global $gBitSystem, $gBitSmarty;
+	if( $gBitSystem->isFeatureActive('gmap_api_key') && $gBitSystem->isFeatureActive( 'gmap_map_'.$pObject->getContentType() ) ) {
+		$gBitSmarty->assign('geo_edit_serv', TRUE);
+		$gBitSystem->mOnload[] = 'BitMap.EditContent();';
+		if ( isset( $_REQUEST['geo']['lat'] ) && isset( $_REQUEST['geo']['lng'] ) ) {
+			$pObject->mInfo['lat'] = $_REQUEST['geo']['lat'];
+			$pObject->mInfo['lng'] = $_REQUEST['geo']['lng'];
+		}
+	}
+}
 ?>
