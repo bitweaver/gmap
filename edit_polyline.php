@@ -1,16 +1,19 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.21 2007/11/02 18:34:33 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.22 2008/06/19 04:09:45 lsces Exp $
+ *
+ * Copyright (c) 2007 bitweaver.org
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
+ * @author Will <will@wjamesphoto.com>
+ * 
  * @package gmap
  * @subpackage functions
  */
-//
 
-// Copyright (c) 2005-2007 bitweaver Gmap
-// All Rights Reserved. See copyright.txt for details and a complete list of authors.
-// Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
-
-// Initialization
+/**
+ * required setup
+ */
 require_once('../bit_setup_inc.php' );
 
 // Is package installed and enabled

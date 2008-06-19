@@ -1,20 +1,15 @@
 <?php
 /**
- * BitGmapPolylineSet Class
+ * @version $Header: 
  *
- * @package gmap
- * @subpackage BitGmapPolylineSet
- *
- * @author will <will@onnyturf.com>
- *
- * @version v.0
- *
- * Copyright (c) 2007 bitweaver.org, Will James
+ * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
- *
+ * @author Will <will@wjamesphoto.com>
+ * 
+ * @package gmap
  */
-
+ 
 /**
  * required setup
  */
@@ -24,7 +19,12 @@ require_once( GMAP_PKG_PATH.'BitGmapOverlaySetBase.php' );
 define( 'BITGMAPPOLYLINESET_CONTENT_TYPE_GUID', 'bitgpolylineset' );
 
 
-// this is the class that contains all the functions for the package
+/**
+ * class BitGmapPolylineSet
+ * this is the class that contains all the functions for the package
+ * 
+ * @package gmap
+ */
 class BitGmapPolylineSet extends BitGmapOverlaySetBase{
 	/**
 	* During initialisation, be sure to call our base constructors

@@ -1,27 +1,27 @@
 <?php
 /**
- * BitGmapOverlay Class
+ * @version $Header: 
  *
- * @package gmap
- * @subpackage BitGmapOverlayBase
- *
- * @author will <will@onnyturf.com>
- *
- * @version v.0
- *
- * Copyright (c) 2005,2006,2007 bitweaver.org, Will James
+ * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
- *
+ * @author Will <will@wjamesphoto.com>
+ * 
+ * @package gmap
  */
-
+ 
 /**
  * required setup
  */
 
 require_once( LIBERTY_PKG_PATH.'LibertyMime.php' );
 
-// this is the class that contains all the functions for the package
+/**
+ * class BitGmapOverlayBase
+ * this is the class that contains all the functions for the package
+ * 
+ * @package gmap
+ */
 class BitGmapOverlayBase extends LibertyMime {
 
 	var $mOverlayId;

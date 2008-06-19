@@ -1,10 +1,28 @@
 <?php
+/**
+ * @version $Header:
+ *
+ * Copyright (c) 2007 bitweaver.org
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
+ * @author Will <will@wjamesphoto.com>
+ *
+ * @package gmap
+ */
 
+/**
+ * Initialize
+ */
 require_once( LIBERTY_PKG_PATH.'LibertyMime.php' );
 require_once( LIBERTY_PKG_PATH.'LibertyComment.php' );
 
 define( 'BITGMAP_CONTENT_TYPE_GUID', 'bitgmap' );
 
+/**
+ * class BitGmap
+ * 
+ * @package gmap
+ */
 class BitGmap extends LibertyMime {
 
 	var $mGmapId;

@@ -1,4 +1,19 @@
 <?php
+/**
+ * @version $Header: 
+ *
+ * Copyright (c) 2007 bitweaver.org
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
+ * @author Will <will@wjamesphoto.com>
+ * 
+ * @package gmap
+ * @subpackage functions
+ */
+
+/**
+ * required setup
+ */
 	global $gContent;
 	require_once( GMAP_PKG_PATH.'BitGmapMarker.php');
 	require_once( LIBERTY_PKG_PATH.'lookup_content_inc.php' );

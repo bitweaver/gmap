@@ -1,6 +1,6 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_gmap/gmap_history.php,v 1.1 2007/06/01 20:27:31 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/gmap_history.php,v 1.2 2008/06/19 04:09:45 lsces Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
