@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: 
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polylinestyle.php,v 1.13 2008/06/19 04:21:17 lsces Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.

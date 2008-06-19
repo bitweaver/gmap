@@ -1,18 +1,13 @@
 <?php
 /**
- * @version v .0 ?
- * @package gmap
+ * @version  $Header: /cvsroot/bitweaver/_bit_gmap/index.php,v 1.29 2008/06/19 04:21:17 lsces Exp $
  *
- * @author Will <will@wjamesphoto.com>
- *
- *
- * Copyright (c) 2005 bitweaver.org
- * Copyright (c) 2004 bitweaver.org
- * Copyright (c) 2003 tikwiki.org
- * Copyright (c) 2002-2003, Luis Argerich, Garland Foster, Eduardo Polidor, et. al.
+ * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
- *
+ * @author Will <will@wjamesphoto.com>
+ * 
+ * @package gmap
  */
 
 /**
