@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header:
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.127 2008/06/19 04:14:10 lsces Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
