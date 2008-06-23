@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.53 2008/06/19 04:14:10 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.54 2008/06/23 21:56:12 squareing Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -113,7 +113,11 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		global $gBitSystem, $gThumbSizes;
 		$ret = NULL;
 		if( !empty( $pParamHash['image_attachment_path'] )) {
-			$ret = liberty_fetch_thumbnails( $pParamHash['image_attachment_path'], NULL, NULL, FALSE );
+			$thumbHash = array(
+				'mime_image'   => FALSE,
+				'storage_path' => $pParamHash['image_attachment_path']
+			);
+			$ret = liberty_fetch_thumbnails( $thumbHash );
 			$ret['original'] = "/".$pParamHash['image_attachment_path'];
 		}
 		return $ret;
