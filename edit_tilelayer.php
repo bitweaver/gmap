@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_tilelayer.php,v 1.11 2008/06/25 22:21:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_tilelayer.php,v 1.12 2008/06/25 22:58:05 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -62,7 +62,7 @@ if (!empty($_REQUEST["save_tilelayer"])) {
 		$tilelayer['maptype_id'] = $_REQUEST["maptype_id"];
 	}
 	$gBitSmarty->assign_by_ref('tilelayerInfo', $tilelayer);
-	$gBitSystem->display('bitpackage:gmap/edit_tilelayer.tpl', NULL, 'center_only', array( 'display_mode' => 'edit' ));
+	$gBitSystem->display('bitpackage:gmap/edit_tilelayer.tpl', NULL, array( 'format' => 'center_only', 'display_mode' => 'edit' ));
 	die;
 }
 

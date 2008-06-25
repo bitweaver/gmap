@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.11 2008/06/25 22:21:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.12 2008/06/25 22:58:05 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -96,9 +96,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		$gBitSmarty->assign( 'childrenAllowed', $gContent->childrenAllowed() );
 		$gBitSmarty->assign_by_ref('mapInfo', $map);
 		$gBitSmarty->assign_by_ref('mapTypes', $gContent->mMapTypes);
-		$gBitSystem->display('bitpackage:gmap/edit_map.tpl', null, 'center_only', array( 'display_mode' => 'edit' ));
+		$gBitSystem->display('bitpackage:gmap/edit_map.tpl', null, array( 'format' => 'center_only', 'display_mode' => 'edit' ));
 	}
 }else{
-	$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', null, 'center_only', array( 'display_mode' => 'edit' ));
+	$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', null, array( 'format' => 'center_only', 'display_mode' => 'edit' ));
 }
 ?>

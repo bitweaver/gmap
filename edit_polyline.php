@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.23 2008/06/25 22:21:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.24 2008/06/25 22:58:05 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -95,7 +95,7 @@ if (!empty($_REQUEST["save_polyline"])) {
 	}
 	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign_by_ref('polylineInfo', $polyline);
-	$gBitSystem->display('bitpackage:gmap/edit_polyline.tpl', NULL, 'center_only', array( 'display_mode' => 'edit' ));
+	$gBitSystem->display('bitpackage:gmap/edit_polyline.tpl', NULL, array( 'format' => 'center_only', 'display_mode' => 'edit' ));
 	die;
 }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_iconstyle.php,v 1.17 2008/06/25 22:21:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_iconstyle.php,v 1.18 2008/06/25 22:58:05 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -50,7 +50,7 @@ if (!empty($_REQUEST["save_iconstyle"])) {
 		$iconstyle = $gContent->getIconStyle( $_REQUEST["icon_id"] );
 	}
 	$gBitSmarty->assign_by_ref('iconstyleInfo', $iconstyle);
-	$gBitSystem->display('bitpackage:gmap/edit_iconstyle.tpl', NULL, 'center_only', array( 'display_mode' => 'edit' ));
+	$gBitSystem->display('bitpackage:gmap/edit_iconstyle.tpl', NULL, array( 'format' => 'center_only', 'display_mode' => 'edit' ));
 	die;
 }
 
@@ -58,6 +58,6 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
-	$gBitSystem->display('bitpackage:gmap/edit_iconstyle_xml.tpl', null, $format, array( 'display_mode' => 'edit' ));
+	$gBitSystem->display('bitpackage:gmap/edit_iconstyle_xml.tpl', null, array( 'format' => $format, 'display_mode' => 'edit' ));
 }
 ?>	

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_markerset.php,v 1.19 2008/06/25 22:21:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_markerset.php,v 1.20 2008/06/25 22:58:05 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -96,7 +96,7 @@ if (!empty($_REQUEST["save_markerset"])) {
 	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign( 'childrenAllowed', $gContent->childrenAllowed() );
 	$gBitSmarty->assign_by_ref('markersetInfo', $markerset);
-	$gBitSystem->display('bitpackage:gmap/edit_markerset.tpl', NULL, 'center_only', array( 'display_mode' => 'edit' ));
+	$gBitSystem->display('bitpackage:gmap/edit_markerset.tpl', NULL, array( 'format' => 'center_only', 'display_mode' => 'edit' ));
 	die;
 }
 
