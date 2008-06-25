@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/gmap_history.php,v 1.2 2008/06/19 04:09:45 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/gmap_history.php,v 1.3 2008/06/25 22:21:10 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -22,7 +22,7 @@ $gBitSystem->verifyPermission( 'p_gmap_view_history', tra( "Permission denied yo
 
 if( !isset( $_REQUEST["gmap_id"] ) ) {
 	$gBitSmarty->assign( 'msg', tra( "No map indicated" ) );
-	$gBitSystem->display( "error.tpl" );
+	$gBitSystem->display( "error.tpl" , NULL, array( 'display_mode' => 'display' ));
 	die;
 }
 
@@ -49,5 +49,5 @@ $gBitSmarty->assign( 'numPages', $numPages );
 
 // Display the template
 $gBitSmarty->assign_by_ref( 'gContent', $gContent );
-$gBitSystem->display( 'bitpackage:gmap/gmap_history.tpl');
+$gBitSystem->display( 'bitpackage:gmap/gmap_history.tpl', NULL, array( 'display_mode' => 'display' ));
 ?>

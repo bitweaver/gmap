@@ -68,8 +68,8 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	$gBitSmarty->assign_by_ref('list', $listgmaps["data"]);
 	
 	// Display the template
-	$gBitSystem->display('bitpackage:gmap/list_gmaps.tpl', tra('Gmap') );
+	$gBitSystem->display('bitpackage:gmap/list_gmaps.tpl', tra('Gmap') , array( 'display_mode' => 'list' ));
 }else{
-	$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', tra('Gmap') );
+	$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', tra('Gmap') , array( 'display_mode' => 'list' ));
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_copyright.php,v 1.9 2008/06/19 04:21:17 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_copyright.php,v 1.10 2008/06/25 22:21:10 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -61,7 +61,7 @@ if (!empty($_REQUEST["save_copyright"])) {
 		$copyright['copyright_id'] = $_REQUEST["copyright_id"];
 	}
 	$gBitSmarty->assign_by_ref('copyrightInfo', $copyright);
-	$gBitSystem->display('bitpackage:gmap/edit_copyright.tpl', NULL, 'center_only');
+	$gBitSystem->display('bitpackage:gmap/edit_copyright.tpl', NULL, 'center_only', array( 'display_mode' => 'edit' ));
 	die;
 }
 
@@ -73,6 +73,6 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSmarty->assign( 'statusCode', $statusCode);
 	$gBitSmarty->assign( 'XMLContent', $XMLContent);
 	$gBitSystem->setFormatHeader( 'xml' );
-	$gBitSystem->display('bitpackage:gmap/edit_copyright_xml.tpl');
+	$gBitSystem->display('bitpackage:gmap/edit_copyright_xml.tpl', NULL, array( 'display_mode' => 'edit' ));
 }
 ?>

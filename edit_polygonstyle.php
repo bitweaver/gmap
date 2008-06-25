@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygonstyle.php,v 1.11 2008/06/19 04:21:17 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygonstyle.php,v 1.12 2008/06/25 22:21:10 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -50,7 +50,7 @@ if (!empty($_REQUEST["save_polygonstyle"])) {
 		$polygonstyle = $gContent->getPolygonStyle( $_REQUEST["style_id"] );
 	}
 	$gBitSmarty->assign_by_ref('polygonstyleInfo', $polygonstyle);
-	$gBitSystem->display('bitpackage:gmap/edit_polygonstyle.tpl', NULL, 'center_only');
+	$gBitSystem->display('bitpackage:gmap/edit_polygonstyle.tpl', NULL, 'center_only', array( 'display_mode' => 'edit' ));
 	die;
 }
 
@@ -59,6 +59,6 @@ if ( count($gContent->mErrors) > 0 ){
 	$gBitSystem->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
-	$gBitSystem->display('bitpackage:gmap/edit_polygonstyle_xml.tpl', null, $format);
+	$gBitSystem->display('bitpackage:gmap/edit_polygonstyle_xml.tpl', null, $format, array( 'display_mode' => 'edit' ));
 }
 ?>	

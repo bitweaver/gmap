@@ -1,6 +1,6 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_gmap/marker_history.php,v 1.2 2008/06/19 04:09:45 lsces Exp $
+ * $Header: /cvsroot/bitweaver/_bit_gmap/marker_history.php,v 1.3 2008/06/25 22:21:10 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -23,7 +23,7 @@ $gBitSystem->verifyPermission( 'p_marker_view_history', tra( "Permission denied 
 
 if( !isset( $_REQUEST["marker_id"] ) ) {
 	$gBitSmarty->assign( 'msg', tra( "No marker indicated" ) );
-	$gBitSystem->display( "error.tpl" );
+	$gBitSystem->display( "error.tpl" , NULL, array( 'display_mode' => 'display' ));
 	die;
 }
 
@@ -50,5 +50,5 @@ $gBitSmarty->assign( 'numPages', $numPages );
 
 // Display the template
 $gBitSmarty->assign_by_ref( 'gContent', $gContent );
-$gBitSystem->display( 'bitpackage:gmap/marker_history.tpl');
+$gBitSystem->display( 'bitpackage:gmap/marker_history.tpl', NULL, array( 'display_mode' => 'display' ));
 ?>

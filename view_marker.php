@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/view_marker.php,v 1.9 2008/06/19 04:21:17 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/view_marker.php,v 1.10 2008/06/25 22:21:10 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -50,5 +50,5 @@ if( $gContent->isCommentable() ) {
 
 $gBitSmarty->assign_by_ref('marker', $gContent->mInfo);
 
-$gBitSystem->display('bitpackage:gmap/view_marker.tpl', NULL, 'center_only');
+$gBitSystem->display('bitpackage:gmap/view_marker.tpl', NULL, 'center_only', array( 'display_mode' => 'display' ));
 ?>
