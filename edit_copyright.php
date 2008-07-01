@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_copyright.php,v 1.12 2008/07/01 14:26:59 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_copyright.php,v 1.13 2008/07/01 15:43:19 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -35,18 +35,21 @@ $format = 'xml';
 $XMLContent = "";
 $statusCode = 401;
 if (!empty($_REQUEST["save_copyright"])) {
+	$gBitUser->verifyTicket();
 	if( $result = $gContent->storeCopyright( $_REQUEST ) ) {
 		$statusCode = 200;
 		$gBitSmarty->assign_by_ref('copyrightInfo', $result );
 	}
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_copyright"])) {
+	$gBitUser->verifyTicket();
 	if( $gContent->removeCopyrightFromTilelayer( $_REQUEST ) ) {
 		$gBitSmarty->assign('removeSucces', true);
 	}else{
 		$XMLContent = tra( "Sorry, there was an unknown error trying to remove the copyright." );
 	}
 }elseif (!empty($_REQUEST["expunge_copyright"])) {
+	$gBitUser->verifyTicket();
 	if( $gContent->expungeCopyright( $_REQUEST ) ) {
 		$statusCode = 200;
 		$gBitSmarty->assign('expungeSucces', true);

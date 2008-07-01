@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.25 2008/07/01 14:26:59 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.26 2008/07/01 15:43:19 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -57,6 +57,7 @@ $format = 'xml';
 $XMLContent = "";
 $statusCode = 401;
 if (!empty($_REQUEST["save_polyline"])) {
+	$gBitUser->verifyTicket();
     if( $gContent->store( $_REQUEST ) ) {		
 		$statusCode = 200;
 		if ( $gContent->hasAdminPermission() ){
@@ -67,6 +68,7 @@ if (!empty($_REQUEST["save_polyline"])) {
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_polyline"])) {
 	if ( $gContent->hasAdminPermission() ){
+		$gBitUser->verifyTicket();
 		if( $gContent->removeFromSet( $_REQUEST ) ) {
 			$statusCode = 200;
 			$gBitSmarty->assign('removeSucces', true);
@@ -78,6 +80,7 @@ if (!empty($_REQUEST["save_polyline"])) {
 	}
 }elseif (!empty($_REQUEST["expunge_polyline"])) {
 	if ( $gContent->hasAdminPermission() ){
+		$gBitUser->verifyTicket();
 		if( $gContent->expunge() ) {
 			$statusCode = 200;
 			$gBitSmarty->assign('expungeSucces', true);

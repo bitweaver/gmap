@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.13 2008/07/01 14:26:59 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.14 2008/07/01 15:43:19 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -40,6 +40,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	
 	//Check if this is a update or a new map
 	if (!empty($_REQUEST["save_map"])) {
+		$gBitUser->verifyTicket();
 		if( $gContent->store( $_REQUEST ) ) {
 			if ( $gContent->hasAdminPermission() ){
 				$gContent->setEditSharing( $_REQUEST );
