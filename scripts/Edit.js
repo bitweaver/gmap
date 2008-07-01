@@ -1464,7 +1464,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Removing Marker...");
 			this._setIdRef = f.set_id.value;
 			this.editMarkerId = f.marker_id.value;
-			var str = "edit_marker.php?set_id=" + this._setIdRef + "&marker_id=" + this.editMarkerId + "&remove_marker=true";
+			var str = "edit_marker.php?set_id=" + this._setIdRef + "&marker_id=" + this.editMarkerId + "&remove_marker=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) );
 		}
 	 },
@@ -1474,7 +1474,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Deleting Marker...");
 			this._setIdRef = f.set_id.value;
 			this.editMarkerId = f.marker_id.value;
-			var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true";
+			var str = "edit_marker.php?marker_id=" + this.editMarkerId + "&expunge_marker=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarker, this) ); 
 		}
 	 },
@@ -1490,7 +1490,7 @@ BitMap.Edit.prototype = {
 	 	if (confirm("Are you sure you want to remove \nthe markerset \""+f.title.value+"\" from this map?")){
 			this.showSpinner("Removing Markerset...");
 			this._setIdRef = f.set_id.value;
-			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true";
+			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_markerset=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) );
 		}
 	 },
@@ -1499,7 +1499,7 @@ BitMap.Edit.prototype = {
 	 	if (confirm("Are you sure you want to delete \nthe markerset \""+f.title.value+"\"? \n\nThis can not be undone!")){
 			this.showSpinner("Deleting Markerset...");
 			this._setIdRef = f.set_id.value;
-			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true";
+			var str = "edit_markerset.php?" + "set_id=" + f.set_id.value + "&expunge_markerset=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMarkerSet, this) );
 		}
 	 },
@@ -1527,7 +1527,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Removing Maptype...");
 			this.editObjectN = f.array_n.value;
 			this.editSetId = f.maptype_id.value;
-			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true";
+			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&gmap_id=" + this.Map.id + "&remove_maptype=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) );
 		}
 	 },
@@ -1537,7 +1537,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Deleting Maptype...");
 			this.editObjectN = f.array_n.value;
 			this.editSetId = f.maptype_id.value;
-			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true";
+			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) );
 		}
 	 },
@@ -1553,7 +1553,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Removing Tilelayer...");
 			this.editSetId = f.set_id.value;
 			this.editTilelayerId = f.tilelayer_id.value;
-			var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true";
+			var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) );
 		}
 	 },
@@ -1563,7 +1563,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Deleting Tilelayer...");
 			this.editSetId = f.set_id.value;
 			this.editTilelayerId = f.tilelayer_id.value;
-			var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true";
+			var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) );
 		}
 	 },
@@ -1579,7 +1579,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Removing Copyright...");
 			this.editSetId = f.set_id.value;
 			this.editCopyrightId = f.copyright_id.value;
-			var str = "edit_copyright.php?set_id=" + this.editSetId + "&copyright_id=" + this.editCopyrightId + "&remove_copyright=true";
+			var str = "edit_copyright.php?set_id=" + this.editSetId + "&copyright_id=" + this.editCopyrightId + "&remove_copyright=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) );
 		}
 	 },
@@ -1589,7 +1589,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Deleting Copyright...");
 			this.editSetId = f.set_id.value;
 			this.editCopyrightId = f.copyright_id.value;
-			var str = "edit_copyright.php?copyright_id=" + this.editCopyrightId + "&expunge_copyright=true";
+			var str = "edit_copyright.php?copyright_id=" + this.editCopyrightId + "&expunge_copyright=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveCopyright, this) );
 		}
 	 },
@@ -1607,7 +1607,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Removing Polyline...");
 			this._setIdRef = f.set_id.value;
 			this.editPolylineId = f.polyline_id.value;
-			var str = "edit_polyline.php?set_id=" + this._setIdRef + "&polyline_id=" + this.editPolylineId + "&remove_polyline=true";
+			var str = "edit_polyline.php?set_id=" + this._setIdRef + "&polyline_id=" + this.editPolylineId + "&remove_polyline=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolyline, this) ); 
 		}
 	 },
@@ -1617,7 +1617,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Deleting Polyline...");
 			this._setIdRef = f.set_id.value;
 			this.editPolylineId = f.polyline_id.value;
-			var str = "edit_polyline.php?polyline_id=" + this.editPolylineId + "&expunge_polyline=true";
+			var str = "edit_polyline.php?polyline_id=" + this.editPolylineId + "&expunge_polyline=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolyline, this) );
 		}
 	 },
@@ -1633,7 +1633,7 @@ BitMap.Edit.prototype = {
 	 	if (confirm("Are you sure you want to remove \nthe polylineset \""+f.title.value+"\" from this map?")){
 			this.showSpinner("Removing Polylineset...");
 			this._setIdRef = f.set_id.value;
-			var str = "edit_polylineset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polylineset=true";
+			var str = "edit_polylineset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polylineset=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolylineSet, this) );
 		}
 	 },
@@ -1642,7 +1642,7 @@ BitMap.Edit.prototype = {
 	 	if (confirm("Are you sure you want to delete \nthe polylineset \""+f.title.value+"\"? \n\nThis can not be undone!")){
 			this.showSpinner("Deleting Polylineset...");
 			this._setIdRef = f.set_id.value;
-			var str = "edit_polylineset.php?" + "set_id=" + f.set_id.value + "&expunge_polylineset=true";
+			var str = "edit_polylineset.php?" + "set_id=" + f.set_id.value + "&expunge_polylineset=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolylineSet, this) ); 
 		}
 	 },
@@ -1666,7 +1666,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Removing Polygon...");
 			this._setIdRef = f.set_id.value;
 			this.editPolygonId = f.polygon_id.value;
-			var str = "edit_polygon.php?set_id=" + this._setIdRef + "&polygon_id=" + this.editPolygonId + "&remove_polygon=true";
+			var str = "edit_polygon.php?set_id=" + this._setIdRef + "&polygon_id=" + this.editPolygonId + "&remove_polygon=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygon, this) ); 
 		}
 	 },
@@ -1676,7 +1676,7 @@ BitMap.Edit.prototype = {
 			this.showSpinner("Deleting Polygon...");
 			this._setIdRef = f.set_id.value;
 			this.editPolygonId = f.polygon_id.value;
-			var str = "edit_polygon.php?polygon_id=" + this.editPolygonId + "&expunge_polygon=true";
+			var str = "edit_polygon.php?polygon_id=" + this.editPolygonId + "&expunge_polygon=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygon, this) ); 
 		}
 	 },
@@ -1692,7 +1692,7 @@ BitMap.Edit.prototype = {
 	 	if (confirm("Are you sure you want to remove \nthe polygonset \""+f.title.value+"\" from this map?")){
 			this.showSpinner("Removing Polygonset...");
 			this._setIdRef = f.set_id.value;
-			var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polygonset=true";
+			var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&gmap_id=" + this.Map.id + "&remove_polygonset=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) ); 
 		}
 	 },
@@ -1701,7 +1701,7 @@ BitMap.Edit.prototype = {
 	 	if (confirm("Are you sure you want to delete \nthe polygonset \""+f.title.value+"\"? \n\nThis can not be undone!")){
 			this.showSpinner("Deleting Polygonset...");
 			this._setIdRef = f.set_id.value;
-			var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&expunge_polygonset=true";
+			var str = "edit_polygonset.php?" + "set_id=" + f.set_id.value + "&expunge_polygonset=true"+"&tk="+bitTk;
 			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemovePolygonSet, this) ); 
 		}
 	 },
