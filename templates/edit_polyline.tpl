@@ -1,8 +1,9 @@
 {strip}
 {form action="javascript:;" enctype="multipart/form-data" id="edit-polyline-form"}
 	<input name="save_polyline" type="hidden" value="true" />
-	<input name="set_id" type="hidden" size="3" value="{$polylineInfo.set_id}" />
-	<input name="polyline_id" type="hidden" size="3" value="{$polylineInfo.polyline_id}" />
+	<input name="content_id" type="hidden" value="{$polylineInfo.content_id}" />
+	<input name="set_id" type="hidden" value="{$polylineInfo.set_id}" />
+	<input name="polyline_id" type="hidden" value="{$polylineInfo.polyline_id}" />
 	<div class="row">
 		{formlabel label="Name" for="name"}
 			{forminput}

@@ -1,8 +1,9 @@
 {strip}
 {form action="javascript:;" enctype="multipart/form-data" id="edit-polygon-form"}
 	<input name="save_polygon" type="hidden" value="true" />
-	<input name="set_id" type="hidden" size="3" value="{$polygonInfo.set_id}" />
-	<input name="polygon_id" type="hidden" size="3" value="{$polygonInfo.polygon_id}" />
+	<input name="content_id" type="hidden" value="{$polygonInfo.content_id}" />
+	<input name="set_id" type="hidden" value="{$polygonInfo.set_id}" />
+	<input name="polygon_id" type="hidden" value="{$polygonInfo.polygon_id}" />
 	<div class="row">
 		{formlabel label="Name" for="name"}
 			{forminput}

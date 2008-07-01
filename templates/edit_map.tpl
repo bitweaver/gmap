@@ -2,8 +2,9 @@
 {form action="javascript:;" enctype="multipart/form-data" id="edit-map-form"}
 {jstabs}
 	{jstab title="Map Properties"}
-		<input name="save_map" type="hidden" size="25" value="true" />
-		<input name="gmap_id" type="hidden" size="25" value="{$mapInfo.gmap_id}" />
+		<input name="save_map" type="hidden" value="true" />
+		<input name="content_id" type="hidden" value="{$mapInfo.content_id}" />
+		<input name="gmap_id" type="hidden" value="{$mapInfo.gmap_id}" />
 		<div class="row">
 			{formlabel label="Title" for="title"}
 			{forminput}

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.37 2008/07/01 15:43:19 wjames5 Exp $ 
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.38 2008/07/01 20:57:59 wjames5 Exp $ 
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -94,6 +94,12 @@ if (!empty($_REQUEST["save_marker"])) {
 		$XMLContent = tra( "You do not have the required permission to delete this marker." );
 	}
 }else{
+	/* HACKTASTIC!
+	 * if we're just ajaxing up the form then turn this off - hacking around trouble at top of liberty::edit_storage_list.tpl
+	 * we need the wrapper div when just ajaxing in the form. the check in the tpl is not sensative enough.
+	 */
+	$_SERVER['HTTP_X_REQUESTED_WITH'] = NULL;
+
 	$gContent->invokeServices( 'content_edit_function' );
 	$marker = $gContent->mInfo;
 	if (isset($_REQUEST["set_id"])){

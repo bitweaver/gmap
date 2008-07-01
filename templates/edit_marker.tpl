@@ -1,8 +1,10 @@
 {strip}
-{form action="javascript:;" enctype="multipart/form-data" id="edit-marker-form"}
+{assign var="formid" value="edit-marker-form"}
+{form action="javascript:;" enctype="multipart/form-data" id=$formid}
 	{jstabs}
 		{jstab title="Marker Properties"}
 			<input name="save_marker" type="hidden" value="true" />
+			<input name="content_id" type="hidden" value="{$markerInfo.content_id}" />
 			<input name="marker_id" type="hidden" value="{$markerInfo.marker_id}" />
 			<input name="set_id" type="hidden" value="{$markerInfo.set_id}" />
 
@@ -78,13 +80,14 @@
 				<input type="button" name="save_marker_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarker( this.form );" />
 			</div>
 
-			{include file="bitpackage:liberty/edit_storage_list.tpl" primary_label="Marker Image"} 
+			{* include file="bitpackage:liberty/edit_storage_list.tpl" primary_label="Marker Image" *} 
+			{* include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile=content_edit_tab_tpl primary_label="Marker Image" *}
 		{/jstab}
 
 		{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
 			{jstab title="Attachments"}
 				{legend legend="Attachments"}
-					{include file="bitpackage:liberty/edit_storage.tpl"}
+					{include file="bitpackage:liberty/edit_storage.tpl" formid=$formid}
 				{/legend}
 			{/jstab}
 		{/if}

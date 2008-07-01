@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.40 2008/06/25 22:21:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.41 2008/07/01 20:57:59 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -53,6 +53,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 
 	//force ajax attachments inclusion - we'll need it since we dont load up the js with the various forms
 	$gBitThemes->loadJavascript( LIBERTY_PKG_PATH.'scripts/LibertyAttachment.js', TRUE );
+	$gBitThemes->loadJavascript( GMAP_PKG_PATH.'scripts/LibertyAttachment.js', TRUE );
 
 	// Display the template
 	$gBitSystem->display( 'bitpackage:gmap/edit_gmap.tpl', tra('Gmap') , array( 'display_mode' => 'edit' ));    		

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.13 2008/06/19 04:16:31 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.14 2008/07/01 20:57:59 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -93,7 +93,7 @@ class BitGmapOverlayBase extends LibertyMime {
 		if( $this->verify( $pParamHash ) ) {
 			$overlayKey = $this->mOverlayType.'_id';
 			$this->mDb->StartTrans();
-			if( parent::store( $pParamHash ) ) {
+			if( LibertyMime::store( $pParamHash ) ) {
 				if( $this->mOverlayId ) {
 					if ( !empty($pParamHash['overlay_store']) ){
 						// store the posted changes
