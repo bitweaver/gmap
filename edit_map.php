@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.15 2008/07/01 16:33:06 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.16 2008/07/01 22:18:45 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -55,6 +55,12 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 			$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 		}
 	}else{
+		/* HACKTASTIC!
+		 * if we're just ajaxing up the form then turn this off - hacking around trouble at top of liberty::edit_storage_list.tpl
+		 * we need the wrapper div when just ajaxing in the form. the check in the tpl is not sensative enough.
+		 */
+		$_SERVER['HTTP_X_REQUESTED_WITH'] = NULL;
+
 		$gContent->invokeServices( 'content_edit_function' );
 		
 		$map = $gContent->mInfo;

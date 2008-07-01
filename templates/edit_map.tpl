@@ -1,5 +1,6 @@
 <!--map editing form -->
-{form action="javascript:;" enctype="multipart/form-data" id="edit-map-form"}
+{assign var="formid" value="edit-map-form"}
+{form action="javascript:;" enctype="multipart/form-data" id=$formid}
 {jstabs}
 	{jstab title="Map Properties"}
 		<input name="save_map" type="hidden" value="true" />
@@ -161,7 +162,7 @@
 		{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
 			{jstab title="Attachment Browser"}
 				{legend legend="Attachment Browser"}
-					{include file="bitpackage:liberty/edit_storage.tpl"}
+					{include file="bitpackage:liberty/edit_storage.tpl" formid=$formid}
 				{/legend}
 			{/jstab}
 		{/if}
