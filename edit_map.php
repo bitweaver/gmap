@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.14 2008/07/01 15:43:19 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.15 2008/07/01 16:33:06 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -49,7 +49,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 			$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
 			$gContent->load();
 			$gBitSmarty->assign_by_ref('mapInfo', $gContent->mInfo);
-			$gBitSystem->display('bitpackage:gmap/edit_map_xml.tpl', null, 'xml', array( 'display_mode' => 'edit' ));
+			$gBitSystem->display('bitpackage:gmap/edit_map_xml.tpl', null, array( 'format' => 'xml', 'display_mode' => 'edit' ));
 		}else{
 			$gBitThemes->setFormatHeader( 'center_only' );
 			$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
