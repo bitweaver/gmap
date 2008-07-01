@@ -4,15 +4,15 @@
  {/if}
  {if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
 	{if $view_map }
-		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Display.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}
 	{if $simple_map }
-		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Display.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}
 	{if $map_list }
-		<script src="{$smarty.const.GMAP_PKG_URL}templates/List.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}scripts/List.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/yahoo.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/dom.js" type="text/javascript"></script>
@@ -21,12 +21,12 @@
 		<link type="text/css" rel="stylesheet" href="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/calendar.css" />
 	{/if}
 	{if $edit_map }
-		<script src="{$smarty.const.GMAP_PKG_URL}templates/Utl.JSCSS.js" type="text/javascript"></script>
-		<script src="{$smarty.const.GMAP_PKG_URL}templates/Display.js" type="text/javascript"></script>
-		<script src="{$smarty.const.GMAP_PKG_URL}templates/Edit.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Utl.JSCSS.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Display.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Edit.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}
-		<script src="{$smarty.const.GMAP_PKG_URL}templates/Utl.MapResize.js" type="text/javascript"></script>
+		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Utl.MapResize.js" type="text/javascript"></script>
 
 	<style type="text/css">
 		{if $simple_map}
