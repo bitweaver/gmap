@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.35 2008/06/25 22:58:05 spiderr Exp $ 
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.36 2008/07/01 14:26:59 wjames5 Exp $ 
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -22,7 +22,7 @@ $gBitSystem->verifyPackage('gmap' );
 // Get the marker for specified gmarker_id
 require_once(GMAP_PKG_PATH.'lookup_marker_inc.php' );
 
-$gBitSystem->setFormatHeader( 'center_only' );
+$gBitThemes->setFormatHeader( 'center_only' );
 
 // Now check permissions to access the marker
 if( $gContent->isValid() ) {
@@ -108,7 +108,7 @@ if ( count($gContent->mErrors) > 0 ){
 }else{
 	$gBitSmarty->assign( 'statusCode', $statusCode);
 	$gBitSmarty->assign( 'XMLContent', $XMLContent);
-	$gBitSystem->setFormatHeader( 'xml' );
+	$gBitThemes->setFormatHeader( 'xml' );
 	$gBitSystem->display('bitpackage:gmap/edit_marker_xml.tpl', NULL, array( 'display_mode' => 'edit' ));
 }
 ?>

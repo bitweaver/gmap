@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_markerset.php,v 1.20 2008/06/25 22:58:05 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_markerset.php,v 1.21 2008/07/01 14:26:59 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -22,7 +22,7 @@ $gBitSystem->verifyPackage('gmap' );
 // Get the markerset for specified set_id
 require_once(GMAP_PKG_PATH.'lookup_markerset_inc.php' );
 
-$gBitSystem->setFormatHeader( 'center_only' );
+$gBitThemes->setFormatHeader( 'center_only' );
 
 // Now check permissions to access the markerset
 if( $gContent->isValid() ) {
@@ -101,12 +101,12 @@ if (!empty($_REQUEST["save_markerset"])) {
 }
 
 if ( count($gContent->mErrors) > 0 ){
-	$gBitSystem->setFormatHeader( 'center_only' );
+	$gBitThemes->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
 	$gBitSmarty->assign( 'statusCode', $statusCode);
 	$gBitSmarty->assign( 'XMLContent', $XMLContent);
-	$gBitSystem->setFormatHeader( 'xml' );
+	$gBitThemes->setFormatHeader( 'xml' );
 	$gBitSystem->display('bitpackage:gmap/edit_markerset_xml.tpl', NULL, array( 'display_mode' => 'edit' ));
 }
 ?>	

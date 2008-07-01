@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_maptype.php,v 1.16 2008/06/25 22:58:05 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_maptype.php,v 1.17 2008/07/01 14:26:59 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -65,7 +65,7 @@ die;
 
 
 if ( count($gContent->mErrors) > 0 ){
-	$gBitSystem->setFormatHeader( 'center_only' );
+	$gBitThemes->setFormatHeader( 'center_only' );
 	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 }else{
 	$gBitSystem->display('bitpackage:gmap/edit_maptype_xml.tpl', null, array( 'format' => $format, 'display_mode' => 'edit' ));
