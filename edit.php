@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.41 2008/07/01 20:57:59 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.42 2008/07/02 21:07:47 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -45,6 +45,8 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		$gBitSmarty->assign_by_ref( 'polylinestylesInfo', $gContent->mMapPolylineStyles );
 	}
 	
+	$gContent->invokeServices( 'content_edit_function' );
+
 	//set onload function in body
 	$gBitSystem->mOnload[] = 'BitMap.EditMap();';
 	
