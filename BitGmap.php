@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.128 2008/07/02 19:09:29 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.129 2008/07/02 20:46:15 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1380,6 +1380,7 @@ function gmap_content_edit( &$pObject ) {
 	global $gBitSmarty;
 	global $gBitSystem;
 	if( $gBitSystem->isFeatureActive('gmap_api_key') && $gBitSystem->isFeatureActive( 'gmap_map_'.$pObject->getContentType() ) ) {
+		$pObject->mInfo['zoom'] = $pObject->getPreference( 'gmap_zoom', NULL );
 		$gBitSmarty->assign('geo_edit_serv', TRUE);
 		$gBitSystem->mOnload[] = 'BitMap.EditContent();';
 	}

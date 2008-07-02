@@ -34,7 +34,9 @@ BitMap.DisplayList = function(){
 
 BitMap.EditContent = function(){
   BitMap.Initialize(400);
-  BitMap.MapData[0].Map.addLatLngCapture();
+  var MD = BitMap.MapData[0];
+  MD.Map.map.addOverlay(new GMarker( new GLatLng( MD.lat, MD.lng ) ));
+  MD.Map.addLatLngCapture();
 };
 
 
