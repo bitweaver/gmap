@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/map_content.php,v 1.24 2008/06/25 22:21:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/map_content.php,v 1.25 2008/07/02 19:09:29 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -35,6 +35,7 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 			$dataHash['display_url'] = !empty($dataHash['display_url'])?$dataHash['display_url']:$content->getDisplayUrl();
 			$dataHash['creator_user_id'] = !empty($dataHash['creator_user_id'])?$dataHash['creator_user_id']:$dataHash['user_id'];
 			$dataHash['content_description'] = !empty($dataHash['content_description'])?$dataHash['content_description']:$content->mType['content_description'];
+			$dataHash['gmap_zoom'] = $content->getPreference( 'gmap_zoom' );
 //			$dataHash['real_name'] = !empty($dataHash['real_name'])?$dataHash['real_name']:$dataHash['creator_user'];
 			$dataHash['creator_real_name'] = !empty($dataHash['creator_real_name'])?$dataHash['creator_real_name']:$dataHash['real_name'];
 			if (empty($dataHash['modifier_real_name'])){

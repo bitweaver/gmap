@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.127 2008/06/19 04:14:10 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.128 2008/07/02 19:09:29 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1396,5 +1396,14 @@ function gmap_content_preview( &$pObject) {
 			$pObject->mInfo['lng'] = $_REQUEST['geo']['lng'];
 		}
 	}
+}
+function gmap_content_store( &$pObject, &$pParamHash ) {
+	global $gBitSystem;
+	$errors = NULL;
+	// If a content access system is active, let's call it
+	if( $gBitSystem->isFeatureActive('gmap_api_key') && $gBitSystem->isFeatureActive( 'gmap_map_'.$pObject->getContentType() ) ) {
+		$pObject->storePreference( 'gmap_zoom', !empty( $_REQUEST["gmap_zoom"] ) && is_numeric( $_REQUEST["gmap_zoom"] ) ? $_REQUEST["gmap_zoom"] : NULL );
+	}
+	return( $errors );
 }
 ?>
