@@ -97,6 +97,13 @@ BitMap.Edit.prototype = {
 		//setTimeout("this.SPINNER.style.display='none'", 1000);
 		this.SPINNER.style.display="none";
 	},
+
+	"getNodeValue": function( node ){
+		if( node != null ){
+			return node.nodeValue;
+		}
+		return null;
+	},
 	
 	// for sorting arrays
 	"sortOn": function(a,b){ 
@@ -177,9 +184,9 @@ BitMap.Edit.prototype = {
 	},
 
 	"editMapCallback": function(rslt){
-		var mapForm = $('map-form');
-	    mapForm.innerHTML = rslt.responseText;
-	    this.executeJavascript(mapForm);
+		var f = $('map-form');
+	    f.innerHTML = rslt.responseText;
+	    this.executeJavascript(f);
 		BitMap.show('map-form');
 	},
 	
@@ -397,9 +404,9 @@ BitMap.Edit.prototype = {
 	},
 	
 	"editMarkerCallback": function(rslt){
-		var markerForm = $('marker-form');
-		markerForm.innerHTML = rslt.responseText;
-		this.executeJavascript($('markerForm'));
+		var f = $('marker-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
 		setupAllTabs();
 		BitMap.show('edit-markers-table');		
  	},
@@ -1055,9 +1062,9 @@ BitMap.Edit.prototype = {
 	},
 	
 	"editPolylineCallback": function(rslt){
-		var polylineForm = $('polyline-form');
-		polylineForm.innerHTML = rslt.responseText;
-		this.executeJavascript($('polylineForm'));
+		var f = $('polyline-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
 		setupAllTabs();
 		BitMap.show('edit-polylines-table');		
  	},
@@ -1354,9 +1361,9 @@ BitMap.Edit.prototype = {
 	},
 	
 	"editPolygonCallback": function(rslt){
-		var polygonForm = $('polygon-form');
-		polygonForm.innerHTML = rslt.responseText;
-		this.executeJavascript($('polygonForm'));
+		var f = $('polygon-form');
+		f.innerHTML = rslt.responseText;
+		this.executeJavascript(f);
 		setupAllTabs();
 		BitMap.show('edit-polygons-table');		
  	},
@@ -1723,16 +1730,16 @@ BitMap.Edit.prototype = {
 
 		//shorten var names
 		var id = xml.getElementsByTagName('gmap_id');
-		this.Map.id = id[0].firstChild.nodeValue;
+		this.Map.id = this.getNodeValue( id[0].firstChild );
 		var t = xml.getElementsByTagName('title');
-		this.Map.title = t[0].firstChild.nodeValue;
+		this.Map.title = this.getNodeValue( t[0].firstChild );
 		var d = xml.getElementsByTagName('description');
-		this.Map.description = d[0].firstChild.nodeValue;				
+		this.Map.description = this.getNodeValue( d[0].firstChild );			
 		var dt = xml.getElementsByTagName('data');
 		if ( dt[0].hasChildNodes() ){
-			this.Map.data = dt[0].firstChild.nodeValue;
+			this.Map.data = this.getNodeValue( dt[0].firstChild );
 			var pdt = xml.getElementsByTagName('parsed_data');
-			this.Map.parsed_data = pdt[0].firstChild.nodeValue;
+			this.Map.parsed_data = this.getNodeValue( pdt[0].firstChild );
 		}else{
 			this.Map.data = "";
 			this.Map.parsed_data = "";
@@ -1924,9 +1931,9 @@ BitMap.Edit.prototype = {
 		var ln = xml.getElementsByTagName('lng');
 		m.lng = parseFloat(ln[0].firstChild.nodeValue);
 		var dt = xml.getElementsByTagName('data');
-		m.data = dt[0].firstChild.nodeValue;			
+		m.data = this.getNodeValue( dt[0].firstChild );			
 		var pdt = xml.getElementsByTagName('parsed_data');
-		m.parsed_data = pdt[0].firstChild.nodeValue;
+		m.parsed_data = this.getNodeValue( pdt[0].firstChild );
 		var l = xml.getElementsByTagName('label');
 		m.label_data = ( l[0].firstChild != null )?l[0].firstChild.nodeValue:'';
 		var pl = xml.getElementsByTagName('parsed_label');
@@ -1955,9 +1962,9 @@ BitMap.Edit.prototype = {
 		var id = xml.getElementsByTagName('set_id');			
 		s.set_id = parseInt(id[0].firstChild.nodeValue);
 		var nm = xml.getElementsByTagName('name');
-		s.name = nm[0].firstChild.nodeValue;
+		s.name = this.getNodeValue( nm[0].firstChild );
 		var dc = xml.getElementsByTagName('description');
-		s.description = dc[0].firstChild.nodeValue;
+		s.description = this.getNodeValue( dc[0].firstChild );
 		var sy = xml.getElementsByTagName('style_id');
 		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
 		var ic = xml.getElementsByTagName('icon_id');
@@ -2077,7 +2084,7 @@ BitMap.Edit.prototype = {
 		var id = xml.getElementsByTagName('style_id');			
 		s.style_id = parseInt( id[0].firstChild.nodeValue );
 		var nm = xml.getElementsByTagName('name');			
-		s.name = nm[0].firstChild.nodeValue;
+		s.name = this.getNodeValue( nm[0].firstChild );
 		var tp = xml.getElementsByTagName('marker_style_type');
 		s.marker_style_type = parseInt( tp[0].firstChild.nodeValue );
 		var lho = xml.getElementsByTagName('label_hover_opacity');			
@@ -2238,17 +2245,17 @@ BitMap.Edit.prototype = {
 		var id = xml.getElementsByTagName('maptype_id');			
 		m.maptype_id = parseInt( id[0].firstChild.nodeValue );
 		var nm = xml.getElementsByTagName('name');			
-		m.name = nm[0].firstChild.nodeValue;
+		m.name = this.getNodeValue( nm[0].firstChild );
 		var snm = xml.getElementsByTagName('shortname');			
-		m.shortname = snm[0].firstChild.nodeValue;
+		m.shortname = this.getNodeValue( snm[0].firstChild );
 		var ds = xml.getElementsByTagName('description');			
-		m.description = ds[0].firstChild.nodeValue;	  		
+		m.description = this.getNodeValue( ds[0].firstChild );	  		
 		var minz = xml.getElementsByTagName('minzoom');
 		m.minzoom = parseInt( minz[0].firstChild.nodeValue );
 		var mz = xml.getElementsByTagName('maxzoom');
 		m.maxzoom = parseInt( mz[0].firstChild.nodeValue );
 		var er = xml.getElementsByTagName('errormsg');			
-		m.errormsg = er[0].firstChild.nodeValue;
+		m.errormsg = this.getNodeValue( er[0].firstChild );
 	},
 	 
 	"updateRemoveMaptype": function(rslt){
@@ -2380,9 +2387,9 @@ BitMap.Edit.prototype = {
 		var minz = xml.getElementsByTagName('copyright_minzoom');
 		c.copyright_minzoom = parseInt( minz[0].firstChild.nodeValue );
 		var bds = xml.getElementsByTagName('bounds');
-		c.bounds = bds[0].firstChild.nodeValue;
+		c.bounds = this.getNodeValue( bds[0].firstChild );
 		var nt = xml.getElementsByTagName('notice');
-		c.notice = nt[0].firstChild.nodeValue;
+		c.notice = this.getNodeValue( nt[0].firstChild );
 	},
 	
 	"updateRemoveCopyright":function(){
@@ -2457,7 +2464,7 @@ BitMap.Edit.prototype = {
 		var nm = xml.getElementsByTagName('name');
 		s.name = nm[0].firstChild.nodeValue;
 		var dc = xml.getElementsByTagName('description');
-		s.description = dc[0].firstChild.nodeValue;
+		s.description = this.getNodeValue( dc[0].firstChild );
 		var sy = xml.getElementsByTagName('style_id');
 		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
 
@@ -2669,7 +2676,7 @@ BitMap.Edit.prototype = {
 		var nm = xml.getElementsByTagName('name');
 		s.name = nm[0].firstChild.nodeValue;
 		var dc = xml.getElementsByTagName('description');
-		s.description = dc[0].firstChild.nodeValue;
+		s.description = this.getNodeValue( dc[0].firstChild );
 		var sy = xml.getElementsByTagName('style_id');
 		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
 		var plsy = xml.getElementsByTagName('polylinestyle_id');
