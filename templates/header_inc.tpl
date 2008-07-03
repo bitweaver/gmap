@@ -26,13 +26,13 @@
 		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Edit.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 		<script type="text/javascript">
-		{if $connect_group_content_id}
-		LibertyAjaxServices = {ldelim}
-			"liberty_edit_hash":{ldelim}
+		LibertyServices = {ldelim}
+			"ajax_edit_params":{ldelim}
+				{if $connect_group_content_id}
 				"connect_group_content_id":{$connect_group_content_id}
+				{/if}
 			{rdelim}
 		{rdelim};
-		{/if}
 		</script>
 	{/if}
 		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Utl.MapResize.js" type="text/javascript"></script>

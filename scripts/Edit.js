@@ -51,6 +51,9 @@ BitMap.Edit = function(){
 	this.bModPData; 
 	this.bModMLat;
 	this.bModMLng;
+	//for convenience
+	this.LS = {};
+	this.LS.aep = LibertyServices.ajax_edit_params;
 }
 
 
@@ -180,7 +183,7 @@ BitMap.Edit.prototype = {
 	 *******************/
 	
 	"editMap": function(id){
-		doSimpleXMLHttpRequest("edit_map.php", {gmap_id:id}).addCallback( bind(this.editMapCallback, this) ); 
+		doSimpleXMLHttpRequest("edit_map.php", merge({gmap_id:id}, this.LS.aep) ).addCallback( bind(this.editMapCallback, this) ); 
 	},
 
 	"editMapCallback": function(rslt){
@@ -289,7 +292,7 @@ BitMap.Edit.prototype = {
 		this.toggleMenuOptsStyles( "markerset", this.Map.markersets.length, i, 'edit-selected' );
 		
 		//get the edit form
-		doSimpleXMLHttpRequest("edit_markerset.php", {set_id:this._setIdRef, gmap_id:this.Map.id}).addCallback( bind(this.editMarkerSetCallback, this) );
+		doSimpleXMLHttpRequest("edit_markerset.php", merge({set_id:this._setIdRef, gmap_id:this.Map.id},this.LS.aep)).addCallback( bind(this.editMarkerSetCallback, this) );
 	},
 	
 	
@@ -400,7 +403,7 @@ BitMap.Edit.prototype = {
 		this.toggleMenuOptsStyles( "markerset", this.Map.markersets.length, s_i, 'edit-selected' );
 		
 		//get the edit form
-		doSimpleXMLHttpRequest("edit_marker.php", {marker_id:id, set_id:this._setIdRef}).addCallback( bind(this.editMarkerCallback, this) );
+		doSimpleXMLHttpRequest("edit_marker.php", merge({marker_id:id, set_id:this._setIdRef},this.LS.aep)).addCallback( bind(this.editMarkerCallback, this) );
 	},
 	
 	"editMarkerCallback": function(rslt){
@@ -948,7 +951,7 @@ BitMap.Edit.prototype = {
 		this.toggleMenuOptsStyles( "polylineset", this.Map.polylinesets.length, i, 'edit-selected' );
 		
 		//get the edit form
-		doSimpleXMLHttpRequest("edit_polylineset.php", {set_id:this._setIdRef}).addCallback( bind(this.editPolylineSetCallback, this) );
+		doSimpleXMLHttpRequest("edit_polylineset.php", merge({set_id:this._setIdRef},this.LS.aep)).addCallback( bind(this.editPolylineSetCallback, this) );
 	},
 
 	"editPolylineSetCallback": function(rslt){
@@ -1058,7 +1061,7 @@ BitMap.Edit.prototype = {
 		this.toggleMenuOptsStyles( "polylineset", this.Map.polylinesets.length, s_i, 'edit-selected' );
 		
 		//get the edit form
-		doSimpleXMLHttpRequest("edit_polyline.php", {polyline_id:id, set_id:this._setIdRef}).addCallback( bind(this.editPolylineCallback, this) );
+		doSimpleXMLHttpRequest("edit_polyline.php", merge({polyline_id:id, set_id:this._setIdRef},this.LS.aep)).addCallback( bind(this.editPolylineCallback, this) );
 	},
 	
 	"editPolylineCallback": function(rslt){
@@ -1250,7 +1253,7 @@ BitMap.Edit.prototype = {
 		this.toggleMenuOptsStyles( "polygonset", this.Map.polygonsets.length, i, 'edit-selected' );
 		
 		//get the edit form
-		doSimpleXMLHttpRequest("edit_polygonset.php", {set_id:this._setIdRef}).addCallback( bind(this.editPolygonSetCallback, this) );
+		doSimpleXMLHttpRequest("edit_polygonset.php", merge({set_id:this._setIdRef},this.LS.aep)).addCallback( bind(this.editPolygonSetCallback, this) );
 	},
 
 	"editPolygonSetCallback": function(rslt){
@@ -1357,7 +1360,7 @@ BitMap.Edit.prototype = {
 		this.toggleMenuOptsStyles( "polygonset", this.Map.polygonsets.length, s_i, 'edit-selected' );
 		
 		//get the edit form
-		doSimpleXMLHttpRequest("edit_polygon.php", {polygon_id:id, set_id:this._setIdRef}).addCallback( bind(this.editPolygonCallback, this) );
+		doSimpleXMLHttpRequest("edit_polygon.php", merge({polygon_id:id, set_id:this._setIdRef},this.LS.aep)).addCallback( bind(this.editPolygonCallback, this) );
 	},
 	
 	"editPolygonCallback": function(rslt){
