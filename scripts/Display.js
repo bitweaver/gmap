@@ -380,11 +380,24 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			var id = M.content_id;
 			doSimpleXMLHttpRequest("view_marker.php", {content_id:id, pre_window:true}).addCallback( bind(this.loadMarkerCallback, this) ); 
 		}else{
-			if (M.allow_comments == 'y'){
-				M.gmarker.openInfoWindow( M.gmarker.my_html, {maxUrl:M.gmarker.my_maxurl});
-			}else{
-				M.gmarker.openInfoWindow( M.gmarker.my_html );
+			var opt = null;
+			if (M.allow_comments == 'y' && M.gmarker.my_maxurl){
+					var e = DIV(null, "Loading...");
+					opt = {maxContent:e};
+					var ref = this;
+					var url = M.gmarker.my_maxurl;
+					var mref = M.gmarker;
+					GEvent.addListener(this.map, "infowindowopen", function(){
+						var w = ref.map.getInfoWindow();
+						GEvent.addListener(w, "maximizeclick", function() {
+							GDownloadUrl(url, function(data) {
+								mref.my_maxdata = e.innerHTML = data;
+								setTimeout("setupAllTabs()", 200); /*thanks safari and ie*/
+							});
+						});
+					});
 			}
+			M.gmarker.openInfoWindow( M.gmarker.my_html, opt);
 		}
 	},
 
