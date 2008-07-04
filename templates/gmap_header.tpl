@@ -1,6 +1,6 @@
 {strip}
 {if $gBitUser->hasPermission( 'p_users_view_icons_and_tools' )}
-	{if $gContent->hasEditPermission() && !$map_list && !$edit_map}
+	{if !$map_list && !$edit_map && $gContent->hasEditPermission()}
 	 <div class="floaticon">
 		  <a href="{$smarty.const.GMAP_PKG_URL}edit.php?gmap_id={$gContent->mInfo.gmap_id}" >{biticon ipackage="icons" iname="accessories-text-editor" iexplain="edit"}</a>
 	 </div>
