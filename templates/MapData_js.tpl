@@ -18,11 +18,11 @@ BitMap.MapData.push({ldelim}
   lat:{$listcontent[0].lat},
   lng:{$listcontent[0].lng},
   zoom:{if $mapInfo.zoom}
-  			{$mapInfo.zoom+2}
+  			{$mapInfo.zoom}
 		{elseif $listcontent[0].gmap_zoom != NULL}
 			{$listcontent[0].gmap_zoom}
 		{elseif $gBitSystem->getConfig("gmap_zoom")}
-			{$gBitSystem->getConfig("gmap_zoom")+2}
+			{$gBitSystem->getConfig("gmap_zoom")}
 		{else}2{/if},
 {/if}
   scale:{if $mapInfo.scale}{$mapInfo.scale}{elseif $gBitSystem->getConfig("gmap_scale")}{$gBitSystem->getConfig("gmap_scale")}{else}false{/if}, /*true,false*/
