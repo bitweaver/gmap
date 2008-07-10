@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.129 2008/07/02 20:46:15 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.130 2008/07/10 22:06:45 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1338,6 +1338,10 @@ class BitGmap extends LibertyMime {
 		
 		if ($id != NULL){
 			$ret = GMAP_PKG_URL."index.php?gmap_id=".$id;
+		} elseif( @BitBase::verifyId( $pMixed['content_id'] ) ) {
+			$ret = BIT_ROOT_URL.'index.php?content_id='.$pMixed['content_id'];
+		} elseif( $this->isValid() ) {
+			$ret = BIT_ROOT_URL.'index.php?content_id='.$this->mContentId;
 		}
 		return $ret;
 	}

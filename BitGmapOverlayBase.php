@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.14 2008/07/01 20:57:59 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.15 2008/07/10 22:06:45 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -203,6 +203,10 @@ class BitGmapOverlayBase extends LibertyMime {
 		
 		if ($id != NULL){
 			$ret = GMAP_PKG_URL."view_".$this->mOverlayType.".php?".$overlayKey."=".$id;
+		} elseif( @BitBase::verifyId( $pMixed['content_id'] ) ) {
+			$ret = BIT_ROOT_URL.'index.php?content_id='.$pMixed['content_id'];
+		} elseif( $this->isValid() ) {
+			$ret = BIT_ROOT_URL.'index.php?content_id='.$this->mContentId;
 		}
 		return $ret;
 	}
