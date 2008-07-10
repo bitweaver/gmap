@@ -90,9 +90,15 @@ $tables = array(
   CONSTRAINT ', CONSTRAINT `gmaps_markers_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
 ",
 
+'gmaps_icon_themes' => "
+  theme_id I4 PRIMARY,
+  theme_title C(64)
+",
+
 //types has one options: 0 => GIcon
 'gmaps_icon_styles' => "
   icon_id I4 PRIMARY,
+  theme_id I4 NOTNULL,
   name C(64),
   icon_style_type I2 DEFAULT 0,
   image X '/gmap/icons/FlatColorPins/205.png',
@@ -109,8 +115,10 @@ $tables = array(
   infowindow_anchor_x I4 DEFAULT 9,
   infowindow_anchor_y I4 DEFAULT 2,
   image_map X DEFAULT 0,
-  user_id I4  
-  CONSTRAINTS ', CONSTRAINT `gmaps_icon_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'	
+  user_id I4
+  CONSTRAINTS ', CONSTRAINT `gmaps_icon_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )
+               , CONSTRAINT `gmaps_icon_theme_ref` FOREIGN KEY (`theme_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_icon_themes`( `theme_id` )'
+  '
 ",
 
 //type options: 0 => GXMarker, 1 => PdMarker
@@ -262,6 +270,7 @@ $gBitInstaller->registerSchemaIndexes( GMAP_PKG_NAME, $indices );
 // ### Sequences
 $sequences = array (
   'gmaps_gmap_id_seq' => array( 'start' => 1 ),
+  'gmaps_icon_themes_seq' => array( 'start' => 1 ),
   'gmaps_maptypes_maptype_id_seq' => array( 'start' => 1 ),	
   'gmaps_tilelayers_tilelayer_id_seq' => array( 'start' => 1 ),	
   'gmaps_copyrights_copyright_id_seq' => array( 'start' => 1 ),	

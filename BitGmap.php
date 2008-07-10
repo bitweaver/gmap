@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.130 2008/07/10 22:06:45 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.131 2008/07/10 22:34:03 squareing Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1377,6 +1377,176 @@ class BitGmap extends LibertyMime {
 		}
 		return $ret;
 	}	
+
+
+	/* ============= Icon styles and themes ============= */
+
+	/**
+	 * getIconList 
+	 * 
+	 * @param array $pListHash 
+	 * @access public
+	 * @return array of icons
+	 */
+	function getIconList( &$pListHash = NULL ) {
+		$whereSql = "";
+		$bindVars = $ret = array();
+
+		if( empty( $pListHash['sort_mode'] )) {
+			$pListHash['sort_mode'] = array( 'gmit.`theme_title_asc`', 'gmis.`name_asc`' );
+		}
+		$this->prepGetList( $pListHash );
+
+		if( !empty( $pListHash['theme_title'] )) {
+			$pListHash['theme_id'] = $this->getIconThemeId( $pListHash['theme_title'] );
+		}
+
+		if( @BitBase::verifyId( $pListHash['theme_id'] )) {
+			$whereSql = " WHERE gmis.`theme_id` = ? ";
+			$bindVars[] = $pListHash['theme_id'];
+		}
+
+		$sql = "SELECT `icon_id` AS key, *
+			FROM `".BIT_DB_PREFIX."gmaps_icon_styles` gmis
+				INNER JOIN `".BIT_DB_PREFIX."gmaps_icon_themes` gmit ON( gmit.`theme_id` = gmis.`theme_id` )
+			$whereSql
+			ORDER BY ".$this->mDb->convertSortmode( $pListHash['sort_mode'] );
+		$result = $this->mDb->query( $sql, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
+		while( $aux = $result->fetchRow() ) {
+			$ret[] = $aux;
+		}
+
+		$pListHash['cant'] = $this->mDb->getOne( "SELECT COUNT( `icon_id` ) FROM `".BIT_DB_PREFIX."gmaps_icon_styles` gmis $whereSql", $bindVars );
+
+		LibertyContent::postGetList( $pListHash );
+		return $ret;
+	}
+
+	/**
+	 * getIconThemes 
+	 * 
+	 * @access public
+	 * @return array of all available icon themes
+	 */
+	function getIconThemes() {
+		return( $this->mDb->getAssoc( "SELECT `theme_id`, `theme_title` FROM ".BIT_DB_PREFIX."gmaps_icon_themes ORDER BY ".$this->mDb->convertSortmode( 'theme_title_asc' )));
+	}
+
+	/**
+	 * fetchIcons 
+	 * 
+	 * @param string $pDir absolute path to dir that should be scanned
+	 * @access public
+	 * @return nested array of all icons found in path
+	 */
+	function fetchIcons( $pDir ) {
+		$ret = array();
+		if( !empty( $pDir ) && is_dir( $pDir ) && $handle = opendir( $pDir )) {
+			while( FALSE !== ( $file = readdir( $handle ))) {
+				if( !preg_match( "#^\.#", $file ) && $file != 'CVS' ) {
+					if( is_dir( $pDir."/".$file )) {
+						$theme[$file] = $this->fetchIcons( $pDir."/".$file );
+					// avoid picking up icons in icons/ dir
+					} elseif( basename( $pDir ) != 'icons' && preg_match( "#\.(png|jpe?g|gif|bmp|tiff?)$#i", $file )) {
+						// too lazy to code this for servers without GD installed
+						list( $width, $height, $type, $attr ) = @getimagesize( $pDir."/".$file );
+						$theme[] = array(
+							'icon_w' => $width,
+							'icon_h' => $height,
+							'name' => $file,
+							'image' => BIT_ROOT_URL.str_replace( '//', '/', str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( str_replace( BIT_ROOT_PATH, "", $pDir )."/".$file )))),
+						);
+					}
+				}
+			}
+			closedir( $handle );
+			if( !empty( $theme )) {
+				$ret = array_merge( $theme, $ret );
+			}
+		}
+		return $ret;
+	}
+
+	/**
+	 * storeIcons store all icons recursively found in $pDir
+	 * 
+	 * @param array $pDir 
+	 * @access public
+	 * @return void
+	 */
+	function storeIcons( $pDir ) {
+		global $gBitUser;
+		if( $iconThemes = $this->fetchIcons( $pDir )) {
+			foreach( $iconThemes as $theme => $icons ) {
+				$theme_id = $this->storeIconTheme( $theme );
+				foreach( $icons as $icon ) {
+					$icon['theme_id'] = $theme_id;
+					$icon['user_id']  = $gBitUser->mUserId;
+					$this->storeIcon( $icon );
+				}
+			}
+		}
+	}
+
+	/**
+	 * storeIcon 
+	 * 
+	 * @param array $pStoreHash icon information
+	 * @access public
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 */
+	function storeIcon( $pStoreHash ) {
+		if( empty( $pStoreHash['theme_id'] )) {
+			$pStoreHash['theme_id'] = $this->storeIconTheme( 'Custom icons' );
+		}
+
+		if( !empty( $pStoreHash['name'] ) && @BitBase::verifyId( $pStoreHash['theme_id'] )) {
+			if( $icon_id = $this->mDb->getOne( "SELECT `icon_id` FROM `".BIT_DB_PREFIX."gmaps_icon_styles` WHERE `theme_id` = ? AND `name` = ?", array( $pStoreHash['theme_id'], $pStoreHash['name'] ))) {
+				$this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_icon_styles", $pStoreHash, array( 'icon_id' => $icon_id ));
+			} else {
+				$pStoreHash['icon_id'] = $this->mDb->GenID( 'gmaps_icon_styles_icon_id_seq' );
+				$this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_icon_styles", $pStoreHash );
+			}
+		}
+	}
+
+	/**
+	 * storeIconTheme store icon theme if it's new
+	 * 
+	 * @param array $pTheme name of the icon theme
+	 * @access public
+	 * @return theme_id of stored theme
+	 */
+	function storeIconTheme( $pTheme ) {
+		global $gBitSystem;
+		$ret = FALSE;
+		if( !empty( $pTheme )) {
+			if( !( $ret = $this->getIconThemeId( $pTheme ))) {
+				$store = array(
+					"theme_id"    => $gBitSystem->mDb->GenID( "gmaps_icon_theme_id_seq" ),
+					"theme_title" => $pTheme,
+				);
+				$gBitSystem->mDb->associateInsert( BIT_DB_PREFIX."gmaps_icon_themes", $store );
+				$ret = $store["theme_id"];
+			}
+		}
+		return $ret;
+	}
+
+	/**
+	 * getIconThemeId get icon theme id based on theme name
+	 * 
+	 * @param array $pTheme name of the icon theme
+	 * @access public
+	 * @return theme_id if it was found in the database
+	 */
+	function getIconThemeId( $pTheme ) {
+		$ret = FALSE;
+		if( !empty( $pTheme )) {
+			$ret = $this->mDb->getOne( "SELECT `theme_id` FROM `".BIT_DB_PREFIX."gmaps_icon_themes` WHERE `theme_title` = ?", array( $pTheme ));
+		}
+		return $ret;
+	}
 }
 
 
