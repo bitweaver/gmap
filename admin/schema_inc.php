@@ -70,15 +70,15 @@ $tables = array(
   maptype_id I4 NOTNULL,
   tilelayer_id I4 NOTNULL,
   pos F
-  CONSTRAINT ', CONSTRAINT `gmaps_tilelayers_keychain_maptype_ref` FOREIGN KEY (`maptype_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_maptypes`( `maptype_id` )
-              , CONSTRAINT `gmaps_tilelayers_keychain_tilelayers_ref` FOREIGN KEY (`tilelayer_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayer_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_tilelayers_k_maptype_ref` FOREIGN KEY (`maptype_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_maptypes`( `maptype_id` )
+              , CONSTRAINT `gmaps_tilelayers_k_tlayers_ref` FOREIGN KEY (`tilelayer_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayer_id` )'
 ",
 
 'gmaps_copyrights_keychain' => "
   copyright_id I4 NOTNULL,
   tilelayer_id I4 NOTNULL
-  CONSTRAINT ', CONSTRAINT `gmaps_copyrights_keychain_copyright_ref` FOREIGN KEY (`copyright_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_copyrights`( `copyright_id` )
-              , CONSTRAINT `gmaps_copyrights_keychain_tilelayers_ref` FOREIGN KEY (`tilelayer_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayer_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_copyrts_k_copyright_ref` FOREIGN KEY (`copyright_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_copyrights`( `copyright_id` )
+              , CONSTRAINT `gmaps_copyrts__tilelayers_ref` FOREIGN KEY (`tilelayer_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_tilelayers`( `tilelayer_id` )'
 ",
 
 
@@ -145,7 +145,7 @@ $tables = array(
   marker_id I8 NOTNULL.
   pos F
   CONSTRAINT ', CONSTRAINT `gmaps_marker_keychain_set_ref` FOREIGN KEY (`set_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_marker_sets`( `set_id` )
-              , CONSTRAINT `gmaps_marker_keychain_marker_ref` FOREIGN KEY (`marker_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_markers`( `marker_id` )'
+              , CONSTRAINT `gmaps_marker_key_marker_ref` FOREIGN KEY (`marker_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_markers`( `marker_id` )'
 ",
 
 //type options: 0 => Default  1 => Geodesic  2 => Encoded
@@ -184,8 +184,8 @@ $tables = array(
   set_id I4 NOTNULL,
   polyline_id I4 NOTNULL,
   pos F
-  CONSTRAINT ', CONSTRAINT `gmaps_polyline_keychain_set_ref` FOREIGN KEY (`set_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_sets`( `set_id` )
-              , CONSTRAINT `gmaps_polyline_keychain_polyline_ref` FOREIGN KEY (`polyline_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polylines`( `polyline_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_polyline_k_set_ref` FOREIGN KEY (`set_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_sets`( `set_id` )
+              , CONSTRAINT `gmaps_polyline_k_polyline_ref` FOREIGN KEY (`polyline_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polylines`( `polyline_id` )'
 ",
 
 //type options: 0 => Polygon, 1 => Circle 2=> Encoded
@@ -223,15 +223,15 @@ $tables = array(
   polylinestyle_id I4 NOTNULL
   CONSTRAINT ', CONSTRAINT `gmaps_polygon_sets_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
 			  , CONSTRAINT `gmaps_polygon_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polygon_styles`( `style_id` )
-              , CONSTRAINT `gmaps_polygon_sets_polylinestyle_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_styles`( `style_id` )'
+              , CONSTRAINT `gmaps_polygon_sets_pstyle_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_styles`( `style_id` )'
 ",
 
 'gmaps_polygon_keychain' => "
   set_id I4 NOTNULL,
   polygon_id I4 NOTNULL,
   pos F
-  CONSTRAINT ', CONSTRAINT `gmaps_polygon_keychain_set_ref` FOREIGN KEY (`set_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polygon_sets`( `set_id` )
-              , CONSTRAINT `gmaps_polygon_keychain_polygon_ref` FOREIGN KEY (`polygon_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polygons`( `polygon_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_polygon_k_set_ref` FOREIGN KEY (`set_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polygon_sets`( `set_id` )
+              , CONSTRAINT `gmaps_polygon_k_polygon_ref` FOREIGN KEY (`polygon_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polygons`( `polygon_id` )'
 ",
 );
 
