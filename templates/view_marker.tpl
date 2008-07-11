@@ -9,6 +9,12 @@
 	</div><!-- end .header -->
 	<div class="body">
 		{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='body' serviceHash=$gContent->mInfo}
+		{* we include a map natively if we are viewing the marker as a standalone page *}
+		{if !$gBitThemes->isAjaxRequest()}
+			<div class="gmap-permalink" style="overflow:hidden" width="{$gBitSystem->getConfig('gmap_inline_map_width',190)}" height="{$gBitSystem->getConfig('gmap_inline_map_height',190)}">
+				{include file='bitpackage:gmap/map_inc.tpl'}
+			</div>
+		{/if}
 		
 		{if $marker.thumbnail_url}
 			<div class="image">

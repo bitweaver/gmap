@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/view_marker.php,v 1.11 2008/06/25 22:58:05 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/view_marker.php,v 1.12 2008/07/11 18:51:58 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -50,5 +50,23 @@ if( $gContent->isCommentable() ) {
 
 $gBitSmarty->assign_by_ref('marker', $gContent->mInfo);
 
-$gBitSystem->display('bitpackage:gmap/view_marker.tpl', NULL, array( 'format' => 'center_only', 'display_mode' => 'display' ));
+$displayOptions = array( 'display_mode' => 'display' );
+if ( $gBitThemes->isAjaxRequest() ){
+	$displayOptions['format'] = 'center_only';
+}else{
+	// @TODO get a list of maps the marker is attached to.
+	// @TODO clean this up
+	// This is some seriously ugly business here but it works for now
+	// EditContent gets us a pin on the map - that could be a more generic function name
+	$gBitSmarty->assign('view_map', TRUE);
+	$gBitSystem->mOnload[] = 'BitMap.EditContent();';
+	// this hackage is because we are repruposing some much of the basic map display javascript
+	$gContent->mInfo['width'] = $gBitSystem->getConfig('gmap_inline_map_width',190);
+	$gContent->mInfo['height'] = $gBitSystem->getConfig('gmap_inline_map_height',190);
+	$gContent->mInfo['overview_control'] = 'false';
+	$gBitSmarty->assign_by_ref( 'mapInfo', $gContent->mInfo);
+	$gBitThemes->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js', 'Style.js' ) );
+}
+
+$gBitSystem->display('bitpackage:gmap/view_marker.tpl', NULL, $displayOptions );
 ?>
