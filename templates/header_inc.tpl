@@ -52,6 +52,7 @@
 			.data-rating {width:14%; text-align:center}
 			div.data-header {background-color:#eee; font-weight:bold; font-size:1.1em; padding:1px 3px;}
 			#gmap-cal-container {background:#fff;padding:6px;border:#333 solid 1px;}
+			.gmarker-footer {margin-bottom:25px;clear:both;
 		{/literal}
 		{if $edit_map }
     	{literal}

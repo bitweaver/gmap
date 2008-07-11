@@ -87,7 +87,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		M.gmarker = new GMarker(p, {icon: myicon, title:tip});
 		M.gmarker.index = i;
 		M.gmarker.type = 'marker';
-		M.gmarker.my_maxurl = BitMap.BIT_ROOT_URL + "gmap/view_marker.php?marker_id=" + M.marker_id + '&comments_maxComments=999999';
+		M.gmarker.my_maxurl = BitMap.BIT_ROOT_URL + "gmap/view_marker.php?marker_id=" + M.marker_id + '&comments_maxComments=999999&ajax_xml=true';
 		this.map.addOverlay(M.gmarker);
 		M.gmarker.plotted = true;
 	},

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Header: /cvsroot/bitweaver/_bit_gmap/index.php,v 1.30 2008/06/25 22:21:10 spiderr Exp $
+ * @version  $Header: /cvsroot/bitweaver/_bit_gmap/index.php,v 1.31 2008/07/11 19:33:20 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -60,10 +60,12 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		//use Mochikit - prototype sucks
 		$gBitThemes->loadAjax( 'mochikit', array( 'Iter.js', 'DOM.js', 'Style.js' ) );
 	
+		//we need to load up the LibertyComments.js and dependencies in case any sub parts of the map allow commmets even if the map itself does not/
+		$gBitSmarty->assign('comments_ajax', TRUE);
+		$gBitThemes->loadAjax( 'mochikit', array( 'Color.js', 'Position.js', 'Visual.js' ) );	
+
 		if( $gContent->isCommentable() ) {
 			$gBitSystem->setConfig( 'comments_ajax', 'y' );
-			$gBitThemes->loadAjax( 'mochikit', array( 'Color.js', 'Position.js', 'Visual.js' ) );	
-			$gBitSmarty->assign('comments_ajax', TRUE);
 			$commentsParentId = $gContent->mContentId;
 			$gBitSmarty->assign('commentsParentId', $commentsParentId);
 			$comments_vars = Array('gmap');
