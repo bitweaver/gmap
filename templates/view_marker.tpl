@@ -33,7 +33,7 @@
 
 	{if $gContent->isCommentable() }
 		{if $pre_window}
-			<div><a href="javascript:void(0);" onclick="BitMap.MapData[0].Map.map.getInfoWindow().maximize()">{if $comments != null}{$gContent->mInfo.num_comments}{else}0{/if} Comment(s)</a></div>
+			<div class="display"><a href="javascript:void(0);" onclick="BitMap.MapData[0].Map.map.getInfoWindow().maximize()">{if $comments != null}{$gContent->mInfo.num_comments}{else}0{/if} Comment(s)</a></div>
 		{else}
 			{include file="bitpackage:liberty/comments.tpl"}
 		{/if}
