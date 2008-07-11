@@ -1875,6 +1875,8 @@ BitMap.Edit.prototype = {
 		this.Map.map.setCenter(new GLatLng(this.Map.center.lat, this.Map.center.lng), this.Map.zoom);
 		this.hideSpinner("DONE!");
 		this.editMap(this.Map.id);			
+		$('ecancel').href = BitMap.BIT_ROOT_URL+"gmap/index.php?gmap_id="+this.Map.id;
+		$('ecancel-span').style.display = 'inline';
 	 },
 
 

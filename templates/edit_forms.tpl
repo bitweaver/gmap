@@ -6,6 +6,7 @@
 	<a id="emarker" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSets();">Edit Markers</a> |
 	<a id="epolyline" href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineSets();">Edit Polylines</a> |
 	<a id="epolygon" href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonSets();">Edit Polygons</a>
+	<span id="ecancel-span" {if !$gContent->isValid()}style="display:none"{/if}> | <a id="ecancel" href="{$gContent->mInfo.display_url}" title="End editing sesssion">View Map</a></span>
 </div>
 
 
