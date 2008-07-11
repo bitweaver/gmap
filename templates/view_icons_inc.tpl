@@ -13,7 +13,7 @@
 			<ul>
 				<li><a href="{$smarty.const.GMAP_PKG_URL}view_icons_inc.php">{tr}All Icons{/tr}</a></li>
 				{foreach from=$themes key=theme_id item=theme}
-					<li><a href="{$smarty.const.GMAP_PKG_URL}view_icons_inc.php?theme_id={$theme_id}">{$theme}</a> {if $theme_id == $smarty.request.theme_id}{biticon iname=dialog-ok iexplain="Selected"}{/if}</li>
+					<li><a href="{$smarty.const.GMAP_PKG_URL}view_icons_inc.php?theme_id={$theme_id}">{$theme|replace:"_":" "|capitalize}</a> {if $theme_id == $smarty.request.theme_id}{biticon iname=dialog-ok iexplain="Selected"}{/if}</li>
 				{/foreach}
 			</ul>
 		{/forminput}
