@@ -1,6 +1,6 @@
 <?php
 /**
- * @version  $Header: /cvsroot/bitweaver/_bit_gmap/index.php,v 1.31 2008/07/11 19:33:20 wjames5 Exp $
+ * @version  $Header: /cvsroot/bitweaver/_bit_gmap/index.php,v 1.32 2008/07/11 19:39:22 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -75,9 +75,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 			include_once( LIBERTY_PKG_PATH.'comments_inc.php' );
 		}
 	
-		$gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Gmap') , array( 'display_mode' => 'display' ));
+		$gBitSystem->display('bitpackage:gmap/show_gmap.tpl', tra('Map') , array( 'display_mode' => 'display' ));
 	}
 }else{
-	$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', tra('Gmap') , array( 'display_mode' => 'display' ));
+	$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', tra('Map') , array( 'display_mode' => 'display' ));
 }
 ?>

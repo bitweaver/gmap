@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/map_content.php,v 1.25 2008/07/02 19:09:29 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/map_content.php,v 1.26 2008/07/11 19:39:22 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -107,14 +107,14 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 			//this disables marker clicking since infowindow would only contain the data thats already on display
 			$gBitSystem->mOnload[] = 'BitMap.DisplaySimple();';
 			$gBitThemes->setStyle( 'none' );
-			$gBitSystem->display( 'bitpackage:gmap/map_inc.tpl', tra( 'Gmap' ) , array( 'display_mode' => 'display' ));
+			$gBitSystem->display( 'bitpackage:gmap/map_inc.tpl', tra( 'Map' ) , array( 'display_mode' => 'display' ));
 		}else{
 			$gBitSmarty->assign('map_list', TRUE);
 			$gBitSystem->mOnload[] = 'BitMap.DisplayList();';
-			$gBitSystem->display( 'bitpackage:gmap/map_list.tpl', tra( 'Gmap' ) , array( 'display_mode' => 'display' ));
+			$gBitSystem->display( 'bitpackage:gmap/map_list.tpl', tra( 'Map' ) , array( 'display_mode' => 'display' ));
 		}
 	}else{
-		$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', tra('Gmap') , array( 'display_mode' => 'display' ));
+		$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', tra('Map') , array( 'display_mode' => 'display' ));
 	}
 }
 ?>

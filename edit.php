@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.42 2008/07/02 21:07:47 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.43 2008/07/11 19:39:22 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -58,8 +58,8 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	$gBitThemes->loadJavascript( GMAP_PKG_PATH.'scripts/LibertyAttachment.js', TRUE );
 
 	// Display the template
-	$gBitSystem->display( 'bitpackage:gmap/edit_gmap.tpl', tra('Gmap') , array( 'display_mode' => 'edit' ));    		
+	$gBitSystem->display( 'bitpackage:gmap/edit_gmap.tpl', tra('Map') , array( 'display_mode' => 'edit' ));    		
 }else{
-	$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', tra('Gmap') , array( 'display_mode' => 'edit' ));
+	$gBitSystem->display('bitpackage:gmap/error_nokey.tpl', tra('Map') , array( 'display_mode' => 'edit' ));
 }
 ?>

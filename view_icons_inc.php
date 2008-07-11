@@ -15,5 +15,5 @@ $gBitSmarty->assign( 'icons', $gContent->getIconList( $_REQUEST ));
 $gBitSmarty->assign( 'themes', $gContent->getIconThemes() );
 $gBitSmarty->assign( 'listInfo', $_REQUEST['listInfo'] );
 
-$gBitSmarty->display( 'bitpackage:gmap/view_icons_inc.tpl', tra( 'Gmap' ));
+$gBitSmarty->display( 'bitpackage:gmap/view_icons_inc.tpl', tra( 'Map' ));
 ?>
