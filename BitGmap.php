@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.131 2008/07/10 22:34:03 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.132 2008/07/11 15:21:21 squareing Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1406,7 +1406,7 @@ class BitGmap extends LibertyMime {
 			$bindVars[] = $pListHash['theme_id'];
 		}
 
-		$sql = "SELECT `icon_id` AS key, *
+		$sql = "SELECT gmis.`icon_id` AS `key`, gmis.*, gmit.`theme_title`
 			FROM `".BIT_DB_PREFIX."gmaps_icon_styles` gmis
 				INNER JOIN `".BIT_DB_PREFIX."gmaps_icon_themes` gmit ON( gmit.`theme_id` = gmis.`theme_id` )
 			$whereSql
