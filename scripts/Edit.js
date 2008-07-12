@@ -572,13 +572,14 @@ BitMap.Edit.prototype = {
 		BitMap.hide('edit-iconstyles-cancel');
 	},
 
-	"getIconStyles": function(e){
+	"getIconStyles": function(e,s){
 		opts = {};
 		// e = $('theme_id');
 		if ( e != null ){
 			opts.theme_id = e.options[e.selectedIndex].value;
 		}
-		doSimpleXMLHttpRequest("view_icons_inc.php", opts).addCallback( bind(this.getIconStylesCallback, this) ); 
+		s += '&'+queryString(opts); 
+		doSimpleXMLHttpRequest("view_icons_inc.php?"+s).addCallback( bind(this.getIconStylesCallback, this) ); 
 	},
 
 	"getIconStylesCallback": function(rslt){
