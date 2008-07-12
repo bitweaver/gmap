@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarkerSet.php,v 1.6 2008/06/19 04:14:10 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarkerSet.php,v 1.7 2008/07/12 21:54:57 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -110,5 +110,14 @@ class BitGmapMarkerSet extends BitGmapOverlaySetBase{
 				
 		return( count( $this->mErrors ) == 0 );
 	}
+
+	function getIcon( $pIconId ){
+		$ret = NULL;
+		if( @BitBase::verifyId( $pIconId ) ) {
+			$icon = $this->mDb->query( "SELECT * FROM `".BIT_DB_PREFIX."gmaps_icon_styles` gmis WHERE gmis.`icon_id` = ?", array( $pIconId ) );
+			$ret = $icon->fields;
+		}
+		return $ret;
+	}	
 }
 ?>

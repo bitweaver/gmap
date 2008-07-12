@@ -36,12 +36,17 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 	<div class="row">
 		{formlabel label="Icon Style" for="icon_id"}
 			{forminput}
+				<a href="javascript:void(0);" onclick="BitMap.EditSession.getIconStyles();" title="{tr}Click to select another icon{/tr}"><img id="icon_img" src="{$icon.image}" /></a>
+				<div id="icon_styles" style="position:absolute; padding:10px; width:212px; overflow:auto; display:none; background:white; border:2px solid #666"></div>
+				<input name="icon_id" id="icon_id" type="hidden" value="{$iconStyles[ix].icon_id}" />
+				<!--
 				<select name="icon_id">
 				<option value="0" {if $markersetInfo.icon_id == 0 }selected="selected"{/if}>Google (standard)</option>
 				{if count($iconStyles) > 0}{section name=ix loop=$iconStyles}
 					<option value="{$iconStyles[ix].icon_id}" {if $markersetInfo.icon_id == $iconStyles[ix].icon_id}selected="selected"{else}{/if}>{$iconStyles[ix].name}</option>
 				{/section}{/if}
 				</select>
+				-->
 				{formhelp note=""}
 			{/forminput}
 	</div>

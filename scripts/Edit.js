@@ -572,7 +572,24 @@ BitMap.Edit.prototype = {
 		BitMap.hide('edit-iconstyles-cancel');
 	},
 
+	"getIconStyles": function(e){
+		opts = {};
+		// e = $('theme_id');
+		if ( e != null ){
+			opts.theme_id = e.options[e.selectedIndex].value;
+		}
+		doSimpleXMLHttpRequest("view_icons_inc.php", opts).addCallback( bind(this.getIconStylesCallback, this) ); 
+	},
 
+	"getIconStylesCallback": function(rslt){
+		$('icon_styles').innerHTML = rslt.responseText;
+		BitMap.show('icon_styles');
+	},
+
+	"setIconStyle": function(n, url){
+		$('icon_id').value = n;
+		$('icon_img').src = url;
+	},
 
 	/*******************
 	 *

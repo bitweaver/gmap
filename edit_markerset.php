@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_markerset.php,v 1.22 2008/07/01 15:43:19 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_markerset.php,v 1.23 2008/07/12 21:54:57 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -89,11 +89,13 @@ if (!empty($_REQUEST["save_markerset"])) {
 }else{
 	$gContent->invokeServices( 'content_edit_function' );
 	$markerset = $gContent->mInfo;
+	$icon = $gContent->getIcon( $gContent->getField( 'icon_id' ) );
+	$gBitSmarty->assign_by_ref('icon', $icon);
 	require_once(GMAP_PKG_PATH.'BitGmap.php' );
 	$gmap = new BitGmap();
-	$iconStyles = $gmap->getIconStyles(); 
+	// $iconStyles = $gmap->getIconStyles();
 	$markerStyles = $gmap->getMarkerStyles(); 
-	$gBitSmarty->assign( 'iconStyles', $iconStyles );
+	// $gBitSmarty->assign( 'iconStyles', $iconStyles );
 	$gBitSmarty->assign( 'markerStyles', $markerStyles );
 	
 	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
