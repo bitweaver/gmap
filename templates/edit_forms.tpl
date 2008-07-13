@@ -139,15 +139,19 @@
 		-  Markerset and Marker Editing Forms
 		------------------------->
 	{jstab title="Edit Markers" onclick="BitMap.EditSession.editMarkerSets();"}
+		{jstabs}
+
+		{jstab title="Marker Sets" onclick="editMarkerSets();"}
 		<!-- marker editing menu -->
 		<div id="edit-markers-menu" style="display:none;">
 				<a href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSet();">New Marker Set</a> |
+				<!--
 				<a href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerStyles();">Edit Marker Styles</a> |
 				<a href="javascript:void(0)" onclick="BitMap.EditSession.editIconStyles();">Edit Marker Icons</a>
+				-->
 		</div>
+
 		<!-- end of marker editing menu -->
-
-
 		<!-- markerset editing menu -->
 		<div id="edit-markersets-table" class="edit-table" style="display:none;">
 		  <h2>Marker Sets Associated With This Map</h2>
@@ -200,7 +204,6 @@
 								<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editMarker(n);">Marker Name Here</a></li>
 								<li id="edit-markerlink-new"><b><a id="edit-markerlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newMarker(setindex);">Add A New Marker</a></b></li>
 							</ul>
-						</td>
 						<td>
 							<div id="marker-form">PUT MARKER FORM HERE!</div>
 						</td>
@@ -225,9 +228,11 @@
 		<div id="edit-markersets-cancel" style="display:none;">
 		  <input type="button" name="closemarkerform" value="Close Marker Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSets();" />
 		</div>
+		{/jstab}
 
 
 
+		{jstab title="Marker Styles" onclick="BitMap.EditSession.editMarkerStyles();"}
 		<!--------------------------------
 			-  Markerstyles Editing Forms
 			-------------------------------->
@@ -275,10 +280,10 @@
 		  <input type="button" name="closemarkerstylesform" value="Close Marker Styles Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerStyles();" />
 		</div>
 		<!-- end markerstyles editing forms -->
+		{/jstab}
 
 
-
-
+		{jstab title="Icon Styles" onclick="BitMap.EditSession.editIconStyles();"}
 		<!--------------------------------
 			-  Iconstyles Editing Forms
 			-------------------------------->
@@ -326,6 +331,8 @@
 		  <input type="button" name="closeiconstylesform" value="Close Icon Styles Editing" onclick="javascript:BitMap.EditSession.cancelEditIconStyles();" />
 		</div>
 		<!-- end iconstyles editing forms -->
+		{/jstab}
+		{/jstabs}
 	{/jstab}
 
 
