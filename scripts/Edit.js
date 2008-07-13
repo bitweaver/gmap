@@ -202,7 +202,6 @@ BitMap.Edit.prototype = {
 	 *******************/
 	
 	"editMarkerSets": function(){
-		BitMap.show('edit-markers-menu');
 		//First check if there are any marker sets
 		if (this.Map.markersets.length > 0){
 			// We assume editMarkerSets has been called before and remove 
@@ -229,7 +228,6 @@ BitMap.Edit.prototype = {
 			}
 		}
 		BitMap.show('edit-markersets-table');
-		BitMap.show('edit-markersets-cancel');
 	},
 	
 	
@@ -242,9 +240,7 @@ BitMap.Edit.prototype = {
 		var elm = $('edit-markerset-options-table');
 		document.body.appendChild(elm);
 		
-		this.canceledit('edit-markers-menu');
 		this.canceledit('edit-markersets-table');
-		this.canceledit('edit-markersets-cancel');
 		
 		this.removeAssistant(); 
 		this.canceledit('editerror');
@@ -450,7 +446,6 @@ BitMap.Edit.prototype = {
 
 	"editMarkerStyles": function(){
 		BitMap.show('edit-markerstyles-table');
-		BitMap.show('edit-markerstyles-cancel');
 		
 		var markerstyleTable = $('edit-markerstyle-table');
 		//set some constants
@@ -526,7 +521,6 @@ BitMap.Edit.prototype = {
 
 	"editIconStyles": function(){
 		BitMap.show('edit-iconstyles-table');
-		BitMap.show('edit-iconstyles-cancel');
 		
 		var iconstyleTable = $('edit-iconstyle-table');
 		//set some constants
@@ -908,7 +902,6 @@ BitMap.Edit.prototype = {
 			}
 		}
 		BitMap.show('edit-polylinesets-table');
-		BitMap.show('edit-polylinesets-cancel');		
 	},
 		
 	"cancelEditPolylineSets": function(){
@@ -922,7 +915,6 @@ BitMap.Edit.prototype = {
 		
 		this.canceledit('edit-polylines-menu');
 		this.canceledit('edit-polylinesets-table');
-		this.canceledit('edit-polylinesets-cancel');
 		
 		this.removeAssistant(); 
 		this.canceledit('editerror');
@@ -1210,7 +1202,6 @@ BitMap.Edit.prototype = {
 			}
 		}
 		BitMap.show('edit-polygonsets-table');
-		BitMap.show('edit-polygonsets-cancel');		
 	},
 		
 	"cancelEditPolygonSets": function(){
@@ -1224,7 +1215,6 @@ BitMap.Edit.prototype = {
 		
 		this.canceledit('edit-polygons-menu');
 		this.canceledit('edit-polygonsets-table');
-		this.canceledit('edit-polygonsets-cancel');
 		
 		this.removeAssistant(); 
 		this.canceledit('editerror');

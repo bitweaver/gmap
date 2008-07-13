@@ -126,11 +126,6 @@
 			<div id="copyright-form">PUT COPYRIGHT FORM HERE!</div>
 		</div>
 		<!-- edit of edit copyrights form -->
-
-		<!-- close all maptype editing -->
-		<div id="edit-maptypes-cancel" style="display:none;">
-			<input type="button" name="closemaptypeform" value="Close Maptype Editing" onclick="javascript:BitMap.EditSession.cancelEditMaptypes();" />
-		</div>
 	{/jstab}
 
 
@@ -141,14 +136,10 @@
 	{jstab title="Edit Markers" onclick="BitMap.EditSession.editMarkerSets();"}
 		{jstabs}
 
-		{jstab title="Marker Sets" onclick="editMarkerSets();"}
+		{jstab title="Marker Sets" onclick="BitMap.EditSession.editMarkerSets();"}
 		<!-- marker editing menu -->
-		<div id="edit-markers-menu" style="display:none;">
-				<a href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSet();">New Marker Set</a> |
-				<!--
-				<a href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerStyles();">Edit Marker Styles</a> |
-				<a href="javascript:void(0)" onclick="BitMap.EditSession.editIconStyles();">Edit Marker Icons</a>
-				-->
+		<div id="edit-markers-menu">
+				<a href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSet();">New Marker Set</a>
 		</div>
 
 		<!-- end of marker editing menu -->
@@ -222,12 +213,6 @@
 			<input type="button" name="closemarkerset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditMarkers()" />
 		</div>
 		<!-- edit of edit markers form -->
-
-
-		<!-- close all marker editing -->
-		<div id="edit-markersets-cancel" style="display:none;">
-		  <input type="button" name="closemarkerform" value="Close Marker Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSets();" />
-		</div>
 		{/jstab}
 
 
@@ -274,11 +259,6 @@
 				</tr>
 			</table>
 		</div> <!-- end of edit markerstyles form -->
-
-		<!-- close all markerstyles editing -->
-		<div id="edit-markerstyles-cancel" style="display:none;">
-		  <input type="button" name="closemarkerstylesform" value="Close Marker Styles Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerStyles();" />
-		</div>
 		<!-- end markerstyles editing forms -->
 		{/jstab}
 
@@ -325,11 +305,6 @@
 				</tr>
 			</table>
 		</div> <!-- end of edit iconstyles form -->
-
-		<!-- close all iconstyles editing -->
-		<div id="edit-iconstyles-cancel" style="display:none;">
-		  <input type="button" name="closeiconstylesform" value="Close Icon Styles Editing" onclick="javascript:BitMap.EditSession.cancelEditIconStyles();" />
-		</div>
 		<!-- end iconstyles editing forms -->
 		{/jstab}
 		{/jstabs}
@@ -416,10 +391,6 @@
 		</div>
 		<!-- edit of edit polylines form -->
 
-		<!-- close all polyline editing -->
-		<div id="edit-polylinesets-cancel" style="display:none;">
-		  <input type="button" name="closepolylineform" value="Close Polyline Editing" onclick="javascript:BitMap.EditSession.cancelEditPolylineSets();" />
-		</div>
 
 
 
@@ -551,12 +522,6 @@
 					</tr>
 				</table>
 			<input type="button" name="closepolygonset" value="Close This Set" onclick="javascript:BitMap.EditSession.cancelEditPolygons()" />
-		</div>
-		<!-- edit of edit polygons form -->
-
-		<!-- close all polygon editing -->
-		<div id="edit-polygonsets-cancel" style="display:none;">
-		  <input type="button" name="closepolygonform" value="Close Polygon Editing" onclick="javascript:BitMap.EditSession.cancelEditPolygonSets();" />
 		</div>
 		<!--end polygon editing forms -->
 
