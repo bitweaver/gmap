@@ -118,7 +118,7 @@ BitMap.Edit.prototype = {
 	},
 	
 	"canceledit": function(i){
-		$(i).style.display = "none";	
+		if( $(i) != null ){ $(i).style.display = "none" };
 	},
 	
 	"toggleIconMenu": function(o, n){
@@ -202,6 +202,7 @@ BitMap.Edit.prototype = {
 	 *******************/
 	
 	"editMarkerSets": function(){
+		this.cancelEditMarkerSets();
 		//First check if there are any marker sets
 		if (this.Map.markersets.length > 0){
 			// We assume editMarkerSets has been called before and remove 
