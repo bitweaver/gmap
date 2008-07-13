@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.43 2008/07/11 19:39:22 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.44 2008/07/13 19:01:53 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -48,7 +48,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	$gContent->invokeServices( 'content_edit_function' );
 
 	//set onload function in body
-	$gBitSystem->mOnload[] = 'BitMap.EditMap();';
+	$gBitSystem->mOnload[] = 'BitMap.EditMap(); BitMap.EditSession.editMap('.$gContent->mGmapId.');';
 	
 	//use Mochikit - prototype sucks
 	$gBitThemes->loadAjax( 'mochikit', array( 'Base.js', 'Iter.js', 'Async.js', 'DOM.js', 'Style.js' ) );
