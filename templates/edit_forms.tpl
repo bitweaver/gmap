@@ -78,7 +78,7 @@
 					<td width="200px">Tilelayers:<br />
 						<ul id="edit-tilelayers-list">
 							<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editTilelayer(n);">Tilelayer Name Here</a></li>
-							<li id="edit-tilelayerlink-new"><b><a id="edit-tilelayerlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newTilelayer(setindex);">Add A New Tilelayer</a></b></li>
+							<li id="edit-tilelayerlink-new"><strong><a id="edit-tilelayerlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newTilelayer(setindex);">Add A New Tilelayer</a></strong></li>
 						</ul>
 					</td>
 					<td>
@@ -104,7 +104,7 @@
 							<div id="edit-copyright-menu">
 								Copyright Notices for this Tilelayer
 								<div id="edit-copyrightlink-new">
-									<b><a id="edit-copyrightlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editCopyright(copyrightindex, tilelayerindex);">Add A New Copyright</a></b>
+									<strong><a id="edit-copyrightlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editCopyright(copyrightindex, tilelayerindex);">Add A New Copyright</a></strong>
 								</div>
 								<div id="edit-copyrightlink" style="display:none;">
 									<a href="javascript:void(0)" onclick="BitMap.EditSession.editCopyright(n);">Copyright Notice Here</a>
@@ -193,7 +193,7 @@
 						<td width="200px">Markers:<br />
 							<ul id="edit-markers-list">
 								<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editMarker(n);">Marker Name Here</a></li>
-								<li id="edit-markerlink-new"><b><a id="edit-markerlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newMarker(setindex);">Add A New Marker</a></b></li>
+								<li id="edit-markerlink-new"><strong><a id="edit-markerlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newMarker(setindex);">Add A New Marker</a></strong></li>
 							</ul>
 						<td>
 							<div id="marker-form">PUT MARKER FORM HERE!</div>
@@ -242,7 +242,7 @@
 					<td width="200px"><br />
 						<ul>
 							<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerStyle(n);">Marker Style Name Here</a></li>
-							<li id="edit-markerstylelink-new"><b><a id="edit-markerstylelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerStyle();">Add A New Marker Style</a></b></li>
+							<li id="edit-markerstylelink-new"><strong><a id="edit-markerstylelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerStyle();">Add A New Marker Style</a></strong></li>
 						</ul>
 					</td>
 					<td>
@@ -288,7 +288,7 @@
 					<td width="200px"><br />
 						<ul>
 							<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editIconStyle(n);">Icon Style Name Here</a></li>
-							<li id="edit-iconstylelink-new"><b><a id="edit-iconstylelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editIconStyle(null);">Add A New Icon Style</a></b></li>
+							<li id="edit-iconstylelink-new"><strong><a id="edit-iconstylelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editIconStyle(null);">Add A New Icon Style</a></strong></li>
 						</ul>
 					</td>
 					<td>
@@ -370,7 +370,7 @@
 						<td width="200px">Polylines:<br />
 							<ul id="edit-polylines-list">
 								<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editPolyline(n);">Polyline Name Here</a></li>
-								<li id="edit-polylinelink-new"><b><a id="edit-polylinelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newPolyline(setindex);">Add A New Polyline</a></b></li>
+								<li id="edit-polylinelink-new"><strong><a id="edit-polylinelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newPolyline(setindex);">Add A New Polyline</a></strong></li>
 							</ul>
 						</td>
 						<td>
@@ -418,7 +418,7 @@
 					<td width="200px"><br />
 						<ul>
 							<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineStyle(n);">Polyline Style Name Here</a></li>
-							<li id="edit-polylinestylelink-new"><b><a id="edit-polylinestylelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineStyle();">Add A New Polyline Style</a></b></li>
+							<li id="edit-polylinestylelink-new"><strong><a id="edit-polylinestylelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editPolylineStyle();">Add A New Polyline Style</a></strong></li>
 						</ul>
 					</td>
 					<td>
@@ -504,7 +504,7 @@
 						<td width="200px">Polygons:<br />
 							<ul id="edit-polygons-list">
 								<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editPolygon(n);">Polygon Name Here</a></li>
-								<li id="edit-polygonlink-new"><b><a id="edit-polygonlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newPolygon(setindex);">Add A New Polygon</a></b></li>
+								<li id="edit-polygonlink-new"><strong><a id="edit-polygonlink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.newPolygon(setindex);">Add A New Polygon</a></strong></li>
 							</ul>
 						</td>
 						<td>
@@ -550,7 +550,7 @@
 					<td width="200px"><br />
 						<ul>
 							<li style="display:none;"><a href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonStyle(n);">Polygon Style Name Here</a></li>
-							<li id="edit-polygonstylelink-new"><b><a id="edit-polygonstylelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonStyle();">Add A New Polygon Style</a></b></li>
+							<li id="edit-polygonstylelink-new"><strong><a id="edit-polygonstylelink-new-a" href="javascript:void(0)" onclick="BitMap.EditSession.editPolygonStyle();">Add A New Polygon Style</a></strong></li>
 						</ul>
 					</td>
 					<td>
