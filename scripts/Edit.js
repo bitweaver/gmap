@@ -1752,45 +1752,28 @@ BitMap.Edit.prototype = {
 		 
 	 "updateMap": function(rslt){
 		var xml = rslt.responseXML.documentElement;
+		// convenience
+		var $s = partial( bind(this.getXMLTagValue, this), xml );
+		var $i = function( s ){ return parseInt( $s( s ) )};
+		var $f = function( s ){ return parseFloat( $s( s ) )};
+		var m = this.Map;
 
-		//shorten var names
-		var id = xml.getElementsByTagName('gmap_id');
-		this.Map.id = this.getNodeValue( id[0].firstChild );
-		var t = xml.getElementsByTagName('title');
-		this.Map.title = this.getNodeValue( t[0].firstChild );
-		var d = xml.getElementsByTagName('description');
-		this.Map.description = this.getNodeValue( d[0].firstChild );			
-		var dt = xml.getElementsByTagName('data');
-		if ( dt[0].hasChildNodes() ){
-			this.Map.data = this.getNodeValue( dt[0].firstChild );
-			var pdt = xml.getElementsByTagName('parsed_data');
-			this.Map.parsed_data = this.getNodeValue( pdt[0].firstChild );
-		}else{
-			this.Map.data = "";
-			this.Map.parsed_data = "";
-		}
-		var w = xml.getElementsByTagName('width');
-		this.Map.width = w[0].firstChild.nodeValue;
-		var h = xml.getElementsByTagName('height');
-		this.Map.height = h[0].firstChild.nodeValue;			
-		var lt = xml.getElementsByTagName('lat');
-		this.Map.center.lat = parseFloat(lt[0].firstChild.nodeValue);
-		var ln = xml.getElementsByTagName('lng');
-		this.Map.center.lng = parseFloat(ln[0].firstChild.nodeValue);
-		var z = xml.getElementsByTagName('zoom');
-		this.Map.zoom = parseInt(z[0].firstChild.nodeValue);
-		var mt = xml.getElementsByTagName('maptype');
-		this.Map.maptype = parseInt(mt[0].firstChild.nodeValue);
-		var sc = xml.getElementsByTagName('zoom_control');
-		this.Map.controls.zoom_control = sc[0].firstChild.nodeValue;
-		var sm = xml.getElementsByTagName('maptype_control');
-		this.Map.controls.maptype_control = sm[0].firstChild.nodeValue;
-		var oc = xml.getElementsByTagName('overview_control');
-		this.Map.controls.overview_control = oc[0].firstChild.nodeValue;
-		var ss = xml.getElementsByTagName('scale');
-		this.Map.controls.scale = ss[0].firstChild.nodeValue;
-		var com = xml.getElementsByTagName('allow_comments');
-		this.Map.allow_comments = com[0].firstChild.nodeValue;
+		m.id = $i('gmap_id');
+		m.title = $s('title');
+		m.description = $s('description');
+		m.data = $s('data')!=null?$s('data'):"";
+		m.parsed_data = $s('parsed_data')!=null?$s('parsed_data'):"";
+		m.width = $i('width');
+		m.height = $i('height');
+		m.center.lat = $f('lat');
+		m.center.lng = $f('lng');
+		m.zoom = $i('zoom');
+		m.maptype = $i('maptype');
+		m.controls.zoom_control = $s('zoom_control');
+		m.controls.maptype_control = $s('maptype_control');
+		m.controls.overview_control = $s('overview_control');
+		m.controls.scale = $s('scale');
+		m.allow_comments = $s('allow_comments');
 
 		//replace everything	
 		var maptile = $('map_title');
