@@ -2009,7 +2009,8 @@ BitMap.Edit.prototype = {
 					this.getIconStyle( s.icon_id );
 				}
 			}
-			// update the sets menus
+			// update the sets menus and side panel
+			this.Map.attachSideMarkers();
 			this.editMarkerSet(this.editObjectN);
 		}
 	},
@@ -2143,7 +2144,7 @@ BitMap.Edit.prototype = {
 		var i = null;
 		var is = this.Map.iconstyles;
 		for (var n=0; n<is.length; n++){
-			if ( is[n].icon_id = icon_id ){
+			if ( is[n].icon_id == icon_id ){
 				i = is[n];
 				break;
 			}
@@ -2193,6 +2194,8 @@ BitMap.Edit.prototype = {
 			}
 		}
 		
+		this.Map.attachSideMarkers();
+
 		this.hideSpinner("DONE!");
 		if( refr ){
 			// update the styles menus
