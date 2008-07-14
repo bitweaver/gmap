@@ -32,14 +32,14 @@
 	<div class="row">
 		{formlabel label="Path to Image" for="icon_image"}
 			{forminput}
-				<input name="icon_image" type="text" style="width:90%" value="{if $iconstyleInfo.icon_image}{$iconstyleInfo.icon_image}{else}icons/flat_color_pins/205.png{/if}" />
+				<input name="icon_image" type="text" style="width:90%" value="{if $iconstyleInfo.image}{$iconstyleInfo.image}{else}icons/flat_color_pins/205.png{/if}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
 	<div class="row">
 		{formlabel label="Path to Rollover Image" for="rollover_image"}
 			{forminput}
-				<input name="rollover_image" type="text" style="width:90%" value="{if $iconstyleInfo.rollover_image}{$iconstyleInfo.rollover_image}{else}icons/flat_color_pins/090.png{/if}" />
+				<input name="rollover_image" type="text" style="width:90%" value="{if $iconstyleInfo.rollover_image}{$iconstyleInfo.rollover_image}{/if}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
