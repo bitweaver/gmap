@@ -64,12 +64,14 @@
 			.gmapsidelist {padding:0px 2px 0px 6px; line-height:1.5em; clear:both;}
 			
 			.edit-datatable {background-color:#feb; border-bottom:2px solid #f30;}
-			.edit-datatable ul {margin-left:0em;}
-			.edit-datatable ul li {margin:0; padding:.25em 1em;}
+			.edit-datatable  ul {list-style-type:none; margin:16px 0 0 1em; padding:0;}
+		    .edit-datatable  ul li {padding:.25em .5em;}
 			.edit-titlebar {background-color:#cdf; margin:.5em 0em;}
 			.edit-selected {background-color:#fc7; border-top:2px solid #f30;}
-			.edit-selected .bar a.list {background-color:#feb}
+			.bar td {padding:1px 2px;}
+			.edit-selected .bar a.list {background-color:#feb; padding:1px 6px 2px 6px;}
 			.edit-select {background-color:#fff;}
+			.edit-form				{margin:6px 0px; padding:8px; background:white}
 			.tplform {background-color:#fff; margin:1em 0em; padding:2em; border:none;}
 			table {border-collapse:collapse;}
 			table.data td {padding:.5em;}

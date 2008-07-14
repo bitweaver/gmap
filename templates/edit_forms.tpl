@@ -53,7 +53,7 @@
 					<td width="200px">
 					</td>
 					<td>
-						<div id="maptype-form">PUT MAPTYPE FORM HERE!</div>
+						<div id="maptype-form" class="edit-form">PUT MAPTYPE FORM HERE!</div>
 					</td>
 					<td width="200px">
 						<div id="edit-maptype-tips">Tips<br />
@@ -151,7 +151,7 @@
 				<tr>
 				<td width="200px"><span class="setname">Set Name Here</span></td>
 				<td>
-					<a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSetOptions(n);">Edit Set Options</a> |
+					<a class="opts" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkerSet(n);">Edit Set Options</a> |
 					<a class="list" href="javascript:void(0)" onclick="BitMap.EditSession.editMarkers(n);">Edit Markers In This Set</a>
 				</td>
 			</tr>
@@ -168,7 +168,7 @@
 					<td width="200px">
 					</td>
 					<td>
-						<div id="markerset-form">PUT MARKERSET FORM HERE!</div>
+						<div id="markerset-form" class="edit-form">PUT MARKERSET FORM HERE!</div>
 					</td>
 					<td width="200px">
 						<div id="edit-markerset-options-tips">Tips<br />
@@ -246,7 +246,7 @@
 						</ul>
 					</td>
 					<td>
-						<div id="markerstyle-form">PUT MARKERSTYLE FORM HERE!</div>
+						<div id="markerstyle-form" class="edit-form">PUT MARKERSTYLE FORM HERE!</div>
 					</td>
 					<td width="200px">
 						<div id="edit-markerstyle-tips">Tips<br />

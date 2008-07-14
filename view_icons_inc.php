@@ -8,12 +8,22 @@ $gBitSystem->verifyPackage( 'gmap' );
 $gBitSystem->verifyPermission( 'p_gmap_view' );
 
 $gContent = new BitGmap();
-// this is how you store and update all icons found in the icons path
-//$gContent->storeIcons( GMAP_PKG_PATH."icons" );
-$_REQUEST['max_records'] = $gBitSystem->getConfig( 'max_records' ) * 5;
-$gBitSmarty->assign( 'icons', $gContent->getIconList( $_REQUEST ));
-$gBitSmarty->assign( 'themes', $gContent->getIconThemes() );
-$gBitSmarty->assign( 'listInfo', $_REQUEST['listInfo'] );
 
-$gBitSmarty->display( 'bitpackage:gmap/view_icons_inc.tpl', tra( 'Map' ));
+//if a icon_id is passed try to look it up
+if ( isset( $_REQUEST['icon_id'] ) && is_numeric( $_REQUEST['icon_id'] ) ){
+    if( $result = $gContent->getIconStyle( $_REQUEST['icon_id'] ) ) {
+		$gBitSmarty->assign_by_ref('iconstyleInfo', $result );    
+    }
+	
+	$gBitSystem->display('bitpackage:gmap/edit_iconstyle_xml.tpl', null, array( 'format' => 'xml', 'display_mode' => 'display' ));
+}else{
+	// this is how you store and update all icons found in the icons path
+	//$gContent->storeIcons( GMAP_PKG_PATH."icons" );
+	$_REQUEST['max_records'] = $gBitSystem->getConfig( 'max_records' ) * 5;
+	$gBitSmarty->assign( 'icons', $gContent->getIconList( $_REQUEST ));
+	$gBitSmarty->assign( 'themes', $gContent->getIconThemes() );
+	$gBitSmarty->assign( 'listInfo', $_REQUEST['listInfo'] );
+
+	$gBitSmarty->display( 'bitpackage:gmap/view_icons_inc.tpl', tra( 'Map' ));
+}
 ?>

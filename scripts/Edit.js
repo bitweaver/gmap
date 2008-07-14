@@ -100,6 +100,14 @@ BitMap.Edit.prototype = {
 		//setTimeout("this.SPINNER.style.display='none'", 1000);
 		this.SPINNER.style.display="none";
 	},
+	
+	"getXMLTagValue": function( xml, tag ){
+		var node = xml.getElementsByTagName( tag );
+		if( typeof( node[0] ) != 'undefined' ){
+			return this.getNodeValue( node[0].firstChild );
+		}
+		return null;
+	},
 
 	"getNodeValue": function( node ){
 		if( node != null ){
@@ -585,6 +593,11 @@ BitMap.Edit.prototype = {
 	"setIconStyle": function(n, url){
 		$('icon_id').value = n;
 		$('icon_img').src = url;
+	},
+
+
+	"getIconStyle": function(icon_id){
+		doSimpleXMLHttpRequest("view_icons_inc.php", {icon_id:icon_id}).addCallback( bind(this.updateIconStyle, this), icon_id, false );
 	},
 
 	/*******************
@@ -1532,7 +1545,7 @@ BitMap.Edit.prototype = {
 	 "storeIconStyle": function(f){
 		this.showSpinner("Saving Iconstyle...");
 		var str = "edit_iconstyle.php?" + queryString(f);
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateIconStyle, this) ); 
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateIconStyle, this), f.icon_id.value, true ); 
 	 },
 
 	 "storeMaptype": function(f){
@@ -1972,23 +1985,19 @@ BitMap.Edit.prototype = {
 			var oldStyle = s.style_id;
 			var oldIcon = s.icon_id;
 		}
-		//shorten var names
-		var id = xml.getElementsByTagName('set_id');			
-		s.set_id = parseInt(id[0].firstChild.nodeValue);
-		var nm = xml.getElementsByTagName('name');
-		s.name = this.getNodeValue( nm[0].firstChild );
-		var dc = xml.getElementsByTagName('description');
-		s.description = this.getNodeValue( dc[0].firstChild );
-		var sy = xml.getElementsByTagName('style_id');
-		s.style_id = parseInt(sy[0].firstChild.nodeValue);			
-		var ic = xml.getElementsByTagName('icon_id');
-		s.icon_id = parseInt(ic[0].firstChild.nodeValue);
-		var pol = xml.getElementsByTagName('plot_on_load');
-		if (pol[0].firstChild.nodeValue == 'true'){s.plot_on_load = true;}else{s.plot_on_load = false};
-		var sp = xml.getElementsByTagName('side_panel');
-		if (sp[0].firstChild.nodeValue == 'true'){s.side_panel = true;}else{s.side_panel = false};
-		var ex = xml.getElementsByTagName('explode');
-		if (ex[0].firstChild.nodeValue == 'true'){s.explode = true;}else{s.explode = false};
+
+		// convenience
+		var $s = partial( bind(this.getXMLTagValue, this), xml );
+		var $i = function( s ){ return parseInt( $s( s ) )};
+
+		s.set_id = $i('set_id');
+		s.name = $s('name');
+		s.description = $s('description');
+		s.style_id = $i('style_id');
+		s.icon_id = $i('icon_id');
+		s.plot_on_load = $s('plot_on_load')=='true'?true:false;
+		s.side_panel = $s('side_panel')=='true'?true:false;
+		s.explode = $s('explode')=='true'?true:false;
 		
 		this.hideSpinner("DONE!");
 
@@ -1999,24 +2008,22 @@ BitMap.Edit.prototype = {
 			this.editMarkerSets();
 			this.editMarkers(n_i);		
 		}else{
+			// update effected markers in the set
 			if ( ( oldStyle != s.style_id ) || ( oldIcon != s.icon_id ) ) {
 				a = this.Map.markers;
-				//if the length of the array is > 0
-				if (a.length > 0){
-					//loop through the array
-					for(var n=0; n<a.length; n++){
-						//if the array item is not Null
-						if (a[n]!= null && a[n].plot_on_load == true){
-							if (a[n].set_id == s.set_id){
-								a[n].style_id = s.style_id;
-								a[n].icon_id = s.icon_id;
-								//unload the marker
-								this.Map.map.removeOverlay( a[n].marker );
-								//define marker
-								this.Map.addMarker(n);
-							}
-						}
+				for(n in a){
+					if (a[n] != null && a[n].set_id == s.set_id ){
+						a[n].style_id = s.style_id;
+						a[n].icon_id = s.icon_id;
+						//unload the marker
+						this.Map.map.removeOverlay( a[n].gmarker );
+						//define marker
+						this.Map.addMarker(n);
 					}
+				}
+				// if we have a new icon style we assume our session knows nothing about it
+				if( oldIcon != s.icon_id ){
+					this.getIconStyle( s.icon_id );
 				}
 			}
 			// update the sets menus
@@ -2136,11 +2143,11 @@ BitMap.Edit.prototype = {
 			//loop through the array
 			for(var n=0; n<a.length; n++){
 				//if the array item is not Null
-				if (a[n]!= null && a[n].marker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
+				if (a[n]!= null && a[n].gmarker != null && a[n].style_id == s.style_id && s.marker_style_type != oldtp){
 					//unload the marker
-					this.map.removeOverlay( a[n].marker );
+					this.map.removeOverlay( a[n].gmarker );
 					//define new marker with new styles
-						this.addMarker(n);
+						this.Map.addMarker(n);
 					}
 				}
 			}
@@ -2148,79 +2155,66 @@ BitMap.Edit.prototype = {
 	},
 
 	
-	"updateIconStyle": function(rslt){
+	"updateIconStyle": function(icon_id, refr, rslt){
 	    var xml = rslt.responseXML.documentElement;
-		var n = this.editObjectN;
-		var i;
-	    if ( n != null){
-			//the iconstyles data we are changing
-			i = this.Map.iconstyles[n];
-	    }else{
-			n = this.Map.iconstyles.length;
-			i = this.Map.iconstyles[n] = [];
+		var i = null;
+		var is = this.Map.iconstyles;
+		for (var n=0; n<is.length; n++){
+			if ( is[n].icon_id = icon_id ){
+				i = is[n];
+				break;
+			}
+		}
+	    if ( i == null){
+			n = is.length;
+			i = is[n] = [];
 	    }
 	    
+		// convenience
+		var $s = partial( bind(this.getXMLTagValue, this), xml );
+		var $i = function( s ){ return parseInt( $s( s ) )};
+
 		// assign iconsstyle values to data array
-		var id = xml.getElementsByTagName('icon_id');
-		i.icon_id = parseInt( id[0].firstChild.nodeValue );
-		var nm = xml.getElementsByTagName('name');
-		i.name = nm[0].firstChild.nodeValue;
-		var tp = xml.getElementsByTagName('icon_style_type');
-		i.icon_style_type = parseInt( tp[0].firstChild.nodeValue );
-		var ig = xml.getElementsByTagName('image');
-		i.image = ig[0].firstChild.nodeValue;
-		var rig = xml.getElementsByTagName('rollover_image');
-		i.rollover_image = rig[0].firstChild.nodeValue;
-		var icw = xml.getElementsByTagName('icon_w');
-		i.icon_w = parseInt( icw[0].firstChild.nodeValue );
-		var ich = xml.getElementsByTagName('icon_h');
-		i.icon_h = parseInt( ich[0].firstChild.nodeValue );
-		var is = xml.getElementsByTagName('shadow_image');			
-		i.shadow_image = is[0].firstChild.nodeValue;
-		var isw = xml.getElementsByTagName('shadow_w');
-		i.shadow_w = parseInt( isw[0].firstChild.nodeValue );
-		var ish = xml.getElementsByTagName('shadow_h');
-		i.shadow_h = parseInt( ish[0].firstChild.nodeValue );
-		var iax = xml.getElementsByTagName('icon_anchor_x');			
-		i.icon_anchor_x = parseInt( iax[0].firstChild.nodeValue );
-		var iay = xml.getElementsByTagName('icon_anchor_y');			
-		i.icon_anchor_y = parseInt( iay[0].firstChild.nodeValue );
-		var sax = xml.getElementsByTagName('shadow_anchor_x');			
-		i.shadow_anchor_x = parseInt( sax[0].firstChild.nodeValue );
-		var say = xml.getElementsByTagName('shadow_anchor_y');			
-		i.shadow_anchor_y = parseInt( say[0].firstChild.nodeValue );
-		var wax = xml.getElementsByTagName('infowindow_anchor_x');			
-		i.infowindow_anchor_x = parseInt( wax[0].firstChild.nodeValue );
-		var way = xml.getElementsByTagName('infowindow_anchor_y');			
-		i.infowindow_anchor_y = parseInt( way[0].firstChild.nodeValue );
+		i.icon_id = $i('icon_id');
+		i.name = $s('name');
+		i.icon_style_type = $i('icon_style_type');
+		i.image = $s('image');
+		i.rollover_image = $s('rollover_image');
+		i.icon_w = $i('icon_w');
+		i.icon_h = $i('icon_h');
+		i.shadow_image = $s('shadow_image');
+		i.shadow_w = $i('shadow_w');
+		i.shadow_h = $i('shadow_h');
+		i.icon_anchor_x = $i('icon_anchor_x');
+		i.icon_anchor_y = $i('icon_anchor_y');
+		i.shadow_anchor_x = $i('shadow_anchor_x');
+		i.shadow_anchor_y = $i('shadow_anchor_y');
+		i.infowindow_anchor_x = $i('infowindow_anchor_x');
+		i.infowindow_anchor_y = $i('infowindow_anchor_y');
 
 		//update the icon
 		if (i.icon_style_type == 0) {
 			this.Map.defineGIcon(n);
 		}
-		
-	    if ( this.editObjectN != null){
-			//update all markers
-			var a = this.Map.markers;
-			
-			//if the length of the array is > 0
-			if (a.length > 0){
-				//loop through the array
-				for(var n=0; n<a.length; n++){
-					//if the array item is not Null
-					if (a[n]!= null && a[n].marker != null && a[n].icon_id == i.icon_id){
-						//unload the marker
-						this.Map.map.removeOverlay( a[n].marker );
-						//define the marker
-						this.addMarker(n);
-					}
+
+		//update all markers
+		var a = this.Map.markers;
+		if (a.length > 0){
+			for(var n=0; n<a.length; n++){
+				if (a[n]!= null && a[n].gmarker != null && a[n].icon_id == i.icon_id){
+					//unload the marker
+					this.Map.map.removeOverlay( a[n].gmarker );
+					//define the marker
+					this.Map.addMarker(n);
 				}
 			}
 		}
 		
 		this.hideSpinner("DONE!");
-		// update the styles menus
-		this.editIconStyles();
+		if( refr ){
+			// update the styles menus
+			this.editIconStyles();
+		}
 	},
 
 
@@ -2812,6 +2806,8 @@ BitMap.Edit.prototype = {
 			this.hideSpinner("DONE!");
 		}
 	},		
+
+	
 	/******************
 	 *
 	 *  Editing Tools
