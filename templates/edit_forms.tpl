@@ -82,7 +82,7 @@
 						</ul>
 					</td>
 					<td>
-						<div id="tilelayer-form"></div>
+						<div id="tilelayer-form" class="edit-form"></div>
 					</td>
 					<td width="200px">
 						<div id="edit-tilelayer-tips">Tips<br />
@@ -123,7 +123,7 @@
 
 		<!-- edit copyrights form -->
 		<div id="edit-copyright-table" style="display:none;">
-			<div id="copyright-form">PUT COPYRIGHT FORM HERE!</div>
+			<div id="copyright-form" class="edit-form">PUT COPYRIGHT FORM HERE!</div>
 		</div>
 		<!-- edit of edit copyrights form -->
 	{/jstab}
@@ -292,7 +292,7 @@
 						</ul>
 					</td>
 					<td>
-						<div id="iconstyle-form">PUT ICONSTYLE FORM HERE!</div>
+						<div id="iconstyle-form" class="edit-form">PUT ICONSTYLE FORM HERE!</div>
 					</td>
 					<td width="200px">
 						<div id="edit-iconstyle-tips">Tips<br />
@@ -554,7 +554,7 @@
 						</ul>
 					</td>
 					<td>
-						<div id="polygonstyle-form">PUT POLYLINESTYLE FORM HERE!</div>
+						<div id="polygonstyle-form" class="edit-form">PUT POLYLINESTYLE FORM HERE!</div>
 					</td>
 					<td width="200px">
 						<div id="edit-polygonstyle-tips">Tips<br />
