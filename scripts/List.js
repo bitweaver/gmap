@@ -68,7 +68,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		var right_lng = this.map.getBounds().getNorthEast().lng();
 		var down_lat = this.map.getBounds().getSouthWest().lat();
 		var left_lng = this.map.getBounds().getSouthWest().lng();
-		var str = [BitMap.BIT_ROOT_URL, "liberty/list_content.php?", MochiKit.Base.queryString(f), "&up_lat=",up_lat,"&right_lng=",right_lng,"&down_lat=",down_lat,"&left_lng=",left_lng,"&list_page=",page].join("");
+		var str = [BitSystem.urls.liberty, "list_content.php?", MochiKit.Base.queryString(f), "&up_lat=",up_lat,"&right_lng=",right_lng,"&down_lat=",down_lat,"&left_lng=",left_lng,"&list_page=",page].join("");
 		
 		//account for bug in queryString
 		str = str.replace(/liberty_categories%5B%5D=Any/,"");

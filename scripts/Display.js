@@ -87,7 +87,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		M.gmarker = new GMarker(p, {icon: myicon, title:tip});
 		M.gmarker.index = i;
 		M.gmarker.type = 'marker';
-		M.gmarker.my_maxurl = BitMap.BIT_ROOT_URL + "gmap/view_marker.php?marker_id=" + M.marker_id + '&comments_maxComments=999999&ajax_xml=true';
+		M.gmarker.my_maxurl = BitSystem.urls.gmap + "view_marker.php?marker_id=" + M.marker_id + '&comments_maxComments=999999&ajax_xml=true';
 		this.map.addOverlay(M.gmarker);
 		M.gmarker.plotted = true;
 	},
@@ -357,7 +357,6 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			for ( var n=0; n<markercount; n++ ){
 				//if show set == y and show marker == y
 				var M = this.markers[n];
-				alert( "markersetid: "+M.set_id );
 				if ( M != null && ( ( M.side_panel == true && M.explode == true ) || M.plot_on_load != true ) ) {
 					var imgLink = ( M.thumbnail_url != null && M.thumbnail_url != '' )?[BR(), IMG({"src":M.thumbnail_url})]:null;
 					var newLink = A({"href":"javascript:void(0);", "onclick":"BitMap.MapData[0].Map.openMarkerWindow("+n+");"}, SPAN(null, M.title), imgLink );
