@@ -19,7 +19,7 @@
 		{if $marker.thumbnail_url}
 			<div class="image">
 				{assign var=size value=$gContent->getPreference('primary_attachment_size')|default:small}
-				{jspopup notra=1 href=$marker.thumbnail_url.original alt=$marker.title|escape title=$marker.title|escape" img=$marker.thumbnail_url.$size}
+				{jspopup notra=1 href=$marker.thumbnail_url.large alt=$marker.title|escape title=$marker.title|escape" img=$marker.thumbnail_url.$size}
 			</div>
 		{/if}
 			

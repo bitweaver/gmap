@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.54 2008/06/23 21:56:12 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.55 2008/07/15 02:34:55 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -79,7 +79,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 					  WHERE ot.`$lookupColumn`=? $whereSql";
 
 			if( $this->mInfo = $this->mDb->getRow( $query, $bindVars )){
-				$this->mInfo['thumbnail_url'] = BitGmapMarker::getImageThumbnails( $this->mInfo );
+				$this->mInfo['thumbnail_url'] = liberty_fetch_thumbnails( array( "storage_path" => $this->mInfo['image_attachment_path'] ) );
 				$this->mOverlayId = $this->mInfo[$overlayKey]; 
 				$this->mContentId = $this->mInfo['content_id'];
 				$this->mInfo['raw'] = $this->mInfo['data'];
@@ -102,27 +102,6 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		}
 		return( count( $this->mInfo ) );
 	}
-
-	/**
-	* Get the URL for any given marker image
-	* @param $pParamHash pass in full set of data returned from marker query
-	* @return url to image
-	* @access public
-	**/
-	function getImageThumbnails( $pParamHash ) {
-		global $gBitSystem, $gThumbSizes;
-		$ret = NULL;
-		if( !empty( $pParamHash['image_attachment_path'] )) {
-			$thumbHash = array(
-				'mime_image'   => FALSE,
-				'storage_path' => $pParamHash['image_attachment_path']
-			);
-			$ret = liberty_fetch_thumbnails( $thumbHash );
-			$ret['original'] = "/".$pParamHash['image_attachment_path'];
-		}
-		return $ret;
-	}
-
 
 	function verify( &$pParamHash ) {
 
@@ -253,7 +232,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$res['allow_comments'] = "y";
 				$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
 			}
-			$res['thumbnail_url'] = BitGmapMarker::getImageThumbnails( $res );
+			$res['thumbnail_url'] = liberty_fetch_thumbnails( array( "storage_path" => $res['image_attachment_path'] ) );
 			/* not sure the best way to go about
 			 *  cleaning this kind of crap out -
 			 *  but since gmaps uses plenty of javascript
