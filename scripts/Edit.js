@@ -29,8 +29,8 @@ BitMap.EditMap = function(){
 // MAP EDITING PROTOTYPE and METHODS
 BitMap.Edit = function(){
 	this.SPINNER = $('spinner');
-	this.SPINNER_TEXT = $('spinner-text');
-	this.SPINNER_TEXT_ORG = this.SPINNER_TEXT.innerHTML;
+//	this.SPINNER_TEXT = $('spinner-text');
+//	this.SPINNER_TEXT_ORG = this.SPINNER_TEXT.innerHTML;
 	this.Map = BitMap.MapData[0].Map;
 	// for tracking which object we are updating
 	this.editArray;
@@ -83,13 +83,13 @@ BitMap.Edit.prototype = {
 	},
 
 	"showSpinner": function(str){
-		this.SPINNER_TEXT.innerHTML = (str!=null)?str:this.SPINNER_TEXT_ORG;
+		// this.SPINNER_TEXT.innerHTML = (str!=null)?str:this.SPINNER_TEXT_ORG;
 		this.positionSpinner();
 		this.SPINNER.style.display="block";
 	},
 	
 	"hideSpinner": function(str){
-		this.SPINNER_TEXT.innerHTML = (str!=null)?str:this.SPINNER_TEXT.innerHTML;
+		// this.SPINNER_TEXT.innerHTML = (str!=null)?str:this.SPINNER_TEXT.innerHTML;
 		/*	this would be useful but 
 			regeneration of the edit 
 			forms is pushing the 
