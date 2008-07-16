@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.132 2008/07/11 15:21:21 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.133 2008/07/16 21:41:07 squareing Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1446,11 +1446,51 @@ class BitGmap extends LibertyMime {
 				if( !preg_match( "#^\.#", $file ) && $file != 'CVS' ) {
 					if( is_dir( $pDir."/".$file )) {
 						$theme[$file] = $this->fetchIcons( $pDir."/".$file );
+					// include icons setup file
+					} elseif( $file == 'gmap_icons.tsv' ) {
+						$lines = explode( "\n", file_get_contents( $pDir."/".$file ));
+						// first line contains columns
+						$tableColumns = explode( "\t", array_shift( $lines ));
+						$i = 0;
+
+						// a list of valid columns that can be set using the tsv file
+						$validColumns = array(
+							"name",
+							"icon_style_type",
+							"rollover_image",
+							"shadow_image",
+							"shadow_w",
+							"shadow_h",
+							"icon_anchor_x",
+							"icon_anchor_y",
+							"shadow_anchor_x",
+							"shadow_anchor_y",
+							"infowindow_anchor_x",
+							"infowindow_anchor_y",
+							"image_map",
+						);
+
+						foreach( $lines as $line ) {
+							if( !empty( $line ) && !preg_match( "/^#/", $line )) {
+								$key = $i++;
+								foreach( explode( "\t", $line ) as $k => $value ) {
+									if( !empty( $tableColumns[$k] ) && in_array( $tableColumns[$k], $validColumns )) {
+										$settings[$tableColumns[$k]] = $value;
+
+										// we place default settings in 'default' for easy retrieval later
+										if( $tableColumns[$k] == 'name' && $value == "DEFAULT" ) {
+											$key = 'default';
+										}
+									}
+								}
+								$theme['settings'][$key] = $settings;
+							}
+						}
 					// avoid picking up icons in icons/ dir
 					} elseif( basename( $pDir ) != 'icons' && preg_match( "#\.(png|jpe?g|gif|bmp|tiff?)$#i", $file )) {
 						// too lazy to code this for servers without GD installed
 						list( $width, $height, $type, $attr ) = @getimagesize( $pDir."/".$file );
-						$theme[] = array(
+						$theme['icons'][] = array(
 							'icon_w' => $width,
 							'icon_h' => $height,
 							'name' => $file,
@@ -1477,12 +1517,16 @@ class BitGmap extends LibertyMime {
 	function storeIcons( $pDir ) {
 		global $gBitUser;
 		if( $iconThemes = $this->fetchIcons( $pDir )) {
-			foreach( $iconThemes as $theme => $icons ) {
+			foreach( $iconThemes as $theme => $data ) {
 				$theme_id = $this->storeIconTheme( $theme );
-				foreach( $icons as $icon ) {
+				foreach( $data['icons'] as $icon ) {
 					$icon['theme_id'] = $theme_id;
 					$icon['user_id']  = $gBitUser->mUserId;
 					$this->storeIcon( $icon );
+				}
+
+				if( !empty( $data['settings'] )) {
+					$this->storeIconThemeSettings( $theme_id, $data['settings'] );
 				}
 			}
 		}
@@ -1492,6 +1536,7 @@ class BitGmap extends LibertyMime {
 	 * storeIcon 
 	 * 
 	 * @param array $pStoreHash icon information
+	 *                          if no $pStoreHash['name'] is given and only a theme_id, all icons with that column theme_id will be updated
 	 * @access public
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
@@ -1506,6 +1551,35 @@ class BitGmap extends LibertyMime {
 			} else {
 				$pStoreHash['icon_id'] = $this->mDb->GenID( 'gmaps_icon_styles_icon_id_seq' );
 				$this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_icon_styles", $pStoreHash );
+			}
+		} elseif( @BitBase::verifyId( $pStoreHash['theme_id'] )) {
+			$this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_icon_styles", $pStoreHash, array( 'theme_id' => $pStoreHash['theme_id'] ));
+		}
+	}
+
+	/**
+	 * storeIconThemeSettings 
+	 * 
+	 * @param array $pThemeId Theme ID
+	 * @param array $pStoreHash array of icons
+	 * @access public
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 */
+	function storeIconThemeSettings( $pThemeId, $pStoreHash ) {
+		if( BitBase::verifyId( $pThemeId )) {
+			if( !empty( $pStoreHash['default'] ) && is_array( $pStoreHash['default'] )) {
+				// these are the default settings for all icons in this theme
+				$default = $pStoreHash['default'];
+				$default['theme_id'] = $pThemeId;
+				unset( $default['name'] );
+				unset( $pStoreHash['default'] );
+				$this->storeIcon( $default );
+
+				foreach( $pStoreHash as $icon ) {
+					// we need to populate the icon values with the default ones
+					$icon = array_merge( $default, $icon );
+					vd($icon);
+				}
 			}
 		}
 	}
