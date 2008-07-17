@@ -420,11 +420,12 @@ BitMap.Edit.prototype = {
  	},
 	
 	"cancelNewMarker": function(){
-	  this.canceledit('edit-marker-new');
+		this.canceledit('edit-marker-new');
 	},
 	
 	"cancelEditMarkers": function(){
 		BitMap.hide('edit-markers-table');
+		this.cancelEditMarkerSet();
 	},
 	
 
@@ -636,7 +637,6 @@ BitMap.Edit.prototype = {
 			//alert you must create a maptype first
 		}
 		BitMap.show('edit-maptypes-table');
-		BitMap.show('edit-maptypes-cancel');	  
 	},
 
 	
@@ -1583,20 +1583,19 @@ BitMap.Edit.prototype = {
 	 "removeTilelayer": function(f){
 	 	if (confirm("Are you sure you want to remove \nthe tilelayer \""+f.tiles_name.value+"\" from this maptype?")){
 			this.showSpinner("Removing Tilelayer...");
-			this.editSetId = f.set_id.value;
-			this.editTilelayerId = f.tilelayer_id.value;
-			var str = "edit_tilelayer.php?set_id=" + this.editSetId + "&tilelayer_id=" + this.editTilelayerId + "&remove_tilelayer=true"+"&tk="+bitTk;
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) );
+			var tid = f.tilelayer_id.value;
+			var mid = f.maptype_id.value;
+			var str = "edit_tilelayer.php?maptype_id=" + mid + "&tilelayer_id=" + f.tid + "&remove_tilelayer=true"+"&tk="+bitTk;
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this), tid, mid );
 		}
 	 },
 
 	 "expungeTilelayer": function(f){
 	 	if (confirm("Are you sure you want to delete \nthe tilelayer \""+f.tiles_name.value+"\"? \n\nThis can not be undone!")){
 			this.showSpinner("Deleting Tilelayer...");
-			this.editSetId = f.set_id.value;
-			this.editTilelayerId = f.tilelayer_id.value;
-			var str = "edit_tilelayer.php?tilelayer_id=" + this.editTilelayerId + "&expunge_tilelayer=true"+"&tk="+bitTk;
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this) );
+			var tid = f.tilelayer_id.value;
+			var str = "edit_tilelayer.php?tilelayer_id=" + tid + "&expunge_tilelayer=true"+"&tk="+bitTk;
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveTilelayer, this), tid, null );
 		}
 	 },
 
@@ -2318,33 +2317,42 @@ BitMap.Edit.prototype = {
 	},
 	
 	"parseTilelayerXML": function(tl, xml){
-		// assign map type values data array				
-		var id = xml.getElementsByTagName('tilelayer_id');			
-		tl.tilelayer_id = parseInt( id[0].firstChild.nodeValue );
-		var nm = xml.getElementsByTagName('tiles_name');			
-		tl.tiles_name = nm[0].firstChild.nodeValue;
-		var minz = xml.getElementsByTagName('tiles_minzoom');
-		tl.tiles_minzoom = parseInt( minz[0].firstChild.nodeValue );
-		var mz = xml.getElementsByTagName('tiles_maxzoom');
-		tl.tiles_maxzoom = parseInt( mz[0].firstChild.nodeValue );		
-		var png = xml.getElementsByTagName('ispng');
-		tl.ispng = png[0].firstChild.nodeValue;
-		var url = xml.getElementsByTagName('tilesurl');
-		tl.tilesurl = url[0].firstChild.nodeValue;
-		var op = xml.getElementsByTagName('opacity');
-		tl.opacity = parseFloat( op[0].firstChild.nodeValue );
+		// convenience
+		var $s = partial( bind(this.getXMLTagValue, this), xml );
+		var $i = function( s ){ return parseInt( $s( s ) )};
+		var $f = function( s ){ return parseFloat( $s( s ) )};
+
+		// assign maptype values to data array	
+		tl.tilelayer_id = $i('tilelayer_id');
+		tl.tiles_name = $s('tiles_name');
+		tl.tiles_minzoom = $i('tiles_minzoom');
+		tl.tiles_maxzoom = $i('tiles_maxzoom');		
+		tl.ispng = $s('ispng');
+		tl.tilesurl = $s('tilesurl');
+		tl.opacity = $f('opacity');
 	},
 
-	"updateRemoveTilelayer": function(){
+	"updateRemoveTilelayer": function( tid, mid, rslt ){
 		if ( this.verifyRemove(rslt) ){
-			for (var n=0; n<this.Map.tilelayers.length; n++){
-				if ( ( this.Map.tilelayers[n] != null ) && ( this.Map.maptypes[i].tilelayers[n].marker_id == this.editSetId ) ){
+			// we only need to remove the reference from affected maptypes we ignore the tilelayers array
+			var a = this.Map.maptypes;
+			for (n in a){
+				// if maptype_id == null we delete the tilelayer from all else remove on match
+				if ( (mid == null || a[n].maptype_id == mid) && ( (x=MochiKit.Base.findIdentical( a[n].tilelayer_ids, tid )) > -1 ) ){
 					//@TODO remove layer from related maptype and update maptype on map
-					this.Map.tilelayers[n] = null;
+					a[n].tilelayer_ids[x] = null;
 				}
+
 			}
-			this.editMaptype(editSetId);
-			this.editTilelayers();
+			// @todo update the map
+			if( mid != null ){
+				this.editMaptype(mid);
+				this.editTilelayers();
+			}else{
+				// @todo put a confirmation message in the tilelayer edit window
+				this.cancelEditMaptypes();
+				this.editMaptypes();
+			}
 			this.hideSpinner("DONE!");
 		}	
 	},

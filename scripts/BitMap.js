@@ -206,9 +206,11 @@ BitMap.Map.prototype = {
 	},
 	
 	"makeGetTileUrl": function( url ){
+		var rootUrl = (url.search(/\?/) > -1)?url:url+"?";
 		var func = function(a, b){
 					var c = 17 - b;
-					return url+"?x="+a.x+"&y="+a.y+"&zoom="+c;
+					var ret = rootUrl+"&transparent=true"+"&x="+a.x+"&y="+a.y+"&zoom="+c;
+					return ret;
 				};
 		return func;
 	},
