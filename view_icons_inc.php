@@ -18,9 +18,13 @@ if ( isset( $_REQUEST['icon_id'] ) && is_numeric( $_REQUEST['icon_id'] ) ){
 	$gBitSystem->display('bitpackage:gmap/edit_iconstyle_xml.tpl', null, array( 'format' => 'xml', 'display_mode' => 'display' ));
 }else{
 	// this is how you store and update all icons found in the icons path
-	//$gContent->storeIcons( GMAP_PKG_PATH."icons" );
 	$_REQUEST['max_records'] = $gBitSystem->getConfig( 'max_records' ) * 5;
-	$gBitSmarty->assign( 'icons', $gContent->getIconList( $_REQUEST ));
+	$icons = $gContent->getIconList( $_REQUEST );
+	if( empty( $icons ) || !empty( $_REQUEST['update_icon_list'] )) {
+		$gContent->importIcons( GMAP_PKG_PATH."icons" );
+		$icons = $gContent->getIconList( $_REQUEST );
+	}
+	$gBitSmarty->assign( 'icons', $icons );
 	$gBitSmarty->assign( 'themes', $gContent->getIconThemes() );
 	$gBitSmarty->assign( 'listInfo', $_REQUEST['listInfo'] );
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.133 2008/07/16 21:41:07 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.134 2008/07/17 09:53:37 squareing Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1413,6 +1413,8 @@ class BitGmap extends LibertyMime {
 			ORDER BY ".$this->mDb->convertSortmode( $pListHash['sort_mode'] );
 		$result = $this->mDb->query( $sql, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
 		while( $aux = $result->fetchRow() ) {
+			// convert relative path to valid url
+			$aux['image'] = BIT_ROOT_URL.str_replace( '//', '/', str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( $aux['image'] ))));
 			$ret[] = $aux;
 		}
 
@@ -1429,7 +1431,14 @@ class BitGmap extends LibertyMime {
 	 * @return array of all available icon themes
 	 */
 	function getIconThemes() {
-		return( $this->mDb->getAssoc( "SELECT `theme_id`, `theme_title` FROM ".BIT_DB_PREFIX."gmaps_icon_themes ORDER BY ".$this->mDb->convertSortmode( 'theme_title_asc' )));
+		// INNER JOIN is needed to weed out themes that don't have icons in them
+		// this can happen when you remove a dir of icons and run importIcons();
+		return( $this->mDb->getAssoc( "
+			SELECT git.`theme_id`, git.`theme_title`
+			FROM `".BIT_DB_PREFIX."gmaps_icon_themes` git
+				INNER JOIN `".BIT_DB_PREFIX."gmaps_icon_styles` gis ON( gis.`theme_id` = git.`theme_id` )
+			ORDER BY ".$this->mDb->convertSortmode( 'theme_title_asc' )
+		));
 	}
 
 	/**
@@ -1494,7 +1503,8 @@ class BitGmap extends LibertyMime {
 							'icon_w' => $width,
 							'icon_h' => $height,
 							'name' => $file,
-							'image' => BIT_ROOT_URL.str_replace( '//', '/', str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( str_replace( BIT_ROOT_PATH, "", $pDir )."/".$file )))),
+							'image' => str_replace( BIT_ROOT_PATH, "", $pDir )."/".$file,
+							//'image' => BIT_ROOT_URL.str_replace( '//', '/', str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( str_replace( BIT_ROOT_PATH, "", $pDir )."/".$file )))),
 						);
 					}
 				}
@@ -1508,21 +1518,24 @@ class BitGmap extends LibertyMime {
 	}
 
 	/**
-	 * storeIcons store all icons recursively found in $pDir
+	 * importIcons store all icons recursively found in $pDir
+	 * NOTE: This process is _very_ expensive and you should only run this when absoluteley needed.
 	 * 
 	 * @param array $pDir 
 	 * @access public
 	 * @return void
 	 */
-	function storeIcons( $pDir ) {
+	function importIcons( $pDir ) {
 		global $gBitUser;
 		if( $iconThemes = $this->fetchIcons( $pDir )) {
 			foreach( $iconThemes as $theme => $data ) {
 				$theme_id = $this->storeIconTheme( $theme );
-				foreach( $data['icons'] as $icon ) {
-					$icon['theme_id'] = $theme_id;
-					$icon['user_id']  = $gBitUser->mUserId;
-					$this->storeIcon( $icon );
+				if( !empty( $data['icons'] )) {
+					foreach( $data['icons'] as $icon ) {
+						$icon['theme_id'] = $theme_id;
+						$icon['user_id']  = $gBitUser->mUserId;
+						$this->storeIcon( $icon );
+					}
 				}
 
 				if( !empty( $data['settings'] )) {
@@ -1530,13 +1543,15 @@ class BitGmap extends LibertyMime {
 				}
 			}
 		}
+
+		$this->pruneIcons();
 	}
 
 	/**
 	 * storeIcon 
 	 * 
 	 * @param array $pStoreHash icon information
-	 *                          if no $pStoreHash['name'] is given and only a theme_id, all icons with that column theme_id will be updated
+	 *                          if no $pStoreHash['name'] is given and only a theme_id, all icons with that theme_id will be updated
 	 * @access public
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 */
@@ -1545,10 +1560,11 @@ class BitGmap extends LibertyMime {
 			$pStoreHash['theme_id'] = $this->storeIconTheme( 'Custom icons' );
 		}
 
+		// either update or insert icon based on information we have available
 		if( !empty( $pStoreHash['name'] ) && @BitBase::verifyId( $pStoreHash['theme_id'] )) {
 			if( $icon_id = $this->mDb->getOne( "SELECT `icon_id` FROM `".BIT_DB_PREFIX."gmaps_icon_styles` WHERE `theme_id` = ? AND `name` = ?", array( $pStoreHash['theme_id'], $pStoreHash['name'] ))) {
 				$this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_icon_styles", $pStoreHash, array( 'icon_id' => $icon_id ));
-			} else {
+			} elseif( !empty( $pStoreHash['image'] ) && is_readable( BIT_ROOT_PATH.$pStoreHash['image'] )) {
 				$pStoreHash['icon_id'] = $this->mDb->GenID( 'gmaps_icon_styles_icon_id_seq' );
 				$this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_icon_styles", $pStoreHash );
 			}
@@ -1558,7 +1574,21 @@ class BitGmap extends LibertyMime {
 	}
 
 	/**
-	 * storeIconThemeSettings 
+	 * pruneIcons remove icons that have been removed from the server
+	 * 
+	 * @access public
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 */
+	function pruneIcons() {
+		foreach( $this->mDb->getAll( "SELECT `icon_id`,`image` FROM `".BIT_DB_PREFIX."gmaps_icon_styles`" ) as $icon ) {
+			if( empty( $icon['image'] ) || !is_readable( BIT_ROOT_PATH.$icon['image'] )) {
+				$this->mDb->query( "DELETE FROM `".BIT_DB_PREFIX."gmaps_icon_styles` WHERE `icon_id` = ?", array( $icon['icon_id'] ));
+			}
+		}
+	}
+
+	/**
+	 * storeIconThemeSettings will store information extracted from the gmap_icons.tsv file
 	 * 
 	 * @param array $pThemeId Theme ID
 	 * @param array $pStoreHash array of icons
@@ -1576,9 +1606,14 @@ class BitGmap extends LibertyMime {
 				$this->storeIcon( $default );
 
 				foreach( $pStoreHash as $icon ) {
-					// we need to populate the icon values with the default ones
+					// we need to replace empty icon values with the default ones
+					foreach( $icon as $key => $value ) {
+						if( empty( $value )) {
+							unset( $icon[$key] );
+						}
+					}
 					$icon = array_merge( $default, $icon );
-					vd($icon);
+					$this->storeIcon( $icon );
 				}
 			}
 		}
