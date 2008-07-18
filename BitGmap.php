@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.134 2008/07/17 09:53:37 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.135 2008/07/18 04:02:11 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -193,10 +193,11 @@ class BitGmap extends LibertyMime {
 		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
 		
 		if( @$this->verifyId( $pGmapId ) ) {
-			$selectSql .= ", ( SELECT GROUP_CONCAT( gtl.`tilelayer_id` ) 
-					  FROM `".BIT_DB_PREFIX."gmaps_tilelayers` gtl 
-					  INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk ON (gtl.`tilelayer_id` = gtk.`tilelayer_id` )
-					  WHERE gtk.`maptype_id` = gsk.`set_id`) `tilelayer_ids` ";
+			$selectSql .= ", ( SELECT GROUP_CONCAT( gtk.`tilelayer_id` ORDER BY gtk.".$this->mDb->convertSortmode( array( 'pos_asc' ) )." ) 
+					  FROM `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk 
+					  INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` gtl ON (gtl.`tilelayer_id` = gtk.`tilelayer_id` )
+					  WHERE gtk.`maptype_id` = gsk.`set_id` )
+					  `tilelayer_ids`";
 			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gmt.`maptype_id` = gsk.`set_id`) "; 
 			$whereSql .= " WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = 'maptypes' ";
 			array_push( $bindVars, (int)$pGmapId );
@@ -249,13 +250,25 @@ class BitGmap extends LibertyMime {
 
 	
 	//* Gets data for a given tilelayer.
-	function getTilelayer($tilelayer_id) {
+	function getTilelayer( &$pParamHash ) {
 		global $gBitSystem;
-		if ($tilelayer_id && is_numeric($tilelayer_id)) {
-			$query = "SELECT bmt.*
-			FROM `".BIT_DB_PREFIX."gmaps_tilelayers` bmt
-			WHERE bmt.tilelayer_id = ?";
-	  		$result = $this->mDb->query( $query, array((int)$tilelayer_id));
+
+		$ret = NULL;
+
+		if ( isset( $pParamHash['tilelayer_id'] ) && is_numeric( $pParamHash['tilelayer_id'] ) ) {
+			$bindVars = array( $pParamHash['tilelayer_id'] );
+
+			if ( isset( $pParamHash['maptype_id'] ) && is_numeric( $pParamHash['maptype_id'] ) ) {
+				$select = ", gtk.`pos`";
+				$join = " INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk ON ( gtl.`tilelayer_id` = gtk.`tilelayer_id` )";
+				$where = " AND gtk.`maptype_id` = ?";
+				$bindVars[] = $pParamHash['maptype_id'];
+			}
+			
+			$query = "SELECT gtl.*".$select.
+			" FROM `".BIT_DB_PREFIX."gmaps_tilelayers` gtl".$join.
+			" WHERE gtl.`tilelayer_id` = ?".$where;
+	  		$result = $this->mDb->query( $query, $bindVars );
 	  		
 			if( $result && $result->numRows() ) {
 				$ret = $result->fields;
@@ -769,6 +782,12 @@ class BitGmap extends LibertyMime {
 			$pParamHash['tilelayer_store']['opacity'] = $pParamHash['opacity'];
 		}
 
+		// if we have a maptype id we'll also update the keychain
+		if( isset( $pParamHash['maptype_id'] ) ){
+			$pParamHash['keychain_store'] = array( 'maptype_id' => $pParamHash['maptype_id'] );
+			$pParamHash['keychain_store']['pos'] = ( isset( $pParamHash['pos'] ) && is_numeric( $pParamHash['pos'] ) )?$pParamHash['pos']:1;
+		}
+
 		return( count( $this->mErrors ) == 0 );
 	}
 	
@@ -779,19 +798,20 @@ class BitGmap extends LibertyMime {
 			// store the posted changes
 			if ( !empty( $pParamHash['tilelayer_id'] ) ) {			
 				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_tilelayers", $pParamHash['tilelayer_store'], array( "tilelayer_id" => $pParamHash['tilelayer_id'] ) );
+				 if ( !empty( $pParamHash['keychain_store'] ) ){
+					 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_tilelayers_keychain", $pParamHash['keychain_store'], array( "tilelayer_id" => $pParamHash['tilelayer_id'] ) );
+				 }
 			}else{
 				 $pParamHash['tilelayer_id'] = $this->mDb->GenID( 'gmaps_tilelayers_tilelayer_id_seq' );
 				 $pParamHash['tilelayer_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers", $pParamHash['tilelayer_store'] );				 
-				 // if its a new tilelayer we also get a maptype_id for the keychain and automaticallly associate it with a maptype.
-				 $pParamHash['keychain_store']['maptype_id'] = $pParamHash['maptype_id'];
-				 $pParamHash['keychain_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
+				 // if its a new tilelayer we also associate it with a maptype.
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers_keychain", $pParamHash['keychain_store'] );
 			}
 			$this->mDb->CompleteTrans();
 
 			// re-query to confirm results
-			$result = $this->getTilelayer($pParamHash['tilelayer_id']);
+			$result = $this->getTilelayer($pParamHash);
 		}
 		return $result;
 	}

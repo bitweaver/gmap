@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_tilelayer.php,v 1.14 2008/07/01 15:43:19 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_tilelayer.php,v 1.15 2008/07/18 04:02:11 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -59,7 +59,7 @@ if (!empty($_REQUEST["save_tilelayer"])) {
 	}
 }else{
 	if ( isset( $_REQUEST["tilelayer_id"] ) ){
-		$tilelayer = $gContent->getTilelayer( $_REQUEST["tilelayer_id"] );
+		$tilelayer = $gContent->getTilelayer( $_REQUEST );
 	}
 	if (isset($_REQUEST["maptype_id"])){
 		$tilelayer['maptype_id'] = $_REQUEST["maptype_id"];

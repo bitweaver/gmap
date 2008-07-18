@@ -8,6 +8,7 @@
 		<ispng>{$tilelayerInfo.ispng}</ispng>
 		<tilesurl>{$tilelayerInfo.tilesurl}</tilesurl>
 		<opacity>{$tilelayerInfo.opacity}</opacity>
+		<pos>{$tilelayerInfo.pos}</pos>
 	</tilelayer>
 {else}
 	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}

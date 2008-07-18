@@ -206,13 +206,13 @@ BitMap.Map.prototype = {
 	},
 	
 	"makeGetTileUrl": function( url ){
-		var rootUrl = (url.search(/\?/) > -1)?url:url+"?";
-		var func = function(a, b){
-					var c = url.search(/google.com/)?17-b:b;
-					var ret = rootUrl+"&transparent=true"+"&x="+a.x+"&y="+a.y+"&zoom="+c;
-					return ret;
+		var a = url.search(/\?/)>-1?url:url+"?";
+		var b = url.search(/google.com/)>-1?17:0;
+		var $f = function(p, z){
+					z = b?b-z:z;
+					return a+"&x="+p.x+"&y="+p.y+"&zoom="+z;
 				};
-		return func;
+		return $f;
 	},
 	
 	"addMaptype": function(i){

@@ -19,6 +19,8 @@
 		<input name="tilesurl" type="text" size="50" value="{$tilelayerInfo.tilesurl}"><br />
 		Opacity (a float from 0 to 1)<br />
 		<input name="opacity" type="text" size="5" value="{$tilelayerInfo.opacity}"><br />
+		Position<br />
+		<input name="pos" type="text" size="5" value="{$tilelayerInfo.pos}"><br />
 		</div>
 		<div>
 			<input type="button" name="save_tilelayer_btn" value="Save" onclick="javascript:BitMap.EditSession.storeTilelayer( this.form );" />
