@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarkerSet.php,v 1.7 2008/07/12 21:54:57 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarkerSet.php,v 1.8 2008/07/18 04:31:01 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -35,7 +35,7 @@ class BitGmapMarkerSet extends BitGmapOverlaySetBase{
 		$this->mContentTypeGuid = BITGMAPMARKERSET_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGMAPMARKERSET_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGMAPMARKERSET_CONTENT_TYPE_GUID,
-			'content_description' => 'Set of Markers for Google Map',
+			'content_description' => 'Map Markers Set',
 			'handler_class' => 'BitGmapMarkerSet',
 			'handler_package' => 'gmap',
 			'handler_file' => 'BitGmapMarkerSet.php',

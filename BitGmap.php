@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.135 2008/07/18 04:02:11 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.136 2008/07/18 04:31:01 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -34,7 +34,7 @@ class BitGmap extends LibertyMime {
 		$this->mContentTypeGuid = BITGMAP_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGMAP_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGMAP_CONTENT_TYPE_GUID,
-			'content_description' => 'Google Map',
+			'content_description' => 'Map',
 			'handler_class' => 'BitGmap',
 			'handler_package' => 'gmap',
 			'handler_file' => 'BitGmap.php',
