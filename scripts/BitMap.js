@@ -208,7 +208,7 @@ BitMap.Map.prototype = {
 	"makeGetTileUrl": function( url ){
 		var rootUrl = (url.search(/\?/) > -1)?url:url+"?";
 		var func = function(a, b){
-					var c = 17 - b;
+					var c = url.search(/google.com/)?17-b:b;
 					var ret = rootUrl+"&transparent=true"+"&x="+a.x+"&y="+a.y+"&zoom="+c;
 					return ret;
 				};
