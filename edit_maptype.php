@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_maptype.php,v 1.18 2008/07/01 15:43:19 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_maptype.php,v 1.19 2008/07/20 22:46:16 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -50,12 +50,12 @@ if (!empty($_REQUEST["save_maptype"])) {
 }elseif (!empty($_REQUEST["remove_maptype"])) {
 	$gBitUser->verifyTicket();
 	if( $gContent->removeMapTypeFromMap( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('removeSucces', true);
+		$gBitSmarty->assign('removeSucces', true);
 	}
 }elseif (!empty($_REQUEST["expunge_maptype"])) {
 	$gBitUser->verifyTicket();
 	if( $gContent->expungeMapType( $_REQUEST ) ) {
-		$gBitSmarty->assign_by_ref('expungeSucces', true);
+		$gBitSmarty->assign('expungeSucces', true);
 	}
 }else{
 	if ( isset( $_REQUEST["maptype_id"] ) ){

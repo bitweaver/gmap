@@ -667,9 +667,9 @@ BitMap.Edit.prototype = {
 			var ref = this;
 			$('locate_maptype_btn').onclick = function(){ f1(ref.Map.maptypes[i].type); };
 			var f2 = bind(this.removeMaptype, this);
-			$('remove_maptype_btn').onclick = function(){ f2($('edit-maptype-form')); };
+			$('remove_maptype_btn').onclick = function(){ f2($('edit-maptype-options-form')); };
 			var f3 = bind(this.expungeMaptype, this);
-			$('expunge_maptype_btn').onclick = function(){ f3($('edit-maptype-form')); };
+			$('expunge_maptype_btn').onclick = function(){ f3($('edit-maptype-options-form')); };
 			
 			var optionsTable = $('edit-maptype-options-table');
 			var target = $('edit-maptype-'+i);
@@ -1551,7 +1551,7 @@ BitMap.Edit.prototype = {
 	 "storeMaptype": function(f){
 		this.showSpinner("Saving Map...");
 		var str = "edit_maptype.php?" + queryString(f) + "&gmap_id=" + this.Map.id;
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMaptype, this) ); 
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMaptype, this), f.maptype_id.value ); 
 	 },
 	 
 	 "removeMaptype": function(f){
@@ -1567,10 +1567,11 @@ BitMap.Edit.prototype = {
 	 "expungeMaptype": function(f){
 	 	if (confirm("Are you sure you want to delete \nthe maptype \""+f.name.value+"\"? \n\nThis can not be undone!")){
 			this.showSpinner("Deleting Maptype...");
-			this.editObjectN = f.array_n.value;
-			this.editSetId = f.maptype_id.value;
-			var str = "edit_maptype.php?" + "maptype_id=" + this.editSetId + "&expunge_maptype=true"+"&tk="+bitTk;
-			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this) );
+	//		this.editObjectN = f.array_n.value;
+//			this.editSetId = f.maptype_id.value;
+			var mid = f.maptype_id.value;
+			var str = "edit_maptype.php?" + "maptype_id=" + mid + "&expunge_maptype=true"+"&tk="+bitTk;
+			doSimpleXMLHttpRequest(str).addCallback( bind(this.updateRemoveMaptype, this), mid );
 		}
 	 },
 
@@ -2204,10 +2205,24 @@ BitMap.Edit.prototype = {
 
 
 
-	"updateMaptype": function(rslt){
+	"updateMaptype": function(mid, rslt){
 		var xml = rslt.responseXML.documentElement;
-		var n = ( this.editObjectN != null )?this.editObjectN:this.Map.maptypes.length;
-		var m = this.Map.maptypes[n] = [];
+		var m = null;
+		var mt = this.Map.maptypes;
+		for (var n=0; n<mt.length; n++){
+			if ( mt[n].maptype_id == mid ){
+				m = mt[n];
+				break;
+			}
+		}
+	    if ( m == null){
+			n = mt.length;
+			m = mt[n] = [];
+			m.tilelayer_ids = [];
+	    }
+
+		// var n = ( this.editObjectN != null )?this.editObjectN:this.Map.maptypes.length;
+		// var m = this.Map.maptypes[n] = [];
 		
 		//add the xml data to the marker record
 		this.parseMaptypeXML(m, xml);
@@ -2251,13 +2266,21 @@ BitMap.Edit.prototype = {
 		m.errormsg = this.getNodeValue( er[0].firstChild );
 	},
 	 
-	"updateRemoveMaptype": function(rslt){
+	"updateRemoveMaptype": function(mid, rslt){
 		if ( this.verifyRemove(rslt) ){
-			var n = this.editObjectN;
+			var m = null;
+			var mt = this.Map.maptypes;
+			for (var n=0; n<mt.length; n++){
+				if ( mt[n].maptype_id == mid ){
+					m = mt[n];
+					break;
+				}
+			}
+			
 			// get maptype node value
-			var p = this.Map.maptypes[n].maptype_node;
+			var p = m.maptype_node;
 			// remove the maptype ref form the map array of types
-			this.Map.maptypes[this.Map.maptypes[n].name] = null;
+			this.Map.maptypes[m.name] = null;
 			// remove the controls
 			this.Map.map.removeControl(typecontrols);
 			// remove it from the map			
@@ -2271,7 +2294,7 @@ BitMap.Edit.prototype = {
 			
 			// remove by id the maptype form
 			for (var j=0; j<this.Map.maptypes.length; j++){
-				if ( ( this.Map.maptypes[j] != null ) && ( this.Map.maptypes[j].maptype_id == this.editSetId ) ){
+				if ( ( this.Map.maptypes[j] != null ) && ( this.Map.maptypes[j].maptype_id == mid ) ){
 				var getElem = "editmaptypetable_" + this.Map.maptypes[j].maptype_id;
 				if ( $(getElem) ) {
 					var extraMaptypeForm = $(getElem);

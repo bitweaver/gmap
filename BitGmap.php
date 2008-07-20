@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.136 2008/07/18 04:31:01 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.137 2008/07/20 22:46:16 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -806,6 +806,7 @@ class BitGmap extends LibertyMime {
 				 $pParamHash['tilelayer_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers", $pParamHash['tilelayer_store'] );				 
 				 // if its a new tilelayer we also associate it with a maptype.
+				 $pParamHash['keychain_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers_keychain", $pParamHash['keychain_store'] );
 			}
 			$this->mDb->CompleteTrans();
@@ -1282,7 +1283,7 @@ class BitGmap extends LibertyMime {
 	/**
 	* This function removes a maptype from a map
 	**/
-	function removeMapTypeFromMap(&$pParamHash) {
+	function removeMapTypeFromMap( &$pParamHash ) {
 		$ret = FALSE;
 
   		if( $this->verifyMapTypeRemove( $pParamHash ) ) {
