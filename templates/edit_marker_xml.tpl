@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 {if $markerInfo}
 	<marker>
-		<id>{$markerInfo.marker_id}</id>
+		<marker_id>{$markerInfo.marker_id}</marker_id>
+		<content_id>{$markerInfo.content_id}</content_id>
 		<title>{$markerInfo.title}</title>
 		<lat>{$markerInfo.lat}</lat>
 		<lng>{$markerInfo.lng}</lng>

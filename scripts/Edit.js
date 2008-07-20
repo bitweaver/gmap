@@ -1,4 +1,4 @@
-//NOTE: We ese Mochikit library for AJAX and substitute getElementById with '$()'
+//NOTE: We use Mochikit library for AJAX and substitute getElementById with '$()'
 
 /*	
 BitMap.show('editerror');
@@ -1925,32 +1925,28 @@ BitMap.Edit.prototype = {
 		this.removeAssistant();
 		this.hideSpinner("DONE!");
 		this.editMarkers(s_i);
+		this.Map.attachSideMarkers();
 		this.editMarker(n_i);
 	},
 
 
 	"parseMarkerXML": function(m, xml){
+		// convenience
+		var $s = partial( bind(this.getXMLTagValue, this), xml );
+		var $i = function( s ){ return parseInt( $s( s ) )};
+		var $f = function( s ){ return parseFloat( $s( s ) )};
+
 		//shorten var names
-		var id = xml.getElementsByTagName('id');			
-		m.marker_id = id[0].firstChild.nodeValue;
-		var tl = xml.getElementsByTagName('title');
-		m.title = tl[0].firstChild.nodeValue;			
-		var lt = xml.getElementsByTagName('lat');
-		m.lat = parseFloat(lt[0].firstChild.nodeValue);
-		var ln = xml.getElementsByTagName('lng');
-		m.lng = parseFloat(ln[0].firstChild.nodeValue);
-		var dt = xml.getElementsByTagName('data');
-		m.data = this.getNodeValue( dt[0].firstChild );			
-		var pdt = xml.getElementsByTagName('parsed_data');
-		m.parsed_data = this.getNodeValue( pdt[0].firstChild );
-		var l = xml.getElementsByTagName('label');
-		m.label_data = ( l[0].firstChild != null )?l[0].firstChild.nodeValue:'';
-		var pl = xml.getElementsByTagName('parsed_label');
-		m.parsed_label_data = ( pl[0].firstChild != null )?pl[0].firstChild.nodeValue:'';
-		//var z = xml.getElementsByTagName('z');
-		//m.zindex = parseInt(z[0].firstChild.nodeValue);	
-		var com = xml.getElementsByTagName('allow_comments');
-		m.allow_comments = com[0].firstChild.nodeValue;
+		m.marker_id = $i('marker_id');
+		m.content_id = $i('content_id');
+		m.title = $s('title');			
+		m.lat = $f('lat');
+		m.lng = $f('lng');
+		m.data = $s('data');
+		m.parsed_data = $s('parsed_data');
+		m.label_data = $s('label')?$s('label'):'';
+		m.parsed_label_data = $s('parsed_label')?$s('parsed_label'):'';
+		m.allow_comments = $s('allow_comments');
 	},		 	 
 	
 	
@@ -1985,6 +1981,10 @@ BitMap.Edit.prototype = {
 
 		if (this.editObjectN == null){
 			BitMap.hide('edit-markerset-new');
+			// if we have a new set we assume our session knows nothing about it's icon
+			if( s.icon_id ){
+				this.getIconStyle( s.icon_id );
+			}
 			// update the sets menus
 			this.cancelEditMarkerSets();
 			this.editMarkerSets();

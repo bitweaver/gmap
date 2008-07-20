@@ -3,7 +3,7 @@
 
 <div class="admin">
 	<div class="header">
-		<h1>{tr}Gmap Records{/tr}</h1>
+		<h1>{tr}Maps{/tr}</h1>
 	</div>
 
 	<div class="body">
