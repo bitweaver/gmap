@@ -20,10 +20,10 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	"defineGIcon": function(i){
 		var I = this.iconstyles[i];
 		I.icon = new GIcon();
-		I.icon.image = I.image;
+		I.icon.image = BitSystem.urls.root + I.image;
 		I.icon.iconSize = new GSize(I.icon_w, I.icon_h);
 		I.icon.iconAnchor = new GPoint(I.icon_anchor_x, I.icon_anchor_y);
-		I.icon.shadow = I.shadow_image;
+		I.icon.shadow = BitSystem.urls.root + I.shadow_image;
 		I.icon.shadowSize = new GSize(I.shadow_w, I.shadow_h);
 		I.icon.infoShadowAnchor = new GPoint(I.shadow_anchor_x, I.shadow_anchor_y);
 		I.icon.infoWindowAnchor = new GPoint(I.infowindow_anchor_x, I.infowindow_anchor_y);
@@ -331,7 +331,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				var iconH = "34";				
 				for (var i=0; i<this.iconstyles.length; i++){
 					if ( this.iconstyles[i].icon_id == set.icon_id ){
-						iconSrc = this.iconstyles[i].image;
+						iconSrc = BitSystem.urls.root + this.iconstyles[i].image;
 						iconW = this.iconstyles[i].icon_w;
 						iconH = this.iconstyles[i].icon_h;						
 					}
