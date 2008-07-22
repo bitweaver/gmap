@@ -23,7 +23,7 @@
 			{/if}
 				
 			<div id="markercontent" class="content">
-				{$gContent->mInfo.parsed_data}
+				{$gContent->mInfo.clean_data}
 			</div>
 		</div><!-- end .body --> 
 	</div><!-- end .display -->
