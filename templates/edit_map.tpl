@@ -159,8 +159,8 @@
 		{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_tab_tpl}
 
 		{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
-			{jstab title="Attachment Browser"}
-				{legend legend="Attachment Browser"}
+			{jstab title="Attachments"}
+				{legend legend="Attachments"}
 					{include file="bitpackage:liberty/edit_storage.tpl" formid=$formid}
 				{/legend}
 			{/jstab}

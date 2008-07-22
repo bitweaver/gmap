@@ -1,3 +1,4 @@
+{strip}
 {if $pre_window}<div class="infowindow">{/if}
 	{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
 	<div class="display gmarker">
@@ -40,3 +41,4 @@
 		{/if}
 	</div><!-- end .gmarker-footer -->
 {if $pre_window}</div>{/if}
+{/strip}

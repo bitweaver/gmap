@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.38 2008/07/01 20:57:59 wjames5 Exp $ 
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.39 2008/07/22 17:49:01 wjames5 Exp $ 
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -59,7 +59,10 @@ $XMLContent = "";
 $statusCode = 401;
 if (!empty($_REQUEST["save_marker"])) {	
 	$gBitUser->verifyTicket();
-    if( $gContent->store( $_REQUEST ) ) {
+	$storeHash = $_REQUEST;
+	// the user might be submitting encoded html chars by ajax - decode them before storing
+	$storeHash['edit'] = htmlspecialchars_decode( $storeHash['edit'] );
+    if( $gContent->store( $storeHash ) ) {
 		$statusCode = 200;
 		if ( $gContent->hasAdminPermission() ){
     		$gContent->setEditSharing( $_REQUEST );

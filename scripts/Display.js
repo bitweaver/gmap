@@ -397,7 +397,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 						});
 					});
 			}
-			M.gmarker.openInfoWindow( M.gmarker.my_html, opt);
+			M.gmarker.openInfoWindowHtml( M.gmarker.my_html, opt);
 		}
 	},
 

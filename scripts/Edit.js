@@ -1943,7 +1943,6 @@ BitMap.Edit.prototype = {
 		m.title = $s('title');			
 		m.lat = $f('lat');
 		m.lng = $f('lng');
-		m.data = $s('data');
 		m.parsed_data = $s('parsed_data');
 		m.label_data = $s('label')?$s('label'):'';
 		m.parsed_label_data = $s('parsed_label')?$s('parsed_label'):'';

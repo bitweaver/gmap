@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.137 2008/07/20 22:46:16 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.138 2008/07/22 17:49:01 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1477,7 +1477,7 @@ class BitGmap extends LibertyMime {
 					if( is_dir( $pDir."/".$file )) {
 						$theme[$file] = $this->fetchIcons( $pDir."/".$file );
 					// include icons setup file
-					} elseif( $file == 'gmap_icons.tsv' ) {
+					} elseif( $file == 'icons.tsv' ) {
 						$lines = explode( "\n", file_get_contents( $pDir."/".$file ));
 						// first line contains columns
 						$tableColumns = explode( "\t", array_shift( $lines ));
@@ -1609,7 +1609,7 @@ class BitGmap extends LibertyMime {
 	}
 
 	/**
-	 * storeIconThemeSettings will store information extracted from the gmap_icons.tsv file
+	 * storeIconThemeSettings will store information extracted from the icons.tsv file
 	 * 
 	 * @param array $pThemeId Theme ID
 	 * @param array $pStoreHash array of icons
