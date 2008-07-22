@@ -329,11 +329,13 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				var iconSrc = "http://www.google.com/mapfiles/marker.png";
 				var iconW = "20";
 				var iconH = "34";				
-				for (var i=0; i<this.iconstyles.length; i++){
-					if ( this.iconstyles[i].icon_id == set.icon_id ){
-						iconSrc = BitSystem.urls.root + this.iconstyles[i].image;
-						iconW = this.iconstyles[i].icon_w;
-						iconH = this.iconstyles[i].icon_h;						
+				var is = this.iconstyles;
+				for (var x=0; x<is.length; x++){
+					var i = is[x];
+					if ( i.icon_id == set.icon_id ){
+						iconSrc = BitSystem.urls.root + i.image;
+						iconW = i.icon_w;
+						iconH = i.icon_h;						
 					}
 				}
 
@@ -342,9 +344,9 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 									H3({"class":"gmapsidetitle"}, set.name),
 									DIV({"class":"gmapsidedesc"}, 
 										IMG({"src":iconSrc, "width":iconW + "px", "height":iconH + "px"}), 
-										SPAN(null, set.description),
-										DIV({"id":"listset_" + set.set_id, "class":"boxcontent gmapsidelist", "clear":"both"}, null)
-										)
+										SPAN(null, set.description)
+										),
+									UL({"id":"listset_" + set.set_id, "class":"boxcontent gmapsidelist"}, null)
 								);
 	
 				panel.appendChild(setDiv);
@@ -359,10 +361,9 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				var M = this.markers[n];
 				if ( M != null && ( ( M.side_panel == true && M.explode == true ) || M.plot_on_load != true ) ) {
 					var imgLink = ( M.thumbnail_url != null && M.thumbnail_url != '' )?[BR(), IMG({"src":M.thumbnail_url})]:null;
-					var newLink = A({"href":"javascript:void(0);", "onclick":"BitMap.MapData[0].Map.openMarkerWindow("+n+");"}, SPAN(null, M.title), imgLink );
+					var newLink = LI( null, A({"href":"javascript:void(0);", "onclick":"BitMap.MapData[0].Map.openMarkerWindow("+n+");"}, SPAN(null, M.title), imgLink ) );
 					var container = $('listset_' + M.set_id);
 					container.appendChild(newLink);
-					container.appendChild( BR() );
 				}
 			}
 		}
