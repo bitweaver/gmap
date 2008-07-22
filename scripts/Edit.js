@@ -1486,9 +1486,7 @@ BitMap.Edit.prototype = {
 	 "storeMarker": function(f){
 		this.showSpinner("Saving Marker...");
 		var str = "edit_marker.php?" + queryString(f);
-		this._setIdRef = f.set_id.value;
-		this.editObjectN = this._markerIndexRef;
-		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMarker, this) ); 
+		doSimpleXMLHttpRequest(str).addCallback( bind(this.updateMarker, this), f.set_id.value, f.marker_id.value ); 
 	 },
 	 
 	 "removeMarker": function(f){
@@ -1892,42 +1890,49 @@ BitMap.Edit.prototype = {
 	 *
 	 *******************/
 	
-	"updateMarker": function(rslt){
+	"updateMarker": function(set_id, marker_id, rslt){
 		var xml = rslt.responseXML.documentElement;
-		var n_i = this.editObjectN;
-		var s_i = this._setIndexRef;
-		var m;
-		if ( n_i == null){
-			n_i = this.Map.markers.length;
-			m = this.Map.markers[n_i] = {};
-		}else{
-			m = this.Map.markers[n_i];
+		var m = null;
+		var s = null;
+		var ms = this.Map.markers;
+		var ss = this.Map.markersets;
+		for (var x=0; x<ss.lenght; x++){
+			if ( ss[x].set_id == set_id ){
+				s = ss[x];
+				break;
+			}
 		}
-
-		//add the xml data to the marker record
-		this.parseMarkerXML(m, xml);
-
-		if (this.editObjectN == null){
-			var s = this.Map.markersets[s_i];
+		for (var n=0; n<ms.length; n++){
+			if ( ms[n].marker_id == marker_id ){
+				m = ms[n];
+				break;
+			}
+		}
+	    if ( m == null){
+			n = ms.length;
+			m = ms[n] = {};
 			m.set_id = s.set_id;
 			m.style_id = s.style_id;
 			m.icon_id = s.icon_id;
 			m.plot_on_load = s.plot_on_load;
 			m.side_panel = s.side_panel;
 			m.explode = s.explode;
-			m.array_n = parseInt(n_i);
-		}
+			m.array_n = parseInt(n);
+	    }
+
+		//add the xml data to the marker record
+		this.parseMarkerXML(m, xml);
 
 		//unload the marker if it exists
 		if ( m.gmarker ){ this.Map.map.removeOverlay( m.gmarker ) };
 		
 		//make the marker
-		this.Map.addMarker(n_i);
+		this.Map.addMarker(n);
 		this.removeAssistant();
 		this.hideSpinner("DONE!");
-		this.editMarkers(s_i);
+		// this.editMarkers(x);
 		this.Map.attachSideMarkers();
-		this.editMarker(n_i);
+		this.editMarker(n,x);
 	},
 
 
