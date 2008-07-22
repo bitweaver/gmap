@@ -362,6 +362,7 @@ BitMap.Edit.prototype = {
 				link.innerHTML = m.title;
 				markerLinksList.appendChild(li);
 				li.style.display = "block";
+				// @TODO this isn't totally adequate. sometimes we want to edit one that is not first in the list - and this is a little wasteful
 				if (firstselected != true){
 					//else ajax up a form with the info from the first marker in the list
 					this.editMarker(n, i);
@@ -1896,16 +1897,18 @@ BitMap.Edit.prototype = {
 		var s = null;
 		var ms = this.Map.markers;
 		var ss = this.Map.markersets;
-		for (var x=0; x<ss.lenght; x++){
+		for (var x=0; x<ss.length; x++){
 			if ( ss[x].set_id == set_id ){
 				s = ss[x];
 				break;
 			}
 		}
-		for (var n=0; n<ms.length; n++){
-			if ( ms[n].marker_id == marker_id ){
-				m = ms[n];
-				break;
+		if( marker_id != null && marker_id != ''){
+			for (var n=0; n<ms.length; n++){
+				if ( ms[n].marker_id == marker_id ){
+					m = ms[n];
+					break;
+				}
 			}
 		}
 	    if ( m == null){
@@ -1927,10 +1930,10 @@ BitMap.Edit.prototype = {
 		if ( m.gmarker ){ this.Map.map.removeOverlay( m.gmarker ) };
 		
 		//make the marker
+		this.editMarkers(x);
 		this.Map.addMarker(n);
 		this.removeAssistant();
 		this.hideSpinner("DONE!");
-		// this.editMarkers(x);
 		this.Map.attachSideMarkers();
 		this.editMarker(n,x);
 	},
