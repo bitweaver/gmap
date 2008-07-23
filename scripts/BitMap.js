@@ -240,15 +240,13 @@ BitMap.Map.prototype = {
 						}
 					}
 	
-					layers.push( new GTileLayer( copyrightCollection, T.tiles_minzoom, T.tiles_maxzoom ) );
+					var opts = {
+						'isPng':( T.ispng == true || T.ispng == 'true' )?true:false,
+						'opacity':T.opacity
+					}
+					layers.push( new GTileLayer( copyrightCollection, T.tiles_minzoom, T.tiles_maxzoom, opts ) );
 					x = layers.length-1;
 					layers[x].getTileUrl = this.makeGetTileUrl( T.tilesurl );
-					
-					if ( T.ispng == true || T.ispng == 'true' ){
-						layers[x].isPng = function(){return true;};
-					}else{
-						layers[x].isPng = function(){return false;};
-					}	
 				}
 			}
 		}
