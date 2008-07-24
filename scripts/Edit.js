@@ -46,7 +46,7 @@ BitMap.Edit = function(){
 	this.bLastpoint;
 	this.bAssistant;
 	this.bTempPoints = new Array();	//create point array
-	this.TempOverlay; 				//temporary overlay
+	this.TempOverlay = null; 		//temporary overlay
 	this.bModForm;
 	this.bModPData; 
 	this.bModMLat;
@@ -2960,8 +2960,11 @@ BitMap.Edit.prototype = {
 	
 		
 	"removeAssistant": function(){
-	    if (this.bAssistant != null){
+		if( this.TempOverlay != null ){
 	        this.Map.map.removeOverlay( this.TempOverlay );
+			this.TempOverlay = null;
+		}
+	    if (this.bAssistant != null){
 	   	    GEvent.removeListener(this.bAssistant);
 	  		this.bAssistant = null;
 		 }
