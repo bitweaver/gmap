@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.12 2008/06/19 04:16:31 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.13 2008/07/24 13:10:19 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -142,10 +142,10 @@ class BitGmapOverlaySetBase extends LibertyContent {
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
   			// delete all references to the set from the set keychain
     		$query = "DELETE FROM `".BIT_DB_PREFIX.$this->mOverlaySetKeychainTable."` WHERE `set_id` =?";
-    		$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
+    		$result = $this->mDb->query( $query, array( $this->mOverlaySetId ) );
   			// delete all references to the marker set from the map sets keychain
-    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` WHERE `set_id` =? AND `set_type` = ".$mOverlaySetType;
-  			$result = $this->mDb->query( $query, array( $pParamHash['set_id'] ) );
+    		$query = "DELETE FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` WHERE `set_id` =? AND `set_type` = ?";
+  			$result = $this->mDb->query( $query, array( $this->mOverlaySetId, $this->mOverlaySetType ) );
 			if( LibertyMime::expunge() ) {
 				$ret = TRUE;
 				$this->mDb->CompleteTrans();
