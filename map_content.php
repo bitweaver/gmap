@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/map_content.php,v 1.26 2008/07/11 19:39:22 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/map_content.php,v 1.27 2008/07/29 18:19:53 lsces Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -52,7 +52,7 @@ if ($gBitSystem->isPackageActive('geo') && $gBitSystem->isPackageActive('gmap'))
 			//forces only geo located data
 			$_REQUEST['geo_notnull'] = TRUE;
 			include_once( LIBERTY_PKG_PATH.'list_content.php' );
-			$gBitSmarty->assign_by_ref('listcontent', $contentList["data"]);
+			$gBitSmarty->assign_by_ref('listcontent', $contentList);
 		}
 
 		//get content types in database list  
