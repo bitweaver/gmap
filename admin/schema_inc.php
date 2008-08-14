@@ -41,7 +41,7 @@ $tables = array(
   maptype_id I4 PRIMARY,
   name C(64),
   shortname C(4),
-  description C(255),
+  description X,
   minzoom I4,
   maxzoom I4,
   errormsg C(255),
