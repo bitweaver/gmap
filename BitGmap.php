@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.138 2008/07/22 17:49:01 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.139 2008/08/17 09:54:37 squareing Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1473,7 +1473,7 @@ class BitGmap extends LibertyMime {
 		$ret = array();
 		if( !empty( $pDir ) && is_dir( $pDir ) && $handle = opendir( $pDir )) {
 			while( FALSE !== ( $file = readdir( $handle ))) {
-				if( !preg_match( "#^\.#", $file ) && $file != 'CVS' ) {
+				if( !preg_match( "#^\.#", $file ) && $file != 'CVS'  && !preg_match( "#^(.*[a-z]_)?shadow\.[a-z]{2,5}$#i", $file )) {
 					if( is_dir( $pDir."/".$file )) {
 						$theme[$file] = $this->fetchIcons( $pDir."/".$file );
 					// include icons setup file
@@ -1525,7 +1525,6 @@ class BitGmap extends LibertyMime {
 							'icon_h' => $height,
 							'name' => $file,
 							'image' => str_replace( BIT_ROOT_PATH, "", $pDir )."/".$file,
-							//'image' => BIT_ROOT_URL.str_replace( '//', '/', str_replace( '+', '%20', str_replace( '%2F', '/', urlencode( str_replace( BIT_ROOT_PATH, "", $pDir )."/".$file )))),
 						);
 					}
 				}
