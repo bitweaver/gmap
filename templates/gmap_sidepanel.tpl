@@ -1,11 +1,5 @@
 {strip}
 <div id="gmap-sidepanel" class="module box hide" style="
-	{* height:{if $gContent->mInfo.height == 0}
-            auto
-          {else}
-            {$gContent->mInfo.height}px
-          {/if}; *}
-          
 	height: {if $gContent->mInfo.height}
 		{if $gContent->mInfo.height == 0}
 			auto
