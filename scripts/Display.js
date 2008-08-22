@@ -316,7 +316,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		var center = this.map.getCenter();
 		var display = false;
 		var setscount = this.markersets.length;
-		var panel = $('gmap-sidepanel');
+		var panel = $('gmap-sidepanel-table');
 		MochiKit.DOM.replaceChildNodes(panel, null)
 		for (var n=0; n<setscount; n++){
 			var set = this.markersets[n];
@@ -409,7 +409,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	},
 
 	"clearSidepanel": function(){
-		var s = document.getElementById('gmap-sidepanel');
+		var s = document.getElementById('gmap-sidepanel-table');
 		var count = s.childNodes.length;
 		for (n=count; n>1; n--){
 		   s.removeChild(s.childNodes[n-1]);
