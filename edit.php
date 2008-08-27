@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.45 2008/07/17 19:34:02 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.46 2008/08/27 18:45:21 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -30,7 +30,7 @@ if( $gContent->isValid() ) {
 
 //if there is no API key don't even bother
 if ($gBitSystem->isFeatureActive('gmap_api_key')){	
-	$gBitSmarty->assign( 'gmap_debug', TRUE );
+	// $gBitSmarty->assign( 'gmap_debug', TRUE );
 	$gBitSmarty->assign( 'edit_map', TRUE );
 	$gBitSmarty->assign_by_ref( 'mapInfo', $gContent->mInfo);
 	if ( $gContent->isValid() ){
