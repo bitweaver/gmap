@@ -107,7 +107,7 @@
 		{else}
 			{if $listInfo.current_page > 1}
 				{if $gBitThemes->isAjaxRequest()}
-					&nbsp;<a href="javascript:void(0);" onclick="BitMap.EditSession.getIconStyles( $('theme_id'), '{$pageUrlVar}&amp;list_page={$listInfo.current_page-1}' );">&raquo;</a>
+					&nbsp;<a href="javascript:void(0);" onclick="BitMap.EditSession.getIconStyles( $('theme_id'), '{$pageUrlVar}&amp;list_page={$listInfo.current_page-1}' );">&laquo;</a>
 				{else}
 					&nbsp;<a href="{$pageUrl}&amp;list_page={$listInfo.current_page-1}">&laquo;</a>&nbsp;
 				{/if}
