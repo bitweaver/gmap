@@ -320,36 +320,38 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		MochiKit.DOM.replaceChildNodes(panel, null)
 		for (var n=0; n<setscount; n++){
 			var set = this.markersets[n];
-			//if show set
-			if ( set.side_panel == true || set.plot_on_load != true ){
-				$('gmap-map').style.marginRight = '300px';
-				BitMap.show('gmap-sidepanel');
-				display = true;
-				//get the set icon style
-				var iconSrc = "http://www.google.com/mapfiles/marker.png";
-				var iconW = "20";
-				var iconH = "34";				
-				var is = this.iconstyles;
-				for (var x=0; x<is.length; x++){
-					var i = is[x];
-					if ( i.icon_id == set.icon_id ){
-						iconSrc = BitSystem.urls.root + i.image;
-						iconW = i.icon_w;
-						iconH = i.icon_h;						
+			if( set != null ){
+				//if show set
+				if ( set.side_panel == true || set.plot_on_load != true ){
+					$('gmap-map').style.marginRight = '300px';
+					BitMap.show('gmap-sidepanel');
+					display = true;
+					//get the set icon style
+					var iconSrc = "http://www.google.com/mapfiles/marker.png";
+					var iconW = "20";
+					var iconH = "34";				
+					var is = this.iconstyles;
+					for (var x=0; x<is.length; x++){
+						var i = is[x];
+						if ( i.icon_id == set.icon_id ){
+							iconSrc = BitSystem.urls.root + i.image;
+							iconW = i.icon_w;
+							iconH = i.icon_h;						
+						}
 					}
-				}
 
-				//add set container to side
-				var setDiv = DIV({"id":"sideset_" + set.set_id, "class":"sidebox"}, 
-									H3({"class":"gmapsidetitle"}, set.name),
-									DIV({"class":"gmapsidedesc"}, 
-										IMG({"src":iconSrc, "width":iconW + "px", "height":iconH + "px"}), 
-										SPAN(null, set.description)
-										),
-									UL({"id":"listset_" + set.set_id, "class":"boxcontent gmapsidelist"}, null)
-								);
-	
-				panel.appendChild(setDiv);
+					//add set container to side
+					var setDiv = DIV({"id":"sideset_" + set.set_id, "class":"sidebox"}, 
+										H3({"class":"gmapsidetitle"}, set.name),
+										DIV({"class":"gmapsidedesc"}, 
+											IMG({"src":iconSrc, "width":iconW + "px", "height":iconH + "px"}), 
+											SPAN(null, set.description)
+											),
+										UL({"id":"listset_" + set.set_id, "class":"boxcontent gmapsidelist"}, null)
+									);
+		
+					panel.appendChild(setDiv);
+				}
 			}
 		}
 
