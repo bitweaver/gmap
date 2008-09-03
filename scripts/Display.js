@@ -84,7 +84,8 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		}else if (typeof(M.title) != 'undefined' && M.title != null){
 			tip = M.title;
 		}		
-		M.gmarker = new GMarker(p, {icon: myicon, title:tip});
+		M.gmarker = new GMarker(p, {icon: myicon, title:tip, draggable:true});
+		M.gmarker.disableDragging();
 		M.gmarker.index = i;
 		M.gmarker.type = 'marker';
 		M.gmarker.my_maxurl = BitSystem.urls.gmap + "view_marker.php?marker_id=" + M.marker_id + '&comments_maxComments=999999&ajax_xml=true';
