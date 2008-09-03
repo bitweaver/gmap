@@ -24,6 +24,7 @@ BitMap.EditMap = function(){
 	BitMap.EditSession = new BitMap.Edit();
 	BitMap.MapData[0].Map.addOverlayListener();
 	BitMap.MapData[0].Map.attachSideMarkers();
+	BitMap.EditSession.editMap();
 }
 
 // MAP EDITING PROTOTYPE and METHODS
@@ -191,6 +192,9 @@ BitMap.Edit.prototype = {
 	 *******************/
 	
 	"editMap": function(id){
+		if ( (id == null || typeof(id) == undefined ) && this.Map.id ){
+			id = this.Map.id;
+		}
 		doSimpleXMLHttpRequest("edit_map.php", merge({gmap_id:id}, this.LS.aep) ).addCallback( bind(this.editMapCallback, this) ); 
 	},
 
