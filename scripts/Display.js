@@ -433,7 +433,10 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 
 	"centerMapOnPoly": function(p){
 		var b = this.getPolyBounds(p);
-		this.map.setCenter( b.getCenter(), this.map.getBoundsZoomLevel(b) );
+		// zoom less 1 fits poly nicer - google will fit right to the edge of the window - this leaves a little space
+		var z = this.map.getBoundsZoomLevel(b);
+		z = z>0?z-1:0;
+		this.map.setCenter( b.getCenter(), z );
 	}
 	
 });
