@@ -2,7 +2,7 @@
 {if $polygonInfo}
 	<polygon>
 		<polygon_id>{$polygonInfo.polygon_id}</polygon_id>
-		<name>{$polygonInfo.title}</name>
+		<title>{$polygonInfo.title}</title>
 		<type>{$polygonInfo.type}</type>
 		<points_data>{$polygonInfo.data}</points_data>
 		<circle_center>{$polygonInfo.circle_center}</circle_center>

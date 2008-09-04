@@ -121,7 +121,7 @@ BitMap.MapData.push({ldelim}
   MarkerSets:[{if count($markersetsInfo) > 0}{section name=n loop=$markersetsInfo}
   {ldelim}
 		set_id: {$markersetsInfo[n].set_id},
-		name: "{$markersetsInfo[n].title}",
+		title: "{$markersetsInfo[n].title}",
 		description: "{$markersetsInfo[n].data}",
 		style_id: {$markersetsInfo[n].style_id},
 		icon_id: {$markersetsInfo[n].icon_id},
@@ -178,7 +178,7 @@ BitMap.MapData.push({ldelim}
 		created:{$polylinesInfo[n].created},
 		last_modified:{$polylinesInfo[n].last_modified},
 		version:{$polylinesInfo[n].version},
-		name:"{$polylinesInfo[n].title}",
+		title:"{$polylinesInfo[n].title}",
 		type:"{$polylinesInfo[n].type}",
 		{if $polylinesInfo[n].type != 2 }
 			points_data:new Array(),
@@ -198,7 +198,7 @@ BitMap.MapData.push({ldelim}
   PolylineSets:[{if count($polylinesetsInfo) > 0}{section name=n loop=$polylinesetsInfo}
   {ldelim}
 		set_id: {$polylinesetsInfo[n].set_id},
-		name: "{$polylinesetsInfo[n].title}",
+		title: "{$polylinesetsInfo[n].title}",
 		description: "{$polylinesetsInfo[n].data}",
 		style_id: {$polylinesetsInfo[n].style_id},
 	{rdelim},
@@ -222,7 +222,7 @@ BitMap.MapData.push({ldelim}
 		created: {$gContent->mMapPolygons[polygon_n].created},
 		last_modified: {$gContent->mMapPolygons[polygon_n].last_modified},
 		version: {$gContent->mMapPolygons[polygon_n].version},
-		name: "{$gContent->mMapPolygons[polygon_n].title}",
+		title: "{$gContent->mMapPolygons[polygon_n].title}",
 		circle:{if $gContent->mMapPolygons[polygon_n].circle}{$gContent->mMapPolygons[polygon_n].circle}{else}null{/if},
 		points_data: new Array(),
 		points_data: [{$gContent->mMapPolygons[polygon_n].poly_data}],
@@ -256,7 +256,7 @@ BitMap.MapData.push({ldelim}
   PolygonSets:[{if count($gContent->mMapPolygonSets) > 0}{section name=set_n loop=$gContent->mMapPolygonSets}
   {ldelim}
 		set_id: {$gContent->mMapPolygonSets[set_n].set_id},
-		name: "{$gContent->mMapPolygonSets[set_n].name}",
+		title: "{$gContent->mMapPolygonSets[set_n].title}",
 		description: "{$gContent->mMapPolygonSets[set_n].description}",
 		style_id: {$gContent->mMapPolygonSets[set_n].style_id},
 		polylinestyle_id: {$gContent->mMapPolygonSets[set_n].polylinestyle_id},

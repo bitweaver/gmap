@@ -2,7 +2,7 @@
 {if $polygonsetInfo}
 	<polygonset>
 		<set_id>{$polygonsetInfo.set_id}</set_id>
-		<name>{$polygonsetInfo.title}</name>
+		<title>{$polygonsetInfo.title}</title>
 		<description>{$polygonsetInfo.data}</description>
 		<style_id>{$polygonsetInfo.style_id}</style_id>
 		<polylinestyle_id>{$polygonsetInfo.polylinestyle_id}</polylinestyle_id>

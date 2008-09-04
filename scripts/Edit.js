@@ -233,7 +233,7 @@ BitMap.Edit.prototype = {
 				var ref = this;
 				var ms = $('edit-markerset').cloneNode(true);
 				ms.id = "edit-markerset-"+i;
-				ms.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[i].name;
+				ms.getElementsByTagName("span").item(0).innerHTML = this.Map.markersets[i].title;
 				ms.getElementsByTagName("a").item(0).onclick = this.handleEvent('editMarkerSet',i);
 				ms.getElementsByTagName("a").item(1).onclick = this.handleEvent('editMarkers',i);
 				$('edit-markersets-table').appendChild(ms);
@@ -911,7 +911,7 @@ BitMap.Edit.prototype = {
 			for (var n=0; n<this.Map.polylinesets.length; n++) {
 				var set = $('edit-polylineset').cloneNode(true);
 				set.id = "edit-polylineset-"+n;
-				set.getElementsByTagName("span").item(0).innerHTML = this.Map.polylinesets[n].name;
+				set.getElementsByTagName("span").item(0).innerHTML = this.Map.polylinesets[n].title;
 				var i = n;
 				var ref = this;
 				set.getElementsByTagName("a").item(0).onclick = this.handleEvent('editPolylineSet',i);
@@ -1041,7 +1041,7 @@ BitMap.Edit.prototype = {
 				var link = li.getElementsByTagName("a").item(0);
 				var nn = n;
 				link.onclick = this.handleEvent('editPolyline',n,i);
-				link.innerHTML = p.name;
+				link.innerHTML = p.title;
 				polylineLinksList.appendChild(li);
 				li.style.display = "block";
 				if (firstselected != true){
@@ -1213,7 +1213,7 @@ BitMap.Edit.prototype = {
 				var ref = this;
 				var set = $('edit-polygonset').cloneNode(true);
 				set.id = "edit-polygonset-"+i;
-				set.getElementsByTagName("span").item(0).innerHTML = this.Map.polygonsets[i].name;
+				set.getElementsByTagName("span").item(0).innerHTML = this.Map.polygonsets[i].title;
 				set.getElementsByTagName("a").item(0).onclick = this.handleEvent('editPolygonSet',i);
 				set.getElementsByTagName("a").item(1).onclick = this.handleEvent('editPolygons',i);
 				$('edit-polygonsets-table').appendChild(set);
@@ -1340,7 +1340,7 @@ BitMap.Edit.prototype = {
 				li.id = 'edit-polygonlink-'+n;
 				var link = li.getElementsByTagName("a").item(0);
 				link.onclick = this.handleEvent('editPolygon',n,i);
-				link.innerHTML = p.name;
+				link.innerHTML = p.title;
 				polygonLinksList.appendChild(li);
 				li.style.display = "block";
 				if (firstselected != true){
@@ -1981,7 +1981,7 @@ BitMap.Edit.prototype = {
 		var $i = function( s ){ return parseInt( $s( s ) )};
 
 		s.set_id = $i('set_id');
-		s.name = $s('name');
+		s.title = $s('title');
 		s.description = $s('description');
 		s.style_id = $i('style_id');
 		s.icon_id = $i('icon_id');
@@ -2457,8 +2457,8 @@ BitMap.Edit.prototype = {
 		//shorten var names
 		var id = xml.getElementsByTagName('polyline_id');
 		p.polyline_id = id[0].firstChild.nodeValue;
-		var nm = xml.getElementsByTagName('name');
-		p.name = nm[0].firstChild.nodeValue;
+		var nm = xml.getElementsByTagName('title');
+		p.title = nm[0].firstChild.nodeValue;
 		var dt = xml.getElementsByTagName('points_data');
 		var points_data = dt[0].firstChild.nodeValue;
 		p.points_data = points_data.split(",");
@@ -2497,8 +2497,8 @@ BitMap.Edit.prototype = {
 		//shorten var names
 		var id = xml.getElementsByTagName('set_id');			
 		s.set_id = parseInt(id[0].firstChild.nodeValue);
-		var nm = xml.getElementsByTagName('name');
-		s.name = nm[0].firstChild.nodeValue;
+		var nm = xml.getElementsByTagName('title');
+		s.title = nm[0].firstChild.nodeValue;
 		var dc = xml.getElementsByTagName('description');
 		s.description = this.getNodeValue( dc[0].firstChild );
 		var sy = xml.getElementsByTagName('style_id');
@@ -2662,8 +2662,8 @@ BitMap.Edit.prototype = {
 		//shorten var names
 		var id = xml.documentElement.getElementsByTagName('polygon_id');			
 		p.polygon_id = parseInt(id[0].firstChild.nodeValue);
-		var nm = xml.documentElement.getElementsByTagName('name');
-		p.name = nm[0].firstChild.nodeValue;
+		var nm = xml.documentElement.getElementsByTagName('title');
+		p.title = nm[0].firstChild.nodeValue;
 		var dt = xml.documentElement.getElementsByTagName('points_data');
 		var points_data = dt[0].firstChild.nodeValue;
 		p.points_data = points_data.split(",");
@@ -2709,8 +2709,8 @@ BitMap.Edit.prototype = {
 		//shorten var names
 		var id = xml.getElementsByTagName('set_id');			
 		s.set_id = parseInt(id[0].firstChild.nodeValue);
-		var nm = xml.getElementsByTagName('name');
-		s.name = nm[0].firstChild.nodeValue;
+		var nm = xml.getElementsByTagName('title');
+		s.title = nm[0].firstChild.nodeValue;
 		var dc = xml.getElementsByTagName('description');
 		s.description = this.getNodeValue( dc[0].firstChild );
 		var sy = xml.getElementsByTagName('style_id');

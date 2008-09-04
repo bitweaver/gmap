@@ -2,7 +2,7 @@
 {if $polylinesetInfo}
 	<polylineset>
 		<set_id>{$polylinesetInfo.set_id}</set_id>
-		<name>{$polylinesetInfo.title}</name>
+		<title>{$polylinesetInfo.title}</title>
 		<description>{$polylinesetInfo.data}</description>
 		<style_id>{$polylinesetInfo.style_id}</style_id>
 	</polylineset>

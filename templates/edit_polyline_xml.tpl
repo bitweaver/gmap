@@ -2,7 +2,7 @@
 {if $polylineInfo}
 	<polyline>
 		<polyline_id>{$polylineInfo.polyline_id}</polyline_id>
-		<name>{$polylineInfo.title}</name>
+		<title>{$polylineInfo.title}</title>
 		<type>{$polylineInfo.type}</type>
 		<points_data>{$polylineInfo.data}</points_data>
 		<levels_data>{$polylineInfo.levels_data}</levels_data>

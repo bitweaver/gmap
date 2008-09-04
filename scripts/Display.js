@@ -343,7 +343,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 
 					//add set container to side
 					var setDiv = DIV({"id":"sideset_" + set.set_id, "class":"sidebox"}, 
-										H3({"class":"gmapsidetitle"}, set.name),
+										H3({"class":"gmapsidetitle"}, set.title),
 										DIV({"class":"gmapsidedesc"}, 
 											IMG({"src":iconSrc, "width":iconW + "px", "height":iconH + "px"}), 
 											SPAN(null, set.description)

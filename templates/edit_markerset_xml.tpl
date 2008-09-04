@@ -2,7 +2,7 @@
 {if $markersetInfo}
 <markerset>
 	<set_id>{$markersetInfo.set_id}</set_id>
-	<name>{$markersetInfo.title}</name>
+	<title>{$markersetInfo.title}</title>
 	<description>{$markersetInfo.data}</description>
 	<style_id>{$markersetInfo.style_id}</style_id>
 	<icon_id>{$markersetInfo.icon_id}</icon_id>
