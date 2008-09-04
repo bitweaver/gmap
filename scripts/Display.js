@@ -177,15 +177,16 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 					}
 				}
 			}
-			this.defineGPolyline(i, s_i);
+			this.defineGPolyline(p, s_i);
 		}else{
-			this.defineGPolylineEncoded(i);
+			this.defineGPolylineEncoded(p, s_i);
 		}
 	},
 
 
-	"defineGPolyline": function(i, s){
-		var p = this.polylines[i];
+	"defineGPolyline": function(p, s){
+// deprecated pass datahash by ref
+//		var p = this.polylines[i];
 		var pointlist = [];
 		for (n = 0; n < p.points_data.length; n+=2 ){
 			var point = new GLatLng(
@@ -209,8 +210,9 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	},
 	
 	
-	"defineGPolylineEncoded": function(i, s){
-		var p = this.polylines[i];
+	"defineGPolylineEncoded": function(p, s){
+// deprecated pass datahash by ref
+//		var p = this.polylines[i];
 		if(p.points_data!=null && p.levels_data!=null){
 			var c = null;
 			var w = null;
@@ -273,15 +275,16 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 					}
 				}
 			}
-			this.defineGPolygon(i, s_i, p_i);
+			this.defineGPolygon(p, s_i, p_i);
 		}else{
-			this.defineGPolygonEncoded(i);
+			this.defineGPolygonEncoded(p);
 		}
 	},
 
 
-	"defineGPolygon": function(i, s, l){
-		var p = this.polygons[i];
+	"defineGPolygon": function(p, s, l){
+// deprecated pass datahash by ref
+//		var p = this.polygons[i];
 		var pointlist = [];
 		for (n = 0; n < p.points_data.length; n+=2 ){
 			var point = new GLatLng(
