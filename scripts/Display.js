@@ -417,6 +417,20 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		for (n=count; n>1; n--){
 		   s.removeChild(s.childNodes[n-1]);
 	    }
+	},
+
+	"getPolyBounds": function(p){
+		var bounds = new GLatLngBounds();
+		var count = p.getVertexCount(); 
+		for (var i=0; i < count; i++) {
+			bounds.extend(p.getVertex(i));
+		}
+		return bounds;
+	},
+
+	"centerMapOnPoly": function(p){
+		var b = this.getPolyBounds(p);
+		this.map.setCenter( b.getCenter(), this.map.getBoundsZoomLevel(b) );
 	}
 	
 });
