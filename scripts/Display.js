@@ -207,6 +207,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		var opts = (p.type == 1)?{geodesic:true}:null;
 		p.polyline = new GPolyline(pointlist, c, w, o, opts);
 		this.map.addOverlay(p.polyline);
+		p.polyline.plotted = true;
 	},
 	
 	
@@ -235,6 +236,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				numLevels:n
 			});
 			this.map.addOverlay(p.polyline);
+			p.polyline.plotted = true;
 		}
 	},
 
