@@ -181,12 +181,12 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		}else{
 			this.defineGPolylineEncoded(p, s_i);
 		}
+		p.polyline.index = i;
 	},
 
 
+	// @p polyline datahash
 	"defineGPolyline": function(p, s){
-// deprecated pass datahash by ref
-//		var p = this.polylines[i];
 		var pointlist = [];
 		for (n = 0; n < p.points_data.length; n+=2 ){
 			var point = new GLatLng(
@@ -211,9 +211,8 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	},
 	
 	
+	// @p polyline datahash
 	"defineGPolylineEncoded": function(p, s){
-// deprecated pass datahash by ref
-//		var p = this.polylines[i];
 		if(p.points_data!=null && p.levels_data!=null){
 			var c = null;
 			var w = null;
