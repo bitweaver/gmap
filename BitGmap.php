@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.140 2008/09/09 17:45:58 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.141 2008/09/09 21:40:06 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -185,19 +185,23 @@ class BitGmap extends LibertyMime {
 
 
 
-	//get all maptypes for a given gmap_id
+	// get all maptypes
+	// @pGmapId limit the list to those specifically mapped to a gmap_id
 	function getMapTypes( &$pGmapId = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
 		
 		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
 		
+		// subselect gets list of tilelayers mapped to each maptype
+		// note: where clause changes depending on if gmap_id is set or not
+		$selectSql .= ", ( SELECT GROUP_CONCAT( gtk.`tilelayer_id` ORDER BY gtk.".$this->mDb->convertSortmode( array( 'pos_asc' ) )." ) 
+				  FROM `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk 
+				  INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` gtl ON (gtl.`tilelayer_id` = gtk.`tilelayer_id` )
+				  WHERE ".( @$this->verifyId( $pGmapId )?"gtk.`maptype_id` = gsk.`set_id`":"gtk.`maptype_id` = gmt.`maptype_id`" ). ") 
+				  `tilelayer_ids`";
+
 		if( @$this->verifyId( $pGmapId ) ) {
-			$selectSql .= ", ( SELECT GROUP_CONCAT( gtk.`tilelayer_id` ORDER BY gtk.".$this->mDb->convertSortmode( array( 'pos_asc' ) )." ) 
-					  FROM `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk 
-					  INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` gtl ON (gtl.`tilelayer_id` = gtk.`tilelayer_id` )
-					  WHERE gtk.`maptype_id` = gsk.`set_id` )
-					  `tilelayer_ids`";
 			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gmt.`maptype_id` = gsk.`set_id`) "; 
 			$whereSql .= " WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = 'maptypes' ";
 			array_push( $bindVars, (int)$pGmapId );
@@ -222,28 +226,34 @@ class BitGmap extends LibertyMime {
 
 
 
-	//get all Tilelayers data associated with maptypes associated with a given $gmap_id
-	function getTilelayers($gmap_id) {
+	// get all tilelayers
+	// @pGmapId limit the list to those specifically associated with maptypes associated with a given gmap_id
+	function getTilelayers( &$pGmapId = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
-		if ($gmap_id && is_numeric($gmap_id)) {
 
-			$bindVars = array((int)$gmap_id, "maptypes");
+		$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
 
-			$query = "SELECT DISTINCT gtl.*
-					FROM `".BIT_DB_PREFIX."gmaps_tilelayers` gtl
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk ON ( gtl.`tilelayer_id` = gtk.`tilelayer_id` )
-					INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gtk.`maptype_id` = gsk.`set_id`)
-					WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = ?";
+		if( @$this->verifyId( $pGmapId ) ) {
+			$joinSql .= "INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk ON ( gtl.`tilelayer_id` = gtk.`tilelayer_id` )
+						INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gtk.`maptype_id` = gsk.`set_id`)";
+			$whereSql .= "WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = ?";
+			array_push( $bindVars, (int)$pGmapId, 'maptypes' );
+		}
 
-			$result = $this->mDb->query( $query, $bindVars );
+		$query = "SELECT DISTINCT gtl.* $selectSql
+				FROM `".BIT_DB_PREFIX."gmaps_tilelayers` gtl
+				$joinSql
+				$whereSql";
 
-			$ret = array();
+		$result = $this->mDb->query( $query, $bindVars );
 
-			while ($res = $result->fetchrow()) {
-				$ret[] = $res;
-			};
-		}		
+		$ret = array();
+
+		while ($res = $result->fetchrow()) {
+			$ret[] = $res;
+		};
+
 		return $ret;
 	}
 
@@ -256,18 +266,21 @@ class BitGmap extends LibertyMime {
 		$ret = NULL;
 
 		if ( isset( $pParamHash['tilelayer_id'] ) && is_numeric( $pParamHash['tilelayer_id'] ) ) {
+			
+			$bindVars = array(); $selectSql = ''; $joinSql = ''; $whereSql = '';
+
 			$bindVars = array( $pParamHash['tilelayer_id'] );
 
 			if ( isset( $pParamHash['maptype_id'] ) && is_numeric( $pParamHash['maptype_id'] ) ) {
-				$select = ", gtk.`pos`";
-				$join = " INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk ON ( gtl.`tilelayer_id` = gtk.`tilelayer_id` )";
-				$where = " AND gtk.`maptype_id` = ?";
+				$selectSql = ", gtk.`pos`";
+				$joinSql = " INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk ON ( gtl.`tilelayer_id` = gtk.`tilelayer_id` )";
+				$whereSql = " AND gtk.`maptype_id` = ?";
 				$bindVars[] = $pParamHash['maptype_id'];
 			}
 			
-			$query = "SELECT gtl.*".$select.
-			" FROM `".BIT_DB_PREFIX."gmaps_tilelayers` gtl".$join.
-			" WHERE gtl.`tilelayer_id` = ?".$where;
+			$query = "SELECT gtl.*".$selectSql.
+			" FROM `".BIT_DB_PREFIX."gmaps_tilelayers` gtl".$joinSql.
+			" WHERE gtl.`tilelayer_id` = ?".$whereSql;
 	  		$result = $this->mDb->query( $query, $bindVars );
 	  		
 			if( $result && $result->numRows() ) {
