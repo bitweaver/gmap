@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.139 2008/08/17 09:54:37 squareing Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.140 2008/09/09 17:45:58 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -740,10 +740,13 @@ class BitGmap extends LibertyMime {
 				 $pParamHash['maptype_id'] = $this->mDb->GenID( 'gmaps_maptypes_maptype_id_seq' );
 				 $pParamHash['maptype_store']['maptype_id'] = $pParamHash['maptype_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_maptypes", $pParamHash['maptype_store'] );
-				 // if its a new maptype we also get a set_id for the keychain and automaticallly associate it with a map.
-				 $pParamHash['keychain_store']['set_id'] = $pParamHash['maptype_store']['maptype_id'];
-				 $pParamHash['keychain_store']['set_type'] = "maptypes";
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_store'] );
+
+				 // if its a new maptype and we have a gmap_id we also get a set_id for the keychain and automaticallly associate it with the map.
+				 if( isset( $pParamHash['keychain_store']['gmap_id'] ) ){
+					 $pParamHash['keychain_store']['set_id'] = $pParamHash['maptype_store']['maptype_id'];
+					 $pParamHash['keychain_store']['set_type'] = "maptypes";
+					 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_sets_keychain", $pParamHash['keychain_store'] );
+				 }
 			}
 			$this->mDb->CompleteTrans();
 
@@ -805,9 +808,12 @@ class BitGmap extends LibertyMime {
 				 $pParamHash['tilelayer_id'] = $this->mDb->GenID( 'gmaps_tilelayers_tilelayer_id_seq' );
 				 $pParamHash['tilelayer_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers", $pParamHash['tilelayer_store'] );				 
-				 // if its a new tilelayer we also associate it with a maptype.
-				 $pParamHash['keychain_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
-				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers_keychain", $pParamHash['keychain_store'] );
+
+				 // if its a new tilelayer and we have a maptype_id we associate it with a maptype 
+				 if( isset( $pParamHash['keychain_store']['maptype_id'] ) ){
+					 $pParamHash['keychain_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
+					 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers_keychain", $pParamHash['keychain_store'] );
+				 }
 			}
 			$this->mDb->CompleteTrans();
 
