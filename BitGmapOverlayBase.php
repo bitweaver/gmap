@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.15 2008/07/10 22:06:45 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.16 2008/09/12 14:41:25 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -49,7 +49,7 @@ class BitGmapOverlayBase extends LibertyMime {
 
 
 
-	//returns array of polyline data and associated style and icon style ids for given gmap_id and set_type
+	//returns array of overlay data and associated style and icon style ids for given gmap_id and set_type
 	function load() {
 		if( !empty( $this->mOverlayId ) || !empty( $this->mContentId ) ) {
 			// LibertyContent::load()assumes you have joined already, and will not execute any sql!
@@ -103,7 +103,7 @@ class BitGmapOverlayBase extends LibertyMime {
 					$pParamHash['overlay_store']['content_id'] = $this->mContentId;
 					$pParamHash['overlay_store'][$overlayKey] = $this->mDb->GenID( $this->mOverlaySeq );
 					$this->mDb->associateInsert( BIT_DB_PREFIX.$this->mOverlayTable, $pParamHash['overlay_store'] );
-					// if its a new polyline we also get a set_id for the keychain and automaticallly associate it with a polyline set.
+					// if its a new overlay we also get a set_id for the keychain and automaticallly associate it with a overlay set.
 					$pParamHash['keychain_store'][$overlayKey] = $pParamHash['overlay_store'][$overlayKey];
 					$this->mDb->associateInsert( BIT_DB_PREFIX.$this->mOverlayKeychainTable, $pParamHash['keychain_store'] );													
 				}
@@ -159,7 +159,7 @@ class BitGmapOverlayBase extends LibertyMime {
 		return( count( $this->mErrors ) == 0 );
 	}	
 	/**
-	* This function removes a polyline from a set
+	* This function removes a overlay from a set
 	**/
 	function removeFromSet(&$pParamHash) {
 		$ret = FALSE;
@@ -176,9 +176,9 @@ class BitGmapOverlayBase extends LibertyMime {
 
 
 	/**
-	* Generates the URL to view a polyline on a standalone page
+	* Generates the URL to view a overlay on a standalone page
 	* @param pMixed a hash passed in by LibertyContent:getList
-	* @return the link to display the polyline data.
+	* @return the link to display the overlay data.
 	*/
 	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
 		$ret = NULL;
