@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.16 2008/09/12 14:41:25 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.17 2008/09/15 16:04:59 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -99,13 +99,19 @@ class BitGmapOverlayBase extends LibertyMime {
 						// store the posted changes
 						$this->mDb->associateUpdate( BIT_DB_PREFIX.$this->mOverlayTable, $pParamHash['overlay_store'], array( $overlayKey => $pParamHash[$overlayKey] ) );
 					}
+					// if we have a set id we assume the mapping to the overlay set needs updating too
+					if( !empty( $pParamHash['keychain_store']['set_id'] ) ){;
+						$pParamHash['keychain_store'][$overlayKey] = $this->mOverlayId;
+						$this->mapToSet( $pParamHash );
+					}
 				} else {
 					$pParamHash['overlay_store']['content_id'] = $this->mContentId;
 					$pParamHash['overlay_store'][$overlayKey] = $this->mDb->GenID( $this->mOverlaySeq );
 					$this->mDb->associateInsert( BIT_DB_PREFIX.$this->mOverlayTable, $pParamHash['overlay_store'] );
 					// if its a new overlay we also get a set_id for the keychain and automaticallly associate it with a overlay set.
 					$pParamHash['keychain_store'][$overlayKey] = $pParamHash['overlay_store'][$overlayKey];
-					$this->mDb->associateInsert( BIT_DB_PREFIX.$this->mOverlayKeychainTable, $pParamHash['keychain_store'] );													
+					$this->mapToSet( $pParamHash );
+					// $this->mDb->associateInsert( BIT_DB_PREFIX.$this->mOverlayKeychainTable, $pParamHash['keychain_store'] );													
 				}
 				$this->mDb->CompleteTrans();
 
@@ -158,6 +164,7 @@ class BitGmapOverlayBase extends LibertyMime {
 		}
 		return( count( $this->mErrors ) == 0 );
 	}	
+
 	/**
 	* This function removes a overlay from a set
 	**/
@@ -172,6 +179,26 @@ class BitGmapOverlayBase extends LibertyMime {
 			$this->mDb->CompleteTrans();
 		}
 		return $ret;
+	}
+
+	/**
+	 * This function adds a overlay to a set or updates it if it already exists
+	 **/
+	function mapToSet(&$pParamHash) {
+		$this->mDb->StartTrans();
+		$overlayKey = $this->mOverlayType.'_id';
+		$query = "SELECT `".$overlayKey."` FROM `".BIT_DB_PREFIX.$this->mOverlayKeychainTable."` WHERE `set_id` = ? AND `".$overlayKey."` =?";
+		$bindVars = array( 'set_id' => $pParamHash['keychain_store']['set_id'], $overlayKey => $this->mOverlayId );
+		if( $this->mDb->getOne( $query, $bindVars ) ){
+			// if the mapping already exists then update it
+			$this->mDb->associateUpdate( BIT_DB_PREFIX.$this->mOverlayKeychainTable, $pParamHash['keychain_store'], array( $overlayKey => $pParamHash[$overlayKey] ) );
+		}else{
+			// create a new one
+			$this->mDb->associateInsert( BIT_DB_PREFIX.$this->mOverlayKeychainTable, $pParamHash['keychain_store'] );													
+		}
+		$this->mDb->CompleteTrans();
+		// @TODO insert errors
+		return( count( $this->mErrors ) == 0 );
 	}
 
 

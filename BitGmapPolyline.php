@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.11 2008/07/18 04:31:01 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.12 2008/09/15 16:04:59 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -83,6 +83,11 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 			$pParamHash['keychain_store']['set_id'] = $pParamHash['set_id'];
 		}
 
+		// position values for updating the polyline keychain		
+		if( !empty( $pParamHash['pos'] ) && is_numeric( $pParamHash['pos'] ) ) {
+			$pParamHash['keychain_store']['pos'] = $pParamHash['pos'];
+		}
+		
 		return( count( $this->mErrors ) == 0 );
 	}
 	
