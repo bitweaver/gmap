@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.141 2008/09/09 21:40:06 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.142 2008/09/15 18:19:00 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -92,7 +92,7 @@ class BitGmap extends LibertyMime {
 					$this->mCopyrights = $this->getCopyrights($lookupId);
 
 					//@TODO should prolly find a better way to deal with large numbers of markers - like when +1000
-					$joinHash = array('gmap_id' => $this->mGmapId, 'max_records' => 9999);
+					$joinHash = array('gmap_id' => $this->mGmapId, 'max_records' => 9999, 'sort_mode' => 'pos_asc');
 					require_once( GMAP_PKG_PATH.'BitGmapMarker.php' );
 					$marker = new BitGmapMarker();
 					$markersList = $marker->getList( $joinHash );

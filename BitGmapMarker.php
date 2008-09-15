@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.57 2008/09/15 16:04:59 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.58 2008/09/15 18:19:00 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -200,9 +200,17 @@ class BitGmapMarker extends BitGmapOverlayBase {
 			$whereSql .= " AND ufm.`favorite_content_id` IS NOT NULL ";
 		}
 
-		//$pListHash['sort_mode'] = 'date_added_desc';
-		$sortModePrefix = 'lc.';
-		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] );
+		switch( $pListHash['sort_mode'] ) {
+			case 'pos_desc':
+			case 'pos_asc':
+				$sortModePrefix = 'gmk.';
+				break;
+			default:
+				$sortModePrefix = 'lc.';
+				break;
+		}
+		$secondarySortMode = ($pListHash['sort_mode'] != 'title_asc') ? ', lc.title ASC': '';
+		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] ) . $secondarySortMode;
 
 		$query = "SELECT lc.*, gm.*, 
 				  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,

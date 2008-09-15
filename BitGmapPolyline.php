@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.12 2008/09/15 16:04:59 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.13 2008/09/15 18:19:00 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -142,9 +142,17 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 			array_push( $bindVars, (int)$pListHash['gmap_id'] );
 		}
 		
-		//$pListHash['sort_mode'] = 'date_added_desc';
-		$sortModePrefix = 'lc.';
-		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] );
+		switch( $pListHash['sort_mode'] ) {
+			case 'pos_desc':
+			case 'pos_asc':
+				$sortModePrefix = 'gsk.';
+				break;
+			default:
+				$sortModePrefix = 'lc.';
+				break;
+		}
+		$secondarySortMode = ($pListHash['sort_mode'] != 'title_asc') ? ', title ASC': '';
+		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] ) . $secondarySortMode;
 
 		$query = "SELECT lc.*, gp.*, 
 				  uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
