@@ -43,62 +43,38 @@ BitMap.EditContent = function(){
 BitMap.Initialize = function(minsize){
   var count = BitMap.MapData.length;
   for (n=0; n<count; n++){
-    BitMap.MapData[n].Map = new BitMap.Map(
-      n,
-      BitMap.MapData[n].mapdiv,
-      BitMap.MapData[n].id,
-      BitMap.MapData[n].width,
-      BitMap.MapData[n].height,
-      {lat: BitMap.MapData[n].lat, lng: BitMap.MapData[n].lng},
-      BitMap.MapData[n].zoom,
-      minsize,
-      BitMap.MapData[n].maptype,
-      {scale: BitMap.MapData[n].scale, maptype_control:BitMap.MapData[n].maptype_control, zoom_control: BitMap.MapData[n].zoom_control, overview_control: BitMap.MapData[n].overview_control},
-      BitMap.MapData[n].allow_comments,
-      BitMap.MapData[n].Maptypes,
-      BitMap.MapData[n].Tilelayers,
-      BitMap.MapData[n].Copyrights,
-      BitMap.MapData[n].Markers,
-      BitMap.MapData[n].MarkerSets,
-      BitMap.MapData[n].MarkerStyles,
-      BitMap.MapData[n].IconStyles,
-      BitMap.MapData[n].Polylines,
-      BitMap.MapData[n].PolylineSets,
-      BitMap.MapData[n].PolylineStyles,
-      BitMap.MapData[n].Polygons,
-      BitMap.MapData[n].PolygonSets,
-      BitMap.MapData[n].PolygonStyles
-      );
+	  var MD = BitMap.MapData[n];
+	  MD.index = n;
+	  MD.minsize = minsize;
+	  MD.Map = new BitMap.Map( MD );
   };
 };
 
-//center is an object containing .lat and .lng
-//controls is an object containing .scale .type_control .zoom_control
-BitMap.Map = function (index, mapdiv, id, width, height, center, zoom, minsize, maptype, controls, allow_comments, maptypes, tilelayers, copyrights, markers, markersets, markerstyles, iconstyles, polylines, polylinesets, polylinestyles, polygons, polygonsets, polygonstyles) {
-	this.index = index;
-	this.mapdiv = mapdiv;
-	this.id = id;
-	this.width = width;
-	this.height = height;
-	this.center = center;
-	this.zoom = zoom;
-	this.minsize = minsize;
-	this.maptype = maptype;
-	this.controls = controls;
-	this.allow_comments = allow_comments;
-	this.maptypes = maptypes;
-	this.tilelayers = tilelayers;
-	this.copyrights = copyrights;
-	this.markers = markers;
-	this.markersets = markersets;
-	this.markerstyles = markerstyles;
-	this.iconstyles = iconstyles;
-	this.polylines = polylines;
-	this.polylinesets = polylinesets;
-	this.polylinestyles = polylinestyles;
-	this.polygons = polygons;
-	this.polygonsets = polygonsets;
-	this.polygonstyles = polygonstyles;
+BitMap.Map = function ( pHash ){
+	this.index = pHash.index;
+	this.mapdiv = pHash.mapdiv;
+	this.id = pHash.id;
+	this.width = pHash.width;
+	this.height = pHash.height;
+	this.center = {lat:pHash.lat, lng:pHash.lng};
+	this.zoom = pHash.zoom;
+	this.minsize = pHash.minsize;
+	this.maptype = pHash.maptype;
+	this.controls = {scale:pHash.scale, maptype_control:pHash.maptype_control, zoom_control:pHash.zoom_control, overview_control:pHash.overview_control},
+	this.allow_comments = pHash.allow_comments;
+	this.maptypes = pHash.Maptypes;
+	this.tilelayers = pHash.Tilelayers;
+	this.copyrights = pHash.Copyrights;
+	this.markers = pHash.Markers;
+	this.markersets = pHash.MarkerSets;
+	this.markerstyles = pHash.MarkerStyles;
+	this.iconstyles = pHash.IconStyles;
+	this.polylines = pHash.Polylines;
+	this.polylinesets = pHash.PolylineSets;
+	this.polylinestyles = pHash.PolylineStyles;
+	this.polygons = pHash.Polygons;
+	this.polygonsets = pHash.PolygonSets;
+	this.polygonstyles = pHash.PolygonStyles;
 	this.map = new GMap2(document.getElementById(this.mapdiv));  
 	this.setControls();
 
