@@ -148,6 +148,21 @@ BitMap.Map.prototype = {
 			iTestValue = 0;
 		} while (--iLoopCount > 0);
 	},
+	
+	"getXMLTagValue": function( xml, tag ){
+		var node = xml.getElementsByTagName( tag );
+		if( typeof( node[0] ) != 'undefined' ){
+			return this.getNodeValue( node[0].firstChild );
+		}
+		return null;
+	},
+
+	"getNodeValue": function( node ){
+		if( node != null ){
+			return node.nodeValue;
+		}
+		return null;
+	},
 
 	"setControls": function(){
 		if(this.controls.scale == true){

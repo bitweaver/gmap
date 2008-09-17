@@ -101,20 +101,15 @@ BitMap.Edit.prototype = {
 		//setTimeout("this.SPINNER.style.display='none'", 1000);
 		this.SPINNER.style.display="none";
 	},
-	
-	"getXMLTagValue": function( xml, tag ){
-		var node = xml.getElementsByTagName( tag );
-		if( typeof( node[0] ) != 'undefined' ){
-			return this.getNodeValue( node[0].firstChild );
-		}
-		return null;
-	},
 
+	// virtual function
+	"getXMLTagValue": function( xml, tag ){
+		return this.Map.getXMLTagValue( xml, tag );
+	},
+	
+	// virtual function
 	"getNodeValue": function( node ){
-		if( node != null ){
-			return node.nodeValue;
-		}
-		return null;
+		return this.Map.getNodeValue( node );
 	},
 	
 	// for sorting arrays
