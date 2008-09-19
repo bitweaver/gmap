@@ -45,7 +45,12 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 			foreach( $_REQUEST["checked"] as $del ) {
 				$formHash['input'][] = '<input type="hidden" name="checked[]" value="'.$del.'"/>';
 			}
-			$gBitSystem->confirmDialog( $formHash, array( 'warning' => 'Are you sure you want to delete '.count($_REQUEST["checked"]).' gmaps?', 'error' => 'This cannot be undone!' ) );
+			$gBitSystem->confirmDialog( $formHash, 
+				array( 
+				'warning' => tra('Are you sure you want to delete these gmaps?') . ' (' . tra('Count: ') . count( $_REQUEST["checked"] ) . ')',				
+				'error' => tra('This cannot be undone!'),
+			)
+		);
 		} else {
 			foreach ($_REQUEST["checked"] as $deleteId) {
 				$tmpPage = new BitGmap( $deleteId );
