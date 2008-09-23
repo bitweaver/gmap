@@ -116,14 +116,14 @@ BitMap.Map = function ( pHash ){
 	this.loopOver(ref.markers, function(i){ if(ref.markers[i].plot_on_load == true){ ref.addMarker(i);} });
 	}  
 
-	if (this.polylines.length > 0){
-	var ref = this;
-	this.loopOver(ref.polylines, function(i){ref.addPolyline(i);});
-	}	
-	
 	if (this.polygons.length > 0){
 	var ref = this;
 	this.loopOver(ref.polygons, function(i){ref.addPolygon(i);});
+	}	
+
+	if (this.polylines.length > 0){
+	var ref = this;
+	this.loopOver(ref.polylines, function(i){ref.addPolyline(i);});
 	}	
 }
 
@@ -148,7 +148,7 @@ BitMap.Map.prototype = {
 			iTestValue = 0;
 		} while (--iLoopCount > 0);
 	},
-	
+
 	"getXMLTagValue": function( xml, tag ){
 		var node = xml.getElementsByTagName( tag );
 		if( typeof( node[0] ) != 'undefined' ){
