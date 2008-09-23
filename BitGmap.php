@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.142 2008/09/15 18:19:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.143 2008/09/23 19:38:10 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -116,7 +116,8 @@ class BitGmap extends LibertyMime {
 					$polylineSetsList = $polylineSet->getList( $joinHash );
 					$this->mMapPolylineSets = $polylineSetsList['data'];
 					
-					$this->mMapPolylineStyles = $this->getPolylineStyles($lookupId);
+					$listHash = array( 'gmap_id' => $lookupId );
+					$this->mMapPolylineStyles = $this->getPolylineStyles($listHash);
 
 					require_once( GMAP_PKG_PATH.'BitGmapPolygon.php' );
 					$polygon = new BitGmapPolygon();
@@ -468,33 +469,52 @@ class BitGmap extends LibertyMime {
 	}
 
 	//get all polylines for given gmap_id and set_types
-    function getPolylineStyles( &$pGmapId = NULL ) {
+    function getPolylineStyles( &$pListHash ) {
         global $gBitSystem;
         $ret = NULL;
         
         $bindVars = array(); $joinSql = ''; $whereSql = '';
+		
+	    if( empty( $pListHash['sort_mode'] )) {
+			$pListHash['sort_mode'] = array( 'gis.`name_asc`' );
+		}
+
+		if( empty( $pListHash['max_records'] ) ){
+			$pListHash['max_records'] = 9999;
+		}
+		
+		@LibertyContent::prepGetList( $pListHash );
 
         $query = "SELECT DISTINCT gis.*
                 FROM `".BIT_DB_PREFIX."gmaps_polyline_styles` gis";
                 
-        if( @$this->verifyId( $pGmapId ) ) {
+        if( !empty( $pListHash['gmap_id'] ) && @$this->verifyId( $pListHash['gmap_id'] ) ) {
             // Polyline setup
             $polyline_joinSql = " INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` lgms ON (lgms.`style_id` = gis.`style_id`) ";
-            $polyline_joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` lgsk ON (lgms.`set_id` = lgsk.`set_id`) "; 
+           	$polyline_joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` lgsk ON (lgms.`set_id` = lgsk.`set_id`) "; 
             $polyline_whereSql = " WHERE lgsk.`gmap_id` = ? AND lgsk.`set_type` = 'polylines' ";
-            $bindVars[] = $pGmapId;
+            $bindVars[] = $pListHash['gmap_id'];
 
             // Build the whole sodding mess
-            $query = $query . $polyline_joinSql . $polyline_whereSql . " UNION " . $query . $polyline_joinSql;
-        }
+			$query = $query . $polyline_joinSql . $polyline_whereSql . " UNION " . $query . $polyline_joinSql;
 
-        $result = $this->mDb->query( $query, $bindVars );
+			$joinSql = $polyline_joinSql;
+			$whereSql = $polyline_whereSql;
+		}else{
+			$query .= " ORDER BY ".$gBitSystem->mDb->convertSortmode( $pListHash['sort_mode'] );
+		}
+
+		$result = $gBitSystem->mDb->query( $query, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
     
         $ret = array();
     
         while ($res = $result->fetchrow()) {
             $ret[] = $res;
         };
+
+		$pListHash['cant'] = $gBitSystem->mDb->getOne( "SELECT COUNT( gis.`style_id` ) FROM `".BIT_DB_PREFIX."gmaps_polyline_styles` gis $joinSql $whereSql", $bindVars );
+		
+		@LibertyContent::postGetList( $pListHash );
             
         return $ret;
 	}
