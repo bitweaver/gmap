@@ -4,7 +4,7 @@
 		<polygon_id>{$polygonInfo.polygon_id}</polygon_id>
 		<title>{$polygonInfo.title}</title>
 		<type>{$polygonInfo.type}</type>
-		<points_data>{$polygonInfo.data}</points_data>
+		<points_data>{$polygonInfo.poly_data}</points_data>
 		<circle_center>{$polygonInfo.circle_center}</circle_center>
 		<radius>{$polygonInfo.radius}</radius>
 		<levels_data>{$polygonInfo.levels_data}</levels_data>
