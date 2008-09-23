@@ -280,6 +280,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		}else{
 			this.defineGPolygonEncoded(p);
 		}
+		p.polygon.index = i;
 	},
 
 
@@ -312,6 +313,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		};
 		p.polygon = new GPolygon(pointlist,c,w,o,fc,fo);
 		this.map.addOverlay(p.polygon);
+		p.polygon.plotted = true;
 	},
 
 	
