@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polylineset.php,v 1.22 2008/09/23 19:38:10 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polylineset.php,v 1.23 2008/09/24 15:00:39 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -95,6 +95,15 @@ if (!empty($_REQUEST["save_polylineset"])) {
 	$gmap = new BitGmap();
 	$listHash = array();
 	$polylineStyles = $gmap->getPolylineStyles( $listHash ); 
+
+	// match the style to get the name - some day we should get this in the load query 
+	foreach( $polylineStyles as $style ){
+		if( $style['style_id'] == $polylineset['style_id'] ){
+			$polylineset['style_name'] = $style['name'];
+			break;
+		}
+	}
+
 	$gBitSmarty->assign( 'polylineStyles', $polylineStyles );	
 	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
 	$gBitSmarty->assign( 'childrenAllowed', $gContent->childrenAllowed() );
