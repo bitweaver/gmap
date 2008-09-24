@@ -25,7 +25,7 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 		{formlabel label="Marker Style" for="style_id"}
 			{forminput}
 				<select name="style_id">
-				<option value="0" {if $markersetInfo.style_id == 0 }selected="selected"{/if}>Google (standard)</option>
+				<option value="0" {if $markersetInfo.style_id == 0 }selected="selected"{/if}>Standard</option>
 				{if count($markerStyles) > 0}{section name=ix loop=$markerStyles}
 					<option value="{$markerStyles[ix].style_id}" {if $markersetInfo.style_id == $markerStyles[ix].style_id}selected="selected"{else}{/if}>{$markerStyles[ix].name}</option>
 				{/section}{/if}
@@ -36,17 +36,9 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 	<div class="row">
 		{formlabel label="Icon Style" for="icon_id"}
 			{forminput}
-			<a href="javascript:void(0);" onclick="BitMap.EditSession.getIconStyles(null,'');" title="{tr}Click to select another icon{/tr}"><img id="icon_img" src="{if $icon.image}{$smarty.const.BIT_ROOT_URL}{$icon.image}{else}http://www.google.com/mapfiles/marker.png{/if}" /></a>
+				<a href="javascript:void(0);" onclick="BitMap.EditSession.getIconStyles(null,'');" title="{tr}Click to select another icon{/tr}"><img id="icon_img" src="{if $icon.image}{$smarty.const.BIT_ROOT_URL}{$icon.image}{else}http://www.google.com/mapfiles/marker.png{/if}" /></a>
 				<div id="icon_styles" style="position:absolute; padding:10px; width:212px; overflow:auto; display:none; background:white; border:2px solid #666"></div>
 				<input name="icon_id" id="icon_id" type="hidden" value="{$iconStyles[ix].icon_id}" />
-				<!--
-				<select name="icon_id">
-				<option value="0" {if $markersetInfo.icon_id == 0 }selected="selected"{/if}>Google (standard)</option>
-				{if count($iconStyles) > 0}{section name=ix loop=$iconStyles}
-					<option value="{$iconStyles[ix].icon_id}" {if $markersetInfo.icon_id == $iconStyles[ix].icon_id}selected="selected"{else}{/if}>{$iconStyles[ix].name}</option>
-				{/section}{/if}
-				</select>
-				-->
 				{formhelp note=""}
 			{/forminput}
 	</div>

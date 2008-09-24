@@ -21,7 +21,7 @@
 		{formlabel label="Style" for="style_id"}
 			{forminput}
 				<select name="style_id" id="style_id">
-					<option value="0" {if $polylinesetInfo.style_id == 0 }selected="selected"{/if}>Google (standard)</option>
+					<option value="0" {if $polylinesetInfo.style_id == 0 }selected="selected"{/if}>Default (blue)</option>
 					{if count($polylineStyles) > 0}{section name=ix loop=$polylineStyles}
 						<option value="{$polylineStyles[ix].style_id}" {if $polylinesetInfo.style_id == $polylineStyles[ix].style_id}selected="selected"{else}{/if}>{$polylineStyles[ix].name}</option>
 					{/section}{/if}

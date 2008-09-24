@@ -15,7 +15,7 @@
 		{formlabel label="Polyline Type" for="type"}
 			{forminput}
 				<select name="type">
-					<option value="0" {if $polylineInfo.type == 0 }selected="selected"{/if}>Google (standard)</option>
+					<option value="0" {if $polylineInfo.type == 0 }selected="selected"{/if}>Standard</option>
 					<option value="1" {if $polylineInfo.type == 1 }selected="selected"{/if}>Geodesic</option>
 					<option value="2" {if $polylineInfo.type == 2 }selected="selected"{/if}>Encoded</option>
 				</select>

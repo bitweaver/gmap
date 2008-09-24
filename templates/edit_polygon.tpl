@@ -15,7 +15,7 @@
 		{formlabel label="Polygon Type" for="type"}
 			{forminput}
 				<select name="type">
-					<option value="0" {if $polygonInfo.type == 0 }selected="selected"{/if}>Google (standard)</option>
+					<option value="0" {if $polygonInfo.type == 0 }selected="selected"{/if}>Standard</option>
 					<option value="1" {if $polygonInfo.type == 1 }selected="selected"{/if}>Circle</option>
 					<option value="2" {if $polygonInfo.type == 2 }selected="selected"{/if}>Encoded</option>
 				</select>

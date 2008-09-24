@@ -21,7 +21,7 @@
 		{formlabel label="Line Style" for="polylinestyle_id"}
 			{forminput}
 				<select name="polylinestyle_id" id="polylinestyle_id">
-					<option value="0" {if $polygonsetInfo.polylinestyle_id == 0 }selected="selected"{/if}>Google (standard)</option>
+					<option value="0" {if $polygonsetInfo.polylinestyle_id == 0 }selected="selected"{/if}>Default (blue)</option>
 					{if count($polylineStyles) > 0}{section name=ix loop=$polylineStyles}
 						<option value="{$polylineStyles[ix].style_id}" {if $polygonsetInfo.polylinestyle_id == $polylineStyles[ix].style_id}selected="selected"{else}{/if}>{$polylineStyles[ix].name}</option>
 					{/section}{/if}
@@ -33,7 +33,7 @@
 		{formlabel label="Fill Style" for="style_id"}
 			{forminput}
 				<select name="style_id" id="style_id">
-					<option value="0" {if $polygonsetInfo.style_id == 0 }selected="selected"{/if}>Google (standard)</option>
+					<option value="0" {if $polygonsetInfo.style_id == 0 }selected="selected"{/if}>Default (blue)</option>
 					{if count($polygonStyles) > 0}{section name=ix loop=$polygonStyles}
 						<option value="{$polygonStyles[ix].style_id}" {if $polygonsetInfo.style_id == $polygonStyles[ix].style_id}selected="selected"{else}{/if}>{$polygonStyles[ix].name}</option>
 					{/section}{/if}
