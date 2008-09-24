@@ -295,7 +295,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			);
 			pointlist.push(point);
 		};
-		var fc = "#ff0000";
+		var fc = "#0000ff";
 		var fo = .5;
 		var c = null;
 		var w = null;
