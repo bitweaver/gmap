@@ -22,19 +22,19 @@ if( @BitBase::verifyId( $_REQUEST['polylinestyle_id'] )) {
 	$styleId = $_REQUEST['polylinestyle_id'];
 	$tpl = 'bitpackage:gmap/polygonstyle_xml.tpl';
 	
-}elseif( !empty( $_REQUEST['polytype'] ) ){
+}elseif( !empty( $_REQUEST['polystyle_type'] ) ){
 	
-	if( $_REQUEST['polytype'] == 'polyline' ){
+	if( $_REQUEST['polystyle_type'] == 'polyline' ){
 		$getStyleListFunc = 'getPolylineStyles';
 	}else{
 		$getStyleListFunc = 'getPolygonStyles';
 	}
 
-	$gBitSmarty->assign( 'polytype', $_REQUEST['polytype'] );
+	$gBitSmarty->assign( 'polystyle_type', $_REQUEST['polystyle_type'] );
 
 }
 
-
+$gBitSmarty->assign( 'polytype', $_REQUEST['polytype'] );
 
 // get one
 if( @BitBase::verifyId( $_REQUEST['polylinestyle_id'] ) || @BitBase::verifyId( $_REQUEST['polygonstyle_id'] ) ){

@@ -1,19 +1,20 @@
 {strip}
-<div id="view_polylinestyles">
+<div id="view_{$polytype}_{$polystyle_type}styles">
 	<div class="row">
-		<a href="javascript:void(0);" onclick="BitMap.hide('polyline_styles');" style="float:right">{biticon iname=window-close iexplain="Close"}</a>
+		<a href="javascript:void(0);" onclick="BitMap.hide('{$polytype}_{$polystyle_type}styles');" style="float:right">{biticon iname=window-close iexplain="Close"}</a>
 	</div>
 
 	<ul>
-		{if $polytype == 'polygon'}
-		<li><a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}',null,'None');">None</a></li>
+		{if $polytype == 'polygon' && $polystyle_type == 'polyline'}
+		{* disabled until polygon storage and constructor can deal with a -1, e.g. no outline, value *}
+		<!-- <li><a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}','{$polystyle_type}',-1,'None');">None</a></li> -->
 		{/if}
 
-		<li><a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}',0,'Default (blue)');">Default (blue)</a></li>
+		<li><a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}','{$polystyle_type}',0,'Default (blue)');">Default (blue)</a></li>
 
 		{foreach from=$styles item=style name=styles}
 		<li>
-			<a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}',{$style.style_id},'{$style.name}');">
+			<a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}','{$polystyle_type}',{$style.style_id},'{$style.name}');">
 				{$style.name}
 			</a>
 		</li>
