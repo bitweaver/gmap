@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.143 2008/09/23 19:38:10 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.144 2008/09/24 14:59:18 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -116,8 +116,8 @@ class BitGmap extends LibertyMime {
 					$polylineSetsList = $polylineSet->getList( $joinHash );
 					$this->mMapPolylineSets = $polylineSetsList['data'];
 					
-					$listHash = array( 'gmap_id' => $lookupId );
-					$this->mMapPolylineStyles = $this->getPolylineStyles($listHash);
+					$lineListHash = array( 'gmap_id' => $lookupId );
+					$this->mMapPolylineStyles = $this->getPolylineStyles($lineListHash);
 
 					require_once( GMAP_PKG_PATH.'BitGmapPolygon.php' );
 					$polygon = new BitGmapPolygon();
@@ -129,7 +129,8 @@ class BitGmap extends LibertyMime {
 					$polygonSetsList = $polygonSet->getList( $joinHash );
 					$this->mMapPolygonSets = $polygonSetsList['data'];
 					
-					$this->mMapPolygonStyles = $this->getPolygonStyles($lookupId);
+					$polyListHash = array( 'gmap_id' => $lookupId );
+					$this->mMapPolygonStyles = $this->getPolygonStyles($polyListHash);
 				}
 			}
 		}
@@ -544,39 +545,59 @@ class BitGmap extends LibertyMime {
 
 
 	//get all polylines for given gmap_id and set_types
-    function getPolygonStyles( &$pGmapId = NULL ) {
+    function getPolygonStyles( &$pListHash ) {
         global $gBitSystem;
         $ret = NULL;
         
-        $bindVars = array(); $joinSql = ''; $whereSql = '';
+        $countVars = array(); $bindVars = array(); $joinSql = ''; $whereSql = '';
+		
+	    if( empty( $pListHash['sort_mode'] )) {
+			$pListHash['sort_mode'] = array( 'gis.`name_asc`' );
+		}
+
+		if( empty( $pListHash['max_records'] ) ){
+			$pListHash['max_records'] = 9999;
+		}
+		
+		@LibertyContent::prepGetList( $pListHash );
 
         $query = "SELECT DISTINCT gis.*
                 FROM `".BIT_DB_PREFIX."gmaps_polygon_styles` gis";
         
-        if( @$this->verifyId( $pGmapId ) ) {
+        if( !empty( $pListHash['gmap_id'] ) && @$this->verifyId( $pListHash['gmap_id'] ) ) {
             // Polygon setup
             $polygon_joinSql = " INNER JOIN `".BIT_DB_PREFIX."gmaps_polygon_sets` pgms ON (pgms.`style_id` = gis.`style_id`) ";
             $polygon_joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` pgsk ON (pgms.`set_id` = pgsk.`set_id`) "; 
             $polygon_whereSql = " WHERE pgsk.`gmap_id` = ? AND pgsk.`set_type` = 'polygons' ";
-            $bindVars[] = $pGmapId;
+            $bindVars[] = $pListHash['gmap_id'];
 
             // Polyline setup
             $polyline_joinSql = " INNER JOIN `".BIT_DB_PREFIX."gmaps_polyline_sets` lgms ON (lgms.`style_id` = gis.`style_id`) ";
             $polyline_joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` lgsk ON (lgms.`set_id` = lgsk.`set_id`) "; 
             $polyline_whereSql = " WHERE lgsk.`gmap_id` = ? AND lgsk.`set_type` = 'polylines' ";
-            $bindVars[] = $pGmapId;
+            $bindVars[] = $pListHash['gmap_id'];
 
             // Build the whole sodding mess
             $query = $query . $polygon_joinSql . $polygon_whereSql . " UNION " . $query . $polyline_joinSql . $polyline_whereSql;
-        }
 
-        $result = $this->mDb->query( $query, $bindVars );
+			$joinSql = $polygon_joinSql;
+			$whereSql = $polygon_whereSql;
+			$countVars[] = $pListHash['gmap_id'];
+		}else{
+			$query .= " ORDER BY ".$gBitSystem->mDb->convertSortmode( $pListHash['sort_mode'] );
+		}
+
+		$result = $gBitSystem->mDb->query( $query, $bindVars, $pListHash['max_records'], $pListHash['offset'] );
     
         $ret = array();
     
         while ($res = $result->fetchrow()) {
             $ret[] = $res;
         };
+		
+		$pListHash['cant'] = $gBitSystem->mDb->getOne( "SELECT COUNT( gis.`style_id` ) FROM `".BIT_DB_PREFIX."gmaps_polygon_styles` gis $joinSql $whereSql", $countVars );
+		
+		@LibertyContent::postGetList( $pListHash );
             
         return $ret;
     }
