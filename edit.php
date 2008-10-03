@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.48 2008/09/15 19:48:30 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.49 2008/10/03 17:20:15 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -25,7 +25,7 @@ require_once(GMAP_PKG_PATH.'lookup_gmap_inc.php' );
 if( $gContent->isValid() ) {
 	$gContent->verifyEditPermission();
 } else {
-	$gBitSystem->verifyPermission( 'p_gmap_edit' );
+	$gContent->verifyCreatePermission();
 }
 
 //if there is no API key don't even bother

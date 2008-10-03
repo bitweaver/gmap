@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.16 2008/07/01 22:18:45 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.17 2008/10/03 17:20:15 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -28,7 +28,7 @@ $gBitThemes->setFormatHeader( 'center_only' );
 if( $gContent->isValid() ) {
 	$gContent->verifyEditPermission();
 } else {
-	$gBitSystem->verifyPermission( 'p_gmap_edit' );	
+	$gContent->verifyCreatePermission();
 }
 
 

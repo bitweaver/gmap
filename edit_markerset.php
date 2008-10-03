@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_markerset.php,v 1.23 2008/07/12 21:54:57 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_markerset.php,v 1.24 2008/10/03 17:20:15 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -28,7 +28,8 @@ $gBitThemes->setFormatHeader( 'center_only' );
 if( $gContent->isValid() ) {
 	$gContent->verifyEditPermission();
 } else {
-	$gBitSystem->verifyPermission( 'p_gmap_overlayset_edit' );
+	$gContent->verifyCreatePermission();
+	// $gBitSystem->verifyPermission( 'p_gmap_overlayset_edit' );
 	
 	/* if we are passed a gmap_id the user is trying to add a set to a map.
 	   if they dont have the right, then fuck it.

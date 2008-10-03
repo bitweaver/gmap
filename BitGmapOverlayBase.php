@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.17 2008/09/15 16:04:59 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.18 2008/10/03 17:20:15 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -43,6 +43,7 @@ class BitGmapOverlayBase extends LibertyMime {
 		
 		// Permission setup
 		$this->mViewContentPerm  = 'p_gmap_overlay_view';
+		$this->mCreateContentPerm  = 'p_gmap_overlay_create';
 		$this->mEditContentPerm  = 'p_gmap_overlay_edit';
 		$this->mAdminContentPerm = 'p_gmap_admin';
 	}

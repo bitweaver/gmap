@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.39 2008/07/22 17:49:01 wjames5 Exp $ 
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.40 2008/10/03 17:20:15 wjames5 Exp $ 
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -30,7 +30,8 @@ if( $gContent->isValid() ) {
 		$gBitSystem->fatalError( tra( "Sorry, you do not have permission to edit this marker." ));
 	}
 } else {
-	$gBitSystem->verifyPermission( 'p_gmap_overlay_edit' );
+	$gContent->verifyCreatePermission();
+	// $gBitSystem->verifyPermission( 'p_gmap_overlay_edit' );
 	
 	/* if we are passed a set_id the user is trying to add an overlay to a set.
 	   if they dont have the right, then fuck it.
