@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.14 2008/10/03 17:20:15 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.15 2008/10/07 21:35:29 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -261,13 +261,24 @@ class BitGmapOverlaySetBase extends LibertyContent {
 	}
 	
 	function isEditShared(){
+		global $gBitUser;
 		$ret = FALSE;
-		$this->loadPermissions();
-		if ( isset( $this->mPerms['p_gmap_overlayset_edit'] ) && $this->mPerms['p_gmap_overlayset_edit']['group_id'] == 3 && $this->mPerms['p_gmap_overlayset_edit']['is_revoked'] != "y"){
+		// were checking against registered users perms
+		$groupId = 3;
+
+		// get default and custom content perms and check the whole mess
+		$defaultPerms = $gBitUser->getGroupPermissions( array( 'group_id' => $groupId ) );
+
+		if( ( $assignedPerms = $this->getContentPermissionsList() ) && !empty( $assignedPerms[$groupId][$this->mEditContentPerm] ) ){
+			if( $assignedPerms[$groupId][$this->mEditContentPerm]['is_revoked'] != "y" ){
+				$ret = TRUE;
+			}
+		}elseif( !empty( $defaultPerms[$this->mEditContentPerm] ) ){
 			$ret = TRUE;
 		}
+		
 		return $ret;
-	}	
+	}
 
 	function setAllowChildren(&$pParamHash){
 		if ( isset( $pParamHash['allow_children'] ) ){
