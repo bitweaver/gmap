@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.149 2008/10/08 16:15:52 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.150 2008/10/08 19:32:49 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1079,10 +1079,6 @@ class BitGmap extends LibertyMime {
 			$pParamHash['polylinestyle_store']['name'] = $pParamHash['name'];
 		}
 
-		if( isset( $pParamHash['polyline_style_type'] ) && is_numeric( $pParamHash['polyline_style_type'] ) ) {
-			$pParamHash['polylinestyle_store']['polyline_style_type'] = $pParamHash['polyline_style_type'];
-		}
-				
 		if( !empty( $pParamHash['color'] ) ) {
 			$pParamHash['polylinestyle_store']['color'] = $pParamHash['color'];
 		}
