@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.15 2008/10/07 21:35:29 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.16 2008/10/08 15:13:28 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -253,10 +253,24 @@ class BitGmapOverlaySetBase extends LibertyContent {
 
 	
 	function setEditSharing(&$pParamHash){
+		global $gBitUser;
+		// were checking against registered users perms
+		$groupId = 3;
+
+		// get default and custom content perms and check the whole mess
+		$defaultPerms = $gBitUser->getGroupPermissions( array( 'group_id' => $groupId ) );
+		
 		if ( isset( $pParamHash['share_edit'] ) ){
-			$this->storePermission( 3, 'p_gmap_overlayset_edit' );
+			// store the permission no matter what since someone could remove global edit perm later and this undoes revoke
+			$this->storePermission( $groupId, 'p_gmap_overlayset_edit' );
 		}else{
-			$this->removePermission( 3, 'p_gmap_overlayset_edit' ); 
+			if( !empty( $defaultPerms[$this->mEditContentPerm] ) ){
+				// if global edit perm is set we need to revoke it
+				$this->storePermission( $groupId, 'p_gmap_overlayset_edit', TRUE );
+			}elseif( ( $assignedPerms = $this->getContentPermissionsList() ) && !empty( $assignedPerms[$groupId][$this->mEditContentPerm] ) && $assignedPerms[$groupId][$this->mEditContentPerm]['is_revoked'] != "y" ){
+				// if custom content perm is set but not revoke we need to remove it
+				$this->removePermission( $groupId, 'p_gmap_overlayset_edit' ); 
+			}
 		}
 	}
 	
