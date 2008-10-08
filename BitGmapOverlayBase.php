@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.20 2008/10/08 15:13:28 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.21 2008/10/08 16:15:52 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -246,68 +246,63 @@ class BitGmapOverlayBase extends LibertyMime {
 	 * desirable custom access control without having to give site wide custom-permission
 	 * access to all basic registered users.
 	 */	
-	/**
-	 * Make the overlay editable by all registered users - for wiki like editing
-	 */
-	function setEditSharing(&$pParamHash){
+	function togglePermissionSharing( $pPerm, $pGroupId, $pShare=TRUE ){
 		global $gBitUser;
-		// were checking against registered users perms
-		$groupId = 3;
-
-		// get default and custom content perms and check the whole mess
-		$defaultPerms = $gBitUser->getGroupPermissions( array( 'group_id' => $groupId ) );
 		
-		if ( isset( $pParamHash['share_edit'] ) ){
-			// store the permission no matter what since someone could remove global edit perm later and this undoes revoke
-			$this->storePermission( $groupId, 'p_gmap_overlay_edit' );
+		if ( $pShare ){
+			// store the permission no matter what since someone could remove global perm later, and this undoes revoke
+			$this->storePermission( $pGroupId, $pPerm );
 		}else{
-			if( !empty( $defaultPerms[$this->mEditContentPerm] ) ){
-				// if global edit perm is set we need to revoke it
-				$this->storePermission( $groupId, 'p_gmap_overlay_edit', TRUE );
-			}elseif( ( $assignedPerms = $this->getContentPermissionsList() ) && !empty( $assignedPerms[$groupId][$this->mEditContentPerm] ) && $assignedPerms[$groupId][$this->mEditContentPerm]['is_revoked'] != "y" ){
+			// get default and custom content perms and check the whole mess
+			$defaultPerms = $gBitUser->getGroupPermissions( array( 'group_id' => $pGroupId ) );
+			
+			if( !empty( $defaultPerms[$pPerm] ) ){
+				// if global perm is set we need to revoke it
+				$this->storePermission( $pGroupId, $pPerm, TRUE );
+			}elseif( ( $assignedPerms = $this->getContentPermissionsList() ) && !empty( $assignedPerms[$pGroupId][$pPerm] ) && $assignedPerms[$pGroupId][$pPerm]['is_revoked'] != "y" ){
 				// if custom content perm is set but not revoke we need to remove it
-				$this->removePermission( $groupId, 'p_gmap_overlay_edit' ); 
+				$this->removePermission( $pGroupId, $pPerm ); 
 			}
 		}
 	}
 	
-	function isEditShared(){
+	function isPermissionShared( $pPerm, $pGroupId ){
 		global $gBitUser;
 		$ret = FALSE;
-		// were checking against registered users perms
-		$groupId = 3;
-
+		
 		// get default and custom content perms and check the whole mess
-		$defaultPerms = $gBitUser->getGroupPermissions( array( 'group_id' => $groupId ) );
+		$defaultPerms = $gBitUser->getGroupPermissions( array( 'group_id' => $pGroupId ) );
 
-		if( ( $assignedPerms = $this->getContentPermissionsList() ) && !empty( $assignedPerms[$groupId][$this->mEditContentPerm] ) ){
-			if( $assignedPerms[$groupId][$this->mEditContentPerm]['is_revoked'] != "y" ){
+		if( ( $assignedPerms = $this->getContentPermissionsList() ) && !empty( $assignedPerms[$pGroupId][$pPerm] ) ){
+			if( $assignedPerms[$pGroupId][$pPerm]['is_revoked'] != "y" ){
 				$ret = TRUE;
 			}
-		}elseif( !empty( $defaultPerms[$this->mEditContentPerm] ) ){
+		}elseif( !empty( $defaultPerms[$pPerm] ) ){
 			$ret = TRUE;
 		}
-		
+
 		return $ret;
+	}
+	
+	function setEditSharing(&$pParamHash){
+		// we're setting registered users permission
+		$this->togglePermissionSharing( $this->mEditContentPerm, 3, !empty($pParamHash['share_edit'])?TRUE:FALSE );
+	}
+	
+	function isEditShared(){
+		// we're checking registered users perms
+		return $this->isPermissionShared( $this->mEditContentPerm, 3 );
 	}
 
 	/**
 	 * Make the overlay hidden (assumes view permission is set to anonymous by default and revokes that permission)
 	 */
 	function setViewPrivate(&$pParamHash){
-		if (isset( $pParamHash['make_private'])){
-			$this->storePermission('-1', 'p_gmap_overlay_view', TRUE);
-		}else{
-			$this->removePermission('-1', 'p_gmap_overlay_view');
-		}
+		$this->togglePermissionSharing( 'p_gmap_overlay_view', -1, !empty($pParamHash['make_private'])?FALSE:TRUE );
 	}
 
 	function isViewPrivate(){
-		$ret = FALSE;
-		if ( isset( $this->mPerms['p_gmap_overlay_view'] ) &&  $this->mPerms['p_gmap_overlay_view']['group_id'] == -1  && $this->mPerms['p_gmap_overlay_view']['is_revoked'] == "y" ){
-			$ret = TRUE;
-		}
-		return $ret;
+		return !$this->isPermissionShared( 'p_gmap_overlay_view', -1 );
 	}
 }
 ?>

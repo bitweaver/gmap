@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.16 2008/10/08 15:13:28 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.17 2008/10/08 16:15:52 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -250,65 +250,63 @@ class BitGmapOverlaySetBase extends LibertyContent {
 
 		return $pListHash;
 	}
-
 	
-	function setEditSharing(&$pParamHash){
+	function togglePermissionSharing( $pPerm, $pGroupId, $pShare=TRUE ){
 		global $gBitUser;
-		// were checking against registered users perms
-		$groupId = 3;
-
-		// get default and custom content perms and check the whole mess
-		$defaultPerms = $gBitUser->getGroupPermissions( array( 'group_id' => $groupId ) );
 		
-		if ( isset( $pParamHash['share_edit'] ) ){
-			// store the permission no matter what since someone could remove global edit perm later and this undoes revoke
-			$this->storePermission( $groupId, 'p_gmap_overlayset_edit' );
+		if ( $pShare ){
+			// store the permission no matter what since someone could remove global perm later, and this undoes revoke
+			$this->storePermission( $pGroupId, $pPerm );
 		}else{
-			if( !empty( $defaultPerms[$this->mEditContentPerm] ) ){
-				// if global edit perm is set we need to revoke it
-				$this->storePermission( $groupId, 'p_gmap_overlayset_edit', TRUE );
-			}elseif( ( $assignedPerms = $this->getContentPermissionsList() ) && !empty( $assignedPerms[$groupId][$this->mEditContentPerm] ) && $assignedPerms[$groupId][$this->mEditContentPerm]['is_revoked'] != "y" ){
+			// get default and custom content perms and check the whole mess
+			$defaultPerms = $gBitUser->getGroupPermissions( array( 'group_id' => $pGroupId ) );
+			
+			if( !empty( $defaultPerms[$pPerm] ) ){
+				// if global perm is set we need to revoke it
+				$this->storePermission( $pGroupId, $pPerm, TRUE );
+			}elseif( ( $assignedPerms = $this->getContentPermissionsList() ) && !empty( $assignedPerms[$pGroupId][$pPerm] ) && $assignedPerms[$pGroupId][$pPerm]['is_revoked'] != "y" ){
 				// if custom content perm is set but not revoke we need to remove it
-				$this->removePermission( $groupId, 'p_gmap_overlayset_edit' ); 
+				$this->removePermission( $pGroupId, $pPerm ); 
 			}
 		}
+	}
+	
+	function isPermissionShared( $pPerm, $pGroupId ){
+		global $gBitUser;
+		$ret = FALSE;
+		
+		// get default and custom content perms and check the whole mess
+		$defaultPerms = $gBitUser->getGroupPermissions( array( 'group_id' => $pGroupId ) );
+
+		if( ( $assignedPerms = $this->getContentPermissionsList() ) && !empty( $assignedPerms[$pGroupId][$pPerm] ) ){
+			if( $assignedPerms[$pGroupId][$pPerm]['is_revoked'] != "y" ){
+				$ret = TRUE;
+			}
+		}elseif( !empty( $defaultPerms[$pPerm] ) ){
+			$ret = TRUE;
+		}
+
+		return $ret;
+	}
+	
+	function setEditSharing(&$pParamHash){
+		// we're setting registered users permission
+		$this->togglePermissionSharing( $this->mEditContentPerm, 3, !empty($pParamHash['share_edit'])?TRUE:FALSE );
 	}
 	
 	function isEditShared(){
-		global $gBitUser;
-		$ret = FALSE;
-		// were checking against registered users perms
-		$groupId = 3;
-
-		// get default and custom content perms and check the whole mess
-		$defaultPerms = $gBitUser->getGroupPermissions( array( 'group_id' => $groupId ) );
-
-		if( ( $assignedPerms = $this->getContentPermissionsList() ) && !empty( $assignedPerms[$groupId][$this->mEditContentPerm] ) ){
-			if( $assignedPerms[$groupId][$this->mEditContentPerm]['is_revoked'] != "y" ){
-				$ret = TRUE;
-			}
-		}elseif( !empty( $defaultPerms[$this->mEditContentPerm] ) ){
-			$ret = TRUE;
-		}
-		
-		return $ret;
+		// we're checking registered users perms
+		return $this->isPermissionShared( $this->mEditContentPerm, 3 );
 	}
 
 	function setAllowChildren(&$pParamHash){
-		if ( isset( $pParamHash['allow_children'] ) ){
-			$this->storePermission( 3, 'p_gmap_attach_children' );
-		}else{
-			$this->removePermission( 3, 'p_gmap_attach_children' ); 
-		}
+		// we're setting registered users permission
+		$this->togglePermissionSharing( 'p_gmap_attach_children', 3, !empty($pParamHash['allow_children'])?TRUE:FALSE );
 	}
-	
+
 	function childrenAllowed(){
-		$ret = FALSE;
-		$this->loadPermissions();
-		if ( isset( $this->mPerms['p_gmap_attach_children'] ) && $this->mPerms['p_gmap_attach_children']['group_id'] == 3 && $this->mPerms['p_gmap_attach_children']['is_revoked'] != "y"){
-			$ret = TRUE;
-		}
-		return $ret;
+		// we're checking registered users perms
+		return $this->isPermissionShared( 'p_gmap_attach_children', 3 );
 	}	
 }
 ?>
