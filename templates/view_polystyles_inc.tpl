@@ -15,6 +15,7 @@
 		{foreach from=$styles item=style name=styles}
 		<li>
 			<a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}','{$polystyle_type}',{$style.style_id},'{$style.name}');">
+				<div style="border-top:solid {$style.weight}px #{$style.color}; width:70px; float:right;"></div>
 				{$style.name}
 			</a>
 		</li>
