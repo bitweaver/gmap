@@ -20,6 +20,6 @@
 		</li>
 		{/foreach}
 	</ul>
-	{include file="bitpackage:gmap/jspagination.tpl" ajaxHandler="BitMap.EditSession.getPolyStyles" ajaxInputId="`$polytype`styleid"}
+	{include file="bitpackage:gmap/jspagination.tpl" ajaxHandler="BitMap.EditSession.getPolyStyles" ajaxParams="'`$polytype`','`$polystyle_type`'"}
 </div>
 {/strip}
