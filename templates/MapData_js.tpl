@@ -246,9 +246,7 @@ BitMap.MapData.push({ldelim}
   {ldelim}
 		style_id: {$gContent->mMapPolygonStyles[style_n].style_id},
 		name: "{$gContent->mMapPolygonStyles[style_n].name}",
-		polygon_style_type: {$gContent->mMapPolygonStyles[style_n].polygon_style_type},
 		color: "{$gContent->mMapPolygonStyles[style_n].color}",
-		weight: {$gContent->mMapPolygonStyles[style_n].weight},
 		opacity: {$gContent->mMapPolygonStyles[style_n].opacity},
 	{rdelim},
 	{/section}{/if}],

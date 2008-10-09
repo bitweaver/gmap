@@ -301,7 +301,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		var w = null;
 		var o = null;
 		if ( s != null ){
-			var ps = this.polygontyles[s];	
+			var ps = this.polygonstyles[s];	
 			fc = "#"+ps.color;
 			fo = ps.opacity;
 		};
