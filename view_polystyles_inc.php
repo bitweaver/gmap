@@ -20,7 +20,7 @@ if( @BitBase::verifyId( $_REQUEST['polylinestyle_id'] )) {
 }elseif( @BitBase::verifyId( $_REQUEST['polygonstyle_id'] )) {
 
 	$getStyleFunc = 'getPolygonStyle';
-	$styleId = $_REQUEST['polylinestyle_id'];
+	$styleId = $_REQUEST['polygonstyle_id'];
 	$tpl = 'bitpackage:gmap/edit_polygonstyle_xml.tpl';
 	$styleHashName = 'polygonstyleInfo';
 	
