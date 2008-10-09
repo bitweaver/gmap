@@ -4,18 +4,31 @@
 		<a href="javascript:void(0);" onclick="BitMap.hide('{$polytype}_{$polystyle_type}styles');" style="float:right">{biticon iname=window-close iexplain="Close"}</a>
 	</div>
 
-	<ul>
+	<ul style="clear:right">
 		{if $polytype == 'polygon' && $polystyle_type == 'polyline'}
 		{* disabled until polygon storage and constructor can deal with a -1, e.g. no outline, value *}
 		<!-- <li><a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}','{$polystyle_type}',-1,'None');">None</a></li> -->
 		{/if}
 
-		<li><a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}','{$polystyle_type}',0,'Default (blue)');">Default (blue)</a></li>
+		<li>
+			<a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}','{$polystyle_type}',0,'Default (blue)');">
+				{if $polystyle_type == 'polyline'}
+					<div style="border-top:solid 5px #0000ff; width:70px; float:right;"></div>
+				{else}
+					<div style="background:#0000ff; width:70px; height:10px; float:right;"></div>
+				{/if}
+				Default (blue)
+			</a>
+		</li>
 
 		{foreach from=$styles item=style name=styles}
 		<li>
 			<a href="javascript:void(0);" onclick="BitMap.EditSession.setPolyStyle('{$polytype}','{$polystyle_type}',{$style.style_id},'{$style.name}');">
-				<div style="border-top:solid {$style.weight}px #{$style.color}; width:70px; float:right;"></div>
+				{if $polystyle_type == 'polyline'}
+					<div style="border-top:solid {$style.weight}px #{$style.color}; width:70px; float:right;"></div>
+				{else}
+					<div style="background:#{$style.color}; width:70px; height:10px; float:right;"></div>
+				{/if}
 				{$style.name}
 			</a>
 		</li>
