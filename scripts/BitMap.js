@@ -164,6 +164,14 @@ BitMap.Map.prototype = {
 		return null;
 	},
 
+	"toUpperCaseFirst": function(str){
+        var typeInitCap = str;
+        var tmpChar = typeInitCap.substring(0,1).toUpperCase();
+        var postString = typeInitCap.substring(1,typeInitCap.length);
+        typeInitCap = tmpChar + postString;
+        return typeInitCap;
+    },
+
 	"setControls": function(){
 		if(this.controls.scale == true){
 			this.scaleControl = new GScaleControl();
@@ -277,18 +285,12 @@ BitMap.Map.prototype = {
 	},
 
 	"addOverlayListener": function(){
-		GEvent.addListener(this.map, "click", function(overlay) {
+		GEvent.addListener(this.map, "click", function(overlay, point, overlaypoint) {
 			if (overlay){ 
-				if (overlay.my_html){ 
-					if (overlay.my_maxurl){
-						overlay.openInfoWindow(overlay.my_html, {maxUrl:overlay.my_maxurl});
-					}else{
-						overlay.openInfoWindow(overlay.my_html);
-					}
-				}else{
-					if (overlay.type == 'marker'){
-						BitMap.MapData[0].Map.openMarkerWindow(overlay.index);
-					}
+				if (overlay.type == 'marker'){
+					BitMap.MapData[0].Map.openMarkerWindow(overlay.index);
+				}else if( overlay.type != undefined ){
+					BitMap.MapData[0].Map.openOverlayWindow(overlay.type, overlay.index, overlaypoint);
 				}
 			}
 		});

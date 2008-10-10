@@ -207,6 +207,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		var opts = (p.type == 1)?{geodesic:true}:null;
 		p.polyline = new GPolyline(pointlist, c, w, o, opts);
 		this.map.addOverlay(p.polyline);
+		p.polyline.type = 'polyline';
 		p.polyline.plotted = true;
 	},
 	
@@ -235,6 +236,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				numLevels:n
 			});
 			this.map.addOverlay(p.polyline);
+			p.polyline.type = 'polyline';
 			p.polyline.plotted = true;
 		}
 	},
@@ -313,6 +315,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		};
 		p.polygon = new GPolygon(pointlist,c,w,o,fc,fo);
 		this.map.addOverlay(p.polygon);
+		p.polygon.type = 'polygon';
 		p.polygon.plotted = true;
 	},
 
@@ -415,6 +418,42 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		this.markers[this.TARGET_MARKER_INDEX].gmarker.my_html = rslt.responseText;
 		//this.executeJavascript(markercontentdivid);
 		this.openMarkerWindow( this.TARGET_MARKER_INDEX );
+	},
+
+	"openOverlayWindow": function( type, i, point ){
+		var typeInitCap = this.toUpperCaseFirst( type );
+		var O = this[type+'s'][i];
+		if ( typeof(O[type]) == 'undefined' ){
+			this["add"+typeInitCap](i);
+		}
+		if ( typeof(O[type].my_html) == 'undefined' ){
+			var id = O.content_id;
+			doSimpleXMLHttpRequest("view_overlay.php", {overlay_type:type, content_id:id, pre_window:true}).addCallback( bind(this.loadOverlayCallback, this), type, i, point ); 
+		}else{
+			var opt = null;
+			if (O.allow_comments == 'y' && O[type].my_maxurl){
+					var e = DIV(null, "Loading...");
+					opt = {maxContent:e};
+					var ref = this;
+					var url = O[type].my_maxurl;
+					var mref = O[type];
+					GEvent.addListener(this.map, "infowindowopen", function(){
+						var w = ref.map.getInfoWindow();
+						GEvent.addListener(w, "maximizeclick", function() {
+							GDownloadUrl(url, function(data) {
+								mref.my_maxdata = e.innerHTML = data;
+								setTimeout("setupAllTabs()", 200); /*thanks safari and ie*/
+							});
+						});
+					});
+			}
+			this.map.openInfoWindowHtml( point, O[type].my_html, opt);
+		}
+	},
+
+	"loadOverlayCallback": function(type, i, point, rslt){
+		this[type+"s"][i][type].my_html = rslt.responseText;
+		this.openOverlayWindow( type, i, point );
 	},
 
 	"clearSidepanel": function(){

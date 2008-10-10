@@ -172,6 +172,8 @@ BitMap.MapData.push({ldelim}
 
   Polylines:[{if count($polylinesInfo) > 0}{section name=n loop=$polylinesInfo}
   {ldelim}
+		content_id:{$polylinesInfo[n].content_id},
+		content_type_guid:'{$polylinesInfo[n].content_type_guid}',
 		polyline_id:{$polylinesInfo[n].polyline_id},
 		user_id:{$polylinesInfo[n].user_id},
 		modifier_user_id:{$polylinesInfo[n].modifier_user_id},
@@ -216,6 +218,8 @@ BitMap.MapData.push({ldelim}
 
   Polygons:[{if count($gContent->mMapPolygons) > 0}{section name=polygon_n loop=$gContent->mMapPolygons}
   {ldelim}
+  		content_id:{$gContent->mMapPolygons[polygon_n].content_id},
+		content_type_guid:'{$gContent->mMapPolygons[polygon_n].content_type_guid}',
 		polygon_id: {$gContent->mMapPolygons[polygon_n].polygon_id},
 		user_id: {$gContent->mMapPolygons[polygon_n].user_id},
 		modifier_user_id: {$gContent->mMapPolygons[polygon_n].modifier_user_id},
