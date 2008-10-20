@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.40 2008/10/03 17:20:15 wjames5 Exp $ 
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_marker.php,v 1.41 2008/10/20 21:40:10 spiderr Exp $ 
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -26,7 +26,7 @@ $gBitThemes->setFormatHeader( 'center_only' );
 
 // Now check permissions to access the marker
 if( $gContent->isValid() ) {
-	if ( !$gContent->hasEditPermission() ){
+	if ( !$gContent->hasUpdatePermission() ){
 		$gBitSystem->fatalError( tra( "Sorry, you do not have permission to edit this marker." ));
 	}
 } else {

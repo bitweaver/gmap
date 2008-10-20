@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.151 2008/10/09 17:13:23 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.152 2008/10/20 21:40:10 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -44,7 +44,7 @@ class BitGmap extends LibertyMime {
 		// Permission setup
 		$this->mViewContentPerm  = 'p_gmap_view';
 		$this->mCreateContentPerm  = 'p_gmap_create';
-		$this->mEditContentPerm  = 'p_gmap_edit';
+		$this->mUpdateContentPerm  = 'p_gmap_edit';
 		$this->mAdminContentPerm = 'p_gmap_admin';
 	}
 	
@@ -1361,20 +1361,20 @@ class BitGmap extends LibertyMime {
 	 * See LibertyContent method for defaults
 	*/
 	/*
-	function hasEditPermission( $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
-		return( $this->hasUserPermission( $this->mEditContentPerm, $pVerifyAccessControl, $pCheckGlobalPerm ) );
+	function hasUpdatePermission( $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
+		return( $this->hasUserPermission( $this->mUpdateContentPerm, $pVerifyAccessControl, $pCheckGlobalPerm ) );
 	}
 	*/
 	
-	// === verifyEditPermission
+	// === verifyUpdatePermission
 	/**
 	 * Function that determines if this content specified permission for the current gBitUser. 
 	 * Override LibertyContent method default $pCheckGlobalPerm=FALSE to enable shared editing
 	 * See LibertyContent method for defaults
 	*/
 	/*
-	function verifyEditPermission( $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
-		return parent::verifyEditPermission( $pVerifyAccessControl, $pCheckGlobalPerm );
+	function verifyUpdatePermission( $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
+		return parent::verifyUpdatePermission( $pVerifyAccessControl, $pCheckGlobalPerm );
 	}
 	*/
 	
@@ -1453,12 +1453,12 @@ class BitGmap extends LibertyMime {
 	
 	function setEditSharing(&$pParamHash){
 		// we're setting registered users permission
-		$this->togglePermissionSharing( $this->mEditContentPerm, 3, !empty($pParamHash['share_edit'])?TRUE:FALSE );
+		$this->togglePermissionSharing( $this->mUpdateContentPerm, 3, !empty($pParamHash['share_edit'])?TRUE:FALSE );
 	}
 	
 	function isEditShared(){
 		// we're checking registered users perms
-		return $this->isPermissionShared( $this->mEditContentPerm, 3 );
+		return $this->isPermissionShared( $this->mUpdateContentPerm, 3 );
 	}
 
 	function setAllowChildren(&$pParamHash){

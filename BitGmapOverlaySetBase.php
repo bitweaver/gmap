@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.17 2008/10/08 16:15:52 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.18 2008/10/20 21:40:10 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -50,7 +50,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
 		// Permission setup
 		$this->mViewContentPerm  = 'p_gmap_overlayset_view';
 		$this->mCreateContentPerm  = 'p_gmap_overlayset_create';
-		$this->mEditContentPerm  = 'p_gmap_overlayset_edit';
+		$this->mUpdateContentPerm  = 'p_gmap_overlayset_edit';
 		$this->mAdminContentPerm = 'p_gmap_admin';
 	}
 
@@ -291,12 +291,12 @@ class BitGmapOverlaySetBase extends LibertyContent {
 	
 	function setEditSharing(&$pParamHash){
 		// we're setting registered users permission
-		$this->togglePermissionSharing( $this->mEditContentPerm, 3, !empty($pParamHash['share_edit'])?TRUE:FALSE );
+		$this->togglePermissionSharing( $this->mUpdateContentPerm, 3, !empty($pParamHash['share_edit'])?TRUE:FALSE );
 	}
 	
 	function isEditShared(){
 		// we're checking registered users perms
-		return $this->isPermissionShared( $this->mEditContentPerm, 3 );
+		return $this->isPermissionShared( $this->mUpdateContentPerm, 3 );
 	}
 
 	function setAllowChildren(&$pParamHash){
