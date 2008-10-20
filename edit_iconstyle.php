@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_iconstyle.php,v 1.20 2008/07/01 15:43:19 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_iconstyle.php,v 1.21 2008/10/20 21:52:04 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -34,7 +34,7 @@ if ( isset( $_REQUEST['icon_id'] ) && is_numeric( $_REQUEST['icon_id'] ) ){
 }
 
 //check the user has permission to edit maptypes in general
-$gBitSystem->verifyPermission( 'p_gmap_overlay_edit' );
+$gBitSystem->verifyPermission( 'p_gmap_overlay_update' );
 
 //Preview mode is handled by javascript on the client side.
 //There is no callback to the server for previewing changes.

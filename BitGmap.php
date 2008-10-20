@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.152 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.153 2008/10/20 21:52:04 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -44,7 +44,7 @@ class BitGmap extends LibertyMime {
 		// Permission setup
 		$this->mViewContentPerm  = 'p_gmap_view';
 		$this->mCreateContentPerm  = 'p_gmap_create';
-		$this->mUpdateContentPerm  = 'p_gmap_edit';
+		$this->mUpdateContentPerm  = 'p_gmap_update';
 		$this->mAdminContentPerm = 'p_gmap_admin';
 	}
 	

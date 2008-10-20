@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.16 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.17 2008/10/20 21:52:04 spiderr Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -31,7 +31,6 @@ if( $gContent->isValid() ) {
 	}
 } else {
 	$gContent->verifyCreatePermission();
-	// $gBitSystem->verifyPermission( 'p_gmap_overlay_edit' );
 	
 	/* if we are passed a set_id the user is trying to add an overlay to a set.
 	   if they dont have the right, then fuck it.
