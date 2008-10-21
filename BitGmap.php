@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.154 2008/10/21 02:01:51 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.155 2008/10/21 02:51:28 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1355,29 +1355,6 @@ class BitGmap extends LibertyMime {
 		return( $this->verifyId( $this->mGmapId ) );
 	}
 
-	/**
-	 * Function that determines if this content specified permission for the current gBitUser. 
-	 * Override LibertyContent method default $pCheckGlobalPerm=FALSE to enable shared editing
-	 * See LibertyContent method for defaults
-	*/
-	/*
-	function hasUpdatePermission( $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
-		return( $this->hasUserPermission( $this->mUpdateContentPerm, $pVerifyAccessControl, $pCheckGlobalPerm ) );
-	}
-	*/
-	
-	// === verifyUpdatePermission
-	/**
-	 * Function that determines if this content specified permission for the current gBitUser. 
-	 * Override LibertyContent method default $pCheckGlobalPerm=FALSE to enable shared editing
-	 * See LibertyContent method for defaults
-	*/
-	/*
-	function verifyUpdatePermission( $pVerifyAccessControl=TRUE, $pCheckGlobalPerm=TRUE ) {
-		return parent::verifyUpdatePermission( $pVerifyAccessControl, $pCheckGlobalPerm );
-	}
-	*/
-	
 	/**
 	* Generates the URL to the gmap page
 	* @param pMixed a hash passed in by LibertyContent:getList
