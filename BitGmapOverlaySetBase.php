@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.18 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.19 2008/10/21 01:35:08 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -50,7 +50,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
 		// Permission setup
 		$this->mViewContentPerm  = 'p_gmap_overlayset_view';
 		$this->mCreateContentPerm  = 'p_gmap_overlayset_create';
-		$this->mUpdateContentPerm  = 'p_gmap_overlayset_edit';
+		$this->mUpdateContentPerm  = 'p_gmap_overlayset_update';
 		$this->mAdminContentPerm = 'p_gmap_admin';
 	}
 
