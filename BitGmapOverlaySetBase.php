@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.19 2008/10/21 01:35:08 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.20 2008/10/21 02:01:51 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -289,12 +289,12 @@ class BitGmapOverlaySetBase extends LibertyContent {
 		return $ret;
 	}
 	
-	function setEditSharing(&$pParamHash){
+	function setUpdateSharing(&$pParamHash){
 		// we're setting registered users permission
-		$this->togglePermissionSharing( $this->mUpdateContentPerm, 3, !empty($pParamHash['share_edit'])?TRUE:FALSE );
+		$this->togglePermissionSharing( $this->mUpdateContentPerm, 3, !empty($pParamHash['share_update'])?TRUE:FALSE );
 	}
 	
-	function isEditShared(){
+	function isUpdateShared(){
 		// we're checking registered users perms
 		return $this->isPermissionShared( $this->mUpdateContentPerm, 3 );
 	}

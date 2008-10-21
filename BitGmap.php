@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.153 2008/10/20 21:52:04 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.154 2008/10/21 02:01:51 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1451,12 +1451,12 @@ class BitGmap extends LibertyMime {
 		return $ret;
 	}
 	
-	function setEditSharing(&$pParamHash){
+	function setUpdateSharing(&$pParamHash){
 		// we're setting registered users permission
-		$this->togglePermissionSharing( $this->mUpdateContentPerm, 3, !empty($pParamHash['share_edit'])?TRUE:FALSE );
+		$this->togglePermissionSharing( $this->mUpdateContentPerm, 3, !empty($pParamHash['share_update'])?TRUE:FALSE );
 	}
 	
-	function isEditShared(){
+	function isUpdateShared(){
 		// we're checking registered users perms
 		return $this->isPermissionShared( $this->mUpdateContentPerm, 3 );
 	}

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.18 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.19 2008/10/21 02:01:51 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -43,7 +43,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		$gBitUser->verifyTicket();
 		if( $gContent->store( $_REQUEST ) ) {
 			if ( $gContent->hasAdminPermission() ){
-				$gContent->setEditSharing( $_REQUEST );
+				$gContent->setUpdateSharing( $_REQUEST );
 				$gContent->setAllowChildren( $_REQUEST );
 			}    
 			$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
@@ -99,7 +99,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		$mapTypes = $gContent->getMapTypes(); 
 		$gBitSmarty->assign( 'mapTypes', $mapTypes);
 		
-		$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
+		$gBitSmarty->assign( 'updateShared', $gContent->isUpdateShared() );
 		$gBitSmarty->assign( 'childrenAllowed', $gContent->childrenAllowed() );
 		$gBitSmarty->assign_by_ref('mapInfo', $map);
 		$gBitSmarty->assign_by_ref('mapTypes', $gContent->mMapTypes);

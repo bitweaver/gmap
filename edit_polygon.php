@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.17 2008/10/20 21:52:04 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.18 2008/10/21 02:01:51 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -61,7 +61,7 @@ if (!empty($_REQUEST["save_polygon"])) {
     if( $gContent->store( $_REQUEST ) ) {		
 		$statusCode = 200;
 		if ( $gContent->hasAdminPermission() ){
-    		$gContent->setEditSharing( $_REQUEST );
+    		$gContent->setUpdateSharing( $_REQUEST );
 		}    
 		$gBitSmarty->assign_by_ref('polygonInfo', $gContent->mInfo);
 	}
@@ -96,7 +96,7 @@ if (!empty($_REQUEST["save_polygon"])) {
 	if (isset($_REQUEST["set_id"])){
 		$polygon['set_id'] = $_REQUEST["set_id"];
 	}
-	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
+	$gBitSmarty->assign( 'updateShared', $gContent->isUpdateShared() );
 	$gBitSmarty->assign_by_ref('polygonInfo', $polygon);
 	$gBitSystem->display('bitpackage:gmap/edit_polygon.tpl', NULL, array( 'format' => 'center_only', 'display_mode' => 'edit' ));
 	die;

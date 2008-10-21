@@ -75,9 +75,9 @@
 	
 	{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 	<div class="row">
-		{formlabel label="Allow Registered Users To Edit" for="share_edit"}
+		{formlabel label="Allow Registered Users To Edit" for="share_update"}
 			{forminput}
-				<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
+				<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />
 				{formhelp note="Checking this box will allow any registered user to edit this polygon. This is good if you want this polygon to be editable like a wiki page."}
 			{/forminput}
 	</div>

@@ -40,9 +40,9 @@
 	</div>
 	
 	<div class="row">
-		{formlabel label="Allow Registered Users To Edit" for="share_edit"}
+		{formlabel label="Allow Registered Users To Edit" for="share_update"}
 			{forminput}
-				<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
+				<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />
 				{formhelp note="Checking this box will allow any registered user to edit the parameters of this set - this does not effect if they can add polylines to this set."}
 			{/forminput}
 	</div>

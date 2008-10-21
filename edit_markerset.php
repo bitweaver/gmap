@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_markerset.php,v 1.25 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_markerset.php,v 1.26 2008/10/21 02:01:51 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -57,7 +57,7 @@ if (!empty($_REQUEST["save_markerset"])) {
     if( $gContent->store( $_REQUEST ) ) {
 		$statusCode = 200;
 		if ( $gContent->hasAdminPermission() ){
-    		$gContent->setEditSharing( $_REQUEST );
+    		$gContent->setUpdateSharing( $_REQUEST );
 			$gContent->setAllowChildren( $_REQUEST );
 		}    
 		$gBitSmarty->assign_by_ref('markersetInfo', $gContent->mInfo);
@@ -99,7 +99,7 @@ if (!empty($_REQUEST["save_markerset"])) {
 	// $gBitSmarty->assign( 'iconStyles', $iconStyles );
 	$gBitSmarty->assign( 'markerStyles', $markerStyles );
 	
-	$gBitSmarty->assign( 'editShared', $gContent->isEditShared() );
+	$gBitSmarty->assign( 'updateShared', $gContent->isUpdateShared() );
 	$gBitSmarty->assign( 'childrenAllowed', $gContent->childrenAllowed() );
 	$gBitSmarty->assign_by_ref('markersetInfo', $markerset);
 	$gBitSystem->display('bitpackage:gmap/edit_markerset.tpl', NULL, array( 'format' => 'center_only', 'display_mode' => 'edit' ));

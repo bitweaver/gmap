@@ -83,9 +83,9 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 	</div>
 	
 	<div class="row">
-		{formlabel label="Allow Registered Users To Edit" for="share_edit"}
+		{formlabel label="Allow Registered Users To Edit" for="share_update"}
 			{forminput}
-				<input type="checkbox" name="share_edit" value="y" {if $editShared}checked="checked"{/if} />
+				<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />
 				{formhelp note="Checking this box will allow any registered user to edit the parameters of this set - this does not effect if they can add markers to this set."}
 			{/forminput}
 	</div>
