@@ -250,16 +250,18 @@ foreach( array_keys( $tables ) AS $tableName ) {
 	$gBitInstaller->registerSchemaTable( GMAP_PKG_NAME, $tableName, $tables[$tableName] );
 }
 
-
 $gBitInstaller->registerPackageInfo( GMAP_PKG_NAME, array(
 	'description' => "For creating wiki-like Google Maps as well as viewing other bitweaver content (with location information) on Google Maps.",
-	'requirements' => 'Gmap is dependent on <a class="external" href="http://www.bitweaver.org/wiki/geopackage">GeoPackage</a>',
 	'license' => '<a href="http://www.gnu.org/licenses/licenses.html#LGPL">LGPL</a>',
-	'version' => '0.2',
-	'state' => 'beta',
-	'dependencies' => 'GeoPackage',
-) );
+));
 
+// Package Requirements
+$gBitInstaller->registerRequirements( GMAP_PKG_NAME, array(
+	'geo' => array( 'min' => '0.0.0' ),
+));
+
+// package version
+$gBitInstaller->registerPackageVersion( GMAP_PKG_NAME, '0.2.0-beta' );
 
 $indices = array (
 	'gmaps_gmap_id_idx' => array( 'table' => 'gmaps', 'cols' => 'gmap_id', 'opts' => 'UNIQUE' ),
@@ -269,21 +271,21 @@ $gBitInstaller->registerSchemaIndexes( GMAP_PKG_NAME, $indices );
 
 // ### Sequences
 $sequences = array (
-  'gmaps_gmap_id_seq' => array( 'start' => 1 ),
-  'gmaps_icon_themes_seq' => array( 'start' => 1 ),
-  'gmaps_maptypes_maptype_id_seq' => array( 'start' => 1 ),	
-  'gmaps_tilelayers_tilelayer_id_seq' => array( 'start' => 1 ),	
-  'gmaps_copyrights_copyright_id_seq' => array( 'start' => 1 ),	
-  'gmaps_markers_marker_id_seq' => array( 'start' => 1 ),
-  'gmaps_icon_styles_icon_id_seq' => array( 'start' => 1 ),
-  'gmaps_marker_styles_style_id_seq' => array( 'start' => 1 ),
-  'gmaps_marker_sets_set_id_seq' => array( 'start' => 1 ),
-  'gmaps_polylines_polyline_id_seq' => array( 'start' => 1 ),
-  'gmaps_polyline_styles_style_id_seq' => array( 'start' => 1 ),
-  'gmaps_polyline_sets_set_id_seq' => array( 'start' => 1 ),
-  'gmaps_polygons_polygon_id_seq' => array( 'start' => 1 ),
-  'gmaps_polygon_styles_style_id_seq' => array( 'start' => 1 ),
-  'gmaps_polygon_sets_set_id_seq' => array( 'start' => 1 ),
+	'gmaps_gmap_id_seq'                  => array( 'start' => 1 ),
+	'gmaps_icon_themes_seq'              => array( 'start' => 1 ),
+	'gmaps_maptypes_maptype_id_seq'      => array( 'start' => 1 ),
+	'gmaps_tilelayers_tilelayer_id_seq'  => array( 'start' => 1 ),
+	'gmaps_copyrights_copyright_id_seq'  => array( 'start' => 1 ),
+	'gmaps_markers_marker_id_seq'        => array( 'start' => 1 ),
+	'gmaps_icon_styles_icon_id_seq'      => array( 'start' => 1 ),
+	'gmaps_marker_styles_style_id_seq'   => array( 'start' => 1 ),
+	'gmaps_marker_sets_set_id_seq'       => array( 'start' => 1 ),
+	'gmaps_polylines_polyline_id_seq'    => array( 'start' => 1 ),
+	'gmaps_polyline_styles_style_id_seq' => array( 'start' => 1 ),
+	'gmaps_polyline_sets_set_id_seq'     => array( 'start' => 1 ),
+	'gmaps_polygons_polygon_id_seq'      => array( 'start' => 1 ),
+	'gmaps_polygon_styles_style_id_seq'  => array( 'start' => 1 ),
+	'gmaps_polygon_sets_set_id_seq'      => array( 'start' => 1 ),
 );
 $gBitInstaller->registerSchemaSequences( GMAP_PKG_NAME, $sequences );
 
@@ -352,12 +354,12 @@ $gBitInstaller->registerPreferences( GMAP_PKG_NAME, array(
 
 // ### Register content types
 $gBitInstaller->registerContentObjects( GMAP_PKG_NAME, array( 
-	'BitGmap'=>GMAP_PKG_PATH.'BitGmap.php',
-	'BitGmapMarker'=>GMAP_PKG_PATH.'BitGmapMarker.php',
-	'BitGmapMarkerSet'=>GMAP_PKG_PATH.'BitGmapMarkerSet.php',
-	'BitGmapPolygon'=>GMAP_PKG_PATH.'BitGmapPolygon.php',
-	'BitGmapPolygonSet'=>GMAP_PKG_PATH.'BitGmapPolygonSet.php',
-	'BitGmapPolyline'=>GMAP_PKG_PATH.'BitGmapPolyline.php',
-	'BitGmapPolylineSet'=>GMAP_PKG_PATH.'BitGmapPolylineSet.php',
+	'BitGmap'            => GMAP_PKG_PATH.'BitGmap.php',
+	'BitGmapMarker'      => GMAP_PKG_PATH.'BitGmapMarker.php',
+	'BitGmapMarkerSet'   => GMAP_PKG_PATH.'BitGmapMarkerSet.php',
+	'BitGmapPolygon'     => GMAP_PKG_PATH.'BitGmapPolygon.php',
+	'BitGmapPolygonSet'  => GMAP_PKG_PATH.'BitGmapPolygonSet.php',
+	'BitGmapPolyline'    => GMAP_PKG_PATH.'BitGmapPolyline.php',
+	'BitGmapPolylineSet' => GMAP_PKG_PATH.'BitGmapPolylineSet.php',
 ));
 ?>
