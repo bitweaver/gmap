@@ -1,5 +1,5 @@
 {if $gBitSystem->isFeatureActive( 'gmap_map_bituser')}
-{jstab title="User Location"}
+{jstab title="User Location" onclick="M=BitMap.MapData[0].Map.map; M.savePosition(); M.checkResize(); M.returnToSavedPosition();"}
 	{form legend="Geo Coordinates"}
 		<input type="hidden" name="view_user" value="{$view_user}" />
 		<input type="hidden" name="real_name" value="{$editUser->mInfo.real_name|escape}" />
