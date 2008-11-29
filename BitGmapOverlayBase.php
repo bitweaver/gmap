@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.24 2008/10/21 02:01:51 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.25 2008/11/29 05:40:54 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -89,6 +89,14 @@ class BitGmapOverlayBase extends LibertyMime {
 		return( count( $this->mInfo ) );
 	}
 
+	function prepParseFilters( &$pParamHash ){
+		global $gBitThemes;
+
+		if( $gBitThemes->isAjaxRequest() ){ 
+			// if YouTube is used we want to restrict its size in marker windows since space is limited
+			$pParamHash['htmlp_config']['YouTube'] = array( 'width'=>460, 'height'=>228 );
+		}
+	}
 	
 	function store( &$pParamHash ) {
 		if( $this->verify( $pParamHash ) ) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/lookup_marker_inc.php,v 1.5 2008/06/19 04:21:17 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/lookup_marker_inc.php,v 1.6 2008/11/29 05:40:54 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.

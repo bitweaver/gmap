@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.58 2008/09/15 18:19:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.59 2008/11/29 05:40:54 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -56,7 +56,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 
 
 	//returns array of marker data and associated style and icon style ids for given gmap_id and set_type
-	function load() {
+	function load( &$pMixed=NULL ) {
 		if( !empty( $this->mOverlayId ) || !empty( $this->mContentId ) ) {
 			$overlayKey = $this->mOverlayType.'_id';
 			$lookupColumn = !empty( $this->mOverlayId )? $overlayKey : 'content_id';
@@ -83,8 +83,12 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$this->mOverlayId = $this->mInfo[$overlayKey]; 
 				$this->mContentId = $this->mInfo['content_id'];
 				$this->mInfo['raw'] = $this->mInfo['data'];
-				$this->mInfo['xml_parsed_data'] = $this->parseData( $this->mInfo['data'], $this->mInfo['format_guid'] );
-				$this->mInfo['parsed_data'] = $this->parseData( $this->mInfo['data'], $this->mInfo['format_guid'] );
+
+				$parseHash['data'] = $this->mInfo['data'];
+				$this->prepParseFilters( $parseHash );
+
+				$this->mInfo['xml_parsed_data'] = $this->parseData( $parseHash, $this->mInfo['format_guid'] );
+				$this->mInfo['parsed_data'] = $this->parseData( $parseHash, $this->mInfo['format_guid'] );
 				$this->mInfo['clean_data'] = $this->mInfo['parsed_data'];
 				$this->mInfo['parsed_data'] = addslashes($this->mInfo['parsed_data']);
 				$this->mInfo['xml_data'] = str_replace("\n", "&#13;", $this->mInfo['data']);
