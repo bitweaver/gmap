@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.155 2008/10/21 02:51:28 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.156 2008/11/30 23:08:31 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -198,12 +198,22 @@ class BitGmap extends LibertyMime {
 		
 		// subselect gets list of tilelayers mapped to each maptype
 		// note: where clause changes depending on if gmap_id is set or not
-		$selectSql .= ", ( SELECT GROUP_CONCAT( gtk.`tilelayer_id` ORDER BY gtk.".$this->mDb->convertSortmode( array( 'pos_asc' ) )." ) 
-				  FROM `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk 
-				  INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` gtl ON (gtl.`tilelayer_id` = gtk.`tilelayer_id` )
-				  WHERE ".( @$this->verifyId( $pGmapId )?"gtk.`maptype_id` = gsk.`set_id`":"gtk.`maptype_id` = gmt.`maptype_id`" ). ") 
-				  `tilelayer_ids`";
-
+		global $gBitDbType;
+		if( $gBitDbType == 'mysql' || $gBitDbType == 'mysqli' ) {
+			$selectSql .= ", ( SELECT GROUP_CONCAT( gtk.`tilelayer_id` ORDER BY gtk.".$this->mDb->convertSortmode( array( 'pos_asc' ) )." ) 
+				  	FROM `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk 
+				  	INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` gtl ON (gtl.`tilelayer_id` = gtk.`tilelayer_id` )
+				  	WHERE ".( @$this->verifyId( $pGmapId )?"gtk.`maptype_id` = gsk.`set_id`":"gtk.`maptype_id` = gmt.`maptype_id`" ). ") 
+				  	`tilelayer_ids`";
+		} else {
+			$selectSql .= ", array_to_string( array(
+					SELECT gtk.`tilelayer_id` 
+				  	FROM `".BIT_DB_PREFIX."gmaps_tilelayers_keychain` gtk 
+				  	INNER JOIN `".BIT_DB_PREFIX."gmaps_tilelayers` gtl ON (gtl.`tilelayer_id` = gtk.`tilelayer_id` )
+				  	WHERE ".( @$this->verifyId( $pGmapId )?"gtk.`maptype_id` = gsk.`set_id`":"gtk.`maptype_id` = gmt.`maptype_id`" ). "
+					ORDER BY gtk.".$this->mDb->convertSortmode( array( 'pos_asc' ) )." ), ',' ) 
+					AS `tilelayer_ids`";
+		}
 		if( @$this->verifyId( $pGmapId ) ) {
 			$joinSql .= " INNER JOIN `".BIT_DB_PREFIX."gmaps_sets_keychain` gsk ON (gmt.`maptype_id` = gsk.`set_id`) "; 
 			$whereSql .= " WHERE gsk.`gmap_id` = ? AND gsk.`set_type` = 'maptypes' ";
