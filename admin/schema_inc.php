@@ -143,10 +143,12 @@ $tables = array(
   content_id I4 NOTNULL,
   style_id I4 NOTNULL,
   icon_id I4 NOTNULL
-  CONSTRAINT ', CONSTRAINT `gmaps_marker_sets_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
+  CONSTRAINT ', CONSTRAINT `gmaps_marker_sets_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
+",
+/* @TODO devine defaults for these related tables. we dont store defaut values right now and so this breaks postgress  
   			  , CONSTRAINT `gmaps_marker_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_marker_styles`( `style_id` )
               , CONSTRAINT `gmaps_marker_sets_icon_ref` FOREIGN KEY (`icon_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_icon_styles`( `icon_id` )'
-",
+*/
 
 'gmaps_marker_keychain' => "
   set_id I4 NOTNULL,
@@ -184,9 +186,11 @@ $tables = array(
   set_id I4 PRIMARY,
   content_id I4 NOTNULL,
   style_id I4 NOTNULL
-  CONSTRAINT ', CONSTRAINT `gmaps_polyline_sets_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
-			  , CONSTRAINT `gmaps_polyline_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_styles`( `style_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_polyline_sets_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
 ",
+/* @TODO devine defaults for these related tables. we dont store defaut values right now and so this breaks postgress  
+			  , CONSTRAINT `gmaps_polyline_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_styles`( `style_id` )'
+ */
 
 'gmaps_polyline_keychain' => "
   set_id I4 NOTNULL,
@@ -229,10 +233,12 @@ $tables = array(
   content_id I4 NOTNULL,
   style_id I4 NOTNULL,
   polylinestyle_id I4 NOTNULL
-  CONSTRAINT ', CONSTRAINT `gmaps_polygon_sets_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )
+  CONSTRAINT ', CONSTRAINT `gmaps_polygon_sets_ref` FOREIGN KEY (`content_id`) REFERENCES `".BIT_DB_PREFIX."liberty_content`( `content_id` )'
+",
+/* @TODO devine defaults for these related tables. we dont store defaut values right now and so this breaks postgress  
 			  , CONSTRAINT `gmaps_polygon_sets_style_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polygon_styles`( `style_id` )
               , CONSTRAINT `gmaps_polygon_sets_pstyle_ref` FOREIGN KEY (`style_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_polyline_styles`( `style_id` )'
-",
+ */
 
 'gmaps_polygon_keychain' => "
   set_id I4 NOTNULL,
