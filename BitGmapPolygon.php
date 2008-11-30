@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygon.php,v 1.9 2008/09/15 18:19:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygon.php,v 1.10 2008/11/30 20:32:44 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -71,8 +71,10 @@ class BitGmapPolygon extends BitGmapOverlayBase {
 			$pParamHash['overlay_store']['circle_center'] = $pParamHash['circle_center'];
 		}
 
-		if( !empty( $pParamHash['radius'] ) || $pParamHash['radius'] == 0 ) {
+		if( !empty( $pParamHash['radius'] ) ) {
 			$pParamHash['overlay_store']['radius'] = $pParamHash['radius'];
+		}else{
+			$pParamHash['overlay_store']['radius'] = NULL;
 		}
 		
 		if( !empty( $pParamHash['levels_data'] ) ) {
