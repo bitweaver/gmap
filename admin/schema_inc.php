@@ -150,7 +150,7 @@ $tables = array(
 
 'gmaps_marker_keychain' => "
   set_id I4 NOTNULL,
-  marker_id I8 NOTNULL.
+  marker_id I8 NOTNULL,
   pos F
   CONSTRAINT ', CONSTRAINT `gmaps_marker_keychain_set_ref` FOREIGN KEY (`set_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_marker_sets`( `set_id` )
               , CONSTRAINT `gmaps_marker_key_marker_ref` FOREIGN KEY (`marker_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_markers`( `marker_id` )'
