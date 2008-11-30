@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolylineSet.php,v 1.6 2008/07/18 04:31:01 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolylineSet.php,v 1.7 2008/11/30 19:30:54 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -60,6 +60,8 @@ class BitGmapPolylineSet extends BitGmapOverlaySetBase{
 
 		if( isset( $pParamHash['style_id'] ) && is_numeric( $pParamHash['style_id'] ) ) {
 			$pParamHash['set_store']['style_id'] = $pParamHash['style_id'];
+		}else{
+			$pParamHash['set_store']['style_id'] = 0;
 		}
 
 		// set values for updating the map set keychain	if its a new set
