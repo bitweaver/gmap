@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.25 2008/11/29 05:40:54 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.26 2008/12/02 19:24:37 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -143,14 +143,17 @@ class BitGmapOverlayBase extends LibertyMime {
 		if( $this->isValid() ) {
 			$overlayKey = $this->mOverlayType.'_id';			
 			$this->mDb->StartTrans();
+
+			// delete all references to the overlay from the overlay keychain
+			$query = "DELETE FROM `".BIT_DB_PREFIX.$this->mOverlayKeychainTable."` WHERE `".$overlayKey."` =?";
+			$result = $this->mDb->query( $query, array( $this->mOverlayId ) );
+
+			// delete the overlay record
 			$query = "DELETE FROM `".BIT_DB_PREFIX.$this->mOverlayTable."` WHERE `content_id` = ?";
 			$result = $this->mDb->query( $query, array( $this->mContentId ) );
-			if( LibertyMime::expunge() ) {
-				$ret = TRUE;
-				
-				// delete all references to the overlay from the overlay keychain
-				$query = "DELETE FROM `".BIT_DB_PREFIX.$this->mOverlayKeychainTable."` WHERE `".$overlayKey."` =?";
-				$result = $this->mDb->query( $query, array( $this->mOverlayId ) );
+
+			// delete the overlay liberty content object
+			if( $ret = LibertyMime::expunge() ) {
 				$this->mDb->CompleteTrans();
 			} else {
 				$this->mDb->RollbackTrans();
