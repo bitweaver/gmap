@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.59 2008/11/29 05:40:54 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.60 2008/12/03 22:41:15 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -275,6 +275,42 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		LibertyContent::postGetList( $pListHash );
 
 		return $pListHash;
+	}
+
+	/**
+	* Generates the URL to view a overlay on a standalone page
+	* @param pMixed a hash passed in by LibertyContent:getList
+	* @return the link to display the overlay data.
+	*/
+	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
+		$ret = NULL;
+		$id = NULL;
+		$overlayKey = $this->mOverlayType.'_id';
+		if( empty( $this->mOverlayId ) && empty( $pMixed[$overlayKey] ) && !empty( $pContentId ) ) {
+  			$this->mDb->StartTrans();
+  			$query = "SELECT `".$overlayKey."` FROM `".BIT_DB_PREFIX.$this->mOverlayTable."` WHERE `content_id` = ?";
+  			$result = $this->mDb->query( $query, $pContentId );
+  			$this->mDb->CompleteTrans();
+  			$res = $result->fetchrow();
+  			$id = $res[$overlayKey];
+  		}
+	
+		if( empty( $this->mOverlayId ) && !empty( $pMixed[$overlayKey] )) {
+			$id = $pMixed[$overlayKey];
+		}
+		
+		if( !empty( $this->mOverlayId ) ) {
+			$id = $this->mOverlayId;
+		}
+		
+		if ($id != NULL){
+			$ret = GMAP_PKG_URL."view_marker.php?".$overlayKey."=".$id;
+		} elseif( @BitBase::verifyId( $pMixed['content_id'] ) ) {
+			$ret = BIT_ROOT_URL.'index.php?content_id='.$pMixed['content_id'];
+		} elseif( $this->isValid() ) {
+			$ret = BIT_ROOT_URL.'index.php?content_id='.$this->mContentId;
+		}
+		return $ret;
 	}
 }
 ?>
