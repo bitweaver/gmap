@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.30 2008/10/21 02:01:51 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.31 2008/12/03 23:27:45 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -58,7 +58,10 @@ $XMLContent = "";
 $statusCode = 401;
 if (!empty($_REQUEST["save_polyline"])) {
 	$gBitUser->verifyTicket();
-    if( $gContent->store( $_REQUEST ) ) {		
+	$storeHash = $_REQUEST;
+	// the user might be submitting encoded html chars by ajax - decode them before storing
+	$storeHash['edit'] = htmlspecialchars_decode( $storeHash['edit'] );
+    if( $gContent->store( $storeHash ) ) {
 		$statusCode = 200;
 		if ( $gContent->hasAdminPermission() ){
     		$gContent->setUpdateSharing( $_REQUEST );

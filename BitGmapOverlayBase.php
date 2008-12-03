@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.27 2008/12/03 22:41:15 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.28 2008/12/03 23:27:45 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -80,7 +80,20 @@ class BitGmapOverlayBase extends LibertyMime {
 				$this->mInfo['creator'] =( isset( $result->fields['creator_real_name'] )? $result->fields['creator_real_name'] : $result->fields['creator_user'] );
 				$this->mInfo['editor'] =( isset( $result->fields['modifier_real_name'] )? $result->fields['modifier_real_name'] : $result->fields['modifier_user'] );
 				$this->mInfo['display_url'] = $this->getDisplayUrl();
-				$this->mInfo['parsed_data'] = $this->parseData();
+				// $this->mInfo['parsed_data'] = $this->parseData();
+				$this->mInfo['raw'] = $this->mInfo['data'];
+
+				$parseHash['data'] = $this->mInfo['data'];
+				$this->prepParseFilters( $parseHash );
+
+				// @TODO this has gone through many changes and this looks a bit chaotic - might be able to simplify this
+				$this->mInfo['xml_parsed_data'] = $this->parseData( $parseHash, $this->mInfo['format_guid'] );
+				$this->mInfo['parsed_data'] = $this->parseData( $parseHash, $this->mInfo['format_guid'] );
+				$this->mInfo['clean_data'] = $this->mInfo['parsed_data'];
+				$this->mInfo['parsed_data'] = addslashes($this->mInfo['parsed_data']);
+				$this->mInfo['xml_data'] = str_replace("\n", "&#13;", $this->mInfo['data']);
+				$this->mInfo['data'] = addslashes($this->mInfo['data']);
+				$this->mInfo['data'] = str_replace("\n", "\\n", $this->mInfo['data']);				
 				
 				LibertyMime::load();
 			}
