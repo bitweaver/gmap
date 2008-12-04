@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.28 2008/12/03 23:27:45 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.29 2008/12/04 03:52:16 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -122,7 +122,7 @@ class BitGmapOverlayBase extends LibertyMime {
 						$this->mDb->associateUpdate( BIT_DB_PREFIX.$this->mOverlayTable, $pParamHash['overlay_store'], array( $overlayKey => $pParamHash[$overlayKey] ) );
 					}
 					// if we have a set id we assume the mapping to the overlay set needs updating too
-					if( !empty( $pParamHash['keychain_store']['set_id'] ) ){;
+					if( !empty( $pParamHash['keychain_store']['set_id'] ) ){
 						$pParamHash['keychain_store'][$overlayKey] = $this->mOverlayId;
 						$this->mapToSet( $pParamHash );
 					}
@@ -131,9 +131,10 @@ class BitGmapOverlayBase extends LibertyMime {
 					$pParamHash['overlay_store'][$overlayKey] = $this->mDb->GenID( $this->mOverlaySeq );
 					$this->mDb->associateInsert( BIT_DB_PREFIX.$this->mOverlayTable, $pParamHash['overlay_store'] );
 					// if its a new overlay we also get a set_id for the keychain and automaticallly associate it with a overlay set.
-					$pParamHash['keychain_store'][$overlayKey] = $pParamHash['overlay_store'][$overlayKey];
-					$this->mapToSet( $pParamHash );
-					// $this->mDb->associateInsert( BIT_DB_PREFIX.$this->mOverlayKeychainTable, $pParamHash['keychain_store'] );													
+					if( !empty( $pParamHash['keychain_store']['set_id'] ) ){
+						$pParamHash['keychain_store'][$overlayKey] = $pParamHash['overlay_store'][$overlayKey];
+						$this->mapToSet( $pParamHash );
+					}
 				}
 				$this->mDb->CompleteTrans();
 
