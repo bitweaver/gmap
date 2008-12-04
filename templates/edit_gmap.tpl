@@ -24,5 +24,5 @@
 		</div>
 	</div> <!-- end .body -->
 </div>
-<div id="editerror" class="fade-000000 warning" style="display:none"><img src="/bw/liberty/icons/warning.png" alt="warning" title="warning" class="icon" /> <span id="errortext">Warning Placeholder</span></div>
+<div id="editerror" class="fade-000000 warning" style="display:none"><img src="{$smarty.const.LIBERTY_PKG_URL}icons/warning.png" alt="warning" title="warning" class="icon" /> <span id="errortext">Warning Placeholder</span></div>
 {/strip}
