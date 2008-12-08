@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.22 2008/12/08 21:41:02 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.23 2008/12/08 21:51:30 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -290,7 +290,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
 				case "polylines":
 					$url_param = "polylineset";
 					break;
-				case "polgones":
+				case "polygons":
 					$url_param = "polygonset";
 					break;
 			}
