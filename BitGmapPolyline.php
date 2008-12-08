@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.13 2008/09/15 18:19:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.14 2008/12/08 21:41:02 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -145,7 +145,7 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 		switch( $pListHash['sort_mode'] ) {
 			case 'pos_desc':
 			case 'pos_asc':
-				$sortModePrefix = 'gsk.';
+				$sortModePrefix = 'gpk.';
 				break;
 			default:
 				$sortModePrefix = 'lc.';
@@ -177,6 +177,7 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 		
 		$ret = array();
 		while( $res = $result->fetchRow() ) {
+			$res['display_url'] = $this->getDisplayUrl( NULL, $res );
 			$ret[] = $res;
 		}
 		

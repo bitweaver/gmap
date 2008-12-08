@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.61 2008/12/03 23:27:45 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.62 2008/12/08 21:41:02 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -243,6 +243,8 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		
 		$comment = &new LibertyComment();
 		while ($res = $result->fetchrow()) {		
+			$res['display_url'] = $this->getDisplayUrl( NULL, $res );
+				
 			//need something like this - but need to get the prefs in the query
 			$res['allow_comments'] = "n";
 			if( $this->getPreference('allow_comments', null, $res['content_id']) == 'y' ) {
@@ -284,6 +286,8 @@ class BitGmapMarker extends BitGmapOverlayBase {
 	* @return the link to display the overlay data.
 	*/
 	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
+		global $gBitSystem;
+
 		$ret = NULL;
 		$id = NULL;
 		$overlayKey = $this->mOverlayType.'_id';
@@ -305,7 +309,11 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		}
 		
 		if ($id != NULL){
-			$ret = GMAP_PKG_URL."view_marker.php?".$overlayKey."=".$id;
+			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
+				$ret =  GMAP_PKG_URL.$this->mOverlayType."/".$id;
+			}else{
+				$ret = GMAP_PKG_URL."view_marker.php?".$overlayKey."=".$id;
+			}
 		} elseif( @BitBase::verifyId( $pMixed['content_id'] ) ) {
 			$ret = BIT_ROOT_URL.'index.php?content_id='.$pMixed['content_id'];
 		} elseif( $this->isValid() ) {

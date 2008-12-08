@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygon.php,v 1.10 2008/11/30 20:32:44 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygon.php,v 1.11 2008/12/08 21:41:02 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -156,7 +156,7 @@ class BitGmapPolygon extends BitGmapOverlayBase {
 		switch( $pListHash['sort_mode'] ) {
 			case 'pos_desc':
 			case 'pos_asc':
-				$sortModePrefix = 'gsk.';
+				$sortModePrefix = 'gpk.';
 				break;
 			default:
 				$sortModePrefix = 'lc.';
@@ -188,6 +188,7 @@ class BitGmapPolygon extends BitGmapOverlayBase {
 		
 		$ret = array();
 		while( $res = $result->fetchRow() ) {
+			$res['display_url'] = $this->getDisplayUrl( NULL, $res );
 			$ret[] = $res;
 		}
 		

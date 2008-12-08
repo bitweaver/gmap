@@ -1,0 +1,23 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine  on
+#	Uncomment this if mod_rewrites are not working for you. some hosting services have cranky mod_rewrite
+#    RewriteBase     /groups/
+    RewriteCond %{SCRIPT_FILENAME}  -f [OR]
+    RewriteCond %{SCRIPT_FILENAME}/index.php    -f
+    RewriteRule ^(.*)$            - [L]
+
+	#overlays
+	RewriteRule ^polyline/([0-9]+)$  view_overlay.php?overlay_type=polyline&polyline_id=$1  [L]
+	RewriteRule ^polygon/([0-9]+)$  view_overlay.php?overlay_type=polygon&polygon_id=$1  [L]
+	RewriteRule ^marker/([0-9]+)$  view_marker.php?marker_id=$1  [L]
+	# Add rules like this for all three when overlays can be looked up by name
+	# RewriteRule ^marker/(.*)$  view_marker.php?marker_name=$1  [L]
+
+	#overlay sets
+	RewriteRule ^polylineset/([0-9]+)$  view_overlayset.php?polylineset_id=$1  [L]
+	RewriteRule ^polygonset/([0-9]+)$  view_overlayset.php?polygonset_id=$1  [L]
+	RewriteRule ^markerset/([0-9]+)$  view_overlayset.php?markerset_id=$1  [L]
+
+	#maps
+    RewriteRule ^(.*)$       index.php?map_name=$1  [L,QSA]
+</IfModule>

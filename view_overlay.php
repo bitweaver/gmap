@@ -1,11 +1,11 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/view_overlay.php,v 1.1 2008/10/10 16:38:01 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/view_overlay.php,v 1.2 2008/12/08 21:41:02 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
- * @author Will <will@wjamesphoto.com>
+ * @author Will <will@tekimaki.com>
  * 
  * @package gmap
  * @subpackage functions
@@ -26,7 +26,7 @@ if( !empty( $_REQUEST['overlay_type'] ) ){
 // Now check permissions to access this page
 $gBitSystem->verifyPermission('p_gmap_overlay_view' );
 
-// Get the map for specified gmap_id
+// Get the overlay for specified overylay_id
 require_once(GMAP_PKG_PATH.'lookup_'.$type.'_inc.php' );
 
 $displayHash = array( 'perm_name' => 'p_gmap_overlay_view' );

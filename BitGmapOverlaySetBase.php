@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.21 2008/12/02 19:32:51 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.22 2008/12/08 21:41:02 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -253,7 +253,68 @@ class BitGmapOverlaySetBase extends LibertyContent {
 
 		return $pListHash;
 	}
+
+
+	/**
+	* Generates the URL to view a overlay on a standalone page
+	* @param pMixed a hash passed in by LibertyContent:getList
+	* @return the link to display the overlay data.
+	*/
+	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
+		global $gBitSystem;
+
+		$ret = NULL;
+		$id = NULL;
+		$overlaySetKey = 'set_id';
+		if( empty( $this->mOverlaySetId ) && empty( $pMixed[$overlaySetKey] ) && !empty( $pContentId ) ) {
+  			$query = "SELECT `set_id` FROM `".BIT_DB_PREFIX.$this->mOverlaySetTable."` WHERE `content_id` = ?";
+  			$result = $this->mDb->getOne( $query, $pContentId );
+  			$res = $result->fetchrow();
+  			$id = $res[$overlaySetKey];
+  		}
 	
+		if( empty( $this->mOverlaySetId ) && !empty( $pMixed[$overlaySetKey] )) {
+			$id = $pMixed[$overlaySetKey];
+		}
+		
+		if( !empty( $this->mOverlaySetId ) ) {
+			$id = $this->mOverlaySetId;
+		}
+		
+		if ($id != NULL){
+			switch( $this->mOverlaySetType ){
+				// this is a little ugly
+				case "markers":
+					$url_param = "markerset";
+					break;
+				case "polylines":
+					$url_param = "polylineset";
+					break;
+				case "polgones":
+					$url_param = "polygonset";
+					break;
+			}
+			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
+				$ret =  GMAP_PKG_URL.$url_param."/".$id;
+			}else{
+				$ret = GMAP_PKG_URL."view_overlayset.php?".$url_param."_id=".$id;
+			}
+		} elseif( @BitBase::verifyId( $pMixed['content_id'] ) ) {
+			$ret = BIT_ROOT_URL.'index.php?content_id='.$pMixed['content_id'];
+		} elseif( $this->isValid() ) {
+			$ret = BIT_ROOT_URL.'index.php?content_id='.$this->mContentId;
+		}
+		return $ret;
+	}
+
+	
+	/**
+	 * Custom Permission Convenience Functions
+	 * These are not as robust as the full custom permissions options of Liberty
+	 * However they offer a quick and intuitive way for users to set commonly
+	 * desirable custom access control without having to give site wide custom-permission
+	 * access to all basic registered users.
+	 */	
 	function togglePermissionSharing( $pPerm, $pGroupId, $pShare=TRUE ){
 		global $gBitUser;
 		

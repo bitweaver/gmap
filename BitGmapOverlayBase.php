@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.29 2008/12/04 03:52:16 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.30 2008/12/08 21:41:02 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -234,6 +234,8 @@ class BitGmapOverlayBase extends LibertyMime {
 	* @return the link to display the overlay data.
 	*/
 	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
+		global $gBitSystem;
+
 		$ret = NULL;
 		$id = NULL;
 		$overlayKey = $this->mOverlayType.'_id';
@@ -255,10 +257,14 @@ class BitGmapOverlayBase extends LibertyMime {
 		}
 		
 		if ($id != NULL){
-			// If we ever have view files for prettier urls like view_polyline view_polygon then reinstate this dynamic assignment
-			// $ret = GMAP_PKG_URL."view_".$this->mOverlayType.".php?".$overlayKey."=".$id;
-			// send all overlay requests to the generic view file
-			$ret = GMAP_PKG_URL."view_overlay.php?overlay_type=".$this->mOverlayType."&".$overlayKey."=".$id;
+			if( $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
+				$ret =  GMAP_PKG_URL.$this->mOverlayType."/".$id;
+			}else{
+				// If we ever have view files for prettier urls like view_polyline view_polygon then reinstate this dynamic assignment
+				// $ret = GMAP_PKG_URL."view_".$this->mOverlayType.".php?".$overlayKey."=".$id;
+				// send all overlay requests to the generic view file
+				$ret = GMAP_PKG_URL."view_overlay.php?overlay_type=".$this->mOverlayType."&".$overlayKey."=".$id;
+			}
 		} elseif( @BitBase::verifyId( $pMixed['content_id'] ) ) {
 			$ret = BIT_ROOT_URL.'index.php?content_id='.$pMixed['content_id'];
 		} elseif( $this->isValid() ) {
