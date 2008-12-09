@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<response>
+{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {if $tilelayerInfo}
 	<tilelayer>
 		<tilelayer_id>{$tilelayerInfo.tilelayer_id}</tilelayer_id>
@@ -10,6 +12,5 @@
 		<opacity>{$tilelayerInfo.opacity}</opacity>
 		<pos>{$tilelayerInfo.pos}</pos>
 	</tilelayer>
-{else}
-	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}
+</response>

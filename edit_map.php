@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.20 2008/11/28 22:53:40 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_map.php,v 1.21 2008/12/09 02:55:23 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -41,6 +41,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	//Check if this is a update or a new map
 	if (!empty($_REQUEST["save_map"])) {
 		$gBitUser->verifyTicket();
+		$format = 'xml';
+		$XMLContent = "";
+		$statusCode = 401;
 		$storeHash = $_REQUEST;
 		// the user might be submitting encoded html chars by ajax - decode them before storing
 		$storeHash['edit'] = htmlspecialchars_decode( $storeHash['edit'] );
@@ -53,11 +56,19 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 			$gContent->storePreference( 'allow_comments', !empty( $_REQUEST['allow_comments'] ) ? $_REQUEST['allow_comments'] : NULL );
 			$gContent->load();
 			$gBitSmarty->assign_by_ref('mapInfo', $gContent->mInfo);
-			$gBitSystem->display('bitpackage:gmap/edit_map_xml.tpl', null, array( 'format' => 'xml', 'display_mode' => 'edit' ));
-		}else{
-			$gBitThemes->setFormatHeader( 'center_only' );
-			$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
 		}
+
+		if ( count($gContent->mErrors) > 0 ){
+			$XMLContent = "There were errors with your request:";
+			foreach( $gContent->mErrors as $key=>$error ){
+				$XMLContent .= "\n".$error."\n";
+			}
+		}
+
+		$gBitSmarty->assign( 'statusCode', $statusCode);
+		$gBitSmarty->assign( 'XMLContent', $XMLContent);
+		$gBitThemes->setFormatHeader( $format );
+		$gBitSystem->display('bitpackage:gmap/edit_map_xml.tpl', null, array( 'display_mode' => 'edit' ));
 	}else{
 		/* HACKTASTIC!
 		 * if we're just ajaxing up the form then turn this off - hacking around trouble at top of liberty::edit_storage_list.tpl

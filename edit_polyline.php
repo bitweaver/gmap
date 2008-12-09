@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.31 2008/12/03 23:27:45 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polyline.php,v 1.32 2008/12/09 02:55:23 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -76,10 +76,10 @@ if (!empty($_REQUEST["save_polyline"])) {
 			$statusCode = 200;
 			$gBitSmarty->assign('removeSucces', true);
 		}else{
-			$XMLContent = tra( "Sorry, there was an unknown error trying to remove the marker." );
+			$XMLContent = tra( "Sorry, there was an unknown error trying to remove the polyline." );
 		}
 	}else{
-		$XMLContent = tra( "You do not have the required permission to remove this marker from this set." );
+		$XMLContent = tra( "You do not have the required permission to remove this polyline from this set." );
 	}
 }elseif (!empty($_REQUEST["expunge_polyline"])) {
 	if ( $gContent->hasAdminPermission() ){
@@ -88,10 +88,10 @@ if (!empty($_REQUEST["save_polyline"])) {
 			$statusCode = 200;
 			$gBitSmarty->assign('expungeSucces', true);
 		}else{
-			$XMLContent = tra( "Sorry, there was an unknown error trying to delete the marker." );
+			$XMLContent = tra( "Sorry, there was an unknown error trying to delete the polyline." );
 		}
 	}else{
-		$XMLContent = tra( "You do not have the required permission to delete this marker." );
+		$XMLContent = tra( "You do not have the required permission to delete this polyline." );
 	}
 }else{
 	$gContent->invokeServices( 'content_edit_function' );
@@ -106,12 +106,14 @@ if (!empty($_REQUEST["save_polyline"])) {
 }
 
 if ( count($gContent->mErrors) > 0 ){
-	$gBitThemes->setFormatHeader( 'center_only' );
-	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
-}else{
-	$gBitSmarty->assign( 'statusCode', $statusCode);
-	$gBitSmarty->assign( 'XMLContent', $XMLContent);
-	$gBitThemes->setFormatHeader( 'xml' );
-	$gBitSystem->display('bitpackage:gmap/edit_polyline_xml.tpl', NULL, array( 'display_mode' => 'edit' ));
+	$XMLContent = "There were errors with your request:";
+	foreach( $gContent->mErrors as $key=>$error ){
+		$XMLContent .= "\n".$error."\n";
+	}
 }
+
+$gBitSmarty->assign( 'statusCode', $statusCode);
+$gBitSmarty->assign( 'XMLContent', $XMLContent);
+$gBitThemes->setFormatHeader( 'xml' );
+$gBitSystem->display('bitpackage:gmap/edit_polyline_xml.tpl', NULL, array( 'display_mode' => 'edit' ));
 ?>

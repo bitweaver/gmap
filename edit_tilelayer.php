@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_tilelayer.php,v 1.16 2008/10/20 21:52:04 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_tilelayer.php,v 1.17 2008/12/09 02:55:23 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -69,14 +69,15 @@ if (!empty($_REQUEST["save_tilelayer"])) {
 	die;
 }
 
-
 if ( count($gContent->mErrors) > 0 ){
-	$gBitThemes->setFormatHeader( 'center_only' );
-	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
-}else{
-	$gBitSmarty->assign( 'statusCode', $statusCode);
-	$gBitSmarty->assign( 'XMLContent', $XMLContent);
-	$gBitThemes->setFormatHeader( 'xml' );
-	$gBitSystem->display('bitpackage:gmap/edit_tilelayer_xml.tpl', NULL, array( 'display_mode' => 'edit' ));
+	$XMLContent = "There were errors with your request:";
+	foreach( $gContent->mErrors as $key=>$error ){
+		$XMLContent .= "\n".$error."\n";
+	}
 }
+
+$gBitSmarty->assign( 'statusCode', $statusCode);
+$gBitSmarty->assign( 'XMLContent', $XMLContent);
+$gBitThemes->setFormatHeader( 'xml' );
+$gBitSystem->display('bitpackage:gmap/edit_tilelayer_xml.tpl', NULL, array( 'display_mode' => 'edit' ));
 ?>

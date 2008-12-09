@@ -168,12 +168,13 @@ BitMap.Edit.prototype = {
 		return function(){ func(n,i) };
 	},
 	
-	"verifyRemove": function(rslt){
+	"verifyRslt": function(rslt){
         var xml = rslt.responseXML;
         var status = xml.documentElement.getElementsByTagName('code')[0].firstChild.nodeValue;
 		if (status != '200'){
 			var msg = xml.documentElement.getElementsByTagName('content')[0].firstChild.nodeValue;
 			alert(msg);
+			this.hideSpinner("DONE!");
 			return false;
 		}else{
 			return true;
@@ -1749,6 +1750,7 @@ BitMap.Edit.prototype = {
 	 *******************/	 
 		 
 	 "updateMap": function(rslt){
+		if ( this.verifyRslt(rslt) ){
 		var xml = rslt.responseXML.documentElement;
 		// convenience
 		var $s = partial( bind(this.getXMLTagValue, this), xml );
@@ -1880,6 +1882,7 @@ BitMap.Edit.prototype = {
 		this.editMap(this.Map.id);	
 		$('ecancel').href = BitSystem.urls.gmap+"index.php?gmap_id="+this.Map.id;
 		$('ecancel-span').style.display = 'inline';
+		}
 	 },
 
 
@@ -1891,6 +1894,7 @@ BitMap.Edit.prototype = {
 	 *******************/
 	
 	"updateMarker": function(set_id, marker_id, rslt){
+		if ( this.verifyRslt(rslt) ){
 		var xml = rslt.responseXML.documentElement;
 		var m = null;
 		var s = null;
@@ -1935,6 +1939,7 @@ BitMap.Edit.prototype = {
 		this.hideSpinner("DONE!");
 		this.Map.attachSideMarkers();
 		this.editMarker(n,x);
+		}
 	},
 
 
@@ -1958,6 +1963,7 @@ BitMap.Edit.prototype = {
 	
 	
 	"updateMarkerSet": function(rslt){
+		if ( this.verifyRslt(rslt) ){
 		var xml = rslt.responseXML.documentElement;
 		var n_i = this.editObjectN;
 		var s;
@@ -2019,12 +2025,13 @@ BitMap.Edit.prototype = {
 			this.Map.attachSideMarkers();
 			this.editMarkerSet(this.editObjectN);
 		}
+		}
 	},
 	
 	
 	//this needs special attention
 	"updateRemoveMarker": function(rslt){
-		if ( this.verifyRemove(rslt) ){
+		if ( this.verifyRslt(rslt) ){
 			var ref = this.Map;
 			for (var n=0; n<ref.markers.length; n++){
 				var M = ref.markers[n];
@@ -2050,7 +2057,7 @@ BitMap.Edit.prototype = {
 
 
 	"updateRemoveMarkerSet": function(){
-		if ( this.verifyRemove(rslt) ){
+		if ( this.verifyRslt(rslt) ){
 			for (var n=0; n<this.Map.markers.length; n++){
 				if ( ( this.Map.markers[n] != null ) && ( this.Map.markers[n].set_id == this._setIdRef ) ){
 					if ( typeof( this.Map.markers[n].gmarker != 'undefined' ) ){
@@ -2078,6 +2085,7 @@ BitMap.Edit.prototype = {
 	
 	
 	"updateMarkerStyle": function(rslt){
+		if ( this.verifyRslt(rslt) ){
 		var xml = rslt.responseXML.documentElement;
 
 		//the style data we are changing
@@ -2142,10 +2150,12 @@ BitMap.Edit.prototype = {
 				}
 			}
 		}
+		}
 	},
 
 	
 	"updateIconStyle": function(icon_id, refr, rslt){
+		if ( this.verifyRslt(rslt) ){
 	    var xml = rslt.responseXML.documentElement;
 		var i = null;
 		var is = this.Map.iconstyles;
@@ -2207,11 +2217,13 @@ BitMap.Edit.prototype = {
 			// update the styles menus
 			this.editIconStyles();
 		}
+		}
 	},
 
 
 
 	"updateMaptype": function(mid, rslt){
+		if ( this.verifyRslt(rslt) ){
 		var xml = rslt.responseXML.documentElement;
 		var m = null;
 		var mt = this.Map.maptypes;
@@ -2252,6 +2264,7 @@ BitMap.Edit.prototype = {
 		}else{
 			this.editMaptype(n);
 		}
+		}
 	},
 	
 	"parseMaptypeXML": function(m, xml){
@@ -2273,7 +2286,7 @@ BitMap.Edit.prototype = {
 	},
 	 
 	"updateRemoveMaptype": function(mid, rslt){
-		if ( this.verifyRemove(rslt) ){
+		if ( this.verifyRslt(rslt) ){
 			var m = null;
 			var mt = this.Map.maptypes;
 			for (var n=0; n<mt.length; n++){
@@ -2315,6 +2328,7 @@ BitMap.Edit.prototype = {
 	},
 
 	"updateTilelayer": function(rslt){
+		if ( this.verifyRslt(rslt) ){
 	    var xml = rslt.responseXML.documentElement;
 		//the marker data we are changing
 		var n_i = this.editObjectN;
@@ -2343,6 +2357,7 @@ BitMap.Edit.prototype = {
 		// update the maptypes menus
 		this.editMaptypeTilelayers(s_i);
 		this.editTilelayer(n_i,s_i);
+		}
 	},
 	
 	"parseTilelayerXML": function(tl, xml){
@@ -2362,7 +2377,7 @@ BitMap.Edit.prototype = {
 	},
 
 	"updateRemoveTilelayer": function( tid, mid, rslt ){
-		if ( this.verifyRemove(rslt) ){
+		if ( this.verifyRslt(rslt) ){
 			// we only need to remove the reference from affected maptypes we ignore the tilelayers array
 			var a = this.Map.maptypes;
 			for (n in a){
@@ -2387,6 +2402,7 @@ BitMap.Edit.prototype = {
 	},
 
 	"updateCopyright":function(rslt){
+		if ( this.verifyRslt(rslt) ){
 	    var xml = rslt.responseXML.documentElement;
 	    var s = this._setIndexRef;
 		var n = this.editObjectN;
@@ -2409,6 +2425,7 @@ BitMap.Edit.prototype = {
 		// update the tilelayers menus
 		this.editTilelayer(s);
 		this.editCopyright(n, s);
+		}
 	},
 	
 	"parseCopyrightXML":function(c, xml){
@@ -2424,7 +2441,7 @@ BitMap.Edit.prototype = {
 	},
 	
 	"updateRemoveCopyright":function(){
-		if ( this.verifyRemove(rslt) ){
+		if ( this.verifyRslt(rslt) ){
 			var n = this.editObjectN;
 			this.Map.copyrights[n] = null;
 	
@@ -2438,6 +2455,7 @@ BitMap.Edit.prototype = {
 	},
 
 	"updatePolyline": function(rslt){
+		if ( this.verifyRslt(rslt) ){
 		var xml = rslt.responseXML.documentElement;							
 		var n_i = this.editObjectN;
 		var s_i = this._setIndexRef;
@@ -2474,9 +2492,11 @@ BitMap.Edit.prototype = {
 		this.hideSpinner("DONE!");
 		this.editPolylines(s_i);
 		this.editPolyline(n_i);
+		}
 	},
 
 	"updatePolylineSet": function(rslt){
+		if ( this.verifyRslt(rslt) ){
 		var xml = rslt.responseXML.documentElement;
 		var n_i = this.editObjectN;
 		var s;
@@ -2528,9 +2548,11 @@ BitMap.Edit.prototype = {
 			// update the sets menus
 			this.editPolylineSet(this.editObjectN);
 		}
+		}
 	},
 	
 	"updatePolylineStyle": function(rslt){
+		if ( this.verifyRslt(rslt) ){
 		var xml = rslt.responseXML.documentElement;
 		
 		//the style data we are changing
@@ -2589,9 +2611,11 @@ BitMap.Edit.prototype = {
 				}
 			}
 		}
+		}
 	 },	
 
 	"updateRemovePolyline": function(){
+		if ( this.verifyRslt(rslt) ){
         var xml = rslt.responseXML;
         var status = xml.documentElement.getElementsByTagName('code')[0].firstChild.nodeValue;
 		if (status == '200'){
@@ -2611,11 +2635,12 @@ BitMap.Edit.prototype = {
 			var msg = xml.documentElement.getElementsByTagName('content')[0].firstChild.nodeValue;
 			alert(msg);
 		}		
+		}
 	},
 
 	//this needs special attention
 	"updateRemovePolylineSet": function(){
-		if ( this.verifyRemove(rslt) ){
+		if ( this.verifyRslt(rslt) ){
 			for (var n=0; n<this.Map.polylines.length; n++){
 				if ( ( this.Map.polylines[n] != null ) && ( this.Map.polylines[n].set_id == this.editSetId ) ){
 					if( typeof( this.Map.polylines[n].polyline != null ) ){
@@ -2642,6 +2667,7 @@ BitMap.Edit.prototype = {
 	},
 
 	"updatePolygon": function(rslt){
+		if ( this.verifyRslt(rslt) ){
 	    var xml = rslt.responseXML.documentElement;							
 		var n_i = this.editObjectN;
 		var s_i = this._setIndexRef;
@@ -2686,9 +2712,11 @@ BitMap.Edit.prototype = {
 		this.hideSpinner("DONE!");
 		this.editPolygons(s_i);
 		this.editPolygon(n_i);
+		}
 	},
 
 	"updatePolygonSet": function(rslt){
+		if ( this.verifyRslt(rslt) ){
 		var xml = rslt.responseXML.documentElement;
 		var n_i = this.editObjectN;
 		var s;
@@ -2742,9 +2770,11 @@ BitMap.Edit.prototype = {
 			// update the sets menus
 			this.editPolygonSet(this.editObjectN);
 		}
+		}
 	},
 	
 	"updatePolygonStyle": function(rslt){
+		if ( this.verifyRslt(rslt) ){
 		var xml = rslt.responseXML.documentElement;
 		
 		//the style data we are changing
@@ -2787,10 +2817,11 @@ BitMap.Edit.prototype = {
 				}
 			}
 		}
+		}
 	 },	
 
 	"updateRemovePolygon": function(){
-		if ( this.verifyRemove(rslt) ){
+		if ( this.verifyRslt(rslt) ){
 			for (var i=0; i<this.Map.polygons.length; i++){
 				if ( Map.Polygons[i] != null && this.Map.polygons[n].polygon != null && this.Map.polygons[i].polygon_id == this.editPolygonId ){
 					this.Map.map.removeOverlay(this.Map.polygons[i].polygon);
@@ -2806,7 +2837,7 @@ BitMap.Edit.prototype = {
 
 	//this needs special attention
 	"updateRemovePolygonSet": function(){
-		if ( this.verifyRemove(rslt) ){
+		if ( this.verifyRslt(rslt) ){
 			for (var n=0; n<this.Map.polygons.length; n++){
 				if ( ( this.Map.polygons[n] != null ) && ( this.Map.polygons[n].set_id == this.editSetId ) && ( this.Map.polygons[n].polygon != null ) ){
 					this.Map.map.removeOverlay(Map.Polygons[n].polygon);

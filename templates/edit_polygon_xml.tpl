@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<response>
+{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {if $polygonInfo}
 	<polygon>
 		<polygon_id>{$polygonInfo.polygon_id}</polygon_id>
@@ -11,6 +13,5 @@
 		<zoom_factor>{$polygonInfo.zoom_factor}</zoom_factor>
 		<num_levels>{$polygonInfo.num_levels}</num_levels>
 	</polygon>
-{else}
-	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}
+</response>

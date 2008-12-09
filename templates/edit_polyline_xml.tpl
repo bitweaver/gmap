@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<response>
+{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {if $polylineInfo}
 	<polyline>
 		<polyline_id>{$polylineInfo.polyline_id}</polyline_id>
@@ -9,6 +11,5 @@
 		<zoom_factor>{$polylineInfo.zoom_factor}</zoom_factor>
 		<num_levels>{$polylineInfo.num_levels}</num_levels>
 	</polyline>
-{else}
-	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}
+</response>

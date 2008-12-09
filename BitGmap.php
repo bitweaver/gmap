@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.156 2008/11/30 23:08:31 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.157 2008/12/09 02:55:23 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -692,6 +692,10 @@ class BitGmap extends LibertyMime {
 
 		$pParamHash['gmap_store'] = array();
 
+		// storage of title is handled by LiberytContent, but we need to verify here it exists as LC will store NULL
+		if( empty( $pParamHash['title'] ) ) {
+			$this->mErrors['title'] = tra( "You must enter a title for your map" );
+		}
 		if( isset( $pParamHash['map_w'] ) && is_numeric( $pParamHash['map_w'] ) ) {
 			$pParamHash['gmap_store']['width'] = $pParamHash['map_w'];
 		}
@@ -745,7 +749,7 @@ class BitGmap extends LibertyMime {
 				$this->mDb->RollbackTrans();
 			}
 		}
-		return( count( $this->mInfo ) );
+		return( count( $this->mErrors ) == 0 );
 	}
 
 

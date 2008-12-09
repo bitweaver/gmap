@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.23 2008/12/08 21:51:30 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.24 2008/12/09 02:55:23 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -128,7 +128,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
 				$this->mDb->RollbackTrans();
 			}
 		}
-		return( count( $this->mInfo ) );
+		return( count( $this->mErrors ) == 0 );
 	}
 	
 	/**

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<response>
+{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {if $maptypeInfo}
 <maptype>
 	<maptype_id>{$maptypeInfo.maptype_id}</maptype_id>
@@ -9,6 +11,5 @@
 	<maxzoom>{$maptypeInfo.maxzoom}</maxzoom>
 	<errormsg>{$maptypeInfo.errormsg}</errormsg>
 </maptype>
-{else}
-	{include file="bitpackage:gmap/edit_status_xml_inc.tpl"}
 {/if}
+</response>

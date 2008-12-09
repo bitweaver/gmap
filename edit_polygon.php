@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.19 2008/12/03 23:27:45 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.20 2008/12/09 02:55:23 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -106,13 +106,14 @@ if (!empty($_REQUEST["save_polygon"])) {
 }
 
 if ( count($gContent->mErrors) > 0 ){
-	$gBitThemes->setFormatHeader( 'center_only' );
-	$gBitSmarty->assign_by_ref('errors', $gContent->mErrors );
-}else{
-	$gBitSmarty->assign( 'statusCode', $statusCode);
-	$gBitSmarty->assign( 'XMLContent', $XMLContent);
-	$gBitThemes->setFormatHeader( 'xml' );
-	$gBitSystem->display('bitpackage:gmap/edit_polygon_xml.tpl', NULL, array( 'display_mode' => 'edit' ));
+	$XMLContent = "There were errors with your request:";
+	foreach( $gContent->mErrors as $key=>$error ){
+		$XMLContent .= "\n".$error."\n";
+	}
 }
 
+$gBitSmarty->assign( 'statusCode', $statusCode);
+$gBitSmarty->assign( 'XMLContent', $XMLContent);
+$gBitThemes->setFormatHeader( 'xml' );
+$gBitSystem->display('bitpackage:gmap/edit_polygon_xml.tpl', NULL, array( 'display_mode' => 'edit' ));
 ?>

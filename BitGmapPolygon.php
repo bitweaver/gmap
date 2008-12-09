@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygon.php,v 1.11 2008/12/08 21:41:02 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygon.php,v 1.12 2008/12/09 02:55:23 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -64,7 +64,22 @@ class BitGmapPolygon extends BitGmapOverlayBase {
 		}
 		
 		if( !empty( $pParamHash['poly_data'] ) ) {
-			$pParamHash['overlay_store']['poly_data'] = $pParamHash['poly_data'];
+			$errors = "";
+			if( strstr( $pParamHash['poly_data'], ',' ) ) {
+				$floats = explode( ",", $pParamHash['poly_data'] );
+				foreach( $floats as $float ){
+					if( !is_numeric( $float ) ){
+						$errors .= !empty( $errors )?",".$float:$float;
+					}
+				}
+				if( !empty($errors) ){
+					$this->mErrors['poly_data'] = tra( "You have submitted invalid point data, the following values are not floats:".$errors.". Please check your data.");
+				}else{
+					$pParamHash['overlay_store']['poly_data'] = $pParamHash['poly_data'];
+				}
+			}else{
+				$this->mErrors['poly_data'] = tra( "You have not submitted valid point data values, values must be comma separated floats. Please check your data.");
+			}
 		}
 		
 		if( !empty( $pParamHash['circle_center'] ) || $pParamHash['circle_center'] == 0 ) {
