@@ -40,20 +40,20 @@ BitMap.MapData.push({ldelim}
 		maxzoom:{$maptypesInfo[n].maxzoom},
 		errormsg:"{$maptypesInfo[n].errormsg}",
 		tilelayer_ids:[{$maptypesInfo[n].tilelayer_ids}]
-  {rdelim},
+  {rdelim}{if !$smarty.section.n.last},{/if}
   {/section}{/if}],
 
   Tilelayers:[
-  {if count($tilelayersInfo) > 0}{section name=tilelayers loop=$tilelayersInfo}
+  {if count($tilelayersInfo) > 0}{section name=n loop=$tilelayersInfo}
   {ldelim}
-		tilelayer_id:{$tilelayersInfo[tilelayers].tilelayer_id},
-		tiles_name:"{$tilelayersInfo[tilelayers].tiles_name}",
-		tiles_minzoom:{$tilelayersInfo[tilelayers].tiles_minzoom},
-		tiles_maxzoom:{$tilelayersInfo[tilelayers].tiles_maxzoom},
-		ispng:{$tilelayersInfo[tilelayers].ispng},
-		tilesurl:"{$tilelayersInfo[tilelayers].tilesurl}",
-		opacity:{$tilelayersInfo[tilelayers].opacity}
-  {rdelim},
+		tilelayer_id:{$tilelayersInfo[n].tilelayer_id},
+		tiles_name:"{$tilelayersInfo[n].tiles_name}",
+		tiles_minzoom:{$tilelayersInfo[n].tiles_minzoom},
+		tiles_maxzoom:{$tilelayersInfo[n].tiles_maxzoom},
+		ispng:{$tilelayersInfo[n].ispng},
+		tilesurl:"{$tilelayersInfo[n].tilesurl}",
+		opacity:{$tilelayersInfo[n].opacity}
+  {rdelim}{if !$smarty.section.n.last},{/if}
   {/section}{/if}],
 
   Copyrights:[
@@ -64,7 +64,7 @@ BitMap.MapData.push({ldelim}
 		bounds:[{$copyrightsInfo[n].bounds}],
 		notice:"{$copyrightsInfo[n].notice}",
 		tilelayer_id:{$copyrightsInfo[n].tilelayer_id}
-  {rdelim},
+  {rdelim}{if !$smarty.section.n.last},{/if}
   {/section}{/if}],
 	
   Markers:[{if count($listcontent) > 0}{section name=n loop=$listcontent}{if $listcontent[n].lat != NULL}
@@ -90,7 +90,7 @@ BitMap.MapData.push({ldelim}
 		stars_user_rating:{if $listcontent[n].stars_user_rating}{$listcontent[n].stars_user_rating}{else}null{/if},
 		stars_user_pixels:{if $listcontent[n].stars_user_pixels}{$listcontent[n].stars_user_pixels}{else}null{/if},
 		plot_on_load:true
-		{rdelim},
+		{rdelim}{if !$smarty.section.n.last},{/if}
 	{/if}{/section}{elseif $serviceHash && $serviceHash.lat != NULL}
   {ldelim}
 		lat:{if $gContent}{$mapInfo.lat}{else if $serviceHash}{$serviceHash.lat}{/if},
@@ -115,7 +115,7 @@ BitMap.MapData.push({ldelim}
 		explode: {$markersInfo[n].explode},
 		allow_comments:'{if $markersInfo[n].allow_comments eq "y"}y{else}n{/if}',
 		num_comments:{if ($markersInfo[n].allow_comments eq "y" || $gBitUser->isAdmin()) && $markersInfo[n].num_comments }{$markersInfo[n].num_comments}{else}null{/if}
-	{rdelim},
+	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 	
   MarkerSets:[{if count($markersetsInfo) > 0}{section name=n loop=$markersetsInfo}
@@ -128,8 +128,8 @@ BitMap.MapData.push({ldelim}
 		set_type: "{$markersetsInfo[n].set_type}",
 		plot_on_load: {$markersetsInfo[n].plot_on_load},
 		side_panel: {$markersetsInfo[n].side_panel},
-		explode: {$markersetsInfo[n].explode},
-	{rdelim},
+		explode: {$markersetsInfo[n].explode}
+	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
   MarkerStyles:[{if count($markerstylesInfo) > 0}{section name=n loop=$markerstylesInfo}
@@ -141,7 +141,7 @@ BitMap.MapData.push({ldelim}
 		label_opacity: {$markerstylesInfo[n].label_opacity},
 		label_hover_styles: "{$markerstylesInfo[n].label_hover_styles}",
 		window_styles: "{$markerstylesInfo[n].window_styles}"
-	{rdelim},
+	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
   IconStyles:[{if count($iconstylesInfo) > 0}{section name=n loop=$iconstylesInfo}
@@ -167,7 +167,7 @@ BitMap.MapData.push({ldelim}
 		infowindow_anchor_x: {$iconstylesInfo[n].infowindow_anchor_x},
 		infowindow_anchor_y: {$iconstylesInfo[n].infowindow_anchor_y}
 		{* image_map: {$iconstylesInfo[n].image_map}, *}
-	{rdelim},
+	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
   Polylines:[{if count($polylinesInfo) > 0}{section name=n loop=$polylinesInfo}
@@ -193,8 +193,8 @@ BitMap.MapData.push({ldelim}
 		{/if}
 		set_id:{$polylinesInfo[n].set_id},
 		style_id:{$polylinesInfo[n].style_id},
-		array_n:{$smarty.section.n.index},
-	{rdelim},
+		array_n:{$smarty.section.n.index}
+	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
   PolylineSets:[{if count($polylinesetsInfo) > 0}{section name=n loop=$polylinesetsInfo}
@@ -202,8 +202,8 @@ BitMap.MapData.push({ldelim}
 		set_id: {$polylinesetsInfo[n].set_id},
 		title: "{$polylinesetsInfo[n].title}",
 		description: "{$polylinesetsInfo[n].data}",
-		style_id: {$polylinesetsInfo[n].style_id},
-	{rdelim},
+		style_id: {$polylinesetsInfo[n].style_id}
+	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
   PolylineStyles:[{if count($polylinestylesInfo) > 0 }{section name=n loop=$polylinestylesInfo}
@@ -212,38 +212,38 @@ BitMap.MapData.push({ldelim}
 		name: "{$polylinestylesInfo[n].name}",
 		color: "{$polylinestylesInfo[n].color}",
 		weight: {$polylinestylesInfo[n].weight},
-		opacity: {$polylinestylesInfo[n].opacity},
-	{rdelim},
+		opacity: {$polylinestylesInfo[n].opacity}
+	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
-  Polygons:[{if count($gContent->mMapPolygons) > 0}{section name=polygon_n loop=$gContent->mMapPolygons}
+  Polygons:[{if count($gContent->mMapPolygons) > 0}{section name=n loop=$gContent->mMapPolygons}
   {ldelim}
-  		content_id:{$gContent->mMapPolygons[polygon_n].content_id},
-		content_type_guid:'{$gContent->mMapPolygons[polygon_n].content_type_guid}',
-		polygon_id: {$gContent->mMapPolygons[polygon_n].polygon_id},
-		user_id: {$gContent->mMapPolygons[polygon_n].user_id},
-		modifier_user_id: {$gContent->mMapPolygons[polygon_n].modifier_user_id},
-		created: {$gContent->mMapPolygons[polygon_n].created},
-		last_modified: {$gContent->mMapPolygons[polygon_n].last_modified},
-		version: {$gContent->mMapPolygons[polygon_n].version},
-		title: "{$gContent->mMapPolygons[polygon_n].title}",
-		circle:{if $gContent->mMapPolygons[polygon_n].circle}{$gContent->mMapPolygons[polygon_n].circle}{else}null{/if},
+  		content_id:{$gContent->mMapPolygons[n].content_id},
+		content_type_guid:'{$gContent->mMapPolygons[n].content_type_guid}',
+		polygon_id: {$gContent->mMapPolygons[n].polygon_id},
+		user_id: {$gContent->mMapPolygons[n].user_id},
+		modifier_user_id: {$gContent->mMapPolygons[n].modifier_user_id},
+		created: {$gContent->mMapPolygons[n].created},
+		last_modified: {$gContent->mMapPolygons[n].last_modified},
+		version: {$gContent->mMapPolygons[n].version},
+		title: "{$gContent->mMapPolygons[n].title}",
+		circle:{if $gContent->mMapPolygons[n].circle}{$gContent->mMapPolygons[n].circle}{else}null{/if},
 		points_data: new Array(),
-		points_data: [{$gContent->mMapPolygons[polygon_n].poly_data}],
+		points_data: [{$gContent->mMapPolygons[n].poly_data}],
 		circle_center: new Array(),
-		circle_center: [{$gContent->mMapPolygons[polygon_n].circle_center}],
-		{if $gContent->mMapPolygons[polygon_n].radius != NULL}
-			radius: {$gContent->mMapPolygons[polygon_n].radius},
+		circle_center: [{$gContent->mMapPolygons[n].circle_center}],
+		{if $gContent->mMapPolygons[n].radius != NULL}
+			radius: {$gContent->mMapPolygons[n].radius},
 		{/if}
-		border_text: "{$gContent->mMapPolygons[polygon_n].border_text}",
-		{if $gContent->mMapPolygons[polygon_n].zindex != NULL}
-			zindex: {$gContent->mMapPolygons[polygon_n].zindex},
+		border_text: "{$gContent->mMapPolygons[n].border_text}",
+		{if $gContent->mMapPolygons[n].zindex != NULL}
+			zindex: {$gContent->mMapPolygons[n].zindex},
 		{/if}
-		set_id: {$gContent->mMapPolygons[polygon_n].set_id},
-		style_id: {$gContent->mMapPolygons[polygon_n].style_id},
-		polylinestyle_id: {$gContent->mMapPolygons[polygon_n].polylinestyle_id},
-		array_n: {$smarty.section.polygon_n.index},
-	{rdelim},
+		set_id: {$gContent->mMapPolygons[n].set_id},
+		style_id: {$gContent->mMapPolygons[n].style_id},
+		polylinestyle_id: {$gContent->mMapPolygons[n].polylinestyle_id},
+		array_n: {$smarty.section.n.index}
+	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
   PolygonStyles:[{if count($gContent->mMapPolygonStyles) > 0 }{section name=style_n loop=$gContent->mMapPolygonStyles}
@@ -251,8 +251,8 @@ BitMap.MapData.push({ldelim}
 		style_id: {$gContent->mMapPolygonStyles[style_n].style_id},
 		name: "{$gContent->mMapPolygonStyles[style_n].name}",
 		color: "{$gContent->mMapPolygonStyles[style_n].color}",
-		opacity: {$gContent->mMapPolygonStyles[style_n].opacity},
-	{rdelim},
+		opacity: {$gContent->mMapPolygonStyles[style_n].opacity}
+	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
   PolygonSets:[{if count($gContent->mMapPolygonSets) > 0}{section name=set_n loop=$gContent->mMapPolygonSets}
@@ -261,7 +261,7 @@ BitMap.MapData.push({ldelim}
 		title: "{$gContent->mMapPolygonSets[set_n].title}",
 		description: "{$gContent->mMapPolygonSets[set_n].description}",
 		style_id: {$gContent->mMapPolygonSets[set_n].style_id},
-		polylinestyle_id: {$gContent->mMapPolygonSets[set_n].polylinestyle_id},
-	{rdelim},
+		polylinestyle_id: {$gContent->mMapPolygonSets[set_n].polylinestyle_id}
+	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}]	
 {rdelim});
