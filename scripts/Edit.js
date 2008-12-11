@@ -362,7 +362,7 @@ BitMap.Edit.prototype = {
 				link.innerHTML = m.title;
 				markerLinksList.appendChild(li);
 				li.style.display = "block";
-				// @TODO this isn't totally adequate. sometimes we want to edit one that is not first in the list - and this is a little wasteful
+				/* @TODO this isn't totally adequate. sometimes we want to edit one that is not first in the list - and this is a little wasteful */
 				if (firstselected != true){
 					//else ajax up a form with the info from the first marker in the list
 					this.editMarker(n, i);
@@ -2246,13 +2246,15 @@ BitMap.Edit.prototype = {
 		this.parseMaptypeXML(m, xml);
 		m.maptype_node = n;
 		
-		//@TODO if this.editObjectN != null remove the maptype from the map
-		//@TODO add the maptype to the map			
-		//@TODO set the map type to active
+		/*
+		@TODO if this.editObjectN != null remove the maptype from the map
+		@TODO add the maptype to the map			
+		@TODO set the map type to active
 		//this.Map.map.setMaptype( this.Map.maptypes[this.Map.maptypes[n].name] );
-		//@TODO update the controls
+		@TODO update the controls
 		//this.Map.map.removeControl(typecontrols);
 		//this.Map.map.addControl(typecontrols);
+		*/
 		
 		// update the maptype
 		this.hideSpinner("DONE!");
@@ -2307,7 +2309,7 @@ BitMap.Edit.prototype = {
 			// add the controls
 			this.Map.map.addControl(typecontrols);
 			
-			// @todo we should first check if the map is on display, and then if so flip to street
+			/* @todo we should first check if the map is on display, and then if so flip to street */
 			// we flip to street mode
 			this.Map.map.setMaptype(this.Map.map.mapTypes[0]);
 			
@@ -2383,17 +2385,17 @@ BitMap.Edit.prototype = {
 			for (n in a){
 				// if maptype_id == null we delete the tilelayer from all else remove on match
 				if ( (mid == null || a[n].maptype_id == mid) && ( (x=MochiKit.Base.findIdentical( a[n].tilelayer_ids, tid )) > -1 ) ){
-					//@TODO remove layer from related maptype and update maptype on map
+					/* @TODO remove layer from related maptype and update maptype on map */
 					a[n].tilelayer_ids[x] = null;
 				}
 
 			}
-			// @todo update the map
+			/* @todo update the map */
 			if( mid != null ){
 				this.editMaptype(mid);
 				this.editTilelayers();
 			}else{
-				// @todo put a confirmation message in the tilelayer edit window
+				/* @todo put a confirmation message in the tilelayer edit window */
 				this.cancelEditMaptypes();
 				this.editMaptypes();
 			}
@@ -2418,8 +2420,10 @@ BitMap.Edit.prototype = {
 		this.parseCopyrightXML(c, xml);
 		c.tilelayer_id = this._setIdRef;
 
-		//@TODO remove the related maptype
-		//@TODO re-add the maptype
+		/*
+		@TODO remove the related maptype
+		@TODO re-add the maptype
+		*/
 		
 		this.hideSpinner("DONE!");
 		// update the tilelayers menus
@@ -2445,8 +2449,10 @@ BitMap.Edit.prototype = {
 			var n = this.editObjectN;
 			this.Map.copyrights[n] = null;
 	
-			//@TODO remove the related maptype
-			//@TODO re-add the maptype
+			/*
+			@TODO remove the related maptype
+			@TODO re-add the maptype
+			*/
 		
 			this.hideSpinner("DONE!");
 			this.cancelEditCopyright();

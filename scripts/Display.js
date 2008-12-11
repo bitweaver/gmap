@@ -185,7 +185,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	},
 
 
-	// @p polyline datahash
+	/* @p polyline datahash */
 	"defineGPolyline": function(p, s){
 		var pointlist = [];
 		for (n = 0; n < p.points_data.length; n+=2 ){
@@ -212,7 +212,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 	},
 	
 	
-	// @p polyline datahash
+	/* @p polyline datahashi */
 	"defineGPolylineEncoded": function(p, s){
 		if(p.points_data!=null && p.levels_data!=null){
 			var c = null;

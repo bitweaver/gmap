@@ -150,7 +150,7 @@ myicon.infoShadowAnchor = new GPoint(18, 25);
 		 * For now an empty place holder		 
 		 */
 		var image = null;
-		// @TODO we should probably check if everything exists first
+		/* @TODO we should probably check if everything exists first */
 		M.gmarker.my_html = MochiKit.DOM.DIV({'class':'gmap-marker'}, 
 												H1({'class':'marker-title'}, M.title),
 												DIV(null, M.content_description + " created by " + M.creator_real_name + " on " + M.created_date),
