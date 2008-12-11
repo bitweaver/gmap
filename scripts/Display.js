@@ -16,7 +16,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		}
 	},
 
-	//@TODO - these image paths may not be universal enough, may need to get the root from kernel
+	/* @TODO - these image paths may not be universal enough, may need to get the root from kernel */
 	"defineGIcon": function(i){
 		var I = this.iconstyles[i];
 		I.icon = new GIcon();
