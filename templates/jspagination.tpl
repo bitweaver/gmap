@@ -120,14 +120,20 @@
 					&nbsp;<a href="{$pageUrl}&amp;list_page={$listInfo.current_page+1}">&raquo;</a>&nbsp;
 				{/if}
 			{/if}
+			{* disabled - right now this form is getting nested in another form in map
+			   overlay editing forms - this is a problem.
+			   also the go to page part is not handle by ajax situaations - so exclude it
+			   for now until we want to deal with really solving this, if we want to 
+			   bother supporting it at all -wjames5
 			{form action="$pageUrl"}
 				<input type="hidden" name="find" value="{$find|default:$smarty.request.find}" />
 				<input type="hidden" name="sort_mode" value="{$sort_mode}" />
 				{foreach from=$pgnHidden key=name item=value}
 					<input type="hidden" name="{$name}" value="{$value}" />
 				{/foreach}
-				{* {tr}Go to page{/tr} <input class="gotopage" type="text" size="3" maxlength="4" name="list_page" /> {tr}of{/tr} <strong>{$listInfo.total_pages}</strong> *}
+				{tr}Go to page{/tr} <input class="gotopage" type="text" size="3" maxlength="4" name="list_page" /> {tr}of{/tr} <strong>{$listInfo.total_pages}</strong>
 			{/form}
+			*}
 		{/if}
 	</div> <!-- end .pagination -->
 {/if}
