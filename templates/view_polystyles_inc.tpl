@@ -18,6 +18,7 @@
 					<div style="background:#0000ff; width:70px; height:10px; float:right;"></div>
 				{/if}
 				Default (blue)
+				<div style="clear:both"></div>
 			</a>
 		</li>
 
@@ -30,6 +31,7 @@
 					<div style="background:#{$style.color}; width:70px; height:10px; float:right;"></div>
 				{/if}
 				{$style.name}
+				<div style="clear:both"></div>
 			</a>
 		</li>
 		{/foreach}
