@@ -15,10 +15,24 @@ BitMap.hide = function (i){
 	document.getElementById(i).style.display = "none";
 };
 
-BitMap.Display = function(){
-  BitMap.Initialize(400);
-  BitMap.MapData[0].Map.addOverlayListener();
-  if( $('gmap-sidepanel') ){ BitMap.MapData[0].Map.attachSideMarkers(); };
+BitMap.Display = function(type) {
+	BitMap.Initialize(400);
+	var MD = BitMap.MapData[0];
+	switch(type){
+		case "marker":
+			MD.Map.map.addOverlay(new GMarker( new GLatLng( MD.lat, MD.lng ) ));
+			break;
+		case "polyline":
+		case "polygon":
+			/* poly overlays are attached in init process */
+			MD.Map.centerMapOnPoly(MD.Map[type+"s"][0][type]);
+			break;
+		case "map":
+		default:
+			MD.Map.addOverlayListener();
+			if( $('gmap-sidepanel') ){ MD.Map.attachSideMarkers(); };
+			break;
+	}
 };
 
 BitMap.DisplaySimple = function(){

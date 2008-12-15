@@ -287,8 +287,6 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 
 
 	"defineGPolygon": function(p, s, l){
-// deprecated pass datahash by ref
-//		var p = this.polygons[i];
 		var pointlist = [];
 		for (n = 0; n < p.points_data.length; n+=2 ){
 			var point = new GLatLng(

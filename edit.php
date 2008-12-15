@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.50 2008/10/20 21:40:10 spiderr Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit.php,v 1.51 2008/12/15 20:31:36 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -44,6 +44,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 		$gBitSmarty->assign_by_ref( 'polylinesInfo', $gContent->mMapPolylines );
 		$gBitSmarty->assign_by_ref( 'polylinesetsInfo', $gContent->mMapPolylineSets );
 		$gBitSmarty->assign_by_ref( 'polylinestylesInfo', $gContent->mMapPolylineStyles );
+		$gBitSmarty->assign_by_ref( 'polygonsInfo', $gContent->mMapPolygons );
+		$gBitSmarty->assign_by_ref( 'polygonsetsInfo', $gContent->mMapPolygonSets );
+		$gBitSmarty->assign_by_ref( 'polygonstylesInfo', $gContent->mMapPolygonStyles );
 	}
 	
 	$gContent->invokeServices( 'content_edit_function' );

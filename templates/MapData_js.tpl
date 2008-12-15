@@ -191,8 +191,8 @@ BitMap.MapData.push({ldelim}
 			zoom_factor:{$polylinesInfo[n].zoom_factor}32,
 			num_levels:{$polylinesInfo[n].num_levels}4,
 		{/if}
-		set_id:{$polylinesInfo[n].set_id},
-		style_id:{$polylinesInfo[n].style_id},
+		set_id:{if $polylinesInfo[n].set_id}{$polylinesInfo[n].set_id}{else}null{/if},
+		style_id:{if $polylinesInfo[n].style_id}{$polylinesInfo[n].style_id}{else}0{/if},
 		array_n:{$smarty.section.n.index}
 	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
@@ -216,52 +216,52 @@ BitMap.MapData.push({ldelim}
 	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
-  Polygons:[{if count($gContent->mMapPolygons) > 0}{section name=n loop=$gContent->mMapPolygons}
+  Polygons:[{if count($polygonsInfo) > 0}{section name=n loop=$polygonsInfo}
   {ldelim}
-  		content_id:{$gContent->mMapPolygons[n].content_id},
-		content_type_guid:'{$gContent->mMapPolygons[n].content_type_guid}',
-		polygon_id: {$gContent->mMapPolygons[n].polygon_id},
-		user_id: {$gContent->mMapPolygons[n].user_id},
-		modifier_user_id: {$gContent->mMapPolygons[n].modifier_user_id},
-		created: {$gContent->mMapPolygons[n].created},
-		last_modified: {$gContent->mMapPolygons[n].last_modified},
-		version: {$gContent->mMapPolygons[n].version},
-		title: "{$gContent->mMapPolygons[n].title}",
-		circle:{if $gContent->mMapPolygons[n].circle}{$gContent->mMapPolygons[n].circle}{else}null{/if},
+  		content_id:{$polygonsInfo[n].content_id},
+		content_type_guid:'{$polygonsInfo[n].content_type_guid}',
+		polygon_id: {$polygonsInfo[n].polygon_id},
+		user_id: {$polygonsInfo[n].user_id},
+		modifier_user_id: {$polygonsInfo[n].modifier_user_id},
+		created: {$polygonsInfo[n].created},
+		last_modified: {$polygonsInfo[n].last_modified},
+		version: {$polygonsInfo[n].version},
+		title: "{$polygonsInfo[n].title}",
+		circle:{if $polygonsInfo[n].circle}{$polygonsInfo[n].circle}{else}null{/if},
 		points_data: new Array(),
-		points_data: [{$gContent->mMapPolygons[n].poly_data}],
+		points_data: [{$polygonsInfo[n].poly_data}],
 		circle_center: new Array(),
-		circle_center: [{$gContent->mMapPolygons[n].circle_center}],
-		{if $gContent->mMapPolygons[n].radius != NULL}
-			radius: {$gContent->mMapPolygons[n].radius},
+		circle_center: [{$polygonsInfo[n].circle_center}],
+		{if $polygonsInfo[n].radius != NULL}
+			radius: {$polygonsInfo[n].radius},
 		{/if}
-		border_text: "{$gContent->mMapPolygons[n].border_text}",
-		{if $gContent->mMapPolygons[n].zindex != NULL}
-			zindex: {$gContent->mMapPolygons[n].zindex},
+		border_text: "{$polygonsInfo[n].border_text}",
+		{if $polygonsInfo[n].zindex != NULL}
+			zindex: {$polygonsInfo[n].zindex},
 		{/if}
-		set_id: {$gContent->mMapPolygons[n].set_id},
-		style_id: {$gContent->mMapPolygons[n].style_id},
-		polylinestyle_id: {$gContent->mMapPolygons[n].polylinestyle_id},
+		set_id: {if $polygonsInfo[n].set_id}{$polygonsInfo[n].set_id}{else}null{/if},
+		style_id: {if $polygonsInfo[n].style_id}{$polygonsInfo[n].style_id}{else}0{/if},
+		polylinestyle_id: {if $polygonsInfo[n].polylinestyle_id}{$polygonsInfo[n].polylinestyle_id}{else}0{/if},
 		array_n: {$smarty.section.n.index}
 	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
-  PolygonStyles:[{if count($gContent->mMapPolygonStyles) > 0 }{section name=style_n loop=$gContent->mMapPolygonStyles}
+  PolygonStyles:[{if count($polygonstylesInfo) > 0 }{section name=style_n loop=$polygonstylesInfo}
   {ldelim}
-		style_id: {$gContent->mMapPolygonStyles[style_n].style_id},
-		name: "{$gContent->mMapPolygonStyles[style_n].name}",
-		color: "{$gContent->mMapPolygonStyles[style_n].color}",
-		opacity: {$gContent->mMapPolygonStyles[style_n].opacity}
+		style_id: {$polygonstylesInfo[style_n].style_id},
+		name: "{$polygonstylesInfo[style_n].name}",
+		color: "{$polygonstylesInfo[style_n].color}",
+		opacity: {$polygonstylesInfo[style_n].opacity}
 	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
-  PolygonSets:[{if count($gContent->mMapPolygonSets) > 0}{section name=set_n loop=$gContent->mMapPolygonSets}
+  PolygonSets:[{if count($polygonsetsInfo) > 0}{section name=set_n loop=$polygonsetsInfo}
   {ldelim}
-		set_id: {$gContent->mMapPolygonSets[set_n].set_id},
-		title: "{$gContent->mMapPolygonSets[set_n].title}",
-		description: "{$gContent->mMapPolygonSets[set_n].description}",
-		style_id: {$gContent->mMapPolygonSets[set_n].style_id},
-		polylinestyle_id: {$gContent->mMapPolygonSets[set_n].polylinestyle_id}
+		set_id: {$polygonsetsInfo[set_n].set_id},
+		title: "{$polygonsetsInfo[set_n].title}",
+		description: "{$polygonsetsInfo[set_n].description}",
+		style_id: {$polygonsetsInfo[set_n].style_id},
+		polylinestyle_id: {$polygonsetsInfo[set_n].polylinestyle_id}
 	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}]	
 {rdelim});

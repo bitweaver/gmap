@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/view_marker.php,v 1.13 2008/07/11 19:39:22 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/view_marker.php,v 1.14 2008/12/15 20:31:36 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -56,11 +56,8 @@ if ( $gBitThemes->isAjaxRequest() ){
 	$displayOptions['format'] = 'center_only';
 }else{
 	// @TODO get a list of maps the marker is attached to.
-	// @TODO clean this up
-	// This is some seriously ugly business here but it works for now
-	// EditContent gets us a pin on the map - that could be a more generic function name
 	$gBitSmarty->assign('view_map', TRUE);
-	$gBitSystem->mOnload[] = 'BitMap.EditContent();';
+	$gBitSystem->mOnload[] = "BitMap.Display('marker');";
 	// this hackage is because we are repruposing some much of the basic map display javascript
 	$gContent->mInfo['width'] = $gBitSystem->getConfig('gmap_inline_map_width',190);
 	$gContent->mInfo['height'] = $gBitSystem->getConfig('gmap_inline_map_height',190);
