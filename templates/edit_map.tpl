@@ -65,9 +65,19 @@
 			{forminput}
 				<select name="map_showcont">
 					<option value="s" {if $mapInfo.zoom_control eq 's'}selected="selected"{/if}>Small</option>
-					<option value="l" {if $mapInfo.zoom_control eq 'l'}selected="selected"{/if}>Large</option>
+					<option value="l" {if $mapInfo.zoom_control eq 'l' || !$gContent->isValid()}selected="selected"{/if}>Large</option>
 					<option value="z" {if $mapInfo.zoom_control eq 'z'}selected="selected"{/if}>Zoom Only</option>
 					<option value="n" {if $mapInfo.zoom_control eq 'n'}selected="selected"{/if}>None</option>
+				</select>
+				{formhelp note=""}
+			{/forminput}
+		</div>
+		<div class="row">
+			{formlabel label="Show Map Type Buttons" for="map_showtypecont"}
+			{forminput}
+				<select name="map_showtypecont">
+					<option value="false" {if $mapInfo.maptype_control == "false" }selected="selected"{/if}>No</option>
+					<option value="true" {if $mapInfo.maptype_control == "true" || !$gContent->isValid()}selected="selected"{/if}>Yes</option>
 				</select>
 				{formhelp note=""}
 			{/forminput}
@@ -78,16 +88,6 @@
 				<select name="map_showscale">
 					<option value="false" {if $mapInfo.scale == "false" }selected="selected"{/if}>No</option>
 					<option value="true" {if $mapInfo.scale == "true" }selected="selected"{/if}>Yes</option>
-				</select>
-				{formhelp note=""}
-			{/forminput}
-		</div>
-		<div class="row">
-			{formlabel label="Show Map Type Buttons" for="map_showtypecont"}
-			{forminput}
-				<select name="map_showtypecont">
-					<option value="false" {if $mapInfo.maptype_control == "false" }selected="selected"{/if}>No</option>
-					<option value="true" {if $mapInfo.maptype_control == "true" }selected="selected"{/if}>Yes</option>
 				</select>
 				{formhelp note=""}
 			{/forminput}
