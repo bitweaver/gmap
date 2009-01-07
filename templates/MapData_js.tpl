@@ -246,22 +246,22 @@ BitMap.MapData.push({ldelim}
 	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
-  PolygonStyles:[{if count($polygonstylesInfo) > 0 }{section name=style_n loop=$polygonstylesInfo}
+  PolygonStyles:[{if count($polygonstylesInfo) > 0 }{section name=n loop=$polygonstylesInfo}
   {ldelim}
-		style_id: {$polygonstylesInfo[style_n].style_id},
-		name: "{$polygonstylesInfo[style_n].name}",
-		color: "{$polygonstylesInfo[style_n].color}",
-		opacity: {$polygonstylesInfo[style_n].opacity}
+		style_id: {$polygonstylesInfo[n].style_id},
+		name: "{$polygonstylesInfo[n].name}",
+		color: "{$polygonstylesInfo[n].color}",
+		opacity: {$polygonstylesInfo[n].opacity}
 	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}],
 
-  PolygonSets:[{if count($polygonsetsInfo) > 0}{section name=set_n loop=$polygonsetsInfo}
+  PolygonSets:[{if count($polygonsetsInfo) > 0}{section name=n loop=$polygonsetsInfo}
   {ldelim}
-		set_id: {$polygonsetsInfo[set_n].set_id},
-		title: "{$polygonsetsInfo[set_n].title}",
-		description: "{$polygonsetsInfo[set_n].description}",
-		style_id: {$polygonsetsInfo[set_n].style_id},
-		polylinestyle_id: {$polygonsetsInfo[set_n].polylinestyle_id}
+		set_id: {$polygonsetsInfo[n].set_id},
+		title: "{$polygonsetsInfo[n].title}",
+		description: "{$polygonsetsInfo[n].description}",
+		style_id: {$polygonsetsInfo[n].style_id},
+		polylinestyle_id: {$polygonsetsInfo[n].polylinestyle_id}
 	{rdelim}{if !$smarty.section.n.last},{/if}
 	{/section}{/if}]	
 {rdelim});
