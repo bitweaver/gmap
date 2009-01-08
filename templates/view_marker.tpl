@@ -3,7 +3,7 @@
 	{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='nav' serviceHash=$gContent->mInfo}
 	<div class="display gmarker">
 		<div class="header">
-			<h2>{tr}{$gContent->mType.content_description}{/tr}:</h2>
+			{if !$pre_window}<h2>{tr}{$gContent->mType.content_description}{/tr}:</h2>{/if}
 			<h1 id="mymarkertitle">{$gContent->getTitle()}</h1>
 			<h2 id="mymarkerdesc">{$gContent->mInfo.description}</h2>
 			{include file="bitpackage:gmap/gmap_date_bar.tpl"}

@@ -28,6 +28,7 @@
 			400px
 		{/if}
 	">
+		{include file="bitpackage:gmap/search.tpl"}
 		<h3>Search Results</h3>
 		<div id="gmap-sidepanel-table" class="boxcontent"></div>
 	</div>
