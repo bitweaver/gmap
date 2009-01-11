@@ -1,11 +1,10 @@
 <?php
 /**
  * @version $Header: 
- *
- * Copyright (c) 2007 bitweaver.org
+ * Copyright (c) 2008 bitweaver Group
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
- * @author Will <will@wjamesphoto.com>
+ * @author Will James, Tekimaki LCC <will@tekimaki.com>
  * 
  * @package gmap
  * @subpackage functions
@@ -26,11 +25,11 @@ $gBitSystem->verifyPermission('p_gmap_view');
 //if there is no API key don't even bother
 if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	/* mass-remove:
-	   the checkboxes are sent as the array $_REQUEST["checked[]"], values are the wiki-PageNames,
-	   e.g. $_REQUEST["checked"][3]="HomePage"
+	   the checkboxes are sent as the array $_REQUEST["checked[]"], values are the gmap ids,
+	   e.g. $_REQUEST["checked"][3]="69"
 	   $_REQUEST["submit_mult"] holds the value of the "with selected do..."-option list
-	   we look if any page's checkbox is on and if remove_samples is selected.
-	   then we check permission to delete samples.
+	   we look if any page's checkbox is on and if remove_gmaps is selected.
+	   then we check permission to delete gmaps.
 	   if so, we call histlib's method remove_all_versions for all the checked samples.
 	*/
 	if (isset($_REQUEST["submit_mult"]) && isset($_REQUEST["checked"]) && $_REQUEST["submit_mult"] == "remove_gmaps") {
@@ -71,6 +70,9 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	
 	$gBitSmarty->assign_by_ref('control', $_REQUEST["control"]);
 	$gBitSmarty->assign_by_ref('list', $listgmaps["data"]);
+
+	// getList() has now placed all the pagination information in $_REQUEST['listInfo']
+	$gBitSmarty->assign_by_ref( 'listInfo', $_REQUEST['listInfo'] );
 	
 	// Display the template
 	$gBitSystem->display('bitpackage:gmap/list_gmaps.tpl', tra('Map') , array( 'display_mode' => 'list' ));
