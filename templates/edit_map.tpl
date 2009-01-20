@@ -147,7 +147,7 @@
 				</div>
 			{/if}
 
-			{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_mini_tpl}
+			{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
 			<div class="row submit">
 				<input type="button" name="save_map_btn" value="Save" onclick="BitMap.EditSession.storeMap( this.form );" />
@@ -156,7 +156,7 @@
 			{include file="bitpackage:liberty/edit_storage_list.tpl" primary_label="Marker Image"}
 		{/jstab}
 
-		{include file="bitpackage:liberty/edit_services_inc.tpl serviceFile=content_edit_tab_tpl}
+		{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_tab_tpl"}
 
 		{if $gBitUser->hasPermission('p_liberty_attach_attachments') }
 			{jstab title="Attachments"}
