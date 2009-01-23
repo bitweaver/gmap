@@ -112,19 +112,10 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		/* In the future we would like to set the image onerror property something like this, but it needs to be supported by google.
 				img.onerror = function () { this.src = "default.jpg"; };
 		 */
-var myicon = new GIcon();
-myicon = new GIcon();
-myicon.image = "icons/c_type_pins/" + M.content_type_guid + ".png";
-myicon.shadow = "http://www.google.com/mapfiles/shadow50.png";
-myicon.iconSize = new GSize(21, 24);
-myicon.shadowSize = new GSize(32, 24);
-myicon.iconAnchor = new GPoint(9, 24);
-myicon.infoWindowAnchor = new GPoint(9, 2);
-myicon.infoShadowAnchor = new GPoint(18, 25);
-		 
+		var myicon = this.defineContentIcon(M.content_type_guid);
 //		var myicon = (M.content_type_guid != null)?new GIcon(G_DEFAULT_ICON, "icons/c_type_pins/" + M.content_type_guid + ".png" ):null;
-		var mytip = ["<div class='tip-content'>", M.title, "</div>"].join("");
-		M.gmarker = new GxMarker(p, myicon, mytip, {'className':'gmap-tooltip'});
+		var mytip = ["<div class='gmap-tooltip'><div class='tip-content'>", M.title, "</div></div>"].join("");
+		M.gmarker = new GxMarker(p, myicon, mytip);
 		
 		var starsElm = null;
 		if (typeof(document.getElementById('iwindow-stars')) != 'undefined' && M.stars_pixels != null){
@@ -160,6 +151,8 @@ myicon.infoShadowAnchor = new GPoint(18, 25);
 												image,
 												DIV(null, M.parsed_dull)
 											);
+		M.gmarker.type = "marker";
+		M.gmarker.index = i;
 		this.map.addOverlay(M.gmarker);
 	  }
 	},
@@ -224,6 +217,20 @@ myicon.infoShadowAnchor = new GPoint(18, 25);
 		for (n=count; n>0; n--){
 		 s.removeChild(s.childNodes[n-1]);
 		}
+	},
+
+	"defineContentIcon": function( name ){
+		if( !this.iconstyles[name] ){
+			var I = new GIcon();
+			I.image = BitSystem.urls.gmap+"icons/c_type_pins/" + name + ".png";
+			I.shadow = "http://www.google.com/mapfiles/shadow50.png";
+			I.iconSize = new GSize(21, 24);
+			I.shadowSize = new GSize(32, 24);
+			I.iconAnchor = new GPoint(9, 24);
+			I.infoWindowAnchor = new GPoint(9, 2);
+			this.iconstyles[name] = I;
+		}
+		return this.iconstyles[name];
 	}
 });
 //end of BitMap.Map.prototype update

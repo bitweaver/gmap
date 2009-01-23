@@ -12,6 +12,7 @@
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 	{/if}
 	{if $map_list }
+		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Display.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}scripts/List.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/yahoo.js" type="text/javascript"></script>
