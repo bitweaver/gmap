@@ -1,5 +1,5 @@
 {strip}
-<div id="{$smarty.const.ACTIVE_PACKAGE}-map" style="
+<div id="gmap-map" style="
 	width:{if $gContent->mInfo.width}
 		{if  $gContent->mInfo.width > 0}
 			{$gContent->mInfo.width}px
