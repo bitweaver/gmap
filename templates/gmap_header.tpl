@@ -8,7 +8,7 @@
 {/if}
 
 <div class="header" id="gmap-header">
-	<h1 id="map_title">{if $gContent->mInfo.title}{$gContent->getTitle()}{elseif $edit_map}Create New Map{else}Map Geo-Located Site Content{/if}</h1>
+	<h1 id="map_title">{if $gContent->mInfo.title}{$gContent->getTitle()}{elseif $edit_map}Create New Map{elseif $pageTitle}{$pageTitle}{/if}</h1>
 	{if !$map_list}
 		<h2 id="map_desc">{$gContent->mInfo.summary}</h2>
 		{if $gContent->isValid()}
