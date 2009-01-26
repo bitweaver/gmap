@@ -2,7 +2,7 @@
  {if $geo_edit_serv || $view_map || $simple_map || $map_list || $edit_map}
 		{include file="bitpackage:gmap/header_base.tpl"}
  {/if}
- {if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
+ {if $smarty.const.ACTIVE_PACKAGE == 'gmap' || $map_search_srvc == TRUE}
 	{if $view_map }
 		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Display.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/gxmarker2.js" type="text/javascript"></script>
