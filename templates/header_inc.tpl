@@ -20,6 +20,7 @@
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/event.js" type="text/javascript"></script>
 		<script src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/calendar.js" type="text/javascript"></script>
 		<link type="text/css" rel="stylesheet" href="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/calendar.css" />
+		{if $listInfo}
 		<script type="text/javascript">
 			BitMap.listInfo = {ldelim}
 				"total_records":{$listInfo.total_records},
@@ -31,6 +32,7 @@
 				"max_records":{$listInfo.max_records}
 			{rdelim};
 		</script>
+		{/if}
 	{/if}
 	{if $edit_map }
 		<script src="{$smarty.const.GMAP_PKG_URL}scripts/Utl.JSCSS.js" type="text/javascript"></script>

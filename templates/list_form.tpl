@@ -13,10 +13,10 @@
 			<div style="float:left; margin-right:10px;">
 				<span>Content Types: </span><br />
 				<select multiple size=5 name="content_type_guid[]">
-					<option value="Any" selected >Any</option>
+					<option value="Any" {if !$contentSelect}selected{/if} >Any</option>
 					{foreach from=$ContentTypes item=c_type}
 						{if $c_type.content_type_guid != 'bitcomment' && $c_type.content_type_guid != 'pigeonholes'}
-						<option value="{$c_type.content_type_guid}" >{if $c_type.content_description == "User Information"}Site Members{else}{$c_type.content_description}s{/if}</option>
+						<option value="{$c_type.content_type_guid}" {if $contentSelect && in_array($c_type.content_type_guid, $contentSelect)}selected{/if}>{if $c_type.content_description == "User Information"}Site Members{else}{$c_type.content_description}s{/if}</option>
 						{/if}
 					{/foreach}
 				</select>
