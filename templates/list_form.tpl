@@ -59,14 +59,12 @@
 					</select>
 				</div>
 			</div>
-			{if $listInfo }
-			<div style="float:right; margin-right:10px;">
+			<div id="gmap-block-viewaslist" style="float:right; margin-right:10px; {if !$listInfo}display:none;{/if}">
 				{if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
 					{assign var=listUrl value="`$smarty.const.LIBERTY_PKG_URL`list_content.php"}
 				{/if}
-				<a href="{pageurl listInfo=$listInfo pgnUrl=$listUrl}">View as List</a>
+				<a href="{pageurl listInfo=$listInfo pgnUrl=$listUrl}" id="gmap-link-viewaslist">{tr}View Results as a List{/tr}</a>
 			</div>
-			{/if}
 
 		<div style="clear:both">
 			<div style="padding-top:4px">

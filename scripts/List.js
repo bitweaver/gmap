@@ -68,18 +68,20 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		var right_lng = this.map.getBounds().getNorthEast().lng();
 		var down_lat = this.map.getBounds().getSouthWest().lat();
 		var left_lng = this.map.getBounds().getSouthWest().lng();
-		var str = [BitSystem.urls.liberty, "list_content.php?", MochiKit.Base.queryString(f), "&up_lat=",up_lat,"&right_lng=",right_lng,"&down_lat=",down_lat,"&left_lng=",left_lng,"&list_page=",page].join("");
-		
+		var params = [MochiKit.Base.queryString(f), "&up_lat=",up_lat,"&right_lng=",right_lng,"&down_lat=",down_lat,"&left_lng=",left_lng,"&list_page=",page].join("");
 		//account for bug in queryString
-		str = str.replace(/liberty_categories%5B%5D=Any/,"");
-		str = str.replace(/content_type_guid%5B%5D=Any/,"");
+		params = params.replace(/liberty_categories%5B%5D=Any/,"");
+		params = params.replace(/content_type_guid%5B%5D=Any/,"");
+
+		var str = BitSystem.urls.liberty+"list_content.php?"+params;
 
 		//$('error').innerHTML = str;
 		var d = loadJSONDoc(str);
-		d.addCallbacks(bind(this.ReceiveContent, this), bind(this.RequestFailure, this));
+		d.addCallback(bind(this.ReceiveContent, this), params)
+		d.addErrback(bind(this.RequestFailure, this));
 	},
 
-	"ReceiveContent": function(rslt){
+	"ReceiveContent": function(	query, rslt ){
 		if (rslt.Status.code == 200){
 			for (n=0; n<this.markers.length; n++){if(this.markers[n].gmarker != 'undefined'){this.map.removeOverlay(this.markers[n].gmarker)}};
 			this.markers = rslt.Content;
@@ -88,6 +90,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			this.clearSidepanel();
 			this.attachSideMarkers();
 			this.attachPagination(rslt.ListInfo);
+			this.updateViewAsListUrl( query );
 		}
 		if (rslt.Status.code == 204){
 			alert("sorry we couldn't find anything matching your request");
@@ -164,6 +167,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		if (count > 0){
 			var s = $('gmap-sidepanel-table');
 			$('gmap-map').style.marginRight = '300px';
+			$('gmap-sidepanel').style.width = '300px';
 			BitMap.show('gmap-sidepanel');
 			var markerssorted = MochiKit.Iter.groupby_as_array(this.markers, MochiKit.Base.itemgetter("content_type_guid"));
 			forEach(markerssorted, function(leData){
@@ -231,6 +235,16 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 			this.iconstyles[name] = I;
 		}
 		return this.iconstyles[name];
+	},
+
+	"updateViewAsListUrl": function( query ){
+		var elm = $('gmap-link-viewaslist');
+		var oldhref = elm.href;
+		// clean up the query
+		query = query.replace( /output=json/, "" );
+		query = query.replace( /&&/, "&" );
+		elm.href= oldhref.replace( /\?.*/, "?"+query );
+		$('gmap-block-viewaslist').style.display = "block";
 	}
 });
 //end of BitMap.Map.prototype update
