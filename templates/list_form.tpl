@@ -4,7 +4,7 @@
 		{* offset - probably set this dynamically and hidden *}
 		{* stars_rating_count - is this supported? *}    
 		<input name="output" type="hidden" value="json" />
-		<input name="max_records" type="hidden" value="20" />
+		<input name="max_records" type="hidden" value="{$gBitSystem->getConfig('max_records')|default:10}" />
 		<input name="sort_mode" type="hidden" value="content_type_guid_asc" />
 
 		{if $smarty.request.content_type_guid && $smarty.const.ACTIVE_PACKAGE != 'gmap'}	

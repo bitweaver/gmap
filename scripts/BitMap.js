@@ -45,8 +45,10 @@ BitMap.DisplayList = function(){
 	var Map = BitMap.MapData[0].Map;
 	Map.addOverlayListener();
 	Map.attachSideMarkers();
-	// make all visible within map
 	if( Map.markers.length > 0 ){
+		// add pagination
+		Map.attachPagination(BitMap.listInfo);
+		// make all visible within map
 		var bounds = new GLatLngBounds(); 
 		for (i=0;i<Map.markers.length;i++) { 
 			bounds.extend(Map.markers[i].gmarker.getPoint()); 
