@@ -40,10 +40,22 @@ BitMap.DisplaySimple = function(){
 };
 
 BitMap.DisplayList = function(){
-  BitMap.MakeCalendar();
-  BitMap.Initialize(400);
-  BitMap.MapData[0].Map.addOverlayListener();
-  BitMap.MapData[0].Map.attachSideMarkers();
+	BitMap.MakeCalendar();
+	BitMap.Initialize(400);
+	var Map = BitMap.MapData[0].Map;
+	Map.addOverlayListener();
+	Map.attachSideMarkers();
+	// make all visible within map
+	if( Map.markers.length > 0 ){
+		var bounds = new GLatLngBounds(); 
+		for (i=0;i<Map.markers.length;i++) { 
+			bounds.extend(Map.markers[i].gmarker.getPoint()); 
+		} 
+		var center = bounds.getCenter(); 
+		var zoom = Map.map.getBoundsZoomLevel(bounds); 
+		zoom = zoom>-1?zoom-1:zoom;
+		Map.map.setCenter(center,zoom);
+	}
 };
 
 BitMap.EditContent = function(){
