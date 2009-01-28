@@ -20,6 +20,10 @@ if ( $gBitSystem->isPackageActive('geo') &&
 
 	// if we have at least one content type guid then we want a list
 	if ( !empty($_REQUEST['content_type_guid']) ){
+		if( $_REQUEST['content_type_guid'] == 'Any' ){
+			$_REQUEST['content_type_guid'] = NULL;
+		}
+
 		//forces return of $contentList from get_content_list_inc.php
 		$_REQUEST['output'] = 'raw';
 		//forces only geo located data

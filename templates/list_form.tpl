@@ -8,30 +8,32 @@
 		<input name="sort_mode" type="hidden" value="content_type_guid_asc" />
 
 		{if $smarty.request.content_type_guid && $smarty.const.ACTIVE_PACKAGE != 'gmap'}	
-			<input type="hidden" name="content_type_guid" value="bitgroup" />
+			<input type="hidden" name="content_type_guid" value="{$smarty.request.content_type_guid}" />
 		{else}
-			<div style="float:left; margin-right:10px;">
-				<span>Content Types: </span><br />
-				<select multiple size=5 name="content_type_guid[]">
-					<option value="Any" {if !$contentSelect}selected{/if} >Any</option>
-					{foreach from=$ContentTypes item=c_type}
-						{if $c_type.content_type_guid != 'bitcomment' && $c_type.content_type_guid != 'pigeonholes'}
-						<option value="{$c_type.content_type_guid}" {if $contentSelect && in_array($c_type.content_type_guid, $contentSelect)}selected{/if}>{if $c_type.content_description == "User Information"}Site Members{else}{$c_type.content_description}s{/if}</option>
-						{/if}
-					{/foreach}
-				</select>
+			<div class="row">
+				{formlabel label="Content Types:" for="content_type_guid"}
+				{forminput}
+					{html_options options=$contentTypes name=content_type_guid id=content_type selected=$contentSelect size=5}
+					{formhelp note="Limit search by content type"}
+				{/forminput}
 			</div>
 		{/if}
 
-			<div style="float:left; margin-right:10px;">
-				<span>Find (key word or phrase):</span><br />
-				<input type="text" name="find" value="{$find|default:$smarty.request.find|default:$prompt|escape}" {if $prompt}onclick="if (this.value == '{$prompt}') this.value = '';"{/if}/>&nbsp;
+			<div class="row">
+				{formlabel label="Find (key word or phrase):" for="find"}
+				{forminput}
+					<input type="text" name="find" value="{$find|default:$smarty.request.find|default:$prompt|escape}" {if $prompt}onclick="if (this.value == '{$prompt}') this.value = '';"{/if}/>&nbsp;
+					{formhelp note="Searches titles"}
+				{/forminput}
 			</div>
 
+			{include file="bitpackage:liberty/services_inc.tpl" serviceLocation='search'}
 
+			{* @TODO move this to pigeonholes *}
 			{if $pigeonList}
-				<div style="float:left; margin-right:10px;">
-					<span>Categories: </span><br />
+				<div class="row">
+					{formlabel label="Categories" for="liberty_categories"}
+					{forminput}
 					<select multiple size=5 name="liberty_categories[]">
 						<option value="Any" selected >Any</option>
 						{foreach from=$pigeonList item=item}
@@ -39,26 +41,32 @@
 								<option value="{$item.subtree[ix].content_id}">{$item.subtree[ix].title}</option>
 							{/section}
 						{/foreach}
-					</select><br />
+					</select>
+					{/forminput}
 				</div>
 			{/if}
 
-			<div style="float:left; margin-right:10px;">
-				<div>
-					Date: <br />
-					<input name="hr_date" type="text" size="25px" value="" onchange="BitMap.EvalDate()" />
+			{* @TODO move this to liberty *}
+			<div class="row">
+				{formlabel label="Date:" for="hr_date"}
+				{forminput}
+					<input name="hr_date" type="text" value="" onchange="BitMap.EvalDate()" />
 					<a href="javascript:void(null)" onclick="BitMap.ShowCalendar()" title="select date from calendar"><img id="CalLink" src="{$smarty.const.GMAP_PKG_URL}libraries/yahoo/pdate.gif" style="vertical-align:top;"></a>
 					<input name="from_date" type="hidden" value="" />
 					<input name="until_date" type="hidden" value="" />
-				</div>
+				{/forminput}
 				<div id="gmap-date-range" style="display:none;margin-top:4px">
-					Date Range: 
+					{formlabel label="Date Raage:" for="date_range"}
+					{forminput}
 					<select name="date_range" onchange="return BitMap.SelectDateRange(this)">
 						<option value="selectiononly" >On This Date Only</option>
 						<option value="sinceselection" >Since This Date</option>
 					</select>
+					{/forminput}
 				</div>
 			</div>
+
+		<div class="row submit">
 			<div id="gmap-block-viewaslist" style="float:right; margin-right:10px; {if !$listInfo}display:none;{/if}">
 				{if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
 					{assign var=listUrl value="`$smarty.const.LIBERTY_PKG_URL`list_content.php"}
@@ -66,7 +74,6 @@
 				<a href="{pageurl listInfo=$listInfo pgnUrl=$listUrl}" id="gmap-link-viewaslist">{tr}View Results as a List{/tr}</a>
 			</div>
 
-		<div style="clear:both">
 			<div style="padding-top:4px">
 				<input type="button" value="Submit" onclick="javascript:BitMap.MapData[0].Map.RequestContent(document['list-query-form']);" />
 			</div>
