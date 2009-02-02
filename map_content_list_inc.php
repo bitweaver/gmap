@@ -4,6 +4,9 @@ if ( $gBitSystem->isPackageActive('geo') &&
 	 $gBitSystem->isPackageActive('gmap') &&
 	 $gBitSystem->isFeatureActive('gmap_api_key') ){	
 
+	// list results will be assigned to contentList by liberty
+	$contentList = array();
+
 	// get users geo location if they have one
 	/**
 	 * @TODO this really should be taken care of the initial load of gBitUser, however
@@ -13,14 +16,54 @@ if ( $gBitSystem->isPackageActive('geo') &&
 	require_once( GEO_PKG_PATH.'LibertyGeo.php' );
 	$geo = new LibertyGeo( $gBitUser->mContentId );	
 	$geo->load();
-	if ( is_numeric( $geo->getField( 'lat' ) ) ){
-		$geo->mInfo['zoom'] = 10;
-		$gBitSmarty->assign( 'mapInfo', $geo->mInfo );
-	}
+	array_push( $gBitUser->mInfo, $geo->mInfo );
 
-	// if we have at least one content type guid then we want a list
-	if ( !empty($_REQUEST['content_type_guid']) ){
-		if( $_REQUEST['content_type_guid'] == 'Any' ){
+	// if we have at least one content type guid or we have a distance request then we want a list
+	if ( !empty($_REQUEST['content_type_guid']) || !empty( $_REQUEST['distance'] ) ){
+		
+		// if we have distance we need a center to check from
+		if( !empty( $_REQUEST['distance'] ) ){
+			if( !is_numeric( $_REQUEST['distance'] ) ){
+				$gBitSystem->fatalError( 'Invalid distance value, distance must be a number. Note, the default unit is kilometers.' );
+			}
+			// start with defaults - we'll use these if we don't have a better reference point
+			$dLat = $gBitSystem->getConfig('gmap_lat');
+			$dLng = $gBitSystem->getConfig('gmap_lng');
+			// if lat and lng are set and numeric use them otherwise fatal to report bad value
+			if( !empty( $_REQUEST['lat'] ) && !empty( $_REQUEST['lng'] ) ){
+				if(	!is_numeric( $_REQUEST['lat'] ) ){
+					$gBitSystem->fatalError( 'Invalid latitude submitted, please check the lat value' );
+				}
+				if(	!is_numeric( $_REQUEST['lng'] ) ){
+					$gBitSystem->fatalError( 'Invalid longitude submitted, please check the lng value' );
+				}
+				$dLat = $_REQUEST['lat'];
+				$dLng = $_REQUEST['lng'];
+			// if we have lat lng values for the user we use it as the center
+			}elseif ( is_numeric( $gBitUser->getField( 'lat' ) ) ){
+				$dLat = $gBitUser->getField( 'lat' );
+				$dLng = $gBitUser->getField( 'lng' );
+			}
+
+			require_once( UTIL_PKG_PATH.'geocalc/GeoCalc.class.php' );
+			$oGC = new GeoCalc();
+
+			// distance in kilometers
+			// @TODO turn this into a package config default
+			$dRadius = $_REQUEST['distance'];
+			// Calculate the boundary distance in degrees longitude / latitude
+			$dAddLat = $oGC->getLatPerKm() * $dRadius;
+			$dAddLon = $oGC->getLonPerKmAtLat($dLat) * $dRadius;
+	 
+			// trip the geo service
+			$_REQUEST['up_lat'] = $dLat + $dAddLat;
+			$_REQUEST['right_lng'] = $dLng + $dAddLon;
+			$_REQUEST['down_lat'] = $dLat - $dAddLat;
+			$_REQUEST['left_lng'] = $dLng - $dAddLon;
+		}
+
+		// can force a general lookup using Any param if distance is not specified
+		if( !empty( $_REQUEST['content_type_guid'] ) && $_REQUEST['content_type_guid'] == 'Any' ){
 			$_REQUEST['content_type_guid'] = NULL;
 		}
 
@@ -30,6 +73,12 @@ if ( $gBitSystem->isPackageActive('geo') &&
 		$_REQUEST['geo_notnull'] = TRUE;
 		include_once( LIBERTY_PKG_PATH.'list_content.php' );
 		$gBitSmarty->assign_by_ref('listcontent', $contentList);
+	}
+
+	// if we have no results we want to default center on the users area if they have geo data
+	if( count( $contentList ) == 0  && is_numeric( $gBitUser->getField( 'lat' ) ) ){
+		$gBitUser->mInfo['zoom'] = 10;
+		$gBitSmarty->assign( 'mapInfo', $gBitUser->mInfo );
 	}
 
 	//get content types in database list  
