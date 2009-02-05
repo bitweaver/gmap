@@ -7,13 +7,14 @@
 		<input name="max_records" type="hidden" value="{$gBitSystem->getConfig('max_records')|default:10}" />
 		<input name="sort_mode" type="hidden" value="content_type_guid_asc" />
 
-		{if $smarty.request.content_type_guid && $smarty.const.ACTIVE_PACKAGE != 'gmap'}	
+		{if (count($smarty.request.content_type_guid) == 1) && $smarty.const.ACTIVE_PACKAGE != 'gmap'}	
+			<div class="formlabel"><label for="content_type_guid">{tr}Searches Limited to {$contentTypes[$smarty.request.content_type_guid]}s{/tr}</label></div>
 			<input type="hidden" name="content_type_guid" value="{$smarty.request.content_type_guid}" />
 		{else}
 			<div class="row">
 				{formlabel label="Content Types:" for="content_type_guid"}
 				{forminput}
-					{html_options options=$contentTypes name=content_type_guid id=content_type selected=$contentSelect size=5}
+					{html_options options=$contentTypes name=content_type_guid id=content_type selected=$contentSelect size=5 multiple=TRUE}
 					{formhelp note="Limit search by content type"}
 				{/forminput}
 			</div>
