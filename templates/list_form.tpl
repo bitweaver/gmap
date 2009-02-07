@@ -76,7 +76,7 @@
 			</div>
 
 			<div style="padding-top:4px">
-				<input type="button" value="Submit" onclick="javascript:BitMap.MapData[0].Map.RequestContent(document['list-query-form']);" />
+				<input name="search" type="button" value="Submit" onclick="javascript:BitMap.MapData[0].Map.RequestContent(document['list-query-form']);" />
 			</div>
 			{formhelp note="Searches are limited to the visible map area. Drag the map or zoom out to change the area to search."}
 		</div>
