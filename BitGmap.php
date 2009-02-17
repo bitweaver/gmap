@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.157 2008/12/09 02:55:23 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.158 2009/02/17 17:21:58 lsces Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -871,7 +871,7 @@ class BitGmap extends LibertyMime {
 					 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_tilelayers_keychain", $pParamHash['keychain_store'], array( "tilelayer_id" => $pParamHash['tilelayer_id'] ) );
 				 }
 			}else{
-				 $pParamHash['tilelayer_id'] = $this->mDb->GenID( 'gmaps_tilelayers_tilelayer_id_seq' );
+				 $pParamHash['tilelayer_id'] = $this->mDb->GenID( 'gmaps_tilelayer_id_seq' );
 				 $pParamHash['tilelayer_store']['tilelayer_id'] = $pParamHash['tilelayer_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_tilelayers", $pParamHash['tilelayer_store'] );				 
 
@@ -917,7 +917,7 @@ class BitGmap extends LibertyMime {
 			if ( !empty( $pParamHash['copyright_id'] ) ) {			
 				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_copyrights", $pParamHash['copyright_store'], array( "copyright_id" => $pParamHash['copyright_id'] ) );
 			}else{
-				 $pParamHash['copyright_id'] = $this->mDb->GenID( 'gmaps_copyrights_copyright_id_seq' );
+				 $pParamHash['copyright_id'] = $this->mDb->GenID( 'gmaps_copyright_id_seq' );
 				 $pParamHash['copyright_store']['copyright_id'] = $pParamHash['copyright_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_copyrights", $pParamHash['copyright_store'] );
 				 // if its a new copyright we also get a tilelayer_id for the keychain and automaticallly associate it with a tilelayer.
@@ -977,7 +977,7 @@ class BitGmap extends LibertyMime {
 			if ( !empty( $pParamHash['style_id'] ) ) {
 				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_marker_styles", $pParamHash['markerstyle_store'], array( "style_id" => $pParamHash['style_id'] ) );
 			}else{
-				 $pParamHash['style_id'] = $this->mDb->GenID( 'gmaps_marker_styles_style_id_seq' );
+				 $pParamHash['style_id'] = $this->mDb->GenID( 'gmaps_marker_style_id_seq' );
 				 $pParamHash['markerstyle_store']['style_id'] = $pParamHash['style_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_marker_styles", $pParamHash['markerstyle_store'] );
 			}
@@ -1119,7 +1119,7 @@ class BitGmap extends LibertyMime {
 			if ( !empty( $pParamHash['style_id'] ) ) {
 				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polyline_styles", $pParamHash['polylinestyle_store'], array( "style_id" => $pParamHash['style_id'] ) );
 			}else{
-				 $pParamHash['style_id'] = $this->mDb->GenID( 'gmaps_polyline_styles_style_id_seq' );
+				 $pParamHash['style_id'] = $this->mDb->GenID( 'gmaps_polyline_style_id_seq' );
 				 $pParamHash['polylinestyle_store']['style_id'] = $pParamHash['style_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polyline_styles", $pParamHash['polylinestyle_store'] );
 			}
@@ -1165,7 +1165,7 @@ class BitGmap extends LibertyMime {
 			if ( !empty( $pParamHash['style_id'] ) ) {
 				 $this->mDb->associateUpdate( BIT_DB_PREFIX."gmaps_polygon_styles", $pParamHash['polygonstyle_store'], array( "style_id" => $pParamHash['style_id'] ) );
 			}else{
-				 $pParamHash['style_id'] = $this->mDb->GenID( 'gmaps_polygon_styles_style_id_seq' );
+				 $pParamHash['style_id'] = $this->mDb->GenID( 'gmaps_polygon_style_id_seq' );
 				 $pParamHash['polygonstyle_store']['style_id'] = $pParamHash['style_id'];
 				 $this->mDb->associateInsert( BIT_DB_PREFIX."gmaps_polygon_styles", $pParamHash['polygonstyle_store'] );
 			}

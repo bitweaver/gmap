@@ -277,21 +277,21 @@ $gBitInstaller->registerSchemaIndexes( GMAP_PKG_NAME, $indices );
 
 // ### Sequences
 $sequences = array (
-	'gmaps_gmap_id_seq'                  => array( 'start' => 1 ),
-	'gmaps_icon_themes_seq'              => array( 'start' => 1 ),
-	'gmaps_maptypes_maptype_id_seq'      => array( 'start' => 1 ),
-	'gmaps_tilelayers_tilelayer_id_seq'  => array( 'start' => 1 ),
-	'gmaps_copyrights_copyright_id_seq'  => array( 'start' => 1 ),
-	'gmaps_markers_marker_id_seq'        => array( 'start' => 1 ),
-	'gmaps_icon_styles_icon_id_seq'      => array( 'start' => 1 ),
-	'gmaps_marker_styles_style_id_seq'   => array( 'start' => 1 ),
-	'gmaps_marker_sets_set_id_seq'       => array( 'start' => 1 ),
-	'gmaps_polylines_polyline_id_seq'    => array( 'start' => 1 ),
-	'gmaps_polyline_styles_style_id_seq' => array( 'start' => 1 ),
-	'gmaps_polyline_sets_set_id_seq'     => array( 'start' => 1 ),
-	'gmaps_polygons_polygon_id_seq'      => array( 'start' => 1 ),
-	'gmaps_polygon_styles_style_id_seq'  => array( 'start' => 1 ),
-	'gmaps_polygon_sets_set_id_seq'      => array( 'start' => 1 ),
+	'gmaps_gmap_id_seq'					=> array( 'start' => 1 ),
+	'gmaps_icon_themes_seq'				=> array( 'start' => 1 ),
+	'gmaps_maptypes_maptype_id_seq'		=> array( 'start' => 1 ),
+	'gmaps_tilelayer_id_seq'			=> array( 'start' => 1 ),
+	'gmaps_copyright_id_seq'			=> array( 'start' => 1 ),
+	'gmaps_markers_marker_id_seq'		=> array( 'start' => 1 ),
+	'gmaps_icon_styles_icon_id_seq'		=> array( 'start' => 1 ),
+	'gmaps_marker_style_id_seq'			=> array( 'start' => 1 ),
+	'gmaps_marker_sets_set_id_seq'		=> array( 'start' => 1 ),
+	'gmaps_polylines_polyline_id_seq'	=> array( 'start' => 1 ),
+	'gmaps_polyline_style_id_seq'		=> array( 'start' => 1 ),
+	'gmaps_polyline_sets_set_id_seq'	=> array( 'start' => 1 ),
+	'gmaps_polygons_polygon_id_seq'		=> array( 'start' => 1 ),
+	'gmaps_polygon_style_id_seq'		=> array( 'start' => 1 ),
+	'gmaps_polygon_sets_set_id_seq'		=> array( 'start' => 1 ),
 );
 $gBitInstaller->registerSchemaSequences( GMAP_PKG_NAME, $sequences );
 
