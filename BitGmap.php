@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.158 2009/02/17 17:21:58 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.159 2009/02/21 17:14:48 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -53,7 +53,7 @@ class BitGmap extends LibertyMime {
 	 * Load the data from the database
 	 * @param pParamHash be sure to pass by reference in case we need to make modifcations to the hash
 	**/
-	function load( $pFullLoad = TRUE ) {
+	function load( $pFull = TRUE ) {
 		if( !empty( $this->mGmapId ) || !empty( $this->mContentId ) ) {
 			$lookupColumn = !empty( $this->mGmapId )? 'gmap_id' : 'content_id';
 
@@ -87,7 +87,7 @@ class BitGmap extends LibertyMime {
 				$this->mInfo['data'] = str_replace("\n", "\\n", $this->mInfo['data']);
 				parent::load();
 
-				if( $pFullLoad ) {
+				if( $pFull ) {
 					$this->mMapTypes = $this->getMapTypes($lookupId);
 					$this->mTilelayers = $this->getTilelayers($lookupId);
 					$this->mCopyrights = $this->getCopyrights($lookupId);
