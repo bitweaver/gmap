@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.159 2009/02/21 17:14:48 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.160 2009/02/28 03:32:30 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -166,7 +166,7 @@ class BitGmap extends LibertyMime {
 
 
 	//get a maptype
-	function getMapType( &$pGmaptypeId ) {
+	function getMapType( $pGmaptypeId ) {
 		global $gBitSystem;
 		$ret = NULL;
 		if ( $pGmaptypeId && is_numeric( $pGmaptypeId )) {
@@ -190,7 +190,7 @@ class BitGmap extends LibertyMime {
 
 	// get all maptypes
 	// @pGmapId limit the list to those specifically mapped to a gmap_id
-	function getMapTypes( &$pGmapId = NULL ) {
+	function getMapTypes( $pGmapId = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
 		
@@ -241,7 +241,7 @@ class BitGmap extends LibertyMime {
 
 	// get all tilelayers
 	// @pGmapId limit the list to those specifically associated with maptypes associated with a given gmap_id
-	function getTilelayers( &$pGmapId = NULL ) {
+	function getTilelayers( $pGmapId = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
 
@@ -353,7 +353,7 @@ class BitGmap extends LibertyMime {
 
 	//* Gets data for a given marker style.
 	// @ todo this should probably take an array so that we can get data for a bunch of styles if we want
-	function getMarkerStyle( &$pStyleId ) {
+	function getMarkerStyle( $pStyleId ) {
 		global $gBitSystem;
 		if ( $pStyleId && is_numeric( $pStyleId )) {
 		
@@ -375,7 +375,7 @@ class BitGmap extends LibertyMime {
 
 
 	//get all marker styles for a given gmap_id
-	function getMarkerStyles( &$pGmapId = NULL ) {
+	function getMarkerStyles( $pGmapId = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
 		
@@ -429,7 +429,7 @@ class BitGmap extends LibertyMime {
 	
 	
 	//get all icon styles for a given gmap_id
-	function getIconStyles( &$pGmapId = NULL ) {
+	function getIconStyles( $pGmapId = NULL ) {
 		global $gBitSystem;
 		$ret = NULL;
 		
@@ -460,7 +460,7 @@ class BitGmap extends LibertyMime {
 
 
 		
-	function getPolylineStyle( &$pStyleId ) {
+	function getPolylineStyle( $pStyleId ) {
 		global $gBitSystem;
 		$ret = NULL;
 		if ( $pStyleId && is_numeric( $pStyleId )) {
@@ -538,7 +538,7 @@ class BitGmap extends LibertyMime {
 
 
 
-	function getPolygonStyle( &$pStyleId ) {
+	function getPolygonStyle( $pStyleId ) {
 		global $gBitSystem;
 		$ret = NULL;
 		if ( $pStyleId && is_numeric( $pStyleId )) {
@@ -1472,7 +1472,7 @@ class BitGmap extends LibertyMime {
 	 * @access public
 	 * @return array of icons
 	 */
-	function getIconList( &$pListHash = NULL ) {
+	function getIconList( &$pListHash ) {
 		$whereSql = "";
 		$bindVars = $ret = array();
 

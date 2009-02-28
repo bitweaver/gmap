@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.62 2008/12/08 21:41:02 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.63 2009/02/28 03:32:30 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -56,7 +56,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 
 
 	//returns array of marker data and associated style and icon style ids for given gmap_id and set_type
-	function load( &$pMixed=NULL ) {
+	function load() {
 		if( !empty( $this->mOverlayId ) || !empty( $this->mContentId ) ) {
 			$overlayKey = $this->mOverlayType.'_id';
 			$lookupColumn = !empty( $this->mOverlayId )? $overlayKey : 'content_id';
