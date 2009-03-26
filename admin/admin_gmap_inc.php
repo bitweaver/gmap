@@ -19,31 +19,6 @@ if( !empty( $_REQUEST['gmap_preferences'] )) {
 
 require_once( GMAP_PKG_PATH.'BitGmap.php' );
 
-/* not used
-$formGmapLists = array(
-	"gmap_list_title" => array(
-		'label' => 'Title',
-	),
-	"gmap_list_description" => array(
-		'label' => 'Description',
-	),
-	"gmap_list_data" => array(
-		'label' => 'Text',
-	),
-);
-$gBitSmarty->assign( 'formGmapLists',$formGmapLists );
-
-$processForm = set_tab();
-
-if( $processForm ) {
-	$gmapToggles = array_merge( $formGmapLists );
-	foreach( $gmapToggles as $item => $data ) {
-		simple_set_toggle( $item );
-	}
-}
- */
-
-
 // allow selection of what packages can have gmaps
 $exclude = array( 'bitgmap','bitgmapmarker','bitgmarkerset','bitgmappolyline','bitgpolylineset','bitgmappolygon','bitgpolygonset','tikisticky','pigeonholes' );
 foreach( $gLibertySystem->mContentTypes as $cType ) {
