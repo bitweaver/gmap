@@ -1,4 +1,19 @@
 <?php
+/**
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/view_polystyles_inc.php,v 1.5 2009/03/31 05:51:03 lsces Exp $
+ *
+ * Copyright (c) 2008 bitweaver.org
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
+ * @author Will <will@wjamesphoto.com>
+ * 
+ * @package gmap
+ * @subpackage functions
+ */
+
+/**
+ * required setup
+ */
 require_once( '../bit_setup_inc.php' );
 
 require_once( GMAP_PKG_PATH.'lookup_gmap_inc.php' );

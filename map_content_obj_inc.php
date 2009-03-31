@@ -1,4 +1,15 @@
 <?php
+/**
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/map_content_obj_inc.php,v 1.2 2009/03/31 05:51:03 lsces Exp $
+ *
+ * Copyright (c) 2008 bitweaver.org
+ * All Rights Reserved. See copyright.txt for details and a complete list of authors.
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
+ * @author Will <will@wjamesphoto.com>
+ * 
+ * @package gmap
+ * @subpackage functions
+ */
 
 if ( $gBitSystem->isPackageActive('geo') && 
 	 $gBitSystem->isPackageActive('gmap') &&
