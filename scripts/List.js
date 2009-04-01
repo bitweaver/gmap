@@ -77,7 +77,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 
 		//$('error').innerHTML = str;
 		var d = loadJSONDoc(str);
-		d.addCallback(bind(this.ReceiveContent, this), params)
+		d.addCallback(bind(this.ReceiveContent, this), params);
 		d.addErrback(bind(this.RequestFailure, this));
 	},
 
