@@ -17,36 +17,24 @@
 
 			<table class="data">
 				<tr>
-{*					{if $gBitSystem->isFeatureActive( 'gmap_list_gmap_id' ) eq 'y'}				*}
 						<th>{smartlink ititle="Gmap Id" isort=gmap_id offset=$control.offset iorder=desc idefault=1}</th>
-{*					{/if}											 																						*}
 
-{*					{if $gBitSystem->isFeatureActive( 'gmap_list_title' ) eq 'y'}					*}
 						<th>{smartlink ititle="Title" isort=title offset=$control.offset}</th>
-{*					{/if}											 																						*}
 
-{*					{if $gBitSystem->isFeatureActive( 'gmap_list_description' ) eq 'y'}		*}
 						<th>{smartlink ititle="Description" isort=description offset=$control.offset}</th>
-{*					{/if}											 																						*}
 
-{*					{if $gBitUser->hasPermission( 'p_gmap_remove' )}									*}
+					{if $gBitUser->hasPermission( 'p_gmap_remove' )}
 						<th>{tr}Actions{/tr}</th>
-{*					{/if}											 																						*}
+					{/if}
 				</tr>
 
 				{section name=changes loop=$list}
 					<tr class="{cycle values="odd,even"}">
-{*						{if $gmap_list_gmap_id eq 'y'}           *}
 							<td>{$list[changes].gmap_id|truncate:20:"...":true}</td>
-{*						{/if}
 
-{*						{if $gmap_list_title eq 'y'}						 *}
 							<td><a href="{$smarty.const.GMAP_PKG_URL}index.php?gmap_id={$list[changes].gmap_id|escape:"url"}" title="{$list[changes].gmap_id}">{$list[changes].title}</a></td>
-{*						{/if}													 					 *}
 
-{*						{if $gmap_list_description eq 'y'}			 *}
 							<td>{$list[changes].summary}</td>
-{*						{/if}																 		 *}
 
 							<td class="actionicon">
 						{if $gBitUser->hasPermission( 'p_gmap_remove' )}
