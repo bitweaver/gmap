@@ -36,12 +36,12 @@
 
 							<td>{$list[changes].summary}</td>
 
-							<td class="actionicon">
 						{if $gBitUser->hasPermission( 'p_gmap_remove' )}
+							<td class="actionicon">
 								{smartlink ititle="Edit" ifile="edit.php" ibiticon="icons/accessories-text-editor" gmap_id=$list[changes].gmap_id}
 								<input type="checkbox" name="checked[]" title="{$list[changes].title}" value="{$list[changes].gmap_id|escape}" />
-						{/if}
 							</td>
+						{/if}
 					</tr>
 				{sectionelse}
 					<tr class="norecords"><td colspan="16">
