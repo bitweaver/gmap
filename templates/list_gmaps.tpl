@@ -7,6 +7,8 @@
 	</div>
 
 	<div class="body">
+		{minifind sort_mode=$sort_mode}
+
 		{form id="checkform"}
 {strip}
 {* can't use strip for the entire page due to javascript later on *}
@@ -89,5 +91,4 @@
 	</div><!-- end .body -->
 
 	{pagination}
-	{minifind sort_mode=$sort_mode}
 </div><!-- end .admin -->
