@@ -17,7 +17,9 @@
 
 			<table class="data">
 				<tr>
+					{if $gBitUser->hasPermission( 'p_gmap_admin' )}
 						<th>{smartlink ititle="Gmap Id" isort=gmap_id offset=$control.offset iorder=desc idefault=1}</th>
+					{/if}
 
 						<th>{smartlink ititle="Title" isort=title offset=$control.offset}</th>
 
@@ -30,7 +32,9 @@
 
 				{section name=changes loop=$list}
 					<tr class="{cycle values="odd,even"}">
+						{if $gBitUser->hasPermission( 'p_gmap_admin' )}
 							<td>{$list[changes].gmap_id|truncate:20:"...":true}</td>
+						{/if}
 
 							<td><a href="{$smarty.const.GMAP_PKG_URL}index.php?gmap_id={$list[changes].gmap_id|escape:"url"}" title="{$list[changes].gmap_id}">{$list[changes].title}</a></td>
 
