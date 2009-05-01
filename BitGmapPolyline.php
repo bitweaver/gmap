@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.15 2008/12/09 02:55:23 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.16 2009/05/01 18:23:05 lsces Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -49,7 +49,7 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 		$this->mOverlayType = 'polyline';
 		$this->mOverlayTable = 'gmaps_polylines';
 		$this->mOverlayKeychainTable = 'gmaps_polyline_keychain';
-		$this->mOverlaySeq = 'gmaps_polylines_polyline_id_seq';
+		$this->mOverlaySeq = 'gmaps_polyline_polyline_id_seq';
 	}
 
 

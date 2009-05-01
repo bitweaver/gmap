@@ -286,7 +286,7 @@ $sequences = array (
 	'gmaps_icon_styles_icon_id_seq'		=> array( 'start' => 1 ),
 	'gmaps_marker_style_id_seq'			=> array( 'start' => 1 ),
 	'gmaps_marker_sets_set_id_seq'		=> array( 'start' => 1 ),
-	'gmaps_polylines_polyline_id_seq'	=> array( 'start' => 1 ),
+	'gmaps_polyline_polyline_id_seq'	=> array( 'start' => 1 ),
 	'gmaps_polyline_style_id_seq'		=> array( 'start' => 1 ),
 	'gmaps_polyline_sets_set_id_seq'	=> array( 'start' => 1 ),
 	'gmaps_polygons_polygon_id_seq'		=> array( 'start' => 1 ),
