@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.161 2009/05/15 19:42:19 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.162 2009/05/15 20:51:32 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -685,6 +685,7 @@ class BitGmap extends LibertyMime {
 			if( $this->getPreference('allow_comments', null, $res['content_id']) == 'y' ) {
 				$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
 			}
+			$res['display_url'] = $this->getDisplayUrl( NULL, $res );
 			$ret[] = $res;
 		}
 		$pParamHash["data"] = $ret;
@@ -1387,6 +1388,7 @@ class BitGmap extends LibertyMime {
 	* @return the link to display the gmap.
 	*/
 	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
+		global $gBitSystem;
 		$ret = NULL;
 		$id = NULL;
 		if( empty( $this->mGmapId ) && empty( $pMixed['gmap_id'] ) && !empty( $pContentId ) ) {
@@ -1405,8 +1407,16 @@ class BitGmap extends LibertyMime {
 		if( !empty( $this->mGmapId ) ) {
 			$id = $this->mGmapId;
 		}
-		
-		if ($id != NULL){
+
+		if( !empty( $pMixed['title'] ) || !empty( $this->mInfo['title'] ) ){
+			$mapName = !empty( $pMixed['title'] )?$pMixed['title']:$this->mInfo['title'];
+		}
+
+		if( !empty( $mapName ) && $gBitSystem->isFeatureActive( 'pretty_urls' ) || $gBitSystem->isFeatureActive( 'pretty_urls_extended' ) ) {
+			// let people add any old fucking char they want - not sure what kind of disaster this might be but we'll find out 
+			$prettyMapName = preg_replace( '/ /', '+', $mapName );
+			$ret = GMAP_PKG_URL.$prettyMapName;
+		}elseif ($id != NULL){
 			$ret = GMAP_PKG_URL."index.php?gmap_id=".$id;
 		} elseif( @BitBase::verifyId( $pMixed['content_id'] ) ) {
 			$ret = BIT_ROOT_URL.'index.php?content_id='.$pMixed['content_id'];
