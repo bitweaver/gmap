@@ -23,7 +23,7 @@
 
 						<th>{smartlink ititle="Title" isort=title offset=$control.offset}</th>
 
-						<th>{smartlink ititle="Description" isort=description offset=$control.offset}</th>
+						<th>{smartlink ititle="Description" isort=summary offset=$control.offset}</th>
 
 					{if $gBitUser->hasPermission( 'p_gmap_remove' )}
 						<th>{tr}Actions{/tr}</th>
