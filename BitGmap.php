@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.160 2009/02/28 03:32:30 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.161 2009/05/15 19:42:19 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -641,34 +641,46 @@ class BitGmap extends LibertyMime {
 		$max_records = $pParamHash['max_records'];
 		$offset = $pParamHash['offset'];
 
+		$selectSql = ''; $joinSql = ''; $whereSql = '';
+		$bindVars = array();
+		array_push( $bindVars, $this->mContentTypeGuid );
+
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pListHash );
+
+		// quick search support from find field
 		if( is_array( $find ) ) {
 			// you can use an array of pages
-			$mid = " WHERE tc.`title` IN( ".implode( ',',array_fill( 0,count( $find ),'?' ) )." )";
-			$bindvars = $find;
-		} else if( is_string( $find ) ) {
+			$whereSql .= " AND lc.`title` IN( ".implode( ',',array_fill( 0,count( $find ),'?' ) )." )";
+			$bindVars = array_merge ( $bindVars, $find );
+		} elseif( is_string( $find ) ) {
 			// or a string
-			$mid = " WHERE UPPER( tc.`title` )like ? ";
-			$bindvars = array( '%' . strtoupper( $find ). '%' );
-		} else if( !empty( $pUserId ) ) {
-			// or a string
-			$mid = " WHERE tc.`creator_user_id` = ? ";
-			$bindvars = array( $pUserId );
-		} else {
-			$mid = "";
-			$bindvars = array();
+			$whereSql .= " AND UPPER( lc.`title` )like ? ";
+			$bindVars[] = '%' . strtoupper( $find ). '%';
 		}
 
-		$query = "SELECT bm.*, lc.`content_id`, lc.`title`, lc.`data`, lcds.`data` AS `summary`
-			FROM `".BIT_DB_PREFIX."gmaps` bm 
-			INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = bm.`content_id` )
-			LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')
-			".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." lc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'
-			ORDER BY ".$this->mDb->convertSortmode( $sort_mode );
-		$query_cant = "select count( * )from `".BIT_DB_PREFIX."liberty_content` lc ".( !empty( $mid )? $mid.' AND ' : ' WHERE ' )." lc.`content_type_guid` = '".BITGMAP_CONTENT_TYPE_GUID."'";
-		$result = $this->mDb->query( $query,$bindvars,$max_records,$offset );
+		$sortModePrefix = 'lc.';
+		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pParamHash['sort_mode'] );
+
+		$query = "SELECT bm.*, lc.`content_id`, lc.`title`, lc.`data`, lcds.`data` AS `summary`,
+						lc.`format_guid`, lc.`last_modified`, lc.`created`, lc.`version` 
+						$selectSql
+				  FROM `".BIT_DB_PREFIX."gmaps` bm 
+						INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = bm.`content_id` )
+						LEFT OUTER JOIN `".BIT_DB_PREFIX."liberty_content_data` lcds ON (lc.`content_id` = lcds.`content_id` AND lcds.`data_type`='summary')
+						$joinSql
+				  WHERE lc.`content_type_guid` = ? $whereSql
+				  ORDER BY $sort_mode";
+
+		$query_cant = "SELECT COUNT( * )
+						FROM	`".BIT_DB_PREFIX."gmaps` bm 
+							INNER JOIN `".BIT_DB_PREFIX."liberty_content` lc ON( lc.`content_id` = bm.`content_id` ) $joinSql
+						WHERE lc.`content_type_guid` = ? $whereSql";
+
+		$result = $this->mDb->query( $query,$bindVars,$max_records,$offset );
 		$ret = array();
 		
 		$comment = &new LibertyComment();
+
 		while( $res = $result->fetchRow() ) {
 			if( $this->getPreference('allow_comments', null, $res['content_id']) == 'y' ) {
 				$res['num_comments'] = $comment->getNumComments( $res['content_id'] );
@@ -677,7 +689,7 @@ class BitGmap extends LibertyMime {
 		}
 		$pParamHash["data"] = $ret;
 
-		$pParamHash["cant"] = $this->mDb->getOne( $query_cant,$bindvars );
+		$pParamHash["cant"] = $this->mDb->getOne( $query_cant,$bindVars );
 
 		LibertyContent::postGetList( $pParamHash );
 		return $pParamHash;
