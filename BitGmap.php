@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.163 2009/05/21 16:18:18 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.164 2009/05/21 16:19:23 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -635,13 +635,6 @@ class BitGmap extends LibertyMime {
 	function getList( &$pParamHash ) {
 		global $commentsLib;
 		LibertyContent::prepGetList( $pParamHash );
-
-		/*
-		$find = $pParamHash['find'];
-		$sort_mode = $pParamHash['sort_mode'];
-		$max_records = $pParamHash['max_records'];
-		$offset = $pParamHash['offset'];
-		*/
 
 		$selectSql = ''; $joinSql = ''; $whereSql = '';
 		$bindVars = array();
