@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.162 2009/05/15 20:51:32 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.163 2009/05/21 16:18:18 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -636,16 +636,21 @@ class BitGmap extends LibertyMime {
 		global $commentsLib;
 		LibertyContent::prepGetList( $pParamHash );
 
+		/*
 		$find = $pParamHash['find'];
 		$sort_mode = $pParamHash['sort_mode'];
 		$max_records = $pParamHash['max_records'];
 		$offset = $pParamHash['offset'];
+		*/
 
 		$selectSql = ''; $joinSql = ''; $whereSql = '';
 		$bindVars = array();
 		array_push( $bindVars, $this->mContentTypeGuid );
 
-		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pListHash );
+		$this->getServicesSql( 'content_list_sql_function', $selectSql, $joinSql, $whereSql, $bindVars, NULL, $pParamHash );
+
+		// this will set $find, $sort_mode, $max_records and $offset
+		extract( $pParamHash );
 
 		// quick search support from find field
 		if( is_array( $find ) ) {
@@ -770,6 +775,7 @@ class BitGmap extends LibertyMime {
 	
 	
 	function verifyMapType( &$pParamHash ) {
+		global $gBitUser;
 		
 		$pParamHash['maptype_store'] = array();
 
@@ -797,7 +803,6 @@ class BitGmap extends LibertyMime {
 			$pParamHash['maptype_store']['errormsg'] = $pParamHash['errormsg'];
 		}
 
-		global $gBitUser;
 		$pParamHash['maptype_store']['user_id'] = $gBitUser->mUserId;
 
 		// set values for updating the marker keychain
