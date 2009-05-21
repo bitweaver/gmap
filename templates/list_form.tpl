@@ -70,7 +70,12 @@
 		<div class="row submit">
 			<div id="gmap-block-viewaslist" style="float:right; margin-right:10px; {if !$listInfo}display:none;{/if}">
 				{if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
-					{assign var=listUrl value="`$smarty.const.LIBERTY_PKG_URL`list_content.php"}
+					{if $smarty.request.content_type_guid[0] != 'bitgmap'}
+						{* if we could know a list url based on content_type_guid then this could be improved to redirect to specific pkgs *} 
+						{assign var=listUrl value="`$smarty.const.LIBERTY_PKG_URL`list_content.php"}
+					{else}
+						{assign var=listUrl value="`$smarty.const.GMAP_PKG_URL`index.php"}
+					{/if}
 				{/if}
 				<a href="{pageurl listInfo=$listInfo pgnUrl=$listUrl}" id="gmap-link-viewaslist">{tr}View Results as a List{/tr}</a>
 			</div>
