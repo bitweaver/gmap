@@ -12,9 +12,9 @@
 			<input type="hidden" name="content_type_guid" value="{$smarty.request.content_type_guid}" />
 		{else}
 			<div class="row">
-				{formlabel label="Content Types:" for="content_type_guid"}
+				{formlabel label="Content Types:" for="content_type_guid[]"}
 				{forminput}
-					{html_options options=$contentTypes name=content_type_guid id=content_type selected=$contentSelect size=5 multiple=TRUE}
+					{html_options options=$contentTypes name="content_type_guid[]" id=content_type selected=$contentSelect size=5 multiple=TRUE}
 					{formhelp note="Limit search by content type"}
 				{/forminput}
 			</div>
