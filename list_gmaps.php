@@ -71,6 +71,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 	$gBitSmarty->assign_by_ref('control', $_REQUEST["control"]);
 	$gBitSmarty->assign_by_ref('list', $listgmaps["data"]);
 
+	// add pagination info
 	$_REQUEST['listInfo']['ihash']['content_type_guid'] = BITGMAP_CONTENT_TYPE_GUID;
 
 	// getList() has now placed all the pagination information in $_REQUEST['listInfo']
