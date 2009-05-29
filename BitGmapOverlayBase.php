@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.31 2008/12/09 02:55:23 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.32 2009/05/29 18:30:18 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -119,7 +119,8 @@ class BitGmapOverlayBase extends LibertyMime {
 				if( $this->mOverlayId ) {
 					if ( !empty($pParamHash['overlay_store']) ){
 						// store the posted changes
-						$this->mDb->associateUpdate( BIT_DB_PREFIX.$this->mOverlayTable, $pParamHash['overlay_store'], array( $overlayKey => $pParamHash[$overlayKey] ) );
+						$locId = array( "content_id" => $this->mContentId );
+						$this->mDb->associateUpdate( BIT_DB_PREFIX.$this->mOverlayTable, $pParamHash['overlay_store'], $locId );
 					}
 					// if we have a set id we assume the mapping to the overlay set needs updating too
 					if( !empty( $pParamHash['keychain_store']['set_id'] ) ){
