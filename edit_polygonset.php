@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygonset.php,v 1.24 2008/12/09 02:55:23 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygonset.php,v 1.25 2009/05/29 17:30:56 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -56,6 +56,10 @@ $XMLContent = "";
 $statusCode = 401;
 if (!empty($_REQUEST["save_polygonset"])) {
 	$gBitUser->verifyTicket();
+	// the user might be submitting encoded html chars by ajax - decode them before storing
+	if( !empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' ){
+		@BitGmap::decodeAjaxRequest( $_REQUEST );
+	}
     if( $gContent->store( $_REQUEST ) ) {
 		$statusCode = 200;
 		if ( $gContent->hasAdminPermission() ){

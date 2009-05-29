@@ -4,7 +4,7 @@
 {if $polylineInfo}
 	<polyline>
 		<polyline_id>{$polylineInfo.polyline_id}</polyline_id>
-		<title>{$polylineInfo.title}</title>
+		<title><![CDATA[{$polylineInfo.title}]]></title>
 		<type>{$polylineInfo.type}</type>
 		<points_data>{$polylineInfo.poly_data}</points_data>
 		<levels_data>{$polylineInfo.levels_data}</levels_data>

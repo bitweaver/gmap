@@ -4,8 +4,8 @@
 {if $polygonsetInfo}
 	<polygonset>
 		<set_id>{$polygonsetInfo.set_id}</set_id>
-		<title>{$polygonsetInfo.title}</title>
-		<description>{$polygonsetInfo.data}</description>
+		<title><![CDATA[{$polygonsetInfo.title}]]></title>
+		<description><![CDATA[{$polygonsetInfo.data}]]></description>
 		<style_id>{$polygonsetInfo.style_id}</style_id>
 		<polylinestyle_id>{$polygonsetInfo.polylinestyle_id}</polylinestyle_id>
 	</polygonset>

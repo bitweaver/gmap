@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.164 2009/05/21 16:19:23 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.165 2009/05/29 17:30:56 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -1758,6 +1758,17 @@ class BitGmap extends LibertyMime {
 			$ret = $this->mDb->getOne( "SELECT `theme_id` FROM `".BIT_DB_PREFIX."gmaps_icon_themes` WHERE `theme_title` = ?", array( $pTheme ));
 		}
 		return $ret;
+	}
+
+	/**
+	 * convenience function to process a $_REQUEST array
+	 **/
+	function decodeAjaxRequest( &$pParamHash ){
+		foreach( $pParamHash as $key => $value ){
+			if( is_string($value) ){
+				$pParamHash[$key] = htmlspecialchars_decode( $value );
+			}
+		}
 	}
 }
 

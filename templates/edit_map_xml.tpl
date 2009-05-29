@@ -4,9 +4,9 @@
 {if $mapInfo}
 <map>
 	<gmap_id>{$mapInfo.gmap_id}</gmap_id>
-	<title>{$gContent->getTitle()}</title>
-	<description>{$mapInfo.summary}</description>
-	<data>{$mapInfo.xml_data}</data>
+	<title><![CDATA[{$gContent->getTitle()}]]></title>
+	<description><![CDATA[{$mapInfo.summary}]]></description>
+	<data><![CDATA[{$mapInfo.xml_data}]]></data>
 	<parsed_data><![CDATA[{$mapInfo.xml_parsed_data}]]></parsed_data>	
 	<width>{$mapInfo.width}</width>
 	<height>{$mapInfo.height}</height>

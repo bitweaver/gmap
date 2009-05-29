@@ -4,7 +4,7 @@
 {if $polygonInfo}
 	<polygon>
 		<polygon_id>{$polygonInfo.polygon_id}</polygon_id>
-		<title>{$polygonInfo.title}</title>
+		<title><![CDATA[{$polygonInfo.title}]]></title>
 		<type>{$polygonInfo.type}</type>
 		<points_data>{$polygonInfo.poly_data}</points_data>
 		<circle_center>{$polygonInfo.circle_center}</circle_center>

@@ -4,8 +4,8 @@
 {if $markersetInfo}
 <markerset>
 	<set_id>{$markersetInfo.set_id}</set_id>
-	<title>{$markersetInfo.title}</title>
-	<description>{$markersetInfo.data}</description>
+	<title><![CDATA[{$markersetInfo.title}]]></title>
+	<description><![CDATA[{$markersetInfo.data}]]></description>
 	<style_id>{$markersetInfo.style_id}</style_id>
 	<icon_id>{$markersetInfo.icon_id}</icon_id>
 	<plot_on_load>{$markersetInfo.plot_on_load}</plot_on_load>

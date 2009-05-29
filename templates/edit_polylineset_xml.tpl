@@ -4,8 +4,8 @@
 {if $polylinesetInfo}
 	<polylineset>
 		<set_id>{$polylinesetInfo.set_id}</set_id>
-		<title>{$polylinesetInfo.title}</title>
-		<description>{$polylinesetInfo.data}</description>
+		<title><![CDATA[{$polylinesetInfo.title}]]></title>
+		<description><![CDATA[{$polylinesetInfo.data}]]></description>
 		<style_id>{$polylinesetInfo.style_id}</style_id>
 	</polylineset>
 {/if}
