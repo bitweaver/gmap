@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.24 2008/12/09 02:55:23 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.25 2009/06/10 17:12:17 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -217,8 +217,20 @@ class BitGmapOverlaySetBase extends LibertyContent {
 			array_push( $bindVars, (int)$pListHash['gmap_id'] );
 		}
 
-		$sortModePrefix = 'lc.';
-		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] );
+		$secondarySort = '';
+
+		switch( $pListHash['sort_mode'] ){
+			case 'pos_asc':
+			case 'pos_desc':
+				$sortModePrefix = 'gsk.';
+				$secondarySort = ', lc.created ASC';
+				break;
+			default: 
+				$sortModePrefix = 'lc.';
+				break;
+		}
+
+		$sort_mode = $sortModePrefix . $this->mDb->convertSortmode( $pListHash['sort_mode'] ).$secondarySort;
   		
       	$query = "SELECT DISTINCT gos.*, lc.*,
 					uue.`login` AS modifier_user, uue.`real_name` AS modifier_real_name,
@@ -228,7 +240,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uue ON (uue.`user_id` = lc.`modifier_user_id`)
 				LEFT JOIN `".BIT_DB_PREFIX."users_users` uuc ON (uuc.`user_id` = lc.`user_id`)
 				WHERE lc.`content_type_guid` = ? $whereSql
-                ORDER BY gos.`set_id` ASC";
+                ORDER BY $sort_mode";
 
 		$query_cant = "
 			SELECT COUNT( * )
@@ -372,5 +384,73 @@ class BitGmapOverlaySetBase extends LibertyContent {
 		// we're checking registered users perms
 		return $this->isPermissionShared( 'p_gmap_attach_children', 3 );
 	}	
+
+	/**
+	 * changeSetPos 
+	 * 
+	 * @access private
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 *
+	 * Don't call this function directly. Use moveSetUp or moveSetDown for code legibility and simplicity
+	 */
+	function changeSetPos( $pDirection ) {
+		if( $this->isValid() && !empty( $pDirection ) && !empty( $this->mInfo['gmap_id'] ) ) {
+			//legibility
+			$gmap_id = (int)$this->getField( 'gmap_id' );
+			$set_type = $this->mOverlaySetType;
+			$set_id = (int)$this->mOverlaySetId;
+
+			$this->mDb->StartTrans();
+			// get pos of set we want to move down
+			$query1 = "SELECT `pos` FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` WHERE `gmap_id`=? AND `set_type`=? AND `set_id`=?"; 
+			$result1 = $this->mDb->query( $query1, array($gmap_id, $set_type, $set_id) );
+			$res1 = $result1->fetchRow();
+			if( $res1 ){
+				// Move Up
+				if( $pDirection == 'up' ){
+					// get sets above
+					$query2 = "SELECT `gmap_id`, `set_id`, `pos` FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` WHERE `pos`<? and `gmap_id`=? AND `set_type`=? ORDER BY `pos` DESC";
+				// Move Down 
+				}else{
+					// get sets below
+					$query2 = "SELECT `gmap_id`, `set_id`, `pos` FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` WHERE `pos`>? and `gmap_id`=? AND `set_type`=? ORDER BY `pos` ASC";
+				}
+				$result2 = $this->mDb->query( $query2, array((int)$res1["pos"], $gmap_id, $set_type) );
+				$res2 = $result2->fetchRow();
+				if ($res2) {
+					//Swap position values
+					$query3 = "UPDATE `".BIT_DB_PREFIX."gmaps_sets_keychain` SET `pos`=? WHERE `set_id` = ? AND `gmap_id`=? AND `set_type`=?";
+					$this->mDb->query( $query3, array((int)$res2["pos"], $set_id, $gmap_id, $set_type) );
+					$this->mDb->query( $query3, array((int)$res1["pos"], $res2['set_id'], $gmap_id, $set_type) );
+				}elseif( $pDirection == 'up' ){
+					$this->mErrors['change_set_pos'] = tra("The object is already at the top of the list" );
+				}else{
+					$this->mErrors['change_set_pos'] = tra("The object is already at the bottom of the list" );
+				}
+			}
+			$this->mDb->CompleteTrans();
+		}
+		return( count( $this->mErrors ) == 0 );
+	}
+
+	/**
+	 * moveSetUp
+	 *
+	 * @access public
+	 * convenience function, see changeSetPos
+	 **/
+	function moveSetUp(){
+		return $this->changeSetPos( 'up' );
+	}
+
+	/**
+	 * moveSetDown
+	 *
+	 * @access public
+	 * convenience function, see changeSetPos
+	 **/
+	function moveSetDown(){
+		return $this->changeSetPos( 'down' );
+	}
+
 }
-?>

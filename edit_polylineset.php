@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polylineset.php,v 1.29 2009/05/29 17:30:56 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polylineset.php,v 1.30 2009/06/10 17:12:17 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -67,6 +67,15 @@ if (!empty($_REQUEST["save_polylineset"])) {
 			$gContent->setAllowChildren( $_REQUEST );
 		}    
 		$gBitSmarty->assign_by_ref('polylinesetInfo', $gContent->mInfo);
+	}
+}elseif (!empty($_REQUEST['move_pos']) && !empty( $_REQUEST['gmap_id'] ) ){
+	$gBitUser->verifyTicket();
+
+	if( ($_REQUEST['move_pos'] == 'up'?$gContent->moveSetUp():$gContent->moveSetDown()) ){
+		$statusCode = 200;
+		$XMLContent = tra( "Success" );
+	}else{
+		$XMLContent = tra( "Sorry, there was an unknown error: ".$gContent->mErrors['change_set_pos'] );
 	}
 //Check if this to remove from a map, or to delete completely
 }elseif (!empty($_REQUEST["remove_polylineset"])) {

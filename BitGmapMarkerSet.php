@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarkerSet.php,v 1.9 2008/11/30 19:05:12 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarkerSet.php,v 1.10 2009/06/10 17:12:16 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -79,10 +79,32 @@ class BitGmapMarkerSet extends BitGmapOverlaySetBase{
 			$pParamHash['set_store']['icon_id'] = 0;
 		}
 
-		// set values for updating the map set keychain	if its a new set
+		// if we have a gmap_id then we're are going to associate the set with that map
 		if( !empty( $pParamHash['gmap_id'] ) && is_numeric( $pParamHash['gmap_id'] ) ) {
+			// set values for setting the map set keychain if its a new set
 			$pParamHash['keychain_store']['gmap_id'] = $pParamHash['gmap_id'];
 			$pParamHash['keychain_ids']['gmap_id'] = $pParamHash['gmap_id'];
+
+			// set the position value if its going to be mapped to a map
+			$pos = NULL;
+			if( $this->isValid() ){
+				if( !empty( $pParamHash['pos'] ) ){
+					// if pos is passed in we assume it is on purpose 
+					// dont do this casually, this could screw up auto sorting
+					$pos = $pParamHash['pos'];
+				}else{
+					// if pos is not set in the hash then get it from info
+					$pos = $this->getField( 'pos' );
+				}
+				$pParmaHash['keychain_update']['pos'] = $pos; 
+			}else{
+				// new set get the highest pos used in map chain and increment
+				$query = "SELECT MAX( `pos` ) FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` WHERE `gmap_id` = ?";
+				$result = $this->mDb->getOne($query,array( $pParamHash['gmap_id'] ));
+				// increment or if null start at 0
+				$pos = $result?$result+1:0;
+				$pParmaHash['keychain_store']['pos'] = $pos; 
+			}
 		}
 
 		if( !empty( $pParamHash['plot_on_load'] ) ) {
@@ -111,7 +133,7 @@ class BitGmapMarkerSet extends BitGmapOverlaySetBase{
 
 		$pParamHash['keychain_store']['set_type'] = 'markers';
 		$pParamHash['keychain_ids']['set_type'] = 'markers';
-				
+
 		return( count( $this->mErrors ) == 0 );
 	}
 
@@ -123,5 +145,5 @@ class BitGmapMarkerSet extends BitGmapOverlaySetBase{
 		}
 		return $ret;
 	}	
+
 }
-?>
