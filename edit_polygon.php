@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.21 2009/05/29 17:30:56 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/edit_polygon.php,v 1.22 2009/06/10 19:44:16 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -69,6 +69,18 @@ if (!empty($_REQUEST["save_polygon"])) {
     		$gContent->setUpdateSharing( $_REQUEST );
 		}    
 		$gBitSmarty->assign_by_ref('polygonInfo', $gContent->mInfo);
+	}
+}elseif (!empty($_REQUEST['move_pos']) && !empty( $_REQUEST['set_id'] ) ){
+	$gBitUser->verifyTicket();
+
+	// this is a little ugly
+	$gContent->mInfo['set_id'] = $_REQUEST['set_id'];
+
+	if( ($_REQUEST['move_pos'] == 'up'?$gContent->moveUp():$gContent->moveDown()) ){
+		$statusCode = 200;
+		$XMLContent = tra( "Success" );
+	}else{
+		$XMLContent = tra( "Sorry, there was an unknown error: ".$gContent->mErrors['change_pos'] );
 	}
 //Check if this to remove from a set, or to delete completely
 }elseif (!empty($_REQUEST["remove_polygon"])) {

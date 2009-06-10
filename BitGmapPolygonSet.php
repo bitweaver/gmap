@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygonSet.php,v 1.7 2009/06/10 17:12:17 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygonSet.php,v 1.8 2009/06/10 19:44:16 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -91,14 +91,14 @@ define( 'BITGMAPPOLYGONSET_CONTENT_TYPE_GUID', 'bitgpolygonset' );
 					// if pos is not set in the hash then get it from info
 					$pos = $this->getField( 'pos' );
 				}
-				$pParmaHash['keychain_update']['pos'] = $pos; 
+				$pParamHash['keychain_update']['pos'] = $pos; 
 			}else{
 				// new set get the highest pos used in map chain and increment
 				$query = "SELECT MAX( `pos` ) FROM `".BIT_DB_PREFIX."gmaps_sets_keychain` WHERE `gmap_id` = ?";
 				$result = $this->mDb->getOne($query,array( $pParamHash['gmap_id'] ));
 				// increment or if null start at 0
 				$pos = $result?$result+1:0;
-				$pParmaHash['keychain_store']['pos'] = $pos; 
+				$pParamHash['keychain_store']['pos'] = $pos; 
 			}
 		}
 

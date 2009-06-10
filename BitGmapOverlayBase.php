@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.32 2009/05/29 18:30:18 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlayBase.php,v 1.33 2009/06/10 19:44:16 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -338,6 +338,75 @@ class BitGmapOverlayBase extends LibertyMime {
 
 	function isViewPrivate(){
 		return !$this->isPermissionShared( 'p_gmap_overlay_view', -1 );
+	}
+
+	/**
+	 * changePos 
+	 * 
+	 * @access private
+	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
+	 *
+	 * Don't call this function directly. Use moveUp or moveDown for code legibility and simplicity
+	 */
+	function changePos( $pDirection ) {
+		if( $this->isValid() && !empty( $pDirection ) && !empty( $this->mInfo['set_id'] ) ) {
+			//legibility
+			$overlay_type = $this->mOverlayType;
+			$overlay_id = (int)$this->mOverlayId;
+			$keychain_table = $this->mOverlayKeychainTable;
+			$set_id = (int)$this->getField('set_id');
+
+			$this->mDb->StartTrans();
+			// get pos of overlay we want to move down
+			$query1 = "SELECT `pos` FROM `".BIT_DB_PREFIX.$keychain_table."` WHERE `".$overlay_type."_id`=? AND `set_id`=?"; 
+			$result1 = $this->mDb->query( $query1, array($overlay_id, $set_id) );
+			$res1 = $result1->fetchRow();
+			if( $res1 ){
+				// Move Up
+				if( $pDirection == 'up' ){
+					// get sets above
+					$query2 = "SELECT `".$overlay_type."_id`, `set_id`, `pos` FROM `".BIT_DB_PREFIX.$keychain_table."` WHERE `pos`<? and `set_id`=? ORDER BY `pos` DESC";
+				// Move Down 
+				}else{
+					// get sets below
+					$query2 = "SELECT `".$overlay_type."_id`, `set_id`, `pos` FROM `".BIT_DB_PREFIX.$keychain_table."` WHERE `pos`>? and `set_id`=? ORDER BY `pos` ASC";
+				}
+				$result2 = $this->mDb->query( $query2, array((int)$res1["pos"], $set_id) );
+				$res2 = $result2->fetchRow();
+				if ($res2) {
+					//Swap position values
+					$query3 = "UPDATE `".BIT_DB_PREFIX.$keychain_table."` SET `pos`=? WHERE `set_id` = ? AND `".$overlay_type."_id`=?";
+					$this->mDb->query( $query3, array((int)$res2["pos"], $set_id, $overlay_id) );
+					$this->mDb->query( $query3, array((int)$res1["pos"], $set_id, $res2[$overlay_type.'_id']) );
+				}elseif( $pDirection == 'up' ){
+					$this->mErrors['change_pos'] = tra("The object is already at the top of the list" );
+				}else{
+					$this->mErrors['change_pos'] = tra("The object is already at the bottom of the list" );
+				}
+			}
+			$this->mDb->CompleteTrans();
+		}
+		return( count( $this->mErrors ) == 0 );
+	}
+
+	/**
+	 * moveUp
+	 *
+	 * @access public
+	 * convenience function, see changeSetPos
+	 **/
+	function moveUp(){
+		return $this->changePos( 'up' );
+	}
+
+	/**
+	 * moveDown
+	 *
+	 * @access public
+	 * convenience function, see changeSetPos
+	 **/
+	function moveDown(){
+		return $this->changePos( 'down' );
 	}
 }
 ?>

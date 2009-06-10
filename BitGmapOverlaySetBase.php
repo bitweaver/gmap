@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.25 2009/06/10 17:12:17 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapOverlaySetBase.php,v 1.26 2009/06/10 19:44:16 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -386,14 +386,14 @@ class BitGmapOverlaySetBase extends LibertyContent {
 	}	
 
 	/**
-	 * changeSetPos 
+	 * changePos 
 	 * 
 	 * @access private
 	 * @return TRUE on success, FALSE on failure - mErrors will contain reason for failure
 	 *
-	 * Don't call this function directly. Use moveSetUp or moveSetDown for code legibility and simplicity
+	 * Don't call this function directly. Use moveUp or moveDown for code legibility and simplicity
 	 */
-	function changeSetPos( $pDirection ) {
+	function changePos( $pDirection ) {
 		if( $this->isValid() && !empty( $pDirection ) && !empty( $this->mInfo['gmap_id'] ) ) {
 			//legibility
 			$gmap_id = (int)$this->getField( 'gmap_id' );
@@ -423,9 +423,9 @@ class BitGmapOverlaySetBase extends LibertyContent {
 					$this->mDb->query( $query3, array((int)$res2["pos"], $set_id, $gmap_id, $set_type) );
 					$this->mDb->query( $query3, array((int)$res1["pos"], $res2['set_id'], $gmap_id, $set_type) );
 				}elseif( $pDirection == 'up' ){
-					$this->mErrors['change_set_pos'] = tra("The object is already at the top of the list" );
+					$this->mErrors['change_pos'] = tra("The object is already at the top of the list" );
 				}else{
-					$this->mErrors['change_set_pos'] = tra("The object is already at the bottom of the list" );
+					$this->mErrors['change_pos'] = tra("The object is already at the bottom of the list" );
 				}
 			}
 			$this->mDb->CompleteTrans();
@@ -434,23 +434,23 @@ class BitGmapOverlaySetBase extends LibertyContent {
 	}
 
 	/**
-	 * moveSetUp
+	 * moveUp
 	 *
 	 * @access public
-	 * convenience function, see changeSetPos
+	 * convenience function, see changePos
 	 **/
-	function moveSetUp(){
-		return $this->changeSetPos( 'up' );
+	function moveUp(){
+		return $this->changePos( 'up' );
 	}
 
 	/**
-	 * moveSetDown
+	 * moveDown
 	 *
 	 * @access public
-	 * convenience function, see changeSetPos
+	 * convenience function, see changePos
 	 **/
-	function moveSetDown(){
-		return $this->changeSetPos( 'down' );
+	function moveDown(){
+		return $this->changePos( 'down' );
 	}
 
 }
