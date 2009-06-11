@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/admin/upgrades/1.1.2.php,v 1.1 2009/06/10 17:12:17 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/admin/upgrades/1.1.2.php,v 1.2 2009/06/11 15:11:47 tekimaki_admin Exp $
  */
 global $gBitInstaller;
 
@@ -13,7 +13,6 @@ $gBitInstaller->registerPackageUpgrade( $infoHash, array(
 
 array( 'PHP' => '
 // Is package installed and enabled
-require_once( "../../bit_setup_inc.php" );
 global $gBitSystem;
 
 $gBitSystem->verifyPackage( "gmap" );
