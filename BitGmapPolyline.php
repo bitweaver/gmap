@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.16 2009/05/01 18:23:05 lsces Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.17 2009/06/15 14:23:30 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -96,11 +96,27 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 		// set values for updating the polyline keychain
 		if( !empty( $pParamHash['set_id'] ) && is_numeric( $pParamHash['set_id'] ) ) {
 			$pParamHash['keychain_store']['set_id'] = $pParamHash['set_id'];
-		}
 
-		// position values for updating the polyline keychain		
-		if( !empty( $pParamHash['pos'] ) && is_numeric( $pParamHash['pos'] ) ) {
-			$pParamHash['keychain_store']['pos'] = $pParamHash['pos'];
+			// set the position value if its going to be mapped to a map
+			$pos = NULL;
+			if( $this->isValid() ){
+				if( !empty( $pParamHash['pos'] ) ){
+					// if pos is passed in we assume it is on purpose 
+					// dont do this casually, this could screw up auto sorting
+					$pos = $pParamHash['pos'];
+				}else{
+					// if pos is not set in the hash then get it from info
+					$pos = $this->getField( 'pos' );
+				}
+				$pParamHash['keychain_store']['pos'] = $pos; 
+			}else{
+				// new set get the highest pos used in map chain and increment
+				$query = "SELECT `pos` FROM `".BIT_DB_PREFIX."gmaps_polyline_keychain` WHERE `set_id` = ? ORDER BY `pos` DESC";
+				$result = $this->mDb->getOne($query,array( $pParamHash['set_id'] ));
+				// increment or if null start at 0
+				$pos = ( $result != NULL )?(int)$result+1:0;
+				$pParamHash['keychain_store']['pos'] = $pos; 
+			}
 		}
 		
 		return( count( $this->mErrors ) == 0 );

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.64 2009/06/10 19:44:16 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapMarker.php,v 1.65 2009/06/15 14:23:30 tekimaki_admin Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
@@ -139,10 +139,10 @@ class BitGmapMarker extends BitGmapOverlayBase {
 				$pParamHash['keychain_store']['pos'] = $pos; 
 			}else{
 				// new set get the highest pos used in map chain and increment
-				$query = "SELECT MAX( `pos` ) FROM `".BIT_DB_PREFIX."gmaps_marker_keychain` WHERE `set_id` = ?";
+				$query = "SELECT `pos` FROM `".BIT_DB_PREFIX."gmaps_marker_keychain` WHERE `set_id` = ? ORDER BY `pos` DESC";
 				$result = $this->mDb->getOne($query,array( $pParamHash['set_id'] ));
 				// increment or if null start at 0
-				$pos = $result?$result+1:0;
+				$pos = ( $result != NULL )?(int)$result+1:0;
 				$pParamHash['keychain_store']['pos'] = $pos; 
 			}
 		}
