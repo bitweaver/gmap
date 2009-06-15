@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/admin/upgrades/1.1.2.php,v 1.2 2009/06/11 15:11:47 tekimaki_admin Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/admin/upgrades/1.1.2.php,v 1.3 2009/06/15 14:31:08 tekimaki_admin Exp $
  */
 global $gBitInstaller;
 
@@ -37,16 +37,16 @@ if( !empty( $rslt["data"] ) ){
 	$maps = $rslt["data"];
 	// for each map set the pos values of its overlay sets
 	foreach( $maps as $key=>$map ){
-		gmap_reset_set_pos( $map["gmap_id"], "BitGmapMarkerSet" );
-		gmap_reset_set_pos( $map["gmap_id"], "BitGmapPolylineSet" );
-		gmap_reset_set_pos( $map["gmap_id"], "BitGmapPolygonSet" );
+		gmap_reset_set_pos( $map["gmap_id"], "BitGmapMarkerSet", "markers" );
+		gmap_reset_set_pos( $map["gmap_id"], "BitGmapPolylineSet", "polylines" );
+		gmap_reset_set_pos( $map["gmap_id"], "BitGmapPolygonSet", "polygons" );
 		gmap_reset_overlay_pos( "BitGmapMarkerSet", "BitGmapMarker", "marker" );
 		gmap_reset_overlay_pos( "BitGmapPolylineSet", "BitGmapPolyline", "polyline" );
 		gmap_reset_overlay_pos( "BitGmapPolygonSet", "BitGmapPolygon", "polygon" );
 	}
 }
 
-function gmap_reset_set_pos( $pGmapId, $pOverlaySetClass ){
+function gmap_reset_set_pos( $pGmapId, $pOverlaySetClass, $pOverlaySetType ){
 	// get list of overlay mappings by gmap id
 	$set = new $pOverlaySetClass();
 
@@ -58,9 +58,8 @@ function gmap_reset_set_pos( $pGmapId, $pOverlaySetClass ){
 		$overlaysets = $rslt1["data"]; 
 		$pos = 0;
 		foreach( $overlaysets as $key=>$overlayset ){
-			$query = "UPDATE `".BIT_DB_PREFIX."gmaps_sets_keychain` SET `pos` = ? WHERE `gmap_id` = ? AND `set_id` = ?"; 
-			$bind_vars = array( $pos, $pGmapId, $overlayset["set_id"] );
-			// $bind_vars = array( NULL, $pGmapId, $overlayset["set_id"] );
+			$query = "UPDATE `".BIT_DB_PREFIX."gmaps_sets_keychain` SET `pos` = ? WHERE `set_type` = ? AND `gmap_id` = ? AND `set_id` = ?"; 
+			$bind_vars = array( $pos, $pOverlaySetType, $pGmapId, $overlayset["set_id"] );
 			$set->mDb->query( $query, $bind_vars );
 			// auto increment the pos value
 			$pos++;
