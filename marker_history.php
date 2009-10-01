@@ -1,10 +1,10 @@
 <?php
 /**
- * $Header: /cvsroot/bitweaver/_bit_gmap/marker_history.php,v 1.3 2008/06/25 22:21:10 spiderr Exp $
+ * $Header: /cvsroot/bitweaver/_bit_gmap/marker_history.php,v 1.4 2009/10/01 13:45:39 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See copyright.txt for details and a complete list of authors.
- * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details
+ * Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details
  * @author Will <will@wjamesphoto.com>
  * 
  * @package gmap
