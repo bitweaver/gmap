@@ -1,6 +1,6 @@
 <?php
 // Copyright (c) 2005, 2006 bitweaver Gmap
-// All Rights Reserved. See copyright.txt for details and a complete list of authors.
+// All Rights Reserved. See below for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See http://www.gnu.org/copyleft/lesser.html for details.
 
 /* not used
