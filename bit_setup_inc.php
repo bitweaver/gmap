@@ -21,16 +21,19 @@ if( $gBitSystem->isPackageActive( 'gmap' ) ) {
 	);
 	$gBitSystem->registerAppMenu( $menuHash );
 
-	$gLibertySystem->registerService( LIBERTY_SERVICE_MAPS, GMAP_PKG_NAME, array(
-		'content_edit_function'  => 'gmap_content_edit',
-		'content_preview_function'  => 'gmap_content_preview',
-		'content_store_function'  => 'gmap_content_store',
-		'content_edit_mini_tpl'  => 'bitpackage:gmap/edit_gmap_mini_inc.tpl',
-		'content_nav_tpl'        => 'bitpackage:gmap/view_gmap_nav.tpl',
-		'content_body_tpl'       => 'bitpackage:gmap/view_gmap_body.tpl',
-		'content_view_tpl'       => 'bitpackage:gmap/view_gmap_view.tpl',
-		'content_icon_tpl'       => 'bitpackage:gmap/view_gmap_icon.tpl',
-	) );
+	$gLibertySystem->registerService( 
+		LIBERTY_SERVICE_MAPS, 
+		GMAP_PKG_NAME, 
+		array(
+			'content_edit_function'  => 'gmap_content_edit',
+			'content_preview_function'  => 'gmap_content_preview',
+			'content_store_function'  => 'gmap_content_store',
+			'content_edit_mini_tpl'  => 'bitpackage:gmap/edit_gmap_mini_inc.tpl',
+			'content_nav_tpl'        => 'bitpackage:gmap/view_gmap_nav.tpl',
+			'content_body_tpl'       => 'bitpackage:gmap/view_gmap_body.tpl',
+			'content_view_tpl'       => 'bitpackage:gmap/view_gmap_view.tpl',
+			'content_icon_tpl'       => 'bitpackage:gmap/view_gmap_icon.tpl',
+		),
+		array( 'description' => tra( 'Provides a map view of a content object\'s geo spacial data. Also provides an easy to use interface for inputing geo spacial data. Requires a geo spacial package to store the data, such as Geo Package.' ) )
+	);
 }
-
-?>
