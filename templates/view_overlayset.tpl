@@ -4,7 +4,7 @@
 
 <div class="display gmap">
 	<div class="header">
-		<h2>{tr}{$gContent->mType.content_description}{/tr}:</h2>
+		<h2>{tr}{$gContent->getContentTypeName()}{/tr}:</h2>
 		<h1>{$gContent->getField('title')}</h1>
 	</div>
 
