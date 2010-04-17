@@ -23,7 +23,7 @@ require_once( GMAP_PKG_PATH.'BitGmap.php' );
 $exclude = array( 'bitgmap','bitgmapmarker','bitgmarkerset','bitgmappolyline','bitgpolylineset','bitgmappolygon','bitgpolygonset','tikisticky','pigeonholes' );
 foreach( $gLibertySystem->mContentTypes as $cType ) {
 	if( !in_array( $cType['content_type_guid'], $exclude ) ) {
-		$formMappable['guids']['gmap_map_'.$cType['content_type_guid']]  = $cType['content_description'];
+		$formMappable['guids']['gmap_map_'.$cType['content_type_guid']]  = $gLibertySystem->getContentTypeName( $cType['content_type_guid'] );
 	}
 }
 
