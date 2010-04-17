@@ -147,7 +147,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 		/* @TODO we should probably check if everything exists first */
 		M.gmarker.my_html = MochiKit.DOM.DIV({'class':'gmap-marker'}, 
 												H1({'class':'marker-title'}, M.title),
-												DIV(null, M.content_description + " created by " + M.creator_real_name + " on " + M.created_date),
+												DIV(null, M.content_name + " created by " + M.creator_real_name + " on " + M.created_date),
 												DIV(null, " Last modified by " + M.modifier_real_name + " on " + M.modified_date),
 												DIV(null, A({'href':M.display_url}, 'Permalink')),
 												starsElm,
@@ -190,7 +190,7 @@ MochiKit.Base.update(BitMap.Map.prototype, {
 				    TBODY(null, map(row_display, rows))
 				    );
 			
-				var header = DIV({"class":"data-header"}, leData[1][0].content_description + "s");
+				var header = DIV({"class":"data-header"}, leData[1][0].content_name + "s");
 				s.appendChild(header);
 				s.appendChild(newTable);
 			});

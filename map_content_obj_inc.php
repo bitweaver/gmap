@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/map_content_obj_inc.php,v 1.4 2009/10/01 14:17:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/map_content_obj_inc.php,v 1.5 2010/04/17 22:46:09 wjames5 Exp $
  *
  * Copyright (c) 2008 bitweaver.org
  * All Rights Reserved. See below for details and a complete list of authors.
@@ -24,7 +24,7 @@ if ( $gBitSystem->isPackageActive('geo') &&
 	// because content mInfo does not hand over the same info as contentList as below we need to complete the hash
 	$dataHash['display_url'] = !empty($dataHash['display_url'])?$dataHash['display_url']:$content->getDisplayUrl();
 	$dataHash['creator_user_id'] = !empty($dataHash['creator_user_id'])?$dataHash['creator_user_id']:$dataHash['user_id'];
-	$dataHash['content_description'] = !empty($dataHash['content_description'])?$dataHash['content_description']:$content->mType['content_description'];
+	$dataHash['content_name'] = !empty($dataHash['content_name'])?$dataHash['content_name']:$content->getContentTypeName();
 	$dataHash['gmap_zoom'] = $content->getPreference( 'gmap_zoom' );
 //			$dataHash['real_name'] = !empty($dataHash['real_name'])?$dataHash['real_name']:$dataHash['creator_user'];
 	$dataHash['creator_real_name'] = !empty($dataHash['creator_real_name'])?$dataHash['creator_real_name']:$dataHash['real_name'];

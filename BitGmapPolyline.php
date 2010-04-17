@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.19 2009/10/01 14:17:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolyline.php,v 1.20 2010/04/17 22:46:09 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See below for details and a complete list of authors.
@@ -39,7 +39,7 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 		$this->mContentTypeGuid = BITGMAPPOLYLINE_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGMAPPOLYLINE_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGMAPPOLYLINE_CONTENT_TYPE_GUID,
-			'content_description' => 'Map Polyline',
+			'content_name' => 'Map Polyline',
 			'handler_class' => 'BitGmapPolyline',
 			'handler_package' => 'gmap',
 			'handler_file' => 'BitGmapPolyline.php',

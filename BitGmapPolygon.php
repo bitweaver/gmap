@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygon.php,v 1.15 2009/10/01 14:17:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygon.php,v 1.16 2010/04/17 22:46:09 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See below for details and a complete list of authors.
@@ -40,7 +40,7 @@ class BitGmapPolygon extends BitGmapOverlayBase {
 		$this->mContentTypeGuid = BITGMAPPOLYGON_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGMAPPOLYGON_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGMAPPOLYGON_CONTENT_TYPE_GUID,
-			'content_description' => 'Map Polygon',
+			'content_name' => 'Map Polygon',
 			'handler_class' => 'BitGmapPolygon',
 			'handler_package' => 'gmap',
 			'handler_file' => 'BitGmapPolygon.php',

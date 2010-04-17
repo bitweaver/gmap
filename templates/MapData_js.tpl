@@ -71,7 +71,7 @@ BitMap.MapData.push({ldelim}
   {ldelim}		
 		content_id:{$listcontent[n].content_id},
 		content_type_guid:'{$listcontent[n].content_type_guid}',
-		content_description:'{$listcontent[n].content_description}',
+		content_name:'{$listcontent[n].content_name}',
 		lat:{$listcontent[n].lat},
 		lng:{$listcontent[n].lng},
 		title:'{$listcontent[n].title|addslashes}',

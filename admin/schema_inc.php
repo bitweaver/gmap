@@ -368,4 +368,8 @@ $gBitInstaller->registerContentObjects( GMAP_PKG_NAME, array(
 	'BitGmapPolyline'    => GMAP_PKG_PATH.'BitGmapPolyline.php',
 	'BitGmapPolylineSet' => GMAP_PKG_PATH.'BitGmapPolylineSet.php',
 ));
-?>
+
+// Requirements
+$gBitInstaller->registerRequirements( GMAP_PKG_NAME, array(
+    'liberty' => array( 'min' => '2.1.4' ),
+));

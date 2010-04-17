@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygonSet.php,v 1.11 2009/10/01 14:17:00 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmapPolygonSet.php,v 1.12 2010/04/17 22:46:09 wjames5 Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See below for details and a complete list of authors.
@@ -34,7 +34,7 @@ define( 'BITGMAPPOLYGONSET_CONTENT_TYPE_GUID', 'bitgpolygonset' );
 		$this->mContentTypeGuid = BITGMAPPOLYGONSET_CONTENT_TYPE_GUID;
 		$this->registerContentType( BITGMAPPOLYGONSET_CONTENT_TYPE_GUID, array(
 			'content_type_guid' => BITGMAPPOLYGONSET_CONTENT_TYPE_GUID,
-			'content_description' => 'Map Polygons Set',
+			'content_name' => 'Map Polygons Set',
 			'handler_class' => 'BitGmapPolygonSet',
 			'handler_package' => 'gmap',
 			'handler_file' => 'BitGmapPolygonSet.php',
