@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.168 2010/04/17 22:46:09 wjames5 Exp $
+ * @version $Header: /cvsroot/bitweaver/_bit_gmap/BitGmap.php,v 1.169 2010/04/21 12:51:58 nickpalmer Exp $
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See below for details and a complete list of authors.
@@ -677,7 +677,7 @@ class BitGmap extends LibertyMime {
 		$result = $this->mDb->query( $query,$bindVars,$max_records,$offset );
 		$ret = array();
 		
-		$comment = &new LibertyComment();
+		$comment = new LibertyComment();
 
 		while( $res = $result->fetchRow() ) {
 			if( $this->getPreference('allow_comments', null, $res['content_id']) == 'y' ) {
