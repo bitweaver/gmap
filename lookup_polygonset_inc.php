@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/lookup_polygonset_inc.php,v 1.5 2009/10/01 14:17:00 wjames5 Exp $
+ * @version $Header$
  *
  * Copyright (c) 2007 bitweaver.org
  * All Rights Reserved. See below for details and a complete list of authors.

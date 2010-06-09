@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/admin/upgrades/1.1.2.php,v 1.3 2009/06/15 14:31:08 tekimaki_admin Exp $
+ * @version $Header$
  */
 global $gBitInstaller;
 

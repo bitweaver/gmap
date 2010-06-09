@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Header: /cvsroot/bitweaver/_bit_gmap/map_content_obj_inc.php,v 1.5 2010/04/17 22:46:09 wjames5 Exp $
+ * @version $Header$
  *
  * Copyright (c) 2008 bitweaver.org
  * All Rights Reserved. See below for details and a complete list of authors.
