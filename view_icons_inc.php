@@ -28,6 +28,8 @@ $gContent = new BitGmap();
 if( @BitBase::verifyId( $_REQUEST['icon_id'] )) {
 	if( $result = $gContent->getIconStyle( $_REQUEST['icon_id'] )) {
 		$gBitSmarty->assign_by_ref( 'iconstyleInfo', $result );
+		$statusCode = 200;
+		$gBitSmarty->assign( 'statusCode', $statusCode);
 	}
 
 	$gBitSystem->display('bitpackage:gmap/edit_iconstyle_xml.tpl', null, array( 'format' => 'xml', 'display_mode' => 'display' ));
