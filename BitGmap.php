@@ -136,15 +136,6 @@ class BitGmap extends LibertyMime {
 			}
 		}
 
-
-/*
-		$accessError = $this->invokeServices( 'content_verify_access', $this );
-		if( empty( $accessError ) ) {
-	    // Display the template
-		}else{
-			vd($accessError);
-		}
-*/
 		return( count( $this->mInfo ) );
 	}
 
