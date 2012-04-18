@@ -233,7 +233,8 @@ class BitGmapOverlayBase extends LibertyMime {
 	* Generates the URL to view a overlay on a standalone page
 	* @param pMixed a hash passed in by LibertyContent:getList
 	* @return the link to display the overlay data.
-	*/
+	* /
+SPIDERRKILL - Not sure how to update for BW 3.0
 	function getDisplayUrl( $pContentId=NULL, $pMixed=NULL ) {
 		global $gBitSystem;
 
@@ -273,6 +274,7 @@ class BitGmapOverlayBase extends LibertyMime {
 		}
 		return $ret;
 	}
+*/
 
 	/**
 	 * Custom Permission Convenience Functions

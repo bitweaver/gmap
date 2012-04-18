@@ -208,7 +208,7 @@ class BitGmapPolyline extends BitGmapOverlayBase {
 		
 		$ret = array();
 		while( $res = $result->fetchRow() ) {
-			$res['display_url'] = $this->getDisplayUrl( NULL, $res );
+			$res['display_url'] = $this->getDisplayUrlFromHash( $res );
 			$ret[] = $res;
 		}
 		
