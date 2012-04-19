@@ -257,7 +257,7 @@ class BitGmapMarker extends BitGmapOverlayBase {
 		$result = $this->mDb->query($query,$bindVars,$pListHash['max_records'],$pListHash['offset']);
 		$cant = $this->mDb->getOne($query_cant,$bindVars);
 		
-		$comment = &new LibertyComment();
+		$comment = new LibertyComment();
 		while ($res = $result->fetchrow()) {		
 			$res['display_url'] = $this->getDisplayUrl( NULL, $res );
 				

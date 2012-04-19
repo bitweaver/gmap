@@ -29,7 +29,7 @@ $tables = array(
   side_panel C(5) DEFAULT 'true',
   explode C(5) DEFAULT 'true',
   pos F
-  CONSTRAINTS ', CONSTRAINT `gmaps_sets_keychain_gmap_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."gmaps`( `gmap_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_sets_keychain_gmap_ref` FOREIGN KEY (`gmap_id`) REFERENCES `".BIT_DB_PREFIX."gmaps`( `gmap_id` )'
 ",
 
 /* maptypes and related data
@@ -46,7 +46,7 @@ $tables = array(
   maxzoom I4,
   errormsg C(255),
   user_id I4  
-  CONSTRAINTS ', CONSTRAINT `gmaps_maptypes_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_maptypes_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
 ",
 
 'gmaps_tilelayers' => "
@@ -116,7 +116,7 @@ $tables = array(
   infowindow_anchor_y I4 DEFAULT 2,
   image_map X DEFAULT 0,
   user_id I4
-  CONSTRAINTS ', CONSTRAINT `gmaps_icon_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )
+  CONSTRAINT ', CONSTRAINT `gmaps_icon_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )
                , CONSTRAINT `gmaps_icon_theme_ref` FOREIGN KEY (`theme_id`) REFERENCES `".BIT_DB_PREFIX."gmaps_icon_themes`( `theme_id` )'
   '
 ",
@@ -135,7 +135,7 @@ $tables = array(
   label_hover_styles C(255) DEFAULT 'border:none; color:black; background-color:#ccc',
   window_styles C(255) DEFAULT 'border:none; color:black; background-color:white',
   user_id I4  
-  CONSTRAINTS ', CONSTRAINT `gmaps_marker_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_marker_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
 ",
 
 'gmaps_marker_sets' => "
@@ -179,7 +179,7 @@ $tables = array(
   weight I4 DEFAULT 2,
   opacity F DEFAULT 1,
   user_id I4  
-  CONSTRAINTS ', CONSTRAINT `gmaps_polyline_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_polyline_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
 ",
 
 'gmaps_polyline_sets' => "
@@ -225,7 +225,7 @@ $tables = array(
   color C(6),
   opacity F DEFAULT 1,
   user_id I4  
-  CONSTRAINTS ', CONSTRAINT `gmaps_polygon_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
+  CONSTRAINT ', CONSTRAINT `gmaps_polygon_styles_ref` FOREIGN KEY (`user_id`) REFERENCES `".BIT_DB_PREFIX."users_users`( `user_id` )'
 ",
 
 'gmaps_polygon_sets' => "

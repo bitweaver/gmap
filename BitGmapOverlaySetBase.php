@@ -273,7 +273,7 @@ class BitGmapOverlaySetBase extends LibertyContent {
 	* @return the link to display the overlay data.
 	* /
 SPIDERRKILL - Not sure how to update for BW 3.0
-	function getDisplayUrlFromHash( $pContentId=NULL, $pMixed=NULL ) {
+	public static function getDisplayUrlFromHash( $pContentId=NULL, $pMixed=NULL ) {
 		global $gBitSystem;
 
 		$ret = NULL;
