@@ -33,8 +33,8 @@ class BitGmapPolygon extends BitGmapOverlayBase {
 	/**
 	* During initialisation, be sure to call our base constructors
 	**/
-	function BitGmapPolygon( $pOverlayId=NULL, $pContentId=NULL ) {
-		parent::BitGmapOverlayBase();
+	function __construct( $pOverlayId=NULL, $pContentId=NULL ) {
+		parent::__construct();
 		$this->mOverlayId = $pOverlayId;
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITGMAPPOLYGON_CONTENT_TYPE_GUID;

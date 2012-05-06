@@ -27,8 +27,8 @@ define( 'BITGMAPPOLYGONSET_CONTENT_TYPE_GUID', 'bitgpolygonset' );
 	/**
 	* During initialisation, be sure to call our base constructors
 	**/
-	function BitGmapPolygonSet( $pOverlaySetId=NULL, $pContentId=NULL ) {
-		parent::BitGmapOverlaySetBase();
+	function __construct( $pOverlaySetId=NULL, $pContentId=NULL ) {
+		parent::__construct();
 		$this->mOverlaySetId = $pOverlaySetId;
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITGMAPPOLYGONSET_CONTENT_TYPE_GUID;

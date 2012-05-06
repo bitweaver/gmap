@@ -44,8 +44,8 @@ class BitGmapOverlaySetBase extends LibertyContent {
 	/**
 	* During initialisation, be sure to call our base constructors
 	**/
-	function BitGmapOverlaySetBase() {
-		parent::LibertyContent();
+	function __construct() {
+		parent::__construct();
 		
 		// Permission setup
 		$this->mViewContentPerm  = 'p_gmap_overlayset_view';

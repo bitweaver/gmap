@@ -38,8 +38,8 @@ class BitGmapOverlayBase extends LibertyMime {
 	/**
 	* During initialisation, be sure to call our base constructors
 	**/
-	function BitGmapOverlayBase() {
-		parent::LibertyMime();
+	function __construct() {
+		parent::__construct();
 		
 		// Permission setup
 		$this->mViewContentPerm  = 'p_gmap_overlay_view';

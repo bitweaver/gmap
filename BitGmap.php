@@ -27,8 +27,8 @@ class BitGmap extends LibertyMime {
 
 	var $mGmapId;
 
-	function BitGmap( $pGmapId=NULL, $pContentId=NULL ) {
-		parent::LibertyMime();
+	function __construct( $pGmapId=NULL, $pContentId=NULL ) {
+		parent::__construct();
 		$this->mGmapId = $pGmapId;
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITGMAP_CONTENT_TYPE_GUID;

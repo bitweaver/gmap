@@ -28,8 +28,8 @@ class BitGmapMarkerSet extends BitGmapOverlaySetBase{
 	/**
 	* During initialisation, be sure to call our base constructors
 	**/
-	function BitGmapMarkerSet( $pOverlaySetId=NULL, $pContentId=NULL ) {
-		parent::BitGmapOverlaySetBase();
+	function __construct( $pOverlaySetId=NULL, $pContentId=NULL ) {
+		parent::__construct();
 		$this->mOverlaySetId = $pOverlaySetId;
 		$this->mContentId = $pContentId;
 		$this->mContentTypeGuid = BITGMAPMARKERSET_CONTENT_TYPE_GUID;
