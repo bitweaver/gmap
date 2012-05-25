@@ -60,7 +60,7 @@ if( $gContent->isCommentable() ) {
 	$comments_vars = Array('gmap');
 	$comments_prefix_var='gmap:';
 	$comments_object_var='gmap';
-	$comments_return_url = $_SERVER['PHP_SELF']."view_overlay.php?".$type."_id=".$gContent->mOverlayId;
+	$comments_return_url = $_SERVER['SCRIPT_NAME']."view_overlay.php?".$type."_id=".$gContent->mOverlayId;
 	include_once( LIBERTY_PKG_PATH.'comments_inc.php' );
 }	
 

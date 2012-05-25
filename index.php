@@ -77,7 +77,7 @@ if ($gBitSystem->isFeatureActive('gmap_api_key')){
 			$comments_vars = Array('gmap');
 			$comments_prefix_var='gmap:';
 			$comments_object_var='gmap';
-			$comments_return_url = $_SERVER['PHP_SELF']."?gmap_id=".$gContent->mGmapId;
+			$comments_return_url = $_SERVER['SCRIPT_NAME']."?gmap_id=".$gContent->mGmapId;
 			include_once( LIBERTY_PKG_PATH.'comments_inc.php' );
 		}
 	
