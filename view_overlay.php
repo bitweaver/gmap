@@ -20,7 +20,19 @@ require_once('../kernel/setup_inc.php' );
 $gBitSystem->verifyPackage('gmap' );
 
 if( !empty( $_REQUEST['overlay_type'] ) ){
-	$type = $_REQUEST['overlay_type'];
+	switch( $_REQUEST['overlay_type'] ) {
+		case 'gmap':
+		case 'marker':
+		case 'markerset':
+		case 'polygon':
+		case 'polygonset':  
+		case 'polyline':  
+		case 'polylineset':
+			$type = $_REQUEST['overlay_type'];
+			break;
+		default:
+			$type = 'gmap';
+	}
 }
 
 // Now check permissions to access this page
