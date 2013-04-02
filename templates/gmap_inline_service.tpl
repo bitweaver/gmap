@@ -6,7 +6,7 @@
 			{assign var=iforce value=icon}
 		{/if}
 
-		<a href="{$smarty.const.GMAP_PKG_URL}map_content.php?content_id={$serviceHash.content_id}" title="View on a Google Map">{biticon ipackage="icons" iname="applications-internet" iforce=$iforce iexplain="View location on map"}
+		<a href="{$smarty.const.GMAP_PKG_URL}map_content.php?content_id={$serviceHash.content_id}" title="View on a Google Map">{booticon iname="icon-globe"  ipackage="icons"  iforce=$iforce iexplain="View location on map"}
 		{if $location != icon}
 			{assign var='path' value=$smarty.const.GMAP_PKG_URL|cat:"map_content.php?format=include&content_id="|cat:$serviceHash.content_id}
 			<div>
