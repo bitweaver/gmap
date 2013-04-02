@@ -3,7 +3,7 @@
 	<input name="set_id" type="hidden" value="{$markersetInfo.set_id}" />
 	<input name="gmap_id" type="hidden" value="{$markersetInfo.gmap_id}" />
 	<input name="save_markerset" type="hidden" value="true" />
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Name" for="name"}
 			{forminput}
 				<input size="40" name="title" type="text" value="{$markersetInfo.title}" />
@@ -11,7 +11,7 @@
 			{/forminput}
 	</div>
 	
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Description" for="description"}
 			{forminput}
 				<input size="40" id="editliberty" name="edit" type="text" value="{$markersetInfo.data}" />
@@ -21,7 +21,7 @@
 {*	  if ( this.Map.markerstyles.length > 0 && form.style_id.options.length < (this.Map.markerstyles.length + 1) ){
 form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, this.Map.markerstyles[d].style_id );
 	*}
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Marker Style" for="style_id"}
 			{forminput}
 				<select name="style_id">
@@ -33,7 +33,7 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 				{formhelp note=""}
 			{/forminput}
 	</div>
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Icon Style" for="icon_id"}
 			{forminput}
 				<a href="javascript:void(0);" onclick="BitMap.EditSession.getIconStyles(null,'');" title="{tr}Click to select another icon{/tr}"><img id="icon_img" src="{if $icon.image}{$smarty.const.BIT_ROOT_URL}{$icon.image}{else}http://www.google.com/mapfiles/marker.png{/if}" /></a>
@@ -42,7 +42,7 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 				{formhelp note=""}
 			{/forminput}
 	</div>
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Plot-On-Load" for="plot_on_load"}
 			{forminput}
 				<select name="plot_on_load">
@@ -52,7 +52,7 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 				{formhelp note=""}
 			{/forminput}
 	</div>
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="List Set In Side Panel" for="side_panel"}
 			{forminput}
 				<select name="side_panel">
@@ -62,7 +62,7 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 				{formhelp note=""}
 			{/forminput}
 	</div>
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="List Markers In Side Panel" for="explode"}
 			{forminput}
 				<select name="explode">
@@ -74,7 +74,7 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 	</div>
 
 	{if !$gContent->isValid() || $gContent->hasAdminPermission()}
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Allow Registered Users to Add Markers To This Set" for="allow_children"}
 			{forminput}
 				<input type="checkbox" name="allow_children" value="y" {if $childrenAllowed}checked="checked"{/if} />
@@ -82,7 +82,7 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 			{/forminput}
 	</div>
 	
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Allow Registered Users To Edit" for="share_update"}
 			{forminput}
 				<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />
@@ -91,7 +91,7 @@ form.style_id.options[OptionN + d] = new Option( this.Map.markerstyles[d].name, 
 	</div>
 	{/if}
 	
-	<div class="row submit">
+	<div class="control-group submit">
 		<input type="button" name="savenewmarkerset" value="Save" onclick="javascript:BitMap.EditSession.storeMarkerSet( this.form );"/>
 		<input type="button" name="closemarkersetform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditMarkerSet()"/>
 	</div>		

@@ -11,7 +11,7 @@
 			<div class="formlabel"><label for="content_type_guid">{tr}Searches Limited to {$contentTypes[$smarty.request.content_type_guid]}s{/tr}</label></div>
 			<input type="hidden" name="content_type_guid" value="{$smarty.request.content_type_guid}" />
 		{else}
-			<div class="row">
+			<div class="control-group">
 				{formlabel label="Content Types:" for="content_type_guid[]"}
 				{forminput}
 					{html_options options=$contentTypes name="content_type_guid[]" id=content_type selected=$contentSelect size=5 multiple=TRUE}
@@ -20,7 +20,7 @@
 			</div>
 		{/if}
 
-			<div class="row">
+			<div class="control-group">
 				{formlabel label="Find (key word or phrase):" for="find"}
 				{forminput}
 					<input type="text" name="find" value="{$find|default:$smarty.request.find|default:$prompt|escape}" {if $prompt}onclick="if (this.value == '{$prompt}') this.value = '';"{/if}/>&nbsp;
@@ -32,7 +32,7 @@
 
 			{* @TODO move this to pigeonholes *}
 			{if $pigeonList}
-				<div class="row">
+				<div class="control-group">
 					{formlabel label="Categories" for="liberty_categories"}
 					{forminput}
 					<select multiple size=5 name="liberty_categories[]">
@@ -48,7 +48,7 @@
 			{/if}
 
 			{* @TODO move this to liberty *}
-			<div class="row">
+			<div class="control-group">
 				{formlabel label="Date:" for="hr_date"}
 				{forminput}
 					<input name="hr_date" type="text" value="" onchange="BitMap.EvalDate()" />
@@ -67,7 +67,7 @@
 				</div>
 			</div>
 
-		<div class="row submit">
+		<div class="control-group submit">
 			<div id="gmap-block-viewaslist" style="float:right; margin-right:10px; {if !$listInfo}display:none;{/if}">
 				{if $smarty.const.ACTIVE_PACKAGE == 'gmap'}
 					{if $smarty.request.content_type_guid[0] != 'bitgmap'}

@@ -3,21 +3,21 @@
 	<input name="set_id" type="hidden" value="{$polygonsetInfo.set_id}" />
 	<input name="gmap_id" type="hidden" value="{$polygonsetInfo.gmap_id}" />
 	<input name="save_polygonset" type="hidden" value="true" />
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Name" for="name"}
 			{forminput}
 				<input size="40" name="title" type="text" value="{$polygonsetInfo.title}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Description" for="description"}
 			{forminput}
 				<input size="40" id="editliberty" name="edit" type="text" value="{$polygonsetInfo.data}" />
 				{formhelp note=""}
 			{/forminput}
 	</div>
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Line Style" for="polylinestyle_id"}
 			{forminput}
 				<select name="polylinestyle_id" id="polylinestyle_id">
@@ -29,7 +29,7 @@
 				{formhelp note=""}
 			{/forminput}
 	</div>
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Fill Style" for="style_id"}
 			{forminput}
 				<select name="style_id" id="style_id">
@@ -43,7 +43,7 @@
 	</div>
 	
 	{if !$gContent->isValid() || $gContent->hasAdminPermission()}
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Allow Registered Users to Add Polygons To This Set" for="allow_children"}
 			{forminput}
 				<input type="checkbox" name="allow_children" value="y" {if $childrenAllowed}checked="checked"{/if} />
@@ -51,7 +51,7 @@
 			{/forminput}
 	</div>
 	
-	<div class="row">
+	<div class="control-group">
 		{formlabel label="Allow Registered Users To Edit" for="share_update"}
 			{forminput}
 				<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />
@@ -60,7 +60,7 @@
 	</div>
 	{/if}
 	
-	<div class="row submit">
+	<div class="control-group submit">
 		<input type="button" name="savenewpolygonset" value="Save" onclick="javascript:BitMap.EditSession.storePolygonSet( this.form );" />
 		<input type="button" name="closepolygonsetform" value="Close Options Editing" onclick="javascript:BitMap.EditSession.cancelEditPolygonSet()" />
 	</div>
