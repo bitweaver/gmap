@@ -24,5 +24,5 @@
 		</div>
 	</div> <!-- end .body -->
 </div>
-<div id="editerror" class="fade-000000 warning" style="display:none">{biticon iname=dialog-warning iexplain="Warning"}<span id="errortext">Warning Placeholder</span></div>
+<div id="editerror" class="fade-000000 warning" style="display:none">{booticon iname="icon-warning-sign"   iexplain="Warning"}<span id="errortext">Warning Placeholder</span></div>
 {/strip}
