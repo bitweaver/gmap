@@ -73,7 +73,7 @@
 		{/jstab}
 	{/jstabs}
 	<div class="control-group submit">
-		<input type="submit" name="gmap_preferences" value="{tr}Change Preferences{/tr}" />
+		<input type="submit" class="btn" name="gmap_preferences" value="{tr}Change Preferences{/tr}" />
 	</div>
 {/form}
 {/strip}
