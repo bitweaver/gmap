@@ -62,7 +62,7 @@
 				<tr class="odd">
 					<td colspan="4">
 						<a href="{$gContent->mInfo.display_url}">{tr}Current{/tr}</a>
-						&nbsp;&bull;&nbsp;{smartlink ititle="Source" gmap_id=`$gContent->mGmapId` source="current"}
+						&nbsp;&bull;&nbsp;{smartlink ititle="Source" gmap_id=$gContent->mGmapId source="current"}
 					</td>
 				</tr>
 
@@ -75,12 +75,12 @@
 					</tr>
 					<tr class="{cycle values='even,odd'}">
 						<td colspan="3">
-							{smartlink ititle="View" gmap_id=`$gContent->mGmapId` preview=`$item.version`}
-							&nbsp;&bull;&nbsp;{smartlink ititle="Compare" gmap_id=`$gContent->mGmapId` compare=`$item.version`}
-							&nbsp;&bull;&nbsp;{smartlink ititle="Difference" gmap_id=`$gContent->mGmapId` diff2=`$item.version`}
-							&nbsp;&bull;&nbsp;{smartlink ititle="Source" gmap_id=`$gContent->mGmapId` source=`$item.version`}
+							{smartlink ititle="View" gmap_id=$gContent->mGmapId preview=$item.version}
+							&nbsp;&bull;&nbsp;{smartlink ititle="Compare" gmap_id=$gContent->mGmapId compare=$item.version}
+							&nbsp;&bull;&nbsp;{smartlink ititle="Difference" gmap_id=$gContent->mGmapId diff2=$item.version}
+							&nbsp;&bull;&nbsp;{smartlink ititle="Source" gmap_id=$gContent->mGmapId source=$item.version}
 							{if $gBitUser->hasPermission( 'p_gmap_rollback' )}
-								&nbsp;&bull;&nbsp;{smartlink iurl="rollback.php" ititle="Rollback" gmap_id=`$gContent->mGmapId` version=`$item.version`}
+								&nbsp;&bull;&nbsp;{smartlink iurl="rollback.php" ititle="Rollback" gmap_id=$gContent->mGmapId version=$item.version}
 							{/if}
 						</td>
 						<td style="text-align:right;">

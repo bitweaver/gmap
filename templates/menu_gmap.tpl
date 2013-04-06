@@ -1,5 +1,6 @@
 {strip}
-<ul>
+<a class="dropdown-toggle" data-toggle="dropdown" href="#"> {tr}{$packageMenuTitle}{/tr} <b class="caret"></b></a>
+<ul class="{$packageMenuClass}">
 	{if $gBitUser->hasPermission( 'p_gmap_view' )}
 		<li><a class="item" href="{$smarty.const.GMAP_PKG_URL}map_content.php">{booticon iname="icon-globe"  ipackage="icons"  iexplain="Map Site Content" ilocation="menu"}</a></li>
 	{/if}	
