@@ -45,7 +45,7 @@
 				{/forminput}
 			</div>
 
-			{textarea}{$markerInfo.raw}{/textarea}
+			{textarea edit=$markerInfo.raw}
 
 			<div class="control-group">
 				{formlabel label="Primary Attachment Image Size" for="primary_attachment_size"}

@@ -119,7 +119,7 @@
 			</div>
 			*}
 
-			{textarea}{$mapInfo.raw}{/textarea}
+			{textarea edit=$mapInfo.raw}
 
 			{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 				<div class="control-group">
