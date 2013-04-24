@@ -9,7 +9,7 @@
 	</div>
 
 	<div class="body">
-			<table class="data">
+			<table class="table data">
 				<caption>{tr}{$overlayTypePlural} in this Set{/tr}</caption>
 				<tr>
 					<th>{tr}Title{/tr}</th>

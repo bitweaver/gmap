@@ -32,19 +32,17 @@
 	
 	{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 	<div class="control-group">
-		{formlabel label="Allow Registered Users to Add Polylines To This Set" for="allow_children"}
-			{forminput}
-				<input type="checkbox" name="allow_children" value="y" {if $childrenAllowed}checked="checked"{/if} />
+		<label class="checkbox">
+				<input type="checkbox" name="allow_children" value="y" {if $childrenAllowed}checked="checked"{/if} />Allow Registered Users to Add Polylines To This Set
 				{formhelp note="Checking this box will allow any registered user to add polylines to this set."}
-			{/forminput}
+			</label>
 	</div>
 	
 	<div class="control-group">
-		{formlabel label="Allow Registered Users To Edit" for="share_update"}
-			{forminput}
-				<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />
+		<label class="checkbox">
+				<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />Allow Registered Users To Edit
 				{formhelp note="Checking this box will allow any registered user to edit the parameters of this set - this does not effect if they can add polylines to this set."}
-			{/forminput}
+			</label>
 	</div>
 	{/if}
 

@@ -18,7 +18,7 @@
 		{/if}
 
 		{if $compare eq 'y'}
-			<table class="data">
+			<table class="table data">
 				<caption>{tr}Comparing versions{/tr}</caption>
 				<tr>
 					<th width="50%">{tr}Version {$version_from}{/tr}</td>
@@ -42,7 +42,7 @@
 			<input type="hidden" name="page_id" value="{$gContent->mInfo.page_id}" />
 			<input type="hidden" name="page" value="{$page}" />
 
-			<table class="data">
+			<table class="table data">
 				<caption>{tr}Gmap Marker History{/tr}</caption>
 				<tr>
 					<th style="width:70%;">{tr}Date / Comment{/tr}</th>

@@ -123,27 +123,24 @@
 
 			{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 				<div class="control-group">
-					{formlabel label="Allow Comments" for="allow_comments"}
-					{forminput}
-						<input type="checkbox" name="allow_comments" value="y" {if $gContent->getPreference('allow_comments') eq 'y'}checked="checked"{/if} />
+					<label class="checkbox">
+						<input type="checkbox" name="allow_comments" value="y" {if $gContent->getPreference('allow_comments') eq 'y'}checked="checked"{/if} />Allow Comments
 						{formhelp note=""}
-					{/forminput}
+					</label>
 				</div>
 
 				<div class="control-group">
-					{formlabel label="Allow Registered Users to Attach Maptypes and Sets" for="allow_children"}
-					{forminput}
-						<input type="checkbox" name="allow_children" value="y" {if $childrenAllowed}checked="checked"{/if} />
+					<label class="checkbox">
+						<input type="checkbox" name="allow_children" value="y" {if $childrenAllowed}checked="checked"{/if} />Allow Registered Users to Attach Maptypes and Sets
 						{formhelp note="Checking this box will allow any registered user to add maptypes and sets of markers, polylines, polygons to this map. This is good if you want this map to be editable like a wiki page."}
-					{/forminput}
+					</label>
 				</div>
 
 				<div class="control-group">
-					{formlabel label="Allow Registered Users To Edit" for="share_update"}
-					{forminput}
-						<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />
+					<label class="checkbox">
+						<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />Allow Registered Users To Edit
 						{formhelp note="Checking this box will allow any registered user to edit the parameters of this map, like its center point, title, body text, etc. This is good if you want this map to be editable like a wiki page. NOTE: This does NOT effect if users can add markers, polylines, polygons, or other data to this map."}
-					{/forminput}
+					</label>
 				</div>
 			{/if}
 
