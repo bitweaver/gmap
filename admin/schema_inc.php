@@ -300,24 +300,6 @@ $gBitInstaller->registerSchemaSequences( GMAP_PKG_NAME, $sequences );
 
 
 
-//This does not work as one might expect
-/*
-$moduleHash = array(
-	'mod_package_menu' => array(
-		'title' => NULL,
-		'layout' => 'gmap',
-		'module_id' => 4,
-		'ord' => 1,
-		'pos' => 'r',
-		'module_rsrc' => 'bitpackage:kernel/mod_package_menu.tpl'
-	)
-);
-
-$gBitInstaller->registerModules( $moduleHash );
-*/
-
-
-
 //
 $gBitInstaller->registerUserPermissions( GMAP_PKG_NAME, array(
 	array('p_gmap_view', 'Can view maps', 'basic', GMAP_PKG_NAME),

@@ -100,7 +100,7 @@
 
 			{if $gBitUser->hasPermission( 'p_marker_remove' )}
 				<div style="text-align:right;">
-					<input type="submit" class="btn" name="delete" value="{tr}Delete selected versions{/tr}" />
+					<input type="submit" class="btn btn-default" name="delete" value="{tr}Delete selected versions{/tr}" />
 				</div>
 			{/if}
 		{/form}
