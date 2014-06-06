@@ -1,6 +1,6 @@
 {strip}
 <div id="view_{$polytype}_{$polystyle_type}styles">
-	<div class="control-group">
+	<div class="form-group">
 		<a href="javascript:void(0);" onclick="BitMap.hide('{$polytype}_{$polystyle_type}styles');" style="float:right">{booticon iname="icon-remove"   iexplain="Close"}</a>
 	</div>
 

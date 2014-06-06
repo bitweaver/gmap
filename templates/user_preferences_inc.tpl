@@ -4,7 +4,7 @@
 		<input type="hidden" name="view_user" value="{$view_user}" />
 		<input type="hidden" name="real_name" value="{$editUser->mInfo.real_name|escape}" />
 		{include file='bitpackage:gmap/edit_gmap_mini_inc.tpl'}
-		<div class="control-group submit">
+		<div class="form-group submit">
 			<input type="submit" class="btn btn-default" name="prefs" value="{tr}Change preferences{/tr}" />
 		</div>
 	{/form}

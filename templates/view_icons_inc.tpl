@@ -1,6 +1,6 @@
 {strip}
 <div id="view_icons">
-	<div class="control-group">
+	<div class="form-group">
 		<a href="javascript:void(0);" onclick="BitMap.hide('icon_styles');" style="float:right">{booticon iname="icon-remove"   iexplain="Close"}</a>
 		<a href="{$smarty.const.GMAP_PKG_URL}view_icons_inc.php?update_icon_list=1" style="float:right">{booticon iname="icon-recycle"   iexplain="Update Icons"}</a>
 		{formlabel label="Icon Theme" for="icon_theme"}

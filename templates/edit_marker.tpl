@@ -8,7 +8,7 @@
 			<input name="marker_id" type="hidden" value="{$markerInfo.marker_id}" />
 			<input name="set_id" type="hidden" value="{$markerInfo.set_id}" />
 
-			<div class="control-group">
+			<div class="form-group">
 				{formlabel label="Latitutde" for="geo-lat"}
 				{forminput}
 					<input size="50" name="geo[lat]" id="geo-lat" type="text" value="{$markerInfo.lat}" />
@@ -16,20 +16,20 @@
 				{/forminput}
 			</div>
 
-			<div class="control-group">
+			<div class="form-group">
 				{formlabel label="Longitude" for="geo-lng"}
 				{forminput}
 					<input size="50" id="geo-lng" name="geo[lng]" type="text" value="{$markerInfo.lng}" />
 					{formhelp note=""}
 				{/forminput}
 			</div>
-			<div class="control-group">
+			<div class="form-group">
 				{forminput}
 					<a name="marker_assist_btn" title="click a location!" href="javascript:void(0)" onclick="BitMap.EditSession.addAssistant('marker', 'new');">( Use Locating Assistant )</a>
 				{/forminput}
 			</div>
 
-			<div class="control-group">
+			<div class="form-group">
 				{formlabel label="Title" for="title"}
 				{forminput}
 					<input size="50" name="title" type="text" value="{$markerInfo.title}" />
@@ -37,7 +37,7 @@
 				{/forminput}
 			</div>
 
-			<div class="control-group">
+			<div class="form-group">
 				{formlabel label="Hover Text" for="marker_labeltext"}
 				{forminput}
 					<textarea name="marker_labeltext" rows="1">{$markerInfo.label_data}</textarea>
@@ -47,7 +47,7 @@
 
 			{textarea edit=$markerInfo.raw}
 
-			<div class="control-group">
+			<div class="form-group">
 				{formlabel label="Primary Attachment Image Size" for="primary_attachment_size"}
 				{forminput}
 					{assign var=size value=$gContent->getPreference('primary_attachment_size')|default:small}
@@ -57,14 +57,14 @@
 			</div>
 
 			{if !$gContent->isValid() || $gContent->hasAdminPermission()}
-				<div class="control-group">
+				<div class="form-group">
 					<label class="checkbox">
 						<input type="checkbox" name="allow_comments" value="y" {if $gContent->isCommentable() eq 'y'}checked="checked"{/if} />Allow Comments
 						{formhelp note=""}
 					</label>
 				</div>
 
-				<div class="control-group">
+				<div class="form-group">
 					<label class="checkbox">
 						<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />Allow Registered Users To Edit
 						{formhelp note="Checking this box will allow any registered user to edit this marker. This is good if you want this marker to be editable like a wiki page."}
@@ -74,7 +74,7 @@
 
 			{include file="bitpackage:liberty/edit_services_inc.tpl" serviceFile="content_edit_mini_tpl"}
 
-			<div class="control-group submit">
+			<div class="form-group submit">
 				<input type="button" name="save_marker_btn" value="Save" onclick="javascript:BitMap.EditSession.storeMarker( this.form );" />
 			</div>
 
