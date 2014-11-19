@@ -32,17 +32,17 @@
 	
 	{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 	<div class="form-group">
-		<label class="checkbox">
+		{forminput label="checkbox"}
 				<input type="checkbox" name="allow_children" value="y" {if $childrenAllowed}checked="checked"{/if} />Allow Registered Users to Add Polylines To This Set
 				{formhelp note="Checking this box will allow any registered user to add polylines to this set."}
-			</label>
+			{/forminput}
 	</div>
 	
 	<div class="form-group">
-		<label class="checkbox">
+		{forminput label="checkbox"}
 				<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />Allow Registered Users To Edit
 				{formhelp note="Checking this box will allow any registered user to edit the parameters of this set - this does not effect if they can add polylines to this set."}
-			</label>
+			{/forminput}
 	</div>
 	{/if}
 

@@ -58,17 +58,17 @@
 
 			{if !$gContent->isValid() || $gContent->hasAdminPermission()}
 				<div class="form-group">
-					<label class="checkbox">
+					{forminput label="checkbox"}
 						<input type="checkbox" name="allow_comments" value="y" {if $gContent->isCommentable() eq 'y'}checked="checked"{/if} />Allow Comments
 						{formhelp note=""}
-					</label>
+					{/forminput}
 				</div>
 
 				<div class="form-group">
-					<label class="checkbox">
+					{forminput label="checkbox"}
 						<input type="checkbox" name="share_update" value="y" {if $updateShared}checked="checked"{/if} />Allow Registered Users To Edit
 						{formhelp note="Checking this box will allow any registered user to edit this marker. This is good if you want this marker to be editable like a wiki page."}
-					</label>
+					{/forminput}
 				</div>
 			{/if}
 
